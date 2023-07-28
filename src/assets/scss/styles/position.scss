@@ -1,0 +1,13 @@
+// #POSITION
+
+    // --POSITION-FIXED
+    @mixin placement($position: relative, $top: auto, $right: auto, $bottom: auto, $left: auto, $pseudo-element: false)
+    {
+        @if $pseudo-element { content: ''; }
+
+        position: $position;
+        top: $top;
+        right: $right;
+        bottom: $bottom;
+        left: $left;
+    }

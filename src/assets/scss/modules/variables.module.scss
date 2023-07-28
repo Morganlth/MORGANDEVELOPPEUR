@@ -1,0 +1,3 @@
+@use '../../../../static/variables.scss' as *;
+
+:export { @each $name, $color in $colors { #{$name}: $color; } }

@@ -1,0 +1,29 @@
+// #USES
+
+@use 'sass:map';
+
+@use '../../../../static/variables.scss' as *;
+
+// #VARIABLES
+
+    // --FONT-FAMILY
+    $family-title: 'CodeNext';
+    $family-content: 'AnonymousPro';
+
+    // --FONT-TITLE
+    $h-1: (color: $dark, font-family: $family-title, font-size: 8.8rem, line-height: .8);
+
+    $titles: ('h-1': $h-1);
+
+// #FONT
+
+    // --FONT-TITLE
+    @mixin h-($number: 1) { @each $key, $value in map.get($titles, 'h-#{$number}') { #{$key}: $value; } }
+
+    // --FONT-INTERACT
+    @mixin interact($color: inherit, $font-size: 1.8rem, $line-height: 1)
+    {
+        color: $color;
+        font: 900 $font-size $family-content;
+        line-height: $line-height;
+    }
