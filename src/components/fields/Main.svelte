@@ -134,7 +134,6 @@ main
             box-sizing: border-box;
 
             text-decoration: none;
-            user-select: none;
 
             transition: opacity .3s;
 

@@ -26,4 +26,5 @@
         color: $color;
         font: 900 $font-size $family-content;
         line-height: $line-height;
+        user-select: none;
     }

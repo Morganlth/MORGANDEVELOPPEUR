@@ -3,15 +3,135 @@
 <script>
 // #IMPORTS
 
+    // --JS
+    import MATH from '../../assets/js/utils/math'
+
     // --LIB
     import { COLORS } from '$lib/app'
 
     // --THREE
-    import WebGL from 'three/addons/capabilities/WebGL';
-    import { BoxGeometry, Mesh, MeshBasicMaterial, PerspectiveCamera, Scene, WebGLRenderer } from 'three'
+    import WebGL from 'three/addons/capabilities/WebGL'
+    import { AmbientLight, BoxGeometry, DirectionalLight, Mesh, MeshStandardMaterial, PerspectiveCamera, Scene, WebGLRenderer } from 'three'
 
     // --SVELTE
     import { onMount } from 'svelte'
+
+// #CONSTANTES
+
+    // --ELEMENT-SPACECUBE
+    // const SPACECUBE_CUBES = new Float64Array(
+    //     [
+    //         2, 3, -.5,
+    //         1.5, 5, 2.2,
+    //         1.5, 0, -1.5,
+    //         1.5, 6, -1.7,
+    //         1, 4, 3,
+    //         1, 4, 0,
+    //         1, 8, -1,
+    //         1, .5, 2.5,
+    //         1, 2, 1,
+    //         1, 3, 1.1,
+    //         1, 0, 2,
+    //         1, 2, 2.5,
+    //         1, 7, 0,
+    //         1, 6, .8,
+    //         1, 8.1, 3.5,
+    //         1, 7.5, 2,
+    //         1, -2, -1,
+    //         1, 4, -2.5,
+    //         1, 1.4, -2.3,
+    //         1, -1, -2,
+    //         1, -3.6, -2.7,
+    //         1, -5, -3.3,
+    //         1, .6, .3,
+    //         1, -.3, -.1,
+    //         .5, -7, -3.7,
+    //         .5, -6, -3.3,
+    //         .5, -4.8, -2.5,
+    //         .5, -4, -2,
+    //         .5, -3.8, -3.5,
+    //         .5, -2.6, -2.6,
+    //         .5, -2, -2,
+    //         .5, -3, -1,
+    //         .5, 1.5, -1,
+    //         .5, -2.9, -1.9
+    //     ]
+    // )
+    const SPACECUBE_CUBES = new Float64Array(
+        [
+            2, 1, -1,
+            1.5, -1.75, -2.25,
+            1.5, 2.75, -2.75,
+            1.5, 3.75, 1.75,
+            1, -1, -.5,
+            1, -.5, -2,
+            // 1, -.5, -3,
+            1, .5, -2.5,
+            1, 2.5, -1.5,
+            1, 2.5, -.5,
+            1, .5, 1,
+            1, 1.5, .5,
+            1, 1.5, 2,
+            1, 2.5, 2,
+            1, 2.5, 1,
+            1, 5, 2.5,
+            1, 5, 1.5,
+            1, 4.5, .5,
+            1, 3.5, 0,
+            1, 3.5, -1,
+            1, 5, -.5,
+            1, 4.5, -1.5,
+            1, 4, -2.5,
+            1, 5, -2.5,
+            1, -3.5, -1,
+            1, -4.5, -2,
+            1, -5.5, -2.5,
+            1, -3.5, -3.5,
+            1, 6, 3.5,
+            1, 6.5, 2,
+            1, 6, .5,
+            1, 7, .5,
+            1, 6, -1,
+            1, 6, -2,
+            1, 7, -2,
+            .5, -1.75, -.75,
+            .5, -1.75, -1.25,
+            .5, -1.25, -1.25,
+            .5, -.75, -1.25,
+            .5, -.25, -1.25,
+            .5, -.25, -.75,
+            .5, -.25, -.25,
+            .5, 1.25, -2.25,
+            .5, 1.75, -2.25,
+            .5, -.75, .75,
+            .5, .25, .25,
+            .5, .75, .25,
+            .5, 1.25, 1.25,
+            .5, 1.75, 1.25,
+            .5, 2.25, .25,
+            .5, 2.75, .25,
+            .5, 3.25, .75,
+            .5, 3.75, .75,
+            .5, 3.25, -1.75,
+            .5, 3.75, -1.75,
+            .5, 4.25, -.25,
+            .5, 4.25, -.75,
+            .5, 5.25, -1.25,
+            .5, 5.25, -1.75,
+            .5, -2.25, .25,
+            .5, -3.25, -2.25,
+            .5, -4.75, -.75,
+            .5, -4.75, -3.25,
+            .5, -6.25, -2.75,
+            .5, -6.75, -2.75,
+            .5, -7.75, -3.5,
+            .5, 6.75, 1.25,
+            .5, 7.25, -.75,
+            .5, 7.25, 3.75,
+            .5, 7.25, 3.25,
+            .5, 7.75, 3.25
+        ]
+    )
 
 // #VARIABLES
 
@@ -20,8 +140,7 @@
     spacecube,
     spacecube_SCENE,
     spacecube_CAMERA,
-    spacecube_RENDERER,
-    spacecube_CUBE
+    spacecube_RENDERER
 
 // #FUNCTIONS
 
@@ -34,7 +153,8 @@
 
             spacecube.appendChild(spacecube_RENDERER.domElement)
 
-            spacecube_drawCube()
+            spacecube_draw()
+            spacecube_light()
             spacecube_animationLoop()
         }
     }
@@ -45,7 +165,7 @@
 
         spacecube_SCENE = new Scene()
         spacecube_CAMERA = new PerspectiveCamera(75, WIDTH / HEIGHT, 0.1, 10)
-        spacecube_RENDERER = new WebGLRenderer({ alpha: true })
+        spacecube_RENDERER = new WebGLRenderer({ alpha: true, antialias: true })
 
         spacecube_CAMERA.position.z = 5
 
@@ -54,26 +174,38 @@
     }
 
     // --DRAW
-    function spacecube_drawCube()
+    function spacecube_draw()
     {
-        const
-        GEOMETRY = new BoxGeometry(1, 1, 1),
-        MATERIAL = new MeshBasicMaterial({ color: COLORS.light })
-        
-        spacecube_CUBE = new Mesh(GEOMETRY, MATERIAL)
+        for (let i = 0; i < SPACECUBE_CUBES.length; i += 3)
+        {
+            const
+            SIZE = SPACECUBE_CUBES[i],
+            [GEOMETRY, MATERIAL] = [new BoxGeometry(SIZE, SIZE, SIZE), new MeshStandardMaterial({ color: COLORS.dark, wireframe: false })],
+            CUBE = new Mesh(GEOMETRY, MATERIAL)
 
-        spacecube_SCENE.add(spacecube_CUBE)
+            CUBE.position.set(SPACECUBE_CUBES[i + 1], SPACECUBE_CUBES[i + 2])
+            CUBE.rotation.x = -MATH.rad.r45 / 2
+            CUBE.rotation.y = MATH.rad.r45
+    
+            spacecube_SCENE.add(CUBE)
+        }
     }
 
     // --ANIMATION
-    function spacecube_animationLoop()
+    async function spacecube_animationLoop()
     {
         spacecube_RENDERER.render(spacecube_SCENE, spacecube_CAMERA)
 
-        spacecube_CUBE.rotation.x += 0.01;
-        spacecube_CUBE.rotation.y += 0.01;
-
         requestAnimationFrame(spacecube_animationLoop)
+    }
+
+    // --UTILS
+    function spacecube_light()
+    {
+        const [AMBIENTLIGHT, DIRECTIONALLIGHT] = [new AmbientLight(COLORS.light), new DirectionalLight(COLORS.light, 2.5)]
+        
+        spacecube_SCENE.add(AMBIENTLIGHT)
+        spacecube_SCENE.add(DIRECTIONALLIGHT)
     }
 
 // #CYCLE

@@ -53,8 +53,8 @@
 id="home"
 >
     <Particles />
-    <SpaceWave />
-    <!-- <SpaceCube /> -->
+    <!-- <SpaceWave /> -->
+    <SpaceCube />
 
     <span
     class="lang"
@@ -144,6 +144,8 @@ lang="scss"
 
     padding: app.$gap-inline * 2 0 0 app.$gap-inline;
 
+    background: url('./images/test.png') center / cover no-repeat;
+
     box-sizing: border-box;
 
     .lang { @include font.interact; }
@@ -155,6 +157,8 @@ lang="scss"
         @include font.h-(1);
 
         margin-top: 3rem;
+
+        user-select: none;
 
         strong, span
         {

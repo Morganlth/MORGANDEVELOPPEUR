@@ -48,8 +48,6 @@ context="module"
 
         APP.app_restore()
 
-        console.log(EVENT)
-
         app_OPACITY = 1
     }
 
