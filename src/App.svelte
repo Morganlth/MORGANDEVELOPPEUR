@@ -97,8 +97,8 @@ lang="scss"
 >
 /* #USES */
 
-@use './assets/scss/styles/position';
-@use './assets/scss/styles/size';
+@use './assets/scss/styles/_position';
+@use './assets/scss/styles/_size';
 
 /* #APP */
 
@@ -109,7 +109,8 @@ lang="scss"
     .spring
     {
         @include position.placement(absolute, 0, 0, 0, 0);
-        @include size.any;
+        
+        @extend %any;
 
         z-index: 2;
 

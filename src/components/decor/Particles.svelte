@@ -33,8 +33,6 @@
 
         particles_CONTEXT = particles.getContext('2d')
 
-        particles_CONTEXT.fillStyle = COLORS.dark
-
         particles_draw()
     }
 
@@ -46,8 +44,9 @@
             x: 0,
             y: window.innerHeight,
             vel_X: Math.random() * .5 + .2,
-            vel_Y: Math.random() * .8 + .2,
-            size: Math.random() * 15 + 5
+            vel_Y: Math.random() * 1,
+            size: Math.random() * 15 + 5,
+            color: COLORS[Math.round(Math.random()) ? 'light' : 'primary']
         })
 
         if (PARTICLES_PARTICLES.length > 50) PARTICLES_PARTICLES.shift()
@@ -71,6 +70,7 @@
     {
         for (const PARTICLE of PARTICLES_PARTICLES)
         {
+            particles_CONTEXT.fillStyle = PARTICLE.color
             particles_CONTEXT.fillRect(PARTICLE.x, PARTICLE.y, PARTICLE.size, PARTICLE.size)
             particles_CONTEXT.fill()
 
@@ -103,15 +103,16 @@ lang="scss"
 >
 /* #USES */
 
-@use '../../assets/scss/styles/position';
-@use '../../assets/scss/styles/size';
+@use '../../assets/scss/styles/_position';
+@use '../../assets/scss/styles/_size';
 
 /* #PARTICLES */
 
 .particles
 {
     @include position.placement(absolute, 0, 0, 0, 0);
-    @include size.any;
+
+    @extend %any;
 
     pointer-events: none;
 }

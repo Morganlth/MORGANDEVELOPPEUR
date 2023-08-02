@@ -41,17 +41,17 @@ lang="scss"
 
 @use 'sass:math';
 
-@use '../../assets/scss/app';
+@use '../../assets/scss/_app';
 
-@use '../../assets/scss/styles/position';
-@use '../../assets/scss/styles/font';
+@use '../../assets/scss/styles/_position';
+@use '../../assets/scss/styles/_font';
 
 /* #FOOTER */
 
 footer
 {
     @include position.placement(fixed, auto, 0, 0, auto);
-    @include font.interact($dark);
+    @include font.interact($light);
 
     z-index: 1;
 

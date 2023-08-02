@@ -11,7 +11,7 @@
 
     // --THREE
     import WebGL from 'three/addons/capabilities/WebGL'
-    import { AmbientLight, BoxGeometry, DirectionalLight, Mesh, MeshStandardMaterial, PerspectiveCamera, Scene, WebGLRenderer } from 'three'
+    import { AmbientLight, BoxGeometry, DirectionalLight, Mesh, MeshStandardMaterial, PerspectiveCamera, Scene, SpotLight, WebGLRenderer } from 'three'
 
     // --SVELTE
     import { onMount } from 'svelte'
@@ -19,44 +19,6 @@
 // #CONSTANTES
 
     // --ELEMENT-SPACECUBE
-    // const SPACECUBE_CUBES = new Float64Array(
-    //     [
-    //         2, 3, -.5,
-    //         1.5, 5, 2.2,
-    //         1.5, 0, -1.5,
-    //         1.5, 6, -1.7,
-    //         1, 4, 3,
-    //         1, 4, 0,
-    //         1, 8, -1,
-    //         1, .5, 2.5,
-    //         1, 2, 1,
-    //         1, 3, 1.1,
-    //         1, 0, 2,
-    //         1, 2, 2.5,
-    //         1, 7, 0,
-    //         1, 6, .8,
-    //         1, 8.1, 3.5,
-    //         1, 7.5, 2,
-    //         1, -2, -1,
-    //         1, 4, -2.5,
-    //         1, 1.4, -2.3,
-    //         1, -1, -2,
-    //         1, -3.6, -2.7,
-    //         1, -5, -3.3,
-    //         1, .6, .3,
-    //         1, -.3, -.1,
-    //         .5, -7, -3.7,
-    //         .5, -6, -3.3,
-    //         .5, -4.8, -2.5,
-    //         .5, -4, -2,
-    //         .5, -3.8, -3.5,
-    //         .5, -2.6, -2.6,
-    //         .5, -2, -2,
-    //         .5, -3, -1,
-    //         .5, 1.5, -1,
-    //         .5, -2.9, -1.9
-    //     ]
-    // )
     const SPACECUBE_CUBES = new Float64Array(
         [
             2, 1, -1,
@@ -65,7 +27,6 @@
             1.5, 3.75, 1.75,
             1, -1, -.5,
             1, -.5, -2,
-            // 1, -.5, -3,
             1, .5, -2.5,
             1, 2.5, -1.5,
             1, 2.5, -.5,
@@ -153,8 +114,8 @@
 
             spacecube.appendChild(spacecube_RENDERER.domElement)
 
-            spacecube_draw()
-            spacecube_light()
+            spacecube_setCubes()
+            spacecube_setLight()
             spacecube_animationLoop()
         }
     }
@@ -164,7 +125,7 @@
         const [WIDTH, HEIGHT] = [window.innerWidth, window.innerHeight]
 
         spacecube_SCENE = new Scene()
-        spacecube_CAMERA = new PerspectiveCamera(75, WIDTH / HEIGHT, 0.1, 10)
+        spacecube_CAMERA = new PerspectiveCamera(75, WIDTH / HEIGHT, 0.1, 13)
         spacecube_RENDERER = new WebGLRenderer({ alpha: true, antialias: true })
 
         spacecube_CAMERA.position.z = 5
@@ -173,8 +134,7 @@
         spacecube_RENDERER.setSize(WIDTH, HEIGHT)
     }
 
-    // --DRAW
-    function spacecube_draw()
+    function spacecube_setCubes()
     {
         for (let i = 0; i < SPACECUBE_CUBES.length; i += 3)
         {
@@ -191,21 +151,29 @@
         }
     }
 
+    function spacecube_setLight()
+    {
+        const
+        AMBIENTLIGHT = new AmbientLight(COLORS.light),
+        DIRECTIONALLIGHT = new DirectionalLight(COLORS.light, 5),
+        SPOTPRIMARYLIGHT = new SpotLight(COLORS.primary, 27, 11, .27, .7, .7)
+
+        DIRECTIONALLIGHT.position.set(2, -2, -.5)
+        SPOTPRIMARYLIGHT.position.set(-7, -2.7, -.7)
+        SPOTPRIMARYLIGHT.target.position.set(0, -1.7, 0)
+
+        spacecube_SCENE.add(AMBIENTLIGHT)
+        spacecube_SCENE.add(DIRECTIONALLIGHT)
+        spacecube_SCENE.add(SPOTPRIMARYLIGHT)
+        spacecube_SCENE.add(SPOTPRIMARYLIGHT.target)
+    }
+
     // --ANIMATION
     async function spacecube_animationLoop()
     {
         spacecube_RENDERER.render(spacecube_SCENE, spacecube_CAMERA)
 
         requestAnimationFrame(spacecube_animationLoop)
-    }
-
-    // --UTILS
-    function spacecube_light()
-    {
-        const [AMBIENTLIGHT, DIRECTIONALLIGHT] = [new AmbientLight(COLORS.light), new DirectionalLight(COLORS.light, 2.5)]
-        
-        spacecube_SCENE.add(AMBIENTLIGHT)
-        spacecube_SCENE.add(DIRECTIONALLIGHT)
     }
 
 // #CYCLE
@@ -228,14 +196,15 @@ lang="scss"
 >
 /* #USES */
 
-@use '../../assets/scss/styles/position';
-@use '../../assets/scss/styles/size';
+@use '../../assets/scss/styles/_position';
+@use '../../assets/scss/styles/_size';
 
 /* #SPACECUBE */
 
 .space-cube
 {
     @include position.placement(absolute, 0, 0, 0, 0);
-    @include size.any;
+
+    @extend %any;
 }
 </style>

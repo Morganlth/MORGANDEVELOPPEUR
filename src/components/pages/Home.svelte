@@ -15,7 +15,6 @@
     // --COMPONENT-ELEMENT
     import Particles from '../decor/Particles.svelte'
     import SpaceCube from '../decor/SpaceCube.svelte'
-    import SpaceWave from '../decor/SpaceWave.svelte'
     import Cube from '../elements/Cube.svelte'
 
     // --COMPONENT-COVER
@@ -53,7 +52,6 @@
 id="home"
 >
     <Particles />
-    <!-- <SpaceWave /> -->
     <SpaceCube />
 
     <span
@@ -64,37 +62,15 @@ id="home"
 
     <h1>
         <strong>
-            D
-
-            <Icon
-            prop_COLOR={COLORS.dark}
-            prop_SPRING={false}
-            >
-                <Logo
-                prop_PIECE={true}
-                />
-            </Icon>
-
-            VELOPPEUR
+            DEVELOPPEUR
         </strong>
 
         <span>
-            W
-            
-            <Icon
-            prop_COLOR={COLORS.dark}
-            prop_SPRING={false}
-            >
-                <Logo
-                prop_PIECE={true}
-                />
-            </Icon>
-            
-            B
+            WEB
         </span>
 
         <Icon
-        prop_COLOR={COLORS.dark}
+        prop_COLOR={COLORS.light}
         prop_SPRING={false}
         >
             <Logo />
@@ -129,22 +105,20 @@ lang="scss"
 @use 'sass:map';
 @use 'sass:math';
 
-@use '../../assets/scss/app';
+@use '../../assets/scss/_app';
 
-@use '../../assets/scss/styles/position';
-@use '../../assets/scss/styles/display';
-@use '../../assets/scss/styles/size';
-@use '../../assets/scss/styles/font';
+@use '../../assets/scss/styles/_position';
+@use '../../assets/scss/styles/_display';
+@use '../../assets/scss/styles/_size';
+@use '../../assets/scss/styles/_font';
 
 /* #HOME */
 
 #home
 {
-    @include size.any;
+    @extend %any;
 
     padding: app.$gap-inline * 2 0 0 app.$gap-inline;
-
-    background: url('./images/test.png') center / cover no-repeat;
 
     box-sizing: border-box;
 
@@ -164,30 +138,26 @@ lang="scss"
         {
             &::before
             {
-                $before-size: .6rem;
-        
                 @include position.placement(absolute, 0, auto, auto, 0, true);
 
-                width: $before-size;
+                z-index: -1;
+
+                width: .5rem;
                 height: 100%;
 
-                border-radius: $before-size;
+                background-color: $primary;
             }
     
-            @include display.f-a-center;
+            @extend %f-a-center;
 
             position: relative;
+
+            z-index: 1;
 
             margin-bottom: math.div(app.$gap-block, 2);
             padding-left: app.$gap-inline;
         }
-        strong
-        {
-            &::before { background-color: $primary; }
-
-            margin-left: app.$gap-inline;
-        }
-        span::before { background-color: $indicator; }
+        strong { margin-left: app.$gap-inline; }
     }
 
     img
@@ -203,7 +173,8 @@ lang="scss"
     .space
     {
         @include position.placement(absolute, 0, 0, 0, 0);
-        @include size.any;
+
+        @extend %any;
 
         perspective: 1000px;
 

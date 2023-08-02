@@ -63,7 +63,7 @@ style:transform="translateY({header_TRANSLATEY}%)"
     data-sveltekit-reload
     >
         <Icon
-        prop_COLOR={COLORS.dark}
+        prop_COLOR={COLORS.light}
         prop_LINK={{ href: $page.url.origin, alt: 'home' }}
         >
             <Logo />
@@ -88,10 +88,10 @@ lang="scss"
 >
 /* #USES */
 
-@use '../../assets/scss/app';
+@use '../../assets/scss/_app';
 
-@use '../../assets/scss/styles/position';
-@use '../../assets/scss/styles/font';
+@use '../../assets/scss/styles/_position';
+@use '../../assets/scss/styles/_font';
 
 /* #HEADER */
 
@@ -121,7 +121,7 @@ header
 
         p
         {
-            @include font.interact($dark);
+            @include font.interact($light);
 
             align-self: flex-end;
 

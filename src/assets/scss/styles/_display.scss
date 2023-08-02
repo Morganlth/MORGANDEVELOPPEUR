@@ -1,32 +1,32 @@
 // #DISPLAY
 
     // --DISPLAY-FLEX
-    @mixin f-column-center
+    %f-column-center
     {
-        @include f-center;
+        @extend %f-center;
         flex-direction: column;
     }
 
-    @mixin f-center
+    %f-center
     {
         display: flex;
         justify-content: center;
         align-items: center;
     }
 
-    @mixin f-column
+    %f-column
     {
         display: flex;
         flex-direction: column;
     }
 
-    @mixin f-j-center
+    %f-j-center
     {
         display: flex;
         justify-content: center;
     }
 
-    @mixin f-a-center
+    %f-a-center
     {
         display: flex;
         align-items: center;

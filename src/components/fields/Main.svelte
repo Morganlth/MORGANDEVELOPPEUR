@@ -80,21 +80,21 @@ lang="scss"
 >
 /* #USES */
 
-@use '../../assets/scss/app';
+@use '../../assets/scss/_app';
 
-@use '../../assets/scss/styles/position';
-@use '../../assets/scss/styles/size';
-@use '../../assets/scss/styles/font';
+@use '../../assets/scss/styles/_position';
+@use '../../assets/scss/styles/_size';
+@use '../../assets/scss/styles/_font';
 
 /* #MAIN */
 
 main
 {
-    @include size.any;
+    @extend %any;
 
     overflow: hidden;
 
-    background-color: $light;
+    background-color: $dark;
 
     .site-map
     {
@@ -114,11 +114,12 @@ main
                 width: 100%;
                 height: 0;
                 
-                border-top: solid $dark 1px;
+                border-top: solid $light 1px;
             }
 
-            @include font.interact($dark, 2.4rem, 1.5);
-            @include size.any;
+            @include font.interact($light, 2.4rem, 1.5);
+
+            @extend %any;
 
             position: relative;
 
@@ -141,12 +142,22 @@ main
             {
                 &::before
                 {
+                    border-top-color: $primary;
+    
                     animation: selected-anim-before .3s ease-out;
     
                     @keyframes selected-anim-before { 100% { transform: scaleX(1); } }
                 }
 
                 opacity: 1;
+
+                animation: selected-anim .4s forwards;
+
+                @keyframes selected-anim
+                {
+                    40% { color: $indicator; }
+                    100% { color: $primary; }    
+                }
 
                 &::after
                 {
@@ -159,11 +170,14 @@ main
             &::after
             {
                 @include position.placement(absolute, -1px, 0, 0, 0, true);
-                @include size.any;
+    
+                @extend %any;
 
                 transform: scale(1, 0);
+
+                border: solid $primary 1px;
                 
-                box-shadow: 0 0 10px $dark;
+                box-shadow: 0 0 5px $primary;
             }
         }
     }

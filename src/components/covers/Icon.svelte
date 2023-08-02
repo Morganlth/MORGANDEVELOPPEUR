@@ -86,13 +86,13 @@ lang="scss"
 >
 /* #USE */
 
-@use '../../assets/scss/styles/display';
+@use '../../assets/scss/styles/_display';
 
 /* #ICON */
 
 .icon
 {
-    @include display.f-center;
+    @extend %f-center;
 
     pointer-events: auto;
 }

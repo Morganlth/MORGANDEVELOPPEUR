@@ -21,8 +21,8 @@
     // --LIB
     import { COLORS } from '$lib/app'
 
-    // --CONTEXT
-    import { EVENT } from '../../App.svelte'
+    // --CONTEXTS
+    import { EVENT, SPRING } from '../../App.svelte'
 
     // --SVELTE
     import { onMount, onDestroy } from 'svelte'
@@ -33,13 +33,10 @@
     // --COMPONENT-ICON
     import Logo from '../icons/Logo.svelte'
 
-// #CONSTANTES
+// #CONSTANTE
 
     // --ELEMENT-CUBE
     const CUBE_EVENTS = { mouseMove: cube_mouseMove, mouseUp: cube_mouseUp }
-
-    // --ELEMENT-SIDE
-    const SIDE_COLOR = COLORS[Math.round(Math.random()) ? 'primary' : 'indicator']
 
 // #VARIABLES
 
@@ -78,7 +75,14 @@
 
     function cube_destroyEvent() { EVENT.event_remove(CUBE_EVENTS) }
 
-    // --UPDATE
+    // --UPDATES
+    function elements_update(value)
+    {
+        SPRING.spring_LOCK = value
+
+        cube_GRABBING = value
+    }
+
     function cube_updatePosition(x, y)
     {
         if (cube_GRABBING)
@@ -117,11 +121,11 @@
         gravityarea_TIMEOUT = setTimeout(cube_animationFloating.bind(null, .5), 200)
     }
 
-    async function cube_mouseDown() { cube_GRABBING = true }
+    async function cube_mouseDown() { elements_update(true) }
 
     async function cube_mouseMove(clientX, clientY) { cube_THROTTLE(clientX - prop_SIZE, clientY - prop_SIZE) }
 
-    async function cube_mouseUp() { cube_GRABBING = false }
+    async function cube_mouseUp() { elements_update(false) }
 
     // --CLEAR
     export function cube_clear() { clearInterval(cube_INTERVAL), cube_INTERVAL = null }
@@ -189,7 +193,7 @@ on:mouseleave={gravityarea_mouseLeave}
                 <div
                 class="side"
                 data-side-id={id}
-                style:border-color={SIDE_COLOR}
+                style:border-color={COLORS.primary}
                 >
                     <Icon
                     prop_SIZE="30%"
@@ -211,15 +215,15 @@ lang="scss"
 >
 /* #USES */
 
-@use '../../assets/scss/styles/position';
-@use '../../assets/scss/styles/display';
-@use '../../assets/scss/styles/size';
+@use '../../assets/scss/styles/_position';
+@use '../../assets/scss/styles/_display';
+@use '../../assets/scss/styles/_size';
 
 /* #CUBE */
 
 .gravity-area
 {
-    @include display.f-center;
+    @extend %f-center;
 
     position: absolute;
 
@@ -253,8 +257,8 @@ lang="scss"
 
     .side
     {
-        @include display.f-center;
-        @include size.any;
+        @extend %f-center;
+        @extend %any;
 
         background-color: $dark;
 

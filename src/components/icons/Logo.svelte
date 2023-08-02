@@ -51,10 +51,14 @@ mlns="http://www.w3.org/2000/svg"
 
 <!-- #STYLE -->
 
-<style>
-svg
-{
-    width: 100%;
-    height: 100%;
-}
+<style
+lang="scss"
+>
+/* #USE */
+
+@use '../../assets/scss/styles/_size';
+
+/* #LOGO */
+
+svg { @extend %any; }
 </style>
