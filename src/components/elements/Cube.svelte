@@ -22,7 +22,7 @@
     import { COLORS } from '$lib/app'
 
     // --CONTEXTS
-    import { EVENT, SPRING } from '../../App.svelte'
+    import { EVENT, ANIMATION, SPRING } from '../../App.svelte'
 
     // --SVELTE
     import { onMount, onDestroy } from 'svelte'
@@ -49,11 +49,13 @@
     // --ELEMENT-CUBE
     let
     cube,
+    cube_FLOATY = Math.random(),
+    cube_FLOATUP = false,
     cube_FORCEX = 0,
     cube_FORCEY = 0,
     cube_GRABBING = false,
-    cube_INTERVAL,
-    cube_THROTTLE = wait_throttle(cube_updatePosition, 50)
+    cube_ANIMATIONTHROTTLE = wait_throttle(cube_animationFloating, 100),
+    cube_MOUSETHROTTLE = wait_throttle(cube_updatePosition, 50)
 
 // #FUNCTIONS
 
@@ -61,7 +63,7 @@
     function cube_set()
     {
         cube_setEvent()
-        cube_animationFloating()
+        cube_start()
     }
 
     function cube_setEvent() { EVENT.event_add(CUBE_EVENTS) }
@@ -70,7 +72,7 @@
     function cube_destroy()
     {
         cube_destroyEvent()
-        cube_clear()
+        cube_end()
     }
 
     function cube_destroyEvent() { EVENT.event_remove(CUBE_EVENTS) }
@@ -104,7 +106,7 @@
 
         if (NOW > gravityarea_LAST + 50)
         {
-            cube_clear()
+            cube_end()
             gravityarea_animationAttract(clientX, clientY)
 
             gravityarea_LAST = NOW
@@ -118,34 +120,29 @@
 
         clearTimeout(gravityarea_TIMEOUT)
 
-        gravityarea_TIMEOUT = setTimeout(cube_animationFloating.bind(null, .5), 200)
+        gravityarea_TIMEOUT = setTimeout(() =>
+        {
+            cube_FLOATY = .5
+
+            cube_start()
+        }, 200)
     }
 
     async function cube_mouseDown() { elements_update(true) }
 
-    async function cube_mouseMove(clientX, clientY) { cube_THROTTLE(clientX - prop_SIZE, clientY - prop_SIZE) }
+    async function cube_mouseMove(clientX, clientY) { cube_MOUSETHROTTLE(clientX - prop_SIZE, clientY - prop_SIZE) }
 
     async function cube_mouseUp() { elements_update(false) }
 
-    // --CLEAR
-    export function cube_clear() { clearInterval(cube_INTERVAL), cube_INTERVAL = null }
-
     // --ANIMATION
-    export function cube_animationFloating(a)
+    async function cube_animationFloating()
     {
-        if (cube_INTERVAL) return
+        cube_FORCEY = 10 * (Math.sin((cube_FLOATY - .5) * Math.PI) + 1) - 10
 
-        let t = a ?? Math.random(), up = false
+        cube_FLOATY += cube_FLOATUP ? -.05 : .05
 
-        cube_INTERVAL = setInterval(() =>
-        {
-            cube_FORCEY = 10 * (Math.sin((t - .5) * Math.PI) + 1) - 10
-
-            t += up ? -.05 : .05
-
-            if (t > 1) t = 1, up = true
-            else if (t < 0) t = 0, up = false
-        }, 100)
+        if (cube_FLOATY > 1) cube_FLOATY = 1, cube_FLOATUP = true
+        else if (cube_FLOATY < 0) cube_FLOATY = 0, cube_FLOATUP = false
     }
 
     function gravityarea_animationAttract(clientX, clientY)
@@ -159,6 +156,11 @@
         cube_FORCEX = DIFX * (1 - Math.abs(DIFX) / (Math.cos(ANGLE) * RADIUS)) * .5
         cube_FORCEY = DIFY * (1 - Math.abs(DIFY) / Math.abs(Math.sin(ANGLE) * RADIUS)) * .5
     }
+
+    // --UTILS
+    function cube_start() { ANIMATION.animation_add(cube_ANIMATIONTHROTTLE) }
+
+    function cube_end() { ANIMATION.animation_remove(cube_ANIMATIONTHROTTLE) }
 
 // #CYCLES
 

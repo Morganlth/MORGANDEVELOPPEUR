@@ -11,13 +11,18 @@
 
         return new Promise(resolve =>
         {
-            (function frame()
+            ANIMATION.animation_add(function frame()
             {
                 count++
 
-                performance.now() - START >= 500
-                ? resolve(count * 2)
-                : requestAnimationFrame(frame)
-            })()
+                if (performance.now() - START >= 500)
+                    ANIMATION.animation_remove(frame),
+                    resolve(count * 2)
+            })
         })
     }
+
+// #IMPORT
+
+    // --CONTEXT
+    import ANIMATION from '../managers/animationManager'

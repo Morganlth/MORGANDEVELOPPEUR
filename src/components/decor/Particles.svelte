@@ -6,6 +6,9 @@
     // --LIB
     import { COLORS } from '$lib/app'
 
+    // --CONTEXT
+    import { ANIMATION } from '../../App.svelte'
+
     // --SVELTE
     import { onMount, onDestroy } from 'svelte'
 
@@ -20,7 +23,6 @@
     let
     particles,
     particles_CONTEXT,
-    particles_FRAMEID,
     particles_COUNT = 0
 
 // #FUNCTIONS
@@ -33,7 +35,7 @@
 
         particles_CONTEXT = particles.getContext('2d')
 
-        particles_draw()
+        ANIMATION.animation_add(particles_draw)
     }
 
     function particles_setParticles()
@@ -53,7 +55,7 @@
     }
 
     // --DESTROY
-    function particles_destroy() { if (particles_FRAMEID != undefined) cancelAnimationFrame(particles_FRAMEID) }
+    function particles_destroy() { ANIMATION.animation_remove(particles_draw) }
 
     // --DRAW
     function particles_draw()
@@ -62,8 +64,6 @@
         particles_drawParticles()
 
         if (++particles_COUNT > 100) particles_setParticles()
-
-        particles_FRAMEID = requestAnimationFrame(particles_draw)
     }
 
     function particles_drawParticles()

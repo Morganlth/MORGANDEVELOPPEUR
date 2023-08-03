@@ -122,9 +122,14 @@ lang="scss"
 
         @include font.h-(1);
 
+        position: relative;
+
+        z-index: 1;
+
         margin-top: 3rem;
 
         user-select: none;
+        pointer-events: none;
 
         strong, span
         {
@@ -143,8 +148,6 @@ lang="scss"
             @extend %f-a-center;
 
             position: relative;
-
-            z-index: 1;
 
             margin-bottom: math.div(app.$gap-block, 2);
             padding-left: app.$gap-inline;
