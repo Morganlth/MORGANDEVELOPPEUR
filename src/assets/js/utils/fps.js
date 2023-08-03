@@ -11,7 +11,7 @@
 
         return new Promise(resolve =>
         {
-            ANIMATION.animation_add(function frame()
+            ANIMATION.animation_add(async function frame()
             {
                 count++
 

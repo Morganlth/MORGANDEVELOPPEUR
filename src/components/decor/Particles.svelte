@@ -58,7 +58,7 @@
     function particles_destroy() { ANIMATION.animation_remove(particles_draw) }
 
     // --DRAW
-    function particles_draw()
+    async function particles_draw()
     {
         particles_clear()
         particles_drawParticles()

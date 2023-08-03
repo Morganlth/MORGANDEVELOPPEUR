@@ -9,90 +9,17 @@
 
     // --LIB
     import { COLORS } from '$lib/app'
+    import SPACECUBE_CUBES from '../../assets/js/datas/cubes'
+
+    // --CONTEXTS
+    import { EVENT, ANIMATION } from '../../App.svelte'
 
     // --THREE
     import WebGL from 'three/addons/capabilities/WebGL'
-    import { AmbientLight, BoxGeometry, DirectionalLight, Mesh, PerspectiveCamera, Scene, SpotLight, TextureLoader, Vector2, WebGLRenderer } from 'three'
+    import { AmbientLight, BoxGeometry, DirectionalLight, Mesh, PerspectiveCamera, Plane, Raycaster, Scene, SpotLight, TextureLoader, Vector2, Vector3, WebGLRenderer } from 'three'
 
     // --SVELTE
-    import { onMount } from 'svelte'
-
-// #CONSTANTES
-
-    // --ELEMENT-SPACECUBE
-    const SPACECUBE_CUBES = new Float64Array(
-    [
-        2, 1, -1,
-        1.5, -1.75, -2.25,
-        1.5, 2.75, -2.75,
-        1.5, 3.75, 1.75,
-        1, -1, -.5,
-        1, -.5, -2,
-        1, .5, -2.5,
-        1, 2.5, -1.5,
-        1, 2.5, -.5,
-        1, .5, 1,
-        1, 1.5, .5,
-        1, 1.5, 2,
-        1, 2.5, 2,
-        1, 2.5, 1,
-        1, 5, 2.5,
-        1, 5, 1.5,
-        1, 4.5, .5,
-        1, 3.5, 0,
-        1, 3.5, -1,
-        1, 5, -.5,
-        1, 4.5, -1.5,
-        1, 4, -2.5,
-        1, 5, -2.5,
-        1, -3.5, -1,
-        1, -4.5, -2,
-        1, -5.5, -2.5,
-        1, -3.5, -3.5,
-        1, 6, 3.5,
-        1, 6.5, 2,
-        1, 6, .5,
-        1, 7, .5,
-        1, 6, -1,
-        1, 6, -2,
-        1, 7, -2,
-        .5, -1.75, -.75,
-        .5, -1.75, -1.25,
-        .5, -1.25, -1.25,
-        .5, -.75, -1.25,
-        .5, -.25, -1.25,
-        .5, -.25, -.75,
-        .5, -.25, -.25,
-        .5, 1.25, -2.25,
-        .5, 1.75, -2.25,
-        .5, -.75, .75,
-        .5, .25, .25,
-        .5, .75, .25,
-        .5, 1.25, 1.25,
-        .5, 1.75, 1.25,
-        .5, 2.25, .25,
-        .5, 2.75, .25,
-        .5, 3.25, .75,
-        .5, 3.75, .75,
-        .5, 3.25, -1.75,
-        .5, 3.75, -1.75,
-        .5, 4.25, -.25,
-        .5, 4.25, -.75,
-        .5, 5.25, -1.25,
-        .5, 5.25, -1.75,
-        .5, -2.25, .25,
-        .5, -3.25, -2.25,
-        .5, -4.75, -.75,
-        .5, -4.75, -3.25,
-        .5, -6.25, -2.75,
-        .5, -6.75, -2.75,
-        .5, -7.75, -3.5,
-        .5, 6.75, 1.25,
-        .5, 7.25, -.75,
-        .5, 7.25, 3.75,
-        .5, 7.25, 3.25,
-        .5, 7.75, 3.25
-    ])
+    import { onMount, onDestroy } from 'svelte'
 
 // #VARIABLES
 
@@ -101,7 +28,8 @@
     spacecube,
     spacecube_SCENE,
     spacecube_CAMERA,
-    spacecube_RENDERER
+    spacecube_RENDERER,
+    spacecube_MOUSELIGHT
 
 // #FUNCTIONS
 
@@ -119,8 +47,10 @@
             {
                 spacecube_setCubesTest(texture)
                 spacecube_setLight()
-                spacecube_animation()
+                spacecube_start()
             })
+
+            spacecube_setEvent()
         }
     }
 
@@ -138,6 +68,8 @@
         spacecube_RENDERER.setClearColor(0x000000, 0)
         spacecube_RENDERER.setSize(WIDTH, HEIGHT)
     }
+
+    function spacecube_setEvent() { EVENT.event_add({ mouseMove: spacecube_mouseMove }) }
 
     function spacecube_setCubesTest(texture)
     {
@@ -169,24 +101,58 @@
         const
         AMBIENTLIGHT = new AmbientLight(COLORS.light),
         DIRECTIONALLIGHT = new DirectionalLight(COLORS.light, 5),
-        SPOTPRIMARYLIGHT = new SpotLight(COLORS.primary, 7, 10, .4, .7, .7)
+        SPOTPRIMARYLIGHT = new SpotLight(COLORS.primary, 10, 10, .3, .7, .7)
 
         DIRECTIONALLIGHT.position.set(2, -2, -.5)
         SPOTPRIMARYLIGHT.position.set(-7, -2, .7)
         SPOTPRIMARYLIGHT.target.position.set(0, -2, 0)
 
+        spacecube_MOUSELIGHT = new SpotLight(COLORS.primary, 2, 13, .5, .7, .7)
+        spacecube_MOUSELIGHT.position.z = 5
+
         spacecube_SCENE.add(AMBIENTLIGHT)
         spacecube_SCENE.add(DIRECTIONALLIGHT)
         spacecube_SCENE.add(SPOTPRIMARYLIGHT)
         spacecube_SCENE.add(SPOTPRIMARYLIGHT.target)
+        spacecube_SCENE.add(spacecube_MOUSELIGHT)
+        spacecube_SCENE.add(spacecube_MOUSELIGHT.target)
+    }
+
+    // --DESTROY
+    function spacecube_destroy()
+    {
+        spacecube_stop()
+        spacecube_destroyEvent()
+    }
+
+    function spacecube_destroyEvent() { EVENT.event_remove({ mouseMove: spacecube_mouseMove }) }
+
+    // --EVENT
+    async function spacecube_mouseMove(clientX, clientY)
+    {
+        const
+        [X, Y] = [(clientX / window.innerWidth) * 2 - 1, -(clientY / window.innerHeight) * 2 + 1],
+        RAYCASTER = new Raycaster(),
+        INTERSECTION = new Vector3()
+    
+        RAYCASTER.setFromCamera(new Vector2(X, Y), spacecube_CAMERA)
+        RAYCASTER.ray.intersectPlane(new Plane(new Vector3(0, 0, 1), 0), INTERSECTION)
+
+        spacecube_MOUSELIGHT.target.position.set(INTERSECTION.x, INTERSECTION.y, 0)
     }
 
     // --ANIMATION
-    async function spacecube_animation() { spacecube_RENDERER.render(spacecube_SCENE, spacecube_CAMERA) } // a intégrer à ANIMATION
+    async function spacecube_animation() { spacecube_RENDERER.render(spacecube_SCENE, spacecube_CAMERA) }
 
-// #CYCLE
+    // --CONTROLS
+    function spacecube_start() { ANIMATION.animation_add(spacecube_animation) }
+
+    function spacecube_stop() { ANIMATION.animation_remove(spacecube_animation) }
+
+// #CYCLES
 
 onMount(spacecube_set)
+onDestroy(spacecube_destroy)
 </script>
 
 <!-- #HTML -->

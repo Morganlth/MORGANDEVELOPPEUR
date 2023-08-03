@@ -29,3 +29,9 @@ html, body, body>div, #app
     width: 100vw;
     height: 100vh;
 }
+
+a, img
+{
+    -webkit-user-drag: none;
+    -webkit-app-region: no-drag;
+}
