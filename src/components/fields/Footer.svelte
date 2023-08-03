@@ -60,7 +60,7 @@ footer
     justify-content: space-between;
     align-items: flex-end;
 
-    width: 50%;
+    width: 60%;
 
     padding: 0 app.$gap-inline app.$gap-block 0;
 
@@ -70,10 +70,13 @@ footer
     {
         display: flex;
 
-        gap: 6rem;
+        gap: 8rem;
 
         a
         {
+            @extend %simple-hover;
+
+            padding: .5rem 1rem 0;
             color: inherit;
             text-decoration: none;
         }

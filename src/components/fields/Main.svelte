@@ -105,29 +105,16 @@ main
 
         a
         {
-            &::before
-            {
-                @include position.placement(absolute, 50%, 0, 0, 0, true);
-
-                transform: translateX(-50%) scaleX(.05);
-
-                width: 100%;
-                height: 0;
-                
-                border-top: solid $light 1px;
-            }
-
             @include font.interact($light, 2.4rem, 1.5);
 
             @extend %any;
+            @extend %selected;
 
             position: relative;
 
             display: inline-block;
     
             transform: rotate(-.7deg);
-
-            opacity: .9;
     
             margin-bottom: .5rem;
             padding-inline: 1rem;
@@ -135,50 +122,6 @@ main
             box-sizing: border-box;
 
             text-decoration: none;
-
-            transition: opacity .3s;
-
-            &.selected
-            {
-                &::before
-                {
-                    border-top-color: $primary;
-    
-                    animation: selected-anim-before .3s ease-out;
-    
-                    @keyframes selected-anim-before { 100% { transform: scaleX(1); } }
-                }
-
-                opacity: 1;
-
-                animation: selected-anim .4s forwards;
-
-                @keyframes selected-anim
-                {
-                    40% { color: $indicator; }
-                    100% { color: $primary; }    
-                }
-
-                &::after
-                {
-                    animation: selected-anim-after .2s linear .25s forwards;
-
-                    @keyframes selected-anim-after { 100% { transform: scale(1); } }
-                }
-            }
-
-            &::after
-            {
-                @include position.placement(absolute, -1px, 0, 0, 0, true);
-    
-                @extend %any;
-
-                transform: scale(1, 0);
-
-                border: solid $primary 1px;
-                
-                box-shadow: 0 0 5px $primary;
-            }
         }
     }
 }

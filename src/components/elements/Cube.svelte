@@ -192,8 +192,8 @@ on:mouseleave={gravityarea_mouseLeave}
             {#each [0, 1, 2, 3, 4, 5] as id}
                 <div
                 class="side"
+                class:grabbing={cube_GRABBING}
                 data-side-id={id}
-                style:border-color={COLORS.primary}
                 >
                     <Icon
                     prop_SIZE="30%"
@@ -262,9 +262,13 @@ lang="scss"
 
         background-color: $dark;
 
-        border: solid calc(var(--cube-size) * .05);
+        border: solid $primary calc(var(--cube-size) * .05);
 
         box-sizing: border-box;
+
+        transition: border .7s ease-in;
+
+        &.grabbing { border-color: $indicator; }
     }
     .side:nth-child(1) { transform: translateZ(calc(var(--cube-size) / 2)); }
     .side:nth-child(2) { transform: translateY(-150%) rotateX(-90deg); }

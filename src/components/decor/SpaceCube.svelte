@@ -5,13 +5,14 @@
 
     // --JS
     import MATH from '../../assets/js/utils/math'
+    import ProjectedMaterial from '../../assets/js/utils/ProjectedMaterial'
 
     // --LIB
     import { COLORS } from '$lib/app'
 
     // --THREE
     import WebGL from 'three/addons/capabilities/WebGL'
-    import { AmbientLight, BoxGeometry, DirectionalLight, Mesh, MeshStandardMaterial, PerspectiveCamera, Scene, SpotLight, WebGLRenderer } from 'three'
+    import { AmbientLight, BoxGeometry, DirectionalLight, Mesh, PerspectiveCamera, Scene, SpotLight, TextureLoader, Vector2, WebGLRenderer } from 'three'
 
     // --SVELTE
     import { onMount } from 'svelte'
@@ -114,9 +115,13 @@
 
             spacecube.appendChild(spacecube_RENDERER.domElement)
 
-            spacecube_setCubes()
-            spacecube_setLight()
-            spacecube_animationLoop()
+            new TextureLoader().load('./images/me.png',
+            async (texture) =>
+            {
+                spacecube_setCubesTest(texture)
+                spacecube_setLight()
+                spacecube_animationLoop()
+            })
         }
     }
 
@@ -125,27 +130,36 @@
         const [WIDTH, HEIGHT] = [window.innerWidth, window.innerHeight]
 
         spacecube_SCENE = new Scene()
-        spacecube_CAMERA = new PerspectiveCamera(75, WIDTH / HEIGHT, 0.1, 13)
+        spacecube_CAMERA = new PerspectiveCamera(75, WIDTH / HEIGHT, 0.1, 7)
         spacecube_RENDERER = new WebGLRenderer({ alpha: true, antialias: true })
 
         spacecube_CAMERA.position.z = 5
+        spacecube_CAMERA.lookAt(0, 0, 0)
 
         spacecube_RENDERER.setClearColor(0x000000, 0)
         spacecube_RENDERER.setSize(WIDTH, HEIGHT)
     }
 
-    function spacecube_setCubes()
+    function spacecube_setCubesTest(texture)
     {
         for (let i = 0; i < SPACECUBE_CUBES.length; i += 3)
         {
             const
             SIZE = SPACECUBE_CUBES[i],
-            [GEOMETRY, MATERIAL] = [new BoxGeometry(SIZE, SIZE, SIZE), new MeshStandardMaterial({ color: COLORS.dark, wireframe: false })],
+            GEOMETRY = new BoxGeometry(SIZE, SIZE, SIZE),
+            MATERIAL = new ProjectedMaterial({
+                camera: spacecube_CAMERA,
+                texture,
+                color: COLORS.dark,
+                textureOffset: new Vector2(-0.22, 0)
+            }),
             CUBE = new Mesh(GEOMETRY, MATERIAL)
 
             CUBE.position.set(SPACECUBE_CUBES[i + 1], SPACECUBE_CUBES[i + 2])
             CUBE.rotation.x = -MATH.rad.r45 / 2
             CUBE.rotation.y = MATH.rad.r45
+
+            MATERIAL.project(CUBE)
     
             spacecube_SCENE.add(CUBE)
         }
@@ -156,11 +170,11 @@
         const
         AMBIENTLIGHT = new AmbientLight(COLORS.light),
         DIRECTIONALLIGHT = new DirectionalLight(COLORS.light, 5),
-        SPOTPRIMARYLIGHT = new SpotLight(COLORS.primary, 27, 11, .27, .7, .7)
+        SPOTPRIMARYLIGHT = new SpotLight(COLORS.primary, 7, 10, .3, .7, .7)
 
         DIRECTIONALLIGHT.position.set(2, -2, -.5)
-        SPOTPRIMARYLIGHT.position.set(-7, -2.7, -.7)
-        SPOTPRIMARYLIGHT.target.position.set(0, -1.7, 0)
+        SPOTPRIMARYLIGHT.position.set(-7, -2.7, .7)
+        SPOTPRIMARYLIGHT.target.position.set(0, -2, 0)
 
         spacecube_SCENE.add(AMBIENTLIGHT)
         spacecube_SCENE.add(DIRECTIONALLIGHT)

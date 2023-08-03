@@ -9,9 +9,6 @@
     // --LIB
     import { COLORS } from '$lib/app'
 
-    // --SVELTE
-    import { page } from '$app/stores'
-
     // --COMPONENT-ELEMENT
     import Particles from '../decor/Particles.svelte'
     import SpaceCube from '../decor/SpaceCube.svelte'
@@ -76,11 +73,6 @@ id="home"
             <Logo />
         </Icon>
     </h1>
-
-    <img
-    src="{$page.url.origin}/images/me.png"
-    alt="LE THUAUT MORGAN dessin"
-    >
 
     <div
     class="space"
@@ -158,16 +150,6 @@ lang="scss"
             padding-left: app.$gap-inline;
         }
         strong { margin-left: app.$gap-inline; }
-    }
-
-    img
-    {
-        @include position.placement(absolute, auto, 10%, 0);
-
-        width: 40%;
-        height: auto;
-
-        user-select: none;
     }
 
     .space
