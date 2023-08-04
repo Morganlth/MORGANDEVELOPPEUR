@@ -9,7 +9,7 @@
 
     // --LIB
     import { COLORS } from '$lib/app'
-    import SPACECUBE_CUBES from '../../assets/js/datas/cubes'
+    import SPACECUBE_CUBES from '../../assets/js/datas/cubesDimensionsPositions'
 
     // --CONTEXTS
     import { EVENT, ANIMATION } from '../../App.svelte'
@@ -17,6 +17,8 @@
     // --THREE
     import WebGL from 'three/addons/capabilities/WebGL'
     import { AmbientLight, BoxGeometry, DirectionalLight, Mesh, PerspectiveCamera, Plane, Raycaster, Scene, SpotLight, TextureLoader, Vector2, Vector3, WebGLRenderer } from 'three'
+
+    import { OrbitControls } from 'three/addons/controls/OrbitControls'
 
     // --SVELTE
     import { onMount, onDestroy } from 'svelte'
@@ -29,7 +31,8 @@
     spacecube_SCENE,
     spacecube_CAMERA,
     spacecube_RENDERER,
-    spacecube_MOUSELIGHT
+    spacecube_MOUSELIGHT,
+    spacecube_CONTROLS
 
 // #FUNCTIONS
 
@@ -59,7 +62,7 @@
         const [WIDTH, HEIGHT] = [window.innerWidth, window.innerHeight]
 
         spacecube_SCENE = new Scene()
-        spacecube_CAMERA = new PerspectiveCamera(75, WIDTH / HEIGHT, 0.1, 7)
+        spacecube_CAMERA = new PerspectiveCamera(75, WIDTH / HEIGHT, 0.1, 70) // 7
         spacecube_RENDERER = new WebGLRenderer({ alpha: true, antialias: true })
 
         spacecube_CAMERA.position.z = 5
@@ -67,6 +70,8 @@
 
         spacecube_RENDERER.setClearColor(0x000000, 0)
         spacecube_RENDERER.setSize(WIDTH, HEIGHT)
+
+        spacecube_CONTROLS = new OrbitControls(spacecube_CAMERA, spacecube_RENDERER.domElement)
     }
 
     function spacecube_setEvent() { EVENT.event_add({ mouseMove: spacecube_mouseMove }) }
@@ -128,7 +133,7 @@
     function spacecube_destroyEvent() { EVENT.event_remove({ mouseMove: spacecube_mouseMove }) }
 
     // --EVENT
-    async function spacecube_mouseMove(clientX, clientY)
+    async function spacecube_mouseMove(clientX, clientY) // étudier code
     {
         const
         [X, Y] = [(clientX / window.innerWidth) * 2 - 1, -(clientY / window.innerHeight) * 2 + 1],
@@ -142,7 +147,7 @@
     }
 
     // --ANIMATION
-    async function spacecube_animation() { spacecube_RENDERER.render(spacecube_SCENE, spacecube_CAMERA) }
+    async function spacecube_animation() { spacecube_RENDERER.render(spacecube_SCENE, spacecube_CAMERA), spacecube_CONTROLS.update() }
 
     // --CONTROLS
     function spacecube_start() { ANIMATION.animation_add(spacecube_animation) }

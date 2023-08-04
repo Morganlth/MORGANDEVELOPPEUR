@@ -3,6 +3,7 @@
     // --CUBES-DIMENSIONS-POSITIONS
     export default new Float64Array(
     [
+    // dimension / x - y
         2, 1, -1,
         1.5, -1.75, -2.25,
         1.5, 2.75, -2.75,

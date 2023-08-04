@@ -13,8 +13,14 @@
     $family-title: 'CodeNext';
     $family-content: 'AnonymousPro';
 
+    // --FONT-SIZE -> 0 - 12 - 18 - 24 - 36 - 48 - 60 - 72 - 88
+    $font-sizes: (s0: 0rem, s1: 1.2rem, s2: 1.8rem, s3: 2.4rem, s4: 3.6rem, s5: 4.8rem, s6: 6rem, s7: 7.2rem, s8: 8.8rem);
+
+    // --FONT-WEIGHT
+    $content-font-weight: (w1: 100, w2: 900); // only 2 values
+
     // --FONT-TITLE
-    $h-1: (color: $light, font-family: $family-title, font-size: 8.8rem, line-height: .8);
+    $h-1: (color: $light, font-family: $family-title, font-size: map.get($font-sizes, s8), font-weight: 900, line-height: .8);
 
     $titles: ('h-1': $h-1);
 
@@ -24,10 +30,10 @@
     @mixin h-($number: 1) { @each $key, $value in map.get($titles, 'h-#{$number}') { #{$key}: $value; } }
 
     // --FONT-INTERACT
-    @mixin interact($color: inherit, $font-size: 1.8rem, $line-height: 1)
+    @mixin interact($color: inherit, $font-size: map.get($font-sizes, s2), $line-height: 1, $font-weight: map.get($content-font-weight, w2))
     {
         color: $color;
-        font: 900 $font-size $family-content;
+        font: $font-weight $font-size $family-content;
         line-height: $line-height;
         user-select: none;
     }

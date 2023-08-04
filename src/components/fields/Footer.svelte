@@ -29,7 +29,11 @@
         </ul>
     </nav>
 
-    <p> TOUT DROIT RÉSERVÉ </p>
+    <button
+    type="button"
+    >
+        &#60
+    </button>
 </footer>
 
 <!-- #STYLE -->
@@ -40,9 +44,11 @@ lang="scss"
 /* #USES */
 
 @use 'sass:math';
+@use 'sass:map';
 
 @use '../../assets/scss/_app';
 
+@use '../../assets/scss/styles/_elements';
 @use '../../assets/scss/styles/_position';
 @use '../../assets/scss/styles/_font';
 
@@ -51,7 +57,6 @@ lang="scss"
 footer
 {
     @include position.placement(fixed, auto, 0, 0, auto);
-    @include font.interact($light);
 
     z-index: 1;
 
@@ -74,12 +79,20 @@ footer
 
         a
         {
+            @include font.interact($light);
+    
             @extend %simple-hover;
 
             padding: .5rem 1rem 0;
-            color: inherit;
             text-decoration: none;
         }
+    }
+
+    &>button
+    {
+        @include font.interact($primary, map.get(font.$font-sizes, s4), 1, map.get(font.$content-font-weight, w));
+
+        @extend %button-reset;
     }
 }
 </style>

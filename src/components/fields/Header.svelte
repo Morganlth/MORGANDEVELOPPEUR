@@ -69,11 +69,9 @@ style:transform="translateY({header_TRANSLATEY}%)"
             <Logo />
         </Icon>
             
-        <p>
-            <span>EE</span>
+        <span>EE</span>
 
-            LE THUAUT MORGAN
-        </p>
+        <p>LE THUAUT MORGAN</p>
     </strong>
 
     <span>
@@ -87,6 +85,8 @@ style:transform="translateY({header_TRANSLATEY}%)"
 lang="scss"
 >
 /* #USES */
+
+@use 'sass:map';
 
 @use '../../assets/scss/_app';
 
@@ -118,28 +118,18 @@ header
     &>strong
     {
         display: flex;
+        align-items: flex-end;
 
-        p
-        {
-            @include font.interact($light);
-
-            align-self: flex-end;
-
-            margin-left: 2rem;
-        }
+        p { @include font.interact($light, map.get(font.$font-sizes, s2), 1, map.get(font.$content-font-weight, w1)); }
 
         span
         {
-            margin-right: 1rem;
+            margin-inline: 2rem 1rem;
 
-            color: $primary;
-            font-size: 1.2rem;
+            font-size: map.get(font.$font-sizes, s1);
         }
     }
 
-    &>span
-    {
-        @include font.interact($primary);
-    }
+    span { @include font.interact($primary); }
 }
 </style>

@@ -135,12 +135,12 @@ lang="scss"
         {
             &::before
             {
-                @include position.placement(absolute, 0, auto, auto, 0, true);
+                @include position.placement(absolute, -.7rem, auto, auto, 0, true);
 
                 z-index: -1;
 
-                width: .5rem;
-                height: 100%;
+                width: 2.4rem;
+                height: 2.4rem;
 
                 background-color: $primary;
             }
