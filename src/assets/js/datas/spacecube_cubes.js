@@ -1,6 +1,6 @@
 // #EXPORT
 
-    // --CUBES-DIMENSIONS-POSITIONS
+    // --SPACECUBE-CUBES
     export default new Float64Array(
     [
     // dimension / x - y

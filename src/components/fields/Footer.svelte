@@ -65,7 +65,7 @@ footer
     justify-content: space-between;
     align-items: flex-end;
 
-    width: 60%;
+    width: 57%;
 
     padding: 0 app.$gap-inline app.$gap-block 0;
 
@@ -93,6 +93,10 @@ footer
         @include font.interact($primary, map.get(font.$font-sizes, s4), 1, map.get(font.$content-font-weight, w));
 
         @extend %button-reset;
+
+        padding: 1rem 0 1rem 2rem;
+
+        box-sizing: border-box;
     }
 }
 </style>

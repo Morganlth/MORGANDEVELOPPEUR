@@ -9,14 +9,29 @@
 
     // --LIB
     import { COLORS } from '$lib/app'
-    import SPACECUBE_CUBES from '../../assets/js/datas/cubesDimensionsPositions'
+    import SPACECUBE_CUBES from '../../assets/js/datas/spacecube_cubes'
 
     // --CONTEXTS
     import { EVENT, ANIMATION } from '../../App.svelte'
 
     // --THREE
     import WebGL from 'three/addons/capabilities/WebGL'
-    import { AmbientLight, BoxGeometry, DirectionalLight, Mesh, PerspectiveCamera, Plane, Raycaster, Scene, SpotLight, TextureLoader, Vector2, Vector3, WebGLRenderer } from 'three'
+    import
+    {
+        AmbientLight,
+        BoxGeometry,
+        DirectionalLight,
+        Mesh,
+        PerspectiveCamera,
+        Plane,
+        Raycaster,
+        Scene,
+        SpotLight,
+        TextureLoader,
+        Vector2,
+        Vector3,
+        WebGLRenderer
+    } from 'three'
 
     import { OrbitControls } from 'three/addons/controls/OrbitControls'
 
@@ -112,7 +127,7 @@
         SPOTPRIMARYLIGHT.position.set(-7, -2, .7)
         SPOTPRIMARYLIGHT.target.position.set(0, -2, 0)
 
-        spacecube_MOUSELIGHT = new SpotLight(COLORS.primary, 2, 13, .5, .7, .7)
+        spacecube_MOUSELIGHT = new SpotLight(COLORS.primary, 3, 13, .4, .7, .7)
         spacecube_MOUSELIGHT.position.z = 5
 
         spacecube_SCENE.add(AMBIENTLIGHT)

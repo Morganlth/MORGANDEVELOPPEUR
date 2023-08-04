@@ -5,6 +5,7 @@
 
     // --JS
     import MATH from '../../assets/js/utils/math'
+    import HOME_CUBES from '../../assets/js/datas/home_cubes'
 
     // --LIB
     import { COLORS } from '$lib/app'
@@ -19,28 +20,6 @@
 
     // --COMPONENT-ICON
     import Logo from '../icons/Logo.svelte'
-
-// #CONSTANTE
-
-    // --ELEMENT-SPACE
-    const SPACE_CUBES =
-    [
-        {
-            prop_TRANSLATEX: 700,
-            prop_TRANSLATEY: 550,
-            prop_SIZE: 150
-        },
-        {
-            prop_TRANSLATEX: 1500,
-            prop_TRANSLATEY: 170,
-            prop_SIZE: 120
-        },
-        {
-            prop_TRANSLATEX: 1270,
-            prop_TRANSLATEY: 510,
-            prop_SIZE: 220
-        }
-    ]
 </script>
 
 <!-- #HTML -->
@@ -74,10 +53,8 @@ id="home"
         </Icon>
     </h1>
 
-    <div
-    class="space"
-    >
-        {#each SPACE_CUBES as cube_PROPS}
+    <div>
+        {#each HOME_CUBES as cube_PROPS}
             <Cube
             {...cube_PROPS}
             prop_ROTATE={Math.random() * MATH.PI.x2}
@@ -137,13 +114,16 @@ lang="scss"
             {
                 @include position.placement(absolute, -.7rem, auto, auto, 0, true);
 
-                z-index: -1;
-
                 width: 2.4rem;
                 height: 2.4rem;
 
                 background-color: $primary;
+
+                pointer-events: auto;
+
+                transition: background .4s;
             }
+            &:hover::before { background-color: $indicator; }
     
             @extend %f-a-center;
 
@@ -155,7 +135,7 @@ lang="scss"
         strong { margin-left: app.$gap-inline; }
     }
 
-    .space
+    &>div
     {
         @include position.placement(absolute, 0, 0, 0, 0);
 
