@@ -8,7 +8,6 @@ context="module"
     // --CONTEXTS
     export const APP = a
     export const EVENT = e
-    export const ANIMATION = n
     export const SPRING = s
 
 // #IMPORTS
@@ -16,7 +15,6 @@ context="module"
     // --CONTEXTS
     import a from './assets/js/managers/appManager'
     import e from './assets/js/managers/eventManager'
-    import n from './assets/js/managers/animationManager'
     import s from './assets/js/managers/springManager'
 </script>
 
@@ -24,7 +22,7 @@ context="module"
 // #IMPORTS
 
     // --SVELTE
-    import { onMount } from 'svelte'
+    import { onMount, onDestroy } from 'svelte'
 
     // --COMPONENT-FIELDS
     import Header from './components/fields/Header.svelte'
@@ -56,13 +54,16 @@ context="module"
     function app_setContexts()
     {
         EVENT.event_set()
-        ANIMATION.animation_set()
         SPRING.spring_set()
     }
 
-// #CYCLE
+    // --DESTROY
+    function app_destroy() { EVENT.event_destroy() }
+
+// #CYCLES
 
 onMount(app_set)
+onDestroy(app_destroy)
 </script>
 
 <!-- #HTML -->

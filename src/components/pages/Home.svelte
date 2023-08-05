@@ -4,11 +4,18 @@
 // #IMPORTS
 
     // --JS
-    import MATH from '../../assets/js/utils/math'
     import HOME_CUBES from '../../assets/js/datas/home_cubes'
+    import MATH from '../../assets/js/utils/math'
+    import { wait_throttle } from '../../assets/js/utils/wait'
 
     // --LIB
     import { COLORS } from '$lib/app'
+
+    // --CONTEXT
+    import { EVENT } from '../../App.svelte'
+
+    // --SVELTE
+    import { onMount, onDestroy } from 'svelte'
 
     // --COMPONENT-ELEMENT
     import Particles from '../decor/Particles.svelte'
@@ -20,6 +27,29 @@
 
     // --COMPONENT-ICON
     import Logo from '../icons/Logo.svelte'
+
+// #CONSTANTE
+
+    // --ELEMENT-HOME
+    const HOME_CUBES_ANIMATION = []
+
+// #FUNCTIONS
+
+    // --SET
+    function home_set() { home_setEvent() }
+
+    function home_setEvent() { EVENT.event_add({ animation: home_animation }) }
+
+    // --DESTROY
+    function home_destroy() { EVENT.event_remove({ animation: home_animation }) }
+
+    // --EVENT
+    const home_animation = wait_throttle(() => { for (const CUBE_ANIMATION of HOME_CUBES_ANIMATION) CUBE_ANIMATION() }, 100)
+
+// #CYCLES
+
+onMount(home_set)
+onDestroy(home_destroy)
 </script>
 
 <!-- #HTML -->
@@ -54,9 +84,10 @@ id="home"
     </h1>
 
     <div>
-        {#each HOME_CUBES as cube_PROPS}
+        {#each HOME_CUBES as cube}
             <Cube
-            {...cube_PROPS}
+            {...cube}
+            prop_HOME_ANIMATION={HOME_CUBES_ANIMATION}
             prop_ROTATE={Math.random() * MATH.PI.x2}
             prop_ROTATEY={Math.random() * MATH.PI.x2}
             />

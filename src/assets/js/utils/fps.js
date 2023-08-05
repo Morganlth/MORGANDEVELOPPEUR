@@ -11,18 +11,18 @@
 
         return new Promise(resolve =>
         {
-            ANIMATION.animation_add(async function frame()
+            EVENT.event_add({ animation: async function frame()
             {
                 count++
 
                 if (performance.now() - START >= 500)
-                    ANIMATION.animation_remove(frame),
+                    EVENT.event_remove({ animation: frame }),
                     resolve(count * 2)
-            })
+            }})
         })
     }
 
 // #IMPORT
 
     // --CONTEXT
-    import ANIMATION from '../managers/animationManager'
+    import EVENT from '../managers/eventManager'

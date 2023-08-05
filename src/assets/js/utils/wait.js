@@ -5,13 +5,15 @@
     // --UTILS
     export function wait_debounce(callback, delay)
     {
+        const CONTEXT = this
+
         let timeout
     
-        return function ()
+        return async function ()
         {
             clearTimeout(timeout)
 
-            timeout = setTimeout(callback.bind(this, ...arguments), delay)
+            timeout = setTimeout(callback.bind(CONTEXT, ...arguments), delay)
         }
     }
 
@@ -21,7 +23,7 @@
         last = +new Date(),
         timeout
 
-        return function ()
+        return async function ()
         {
             const NOW = +new Date()
 

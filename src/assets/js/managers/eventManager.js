@@ -13,8 +13,10 @@ class EventManager
         mouseDown: [],
         mouseUp: [],
         resize: [],
-        touchMove: []
+        touchMove: [],
+        animation: []
     }
+    event_ANIMATION
     event_SCROLLFRAME
     event_MOUSEFRAME
     event_TOUCHFRAME
@@ -26,12 +28,32 @@ class EventManager
 
 // #CONSTRUCTOR
 
-constructor () { this.event_GRABBING = writable(false) }
+constructor ()
+{
+    this.event_GRABBING = writable(false)
+
+    this.event_resize = wait_debounce.call(this, this.event_resize, 100)
+}
 
 // #FUNCTIONS
 
     // --SET
-    event_set(main) { this.main = main }
+    event_set(main)
+    {
+        this.main = main
+
+        window.addEventListener('resize', this.event_resize)
+
+        if (!this.event_ANIMATION)
+        {
+            this.event_ANIMATION = this.event_MANAGER.animation
+
+            this.event_animationLoop()
+        }
+    }
+
+    // --DESTROY
+    event_destroy() { try { window.removeEventListener('resize', this.event_resize) } catch {} }
 
     // --EVENTS
     event_scroll({target})
@@ -66,7 +88,7 @@ constructor () { this.event_GRABBING = writable(false) }
 
     event_mouseUp() { this.event_run.call(this.event_MANAGER.mouseUp) }
 
-    event_resize(smallScreen) { this.event_run.call(this.event_MANAGER.resize, smallScreen) }
+    event_resize() { this.event_run.call(this.event_MANAGER.resize) }
 
     event_touchMove(e)
     {
@@ -80,6 +102,14 @@ constructor () { this.event_GRABBING = writable(false) }
 
             this.event_TOUCHFRAME = false
         })
+    }
+
+    // --LOOP
+    event_animationLoop()
+    {
+        for (let i = 0; i < this.event_ANIMATION.length; i++) this.event_ANIMATION[i]()
+
+        requestAnimationFrame(this.event_animationLoop.bind(this))
     }
 
     // --UTILS
@@ -116,6 +146,9 @@ constructor () { this.event_GRABBING = writable(false) }
 }
 
 // #IMPORT
+
+    // --JS
+    import { wait_debounce } from '../utils/wait'
 
     // --SVELTE
     import { writable } from "svelte/store"

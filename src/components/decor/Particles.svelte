@@ -7,15 +7,21 @@
     import { COLORS } from '$lib/app'
 
     // --CONTEXT
-    import { ANIMATION } from '../../App.svelte'
+    import { EVENT } from '../../App.svelte'
 
     // --SVELTE
     import { onMount, onDestroy } from 'svelte'
 
-// #CONSTANTE
+// #CONSTANTES
 
     // --ELEMENT-PARTICLES
-    const PARTICLES_PARTICLES = []
+    const
+    PARTICLES_PARTICLES = [],
+    PARTICLES_EVENTS =
+    {
+        resize: particles_resize,
+        animation: particles_animation
+    }
 
 // #VARIABLES
 
@@ -30,19 +36,26 @@
     // --SET
     function particles_set()
     {
+        particles_setVar()
+        particles_setEvent()
+    }
+
+    function particles_setVar()
+    {
         particles.width = window.innerWidth
         particles.height = window.innerHeight
 
-        particles_CONTEXT = particles.getContext('2d')
-
-        ANIMATION.animation_add(particles_draw)
+        particles_CONTEXT = particles_CONTEXT ?? particles.getContext('2d')
     }
 
-    function particles_setParticles()
+    function particles_setEvent() { EVENT.event_add(PARTICLES_EVENTS) }
+
+    function particles_setParticle()
     {
         particles_COUNT = 0
 
-        PARTICLES_PARTICLES.push({
+        PARTICLES_PARTICLES.push(
+        {
             x: 0,
             y: window.innerHeight,
             vel_X: Math.random() * .5 + .2,
@@ -55,18 +68,10 @@
     }
 
     // --DESTROY
-    function particles_destroy() { ANIMATION.animation_remove(particles_draw) }
+    function particles_destroy() { EVENT.event_remove(PARTICLES_EVENTS) }
 
     // --DRAW
-    async function particles_draw()
-    {
-        particles_clear()
-        particles_drawParticles()
-
-        if (++particles_COUNT > 100) particles_setParticles()
-    }
-
-    function particles_drawParticles()
+    function particles_draw()
     {
         for (const PARTICLE of PARTICLES_PARTICLES)
         {
@@ -81,6 +86,17 @@
 
     // --CLEAR
     function particles_clear() { particles_CONTEXT.clearRect(0, 0, window.innerWidth, window.innerHeight) }
+
+    // --EVENTS
+    async function particles_resize() { particles_setVar() }
+
+    async function particles_animation()
+    {
+        particles_clear()
+        particles_draw()
+
+        if (++particles_COUNT > 100) particles_setParticle()
+    }
 
 // #CYCLES
 

@@ -1,6 +1,6 @@
 // #EXPORT
 
-    // --SPACE-CUBES
+    // --HOME-CUBES
     export default
     [
         {
