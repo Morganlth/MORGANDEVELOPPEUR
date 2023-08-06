@@ -40,7 +40,7 @@
     {
         SPRING.spring_LOCK = lock
         SPRING.spring_HOVER = hover
-        SPRING.spring_SIZE.set(size)
+        SPRING.spring_SIZE = size
     }
 
     // --EVENTS
@@ -54,7 +54,7 @@
 
             icon_springUpdate(true, true, CLIENTRECT.width)
 
-            requestAnimationFrame(() => SPRING.spring_COORDS.set({ x: X, y: Y }))
+            requestAnimationFrame(() => SPRING.spring_COORDS = { x: X, y: Y })
         }
     }
 
@@ -86,7 +86,7 @@ lang="scss"
 >
 /* #USE */
 
-@use '../../assets/scss/styles/_display';
+@use '../../assets/scss/styles/display';
 
 /* #ICON */
 

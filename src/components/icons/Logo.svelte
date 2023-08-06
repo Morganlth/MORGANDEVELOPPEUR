@@ -56,7 +56,7 @@ lang="scss"
 >
 /* #USE */
 
-@use '../../assets/scss/styles/_size';
+@use '../../assets/scss/styles/size';
 
 /* #LOGO */
 

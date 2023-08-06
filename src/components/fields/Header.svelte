@@ -88,10 +88,10 @@ lang="scss"
 
 @use 'sass:map';
 
-@use '../../assets/scss/_app';
+@use '../../assets/scss/app';
 
-@use '../../assets/scss/styles/_position';
-@use '../../assets/scss/styles/_font';
+@use '../../assets/scss/styles/position';
+@use '../../assets/scss/styles/font';
 
 /* #HEADER */
 

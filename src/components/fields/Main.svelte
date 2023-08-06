@@ -6,6 +6,9 @@
     // --COMPONENT-PAGES
     import Home from '../pages/Home.svelte'
 
+    // --COMPONENT-ELEMENT
+    import Console from '../elements/Console.svelte'
+
 // #CONSTANTES
 
     // --ELEMENT-NAV
@@ -71,6 +74,8 @@
             {/each}
         </ul>
     </nav>
+
+   <Console />
 </main>
 
 <!-- #STYLE -->
@@ -80,11 +85,11 @@ lang="scss"
 >
 /* #USES */
 
-@use '../../assets/scss/_app';
+@use '../../assets/scss/app';
 
-@use '../../assets/scss/styles/_position';
-@use '../../assets/scss/styles/_size';
-@use '../../assets/scss/styles/_font';
+@use '../../assets/scss/styles/position';
+@use '../../assets/scss/styles/size';
+@use '../../assets/scss/styles/font';
 
 /* #MAIN */
 
@@ -98,7 +103,7 @@ main
 
     .site-map
     {
-        @include position.placement(fixed, 50vh, 0, 0, app.$gap-inline);
+        @include position.placement(fixed, 50vh, auto, auto, app.$gap-inline);
 
         width: fit-content;
         height: fit-content;

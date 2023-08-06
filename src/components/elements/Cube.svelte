@@ -134,7 +134,7 @@
 
     async function cube_mouseMove(clientX, clientY) { cube_updatePosition(clientX - prop_SIZE, clientY - prop_SIZE) }
 
-    async function cube_mouseUp() { elements_update(false) }
+    async function cube_mouseUp() { if (cube_GRABBING) elements_update(false) }
 
     // --ANIMATION
     export async function cube_animation()
@@ -230,9 +230,9 @@ lang="scss"
 >
 /* #USES */
 
-@use '../../assets/scss/styles/_position';
-@use '../../assets/scss/styles/_display';
-@use '../../assets/scss/styles/_size';
+@use '../../assets/scss/styles/position';
+@use '../../assets/scss/styles/display';
+@use '../../assets/scss/styles/size';
 
 /* #CUBE */
 

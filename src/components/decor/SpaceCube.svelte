@@ -181,7 +181,7 @@
     }
     function spacecube_setDirectionalLight()
     {
-        const DIRECTIONALLIGHT = new DirectionalLight(COLORS.light, 2.5)
+        const DIRECTIONALLIGHT = new DirectionalLight(COLORS.light, 2)
 
         DIRECTIONALLIGHT.position.set(5, -2, 0)
 
@@ -200,7 +200,7 @@
     }
     function spacecube_setMouseLight()
     {
-        spacecube_MOUSELIGHT = new SpotLight(COLORS.primary, 3, 13, .4, .7, .7)
+        spacecube_MOUSELIGHT = new SpotLight(COLORS.primary, 2, 11, .35, 1, .7)
 
         spacecube_MOUSELIGHT.position.z = 5
 
@@ -321,7 +321,7 @@ lang="scss"
 >
 /* #USE */
 
-@use '../../assets/scss/styles/_position';
+@use '../../assets/scss/styles/position';
 
 /* #SPACECUBE */
 

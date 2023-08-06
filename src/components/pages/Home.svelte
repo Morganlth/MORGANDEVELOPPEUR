@@ -105,12 +105,12 @@ lang="scss"
 @use 'sass:map';
 @use 'sass:math';
 
-@use '../../assets/scss/_app';
+@use '../../assets/scss/app';
 
-@use '../../assets/scss/styles/_position';
-@use '../../assets/scss/styles/_display';
-@use '../../assets/scss/styles/_size';
-@use '../../assets/scss/styles/_font';
+@use '../../assets/scss/styles/position';
+@use '../../assets/scss/styles/display';
+@use '../../assets/scss/styles/size';
+@use '../../assets/scss/styles/font';
 
 /* #HOME */
 

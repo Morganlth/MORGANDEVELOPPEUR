@@ -119,8 +119,8 @@ lang="scss"
 >
 /* #USES */
 
-@use '../../assets/scss/styles/_position';
-@use '../../assets/scss/styles/_size';
+@use '../../assets/scss/styles/position';
+@use '../../assets/scss/styles/size';
 
 /* #PARTICLES */
 
