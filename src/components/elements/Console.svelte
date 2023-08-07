@@ -3,6 +3,9 @@
 <script>
 // #IMPORT
 
+    // --JS
+    import AppSuccess from '../../assets/js/class/success'
+
     // --LIB
     import { COLORS } from '$lib/app'
 
@@ -18,9 +21,7 @@
 // #CONSTANTES
 
     // --ELEMENT-CONSOLE
-    const
-    CONSOLE_LINES = [],
-    CONSOLE_HISTORY = ['app']
+    const CONSOLE_HISTORY = ['app']
 
     // --ELEMENT-MIRROR
     const MIRROR_ITEMS = []
@@ -32,7 +33,8 @@
     console,
     console_ON = false,
     console_INPUT,
-    console_CURRENTVALUE,
+    console_CURRENTVALUE = '',
+    console_OUTPUT_LINES = [],
     console_INDEX = 0
 
     // --ELEMENT-MIRROR
@@ -81,20 +83,20 @@
     function console_log(msg)
     {
         const
-        TYPE = msg instanceof Error ? msg instanceof AppSuccess ? 'success' : 'error' : null,
-        MESSAGE = TYPE ? { name: msg.name, message: msg.message.trim() } : msg.trim()
+        [ERROR, SUCCESS] = [msg instanceof Error, msg instanceof AppSuccess],
+        [NAME, MESSAGE] = ERROR || SUCCESS ? [msg.name, msg.message.trim()] : [void 0, msg.trim()]
 
-        CONSOLE_LINES.push({ type: TYPE, msg: MESSAGE })
+        console_OUTPUT_LINES = [...console_OUTPUT_LINES, { error: ERROR, success: SUCCESS, name: NAME, message: MESSAGE }]
     }
 
-    function console_clear() { CONSOLE_LINES.length = 0 }
+    function console_clear() { console_OUTPUT_LINES = [] }
 
     // --EVENTS
     async function console_click()
     {
         console_ON = !console_ON
 
-        if (console_ON) console_focus('')
+        if (console_ON) console_focus(console_CURRENTVALUE)
     }
 
     function console_input()
@@ -197,57 +199,82 @@ bind:this={console}
 on:mouseenter={SPRING.spring_mouseEnter.bind(SPRING)}
 on:mouseleave={SPRING.spring_mouseLeave.bind(SPRING)}
 >
-    <button
-    type="button"
-    on:click={console_click}
-    >
-        <Icon
-        prop_SIZE="1.2rem"
-        prop_COLOR={COLORS.primary}
-        prop_SPRING={false}
-        >
-            <svg
-            class:reverse={console_ON}
-            viewBox="0 0 43 66"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            >
-                <path
-                d="M38 5L5 33L38 61"
-                stroke="var(--icon-color)"
-                stroke-width="9"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                />
-            </svg>
-        </Icon>
-    </button>
-
     <div
-    class="command-line"
+    class="input"
     >
-        <input
-        type="text"
-        maxlength="59"
-        spellcheck="false"
-        bind:this={console_INPUT}
-        bind:value={console_CURRENTVALUE}
-        on:input={console_input}
-        on:keyup|preventDefault={console_keyup}
-        />
+        <button
+        type="button"
+        on:click={console_click}
+        >
+            <Icon
+            prop_SIZE="1.2rem"
+            prop_COLOR={COLORS.primary}
+            prop_SPRING={false}
+            >
+                <svg
+                class:reverse={console_ON}
+                viewBox="0 0 43 66"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                >
+                    <path
+                    d="M38 5L5 33L38 61"
+                    stroke="var(--icon-color)"
+                    stroke-width="9"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    />
+                </svg>
+            </Icon>
+        </button>
 
         <div
-        class="mirror"
-        class:app-available={mirror_APP}
-        class:command-available={mirror_COMMAND}
+        class="line"
         >
-            {#each [0, 1, 2] as i}
-                <pre
-                bind:this={MIRROR_ITEMS[i]}
-                >
-                </pre>
-            {/each}
+            <input
+            type="text"
+            maxlength="59"
+            spellcheck="false"
+            bind:this={console_INPUT}
+            bind:value={console_CURRENTVALUE}
+            on:input={console_input}
+            on:keyup|preventDefault={console_keyup}
+            />
+
+            <div
+            class="mirror"
+            class:app-available={mirror_APP}
+            class:command-available={mirror_COMMAND}
+            >
+                {#each [0, 1, 2] as i}
+                    <pre
+                    bind:this={MIRROR_ITEMS[i]}
+                    >
+                    </pre>
+                {/each}
+            </div>
         </div>
+    </div>
+
+    <div
+    class="output"
+    >
+        {#each console_OUTPUT_LINES as line}
+            <div
+            class="line"
+            >
+                {#if line.name}
+                    <span
+                    class:console-error={line.error}
+                    class:console-success={line.success}
+                    >
+                        {line.name}:
+                    </span>
+                {/if}
+
+                <pre>{line.message}</pre>
+            </div>
+        {/each}
     </div>
 </div>
 
@@ -268,76 +295,135 @@ lang="scss"
 
 /* #VARIABLES */
 
-$size: 7rem;
-$width: 30vw;
+$gap-block: 10rem;
+$line-width: 30vw;
+$line-height: 8rem;
 
 /* #CONSOLE */
 
 .console
 {
-    @include position.placement(fixed, auto, $width * -1, 7rem);
+    @include position.placement(fixed, auto, 0, $gap-block);
 
+    display: flex;
+    flex-direction: column-reverse;
+
+    transform: translateX($line-width);
+
+    overflow: auto;
+
+    width: auto;
+    height: auto;
+    /* max-height: calc(100vh - $gap-block * 2); */
+
+    /* pointer-events: none; */
+
+    transition: transform .3s ease;
+
+    &.on { transform: translateX(0); }
+
+    &>*
+    {
+        width: fit-content;
+        height: fit-content;
+
+        .line
+        {
+            width: $line-width;
+            height: $line-height;
+
+            &>* { @include font.interact(var(--line-color)); }
+        }
+    }
+}
+
+.input
+{
     @extend %f-a-center;
-
-    overflow-y: auto;
-
-    width: fit-content;
-    min-height: $size;
-    max-height: calc(100vh - $size * 2);
-
-    padding-block: .8rem;
 
     background-color: $dark;
 
+    border: solid rgba($light, .1) 1px;
+
     box-sizing: border-box;
 
-    transition: transform .6s ease-in-out;
-
-    &.on { transform: translateX($width * -1); }
+    pointer-events: auto;
 
     &>button
     {
         @extend %button-reset;
         @extend %f-center;
 
-        width: $size;
-        height: 100%;
+        height: $line-height;
 
-        svg
-        {
-            &.reverse
-            {
-                animation: reverse .3s .4s ease-in forwards;
+        padding-inline: 3rem app.$gap-inline;
 
-                @keyframes reverse { 100% { transform: scaleX(-1); } }
-            }
-        }
+        svg.reverse { transform: scaleX(-1); }
     }
 
-    .command-line
+    .line
     {
         position: relative;
-
-        width: $width;
 
         input, .mirror { @extend %any; }
         input
         {
+            --line-color: transparent;
+    
             @include position.placement(absolute, auto, 0, 0, 0);
-            @include font.interact(transparent);
 
             @extend %input-reset;
-
+    
             caret-color: $primary;
         }
         .mirror 
         {
-            @include font.interact($light);
+            #{--line-color}: $light;
 
             @extend %f-a-center;
-
+    
             &.app-available>pre:nth-child(1), &.command-available>pre:nth-child(2) { color: $primary; }
         }
     }
 }
+
+.output
+{
+    @extend %f-column;
+
+    flex-grow: 1;
+
+    overflow: auto;
+
+    min-height: 0;
+    max-height: calc(100vh - ($gap-block * 2 + $line-height));
+
+    /* &::-webkit-scrollbar
+    {
+        width: 10px;
+
+        background-color: $dark;
+
+        pointer-events: auto;
+    }
+    &::-webkit-scrollbar-thumb
+    {
+        background-color: $primary;
+
+        pointer-events: auto;
+    } */
+
+    .line
+    {
+        @extend %f-a-center;
+
+        justify-content: flex-end;
+
+        .console-error { #{--line-color}: $indicator; }
+        .console-success { #{--line-color}: $primary; }
+
+        pre { #{--line-color}: $light; }
+    }
+}
+
 </style>
