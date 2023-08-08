@@ -15,7 +15,8 @@ export default
 
         varying vec3 vSavedNormal;
         varying vec4 vTexCoords;
-        varying vec4 vWorldPosition;`
+        varying vec4 vWorldPosition;
+    `
     ,
     main: /* glsl */`
         #ifdef USE_INSTANCING

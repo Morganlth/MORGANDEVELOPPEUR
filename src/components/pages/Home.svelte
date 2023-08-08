@@ -28,23 +28,38 @@
     // --COMPONENT-ICON
     import Logo from '../icons/Logo.svelte'
 
-// #CONSTANTE
+// #CONSTANTES
 
-    // --ELEMENT-HOME
-    const HOME_CUBES_ANIMATION = []
+    // --ELEMENT-CUBES-WRAPPER
+    const
+    CUBESWRAPPER_RESIZE = [],
+    CUBESWRAPPER_ANIMATION = []
+
+// #VARIABLE
+
+    // --ELEMENT-CUBES-WRAPPER
+    let cubeswrapper_EVENTS
 
 // #FUNCTIONS
 
     // --SET
-    function home_set() { home_setEvent() }
+    function home_set()
+    {
+        cubeswrapper_setVar()
+        cubeswrapper_setEvent()
+    }
 
-    function home_setEvent() { EVENT.event_add({ animation: home_animation }) }
+    function cubeswrapper_setVar() { cubeswrapper_EVENTS = { resize: cubeswrapper_resize, animation: cubeswrapper_animation } }
+
+    function cubeswrapper_setEvent() { EVENT.event_add(cubeswrapper_EVENTS) }
 
     // --DESTROY
-    function home_destroy() { EVENT.event_remove({ animation: home_animation }) }
+    function home_destroy() { EVENT.event_remove(cubeswrapper_EVENTS) }
 
-    // --EVENT
-    const home_animation = wait_throttle(() => { for (const CUBE_ANIMATION of HOME_CUBES_ANIMATION) CUBE_ANIMATION() }, 100)
+    // --EVENTS
+    async function cubeswrapper_resize() { for (const CUBE_RESIZE of CUBESWRAPPER_RESIZE) CUBE_RESIZE() }
+
+    const cubeswrapper_animation = wait_throttle(() => { for (const CUBE_ANIMATION of CUBESWRAPPER_ANIMATION) CUBE_ANIMATION() }, 100)
 
 // #CYCLES
 
@@ -67,13 +82,9 @@ id="home"
     </span>
 
     <h1>
-        <strong>
-            DEVELOPPEUR
-        </strong>
+        <strong>DEVELOPPEUR</strong>
 
-        <span>
-            WEB
-        </span>
+        <span>WEB</span>
 
         <Icon
         prop_COLOR={COLORS.light}
@@ -83,13 +94,16 @@ id="home"
         </Icon>
     </h1>
 
-    <div>
-        {#each HOME_CUBES as cube}
+    <div
+    class="cubes-wrapper"
+    >
+        {#each HOME_CUBES as cube, i}
             <Cube
             {...cube}
-            prop_HOME_ANIMATION={HOME_CUBES_ANIMATION}
+            prop_CUBES_ANIMATION={CUBESWRAPPER_ANIMATION}
             prop_ROTATE={Math.random() * MATH.PI.x2}
             prop_ROTATEY={Math.random() * MATH.PI.x2}
+            bind:cube_resize={CUBESWRAPPER_RESIZE[i]}
             />
         {/each}
     </div>
@@ -103,7 +117,6 @@ lang="scss"
 /* #USES */
 
 @use 'sass:map';
-@use 'sass:math';
 
 @use '../../assets/scss/app';
 
@@ -111,6 +124,7 @@ lang="scss"
 @use '../../assets/scss/styles/display';
 @use '../../assets/scss/styles/size';
 @use '../../assets/scss/styles/font';
+@use '../../assets/scss/styles/media';
 
 /* #HOME */
 
@@ -118,15 +132,20 @@ lang="scss"
 {
     @extend %any;
 
-    padding: app.$gap-inline * 2 0 0 app.$gap-inline;
+    position: relative;
+
+    overflow: hidden;
+
+    padding: calc(app.$gap-inline * 3.3) 0 0 app.$gap-inline;
 
     box-sizing: border-box;
 
-    .lang { @include font.interact; }
+    .lang { @include font.interact($light, map.get(font.$font-sizes, s2), 1, map.get(font.$content-font-weight, w1)); }
 
     h1
     {
-        #{--icon-size}: map.get(font.$h-1, font-size) * .7;
+        #{--title-size}: map.get(font.$font-sizes, s6); 
+        --icon-size: calc(var(--title-size) * .71);
 
         @include font.h-(1);
 
@@ -134,47 +153,58 @@ lang="scss"
 
         z-index: 1;
 
+        width: fit-content;
+        height: fit-content;
+
         margin-top: 3rem;
 
         user-select: none;
         pointer-events: none;
 
-        strong, span
+        strong, span { display: block; }
+        span { padding-bottom: 1rem; }
+
+        @include media.min($ms2) { #{--title-size}: map.get(font.$font-sizes, s7); }
+        @include media.min($ms3, $ms3)
         {
-            &::before
+            #{--title-size}: map.get(font.$font-sizes, s8);
+
+            strong, span
             {
-                @include position.placement(absolute, -.7rem, auto, auto, 0, true);
+                &::before
+                {
+                    @include position.placement(absolute, -.7rem, auto, auto, 0, true);
 
-                width: 2.4rem;
-                height: 2.4rem;
+                    width: 2.4rem;
+                    height: 2.4rem;
 
-                background-color: $primary;
+                    background-color: $primary;
+                }
 
-                pointer-events: auto;
-
-                transition: background .4s;
-            }
-            &:hover::before { background-color: $indicator; }
+                position: relative;
     
-            @extend %f-a-center;
-
-            position: relative;
-
-            margin-bottom: math.div(app.$gap-block, 2);
-            padding-left: app.$gap-inline;
+                padding-left: app.$gap-inline;
+            }
+            strong { margin-left: app.$gap-inline; }
         }
-        strong { margin-left: app.$gap-inline; }
     }
 
-    &>div
+    .cubes-wrapper
     {
+        --cube-ratio: .25;
+
         @include position.placement(absolute, 0, 0, 0, 0);
 
         @extend %any;
 
-        perspective: 1000px;
-
         pointer-events: none;
+
+        @include media.min($ms3, $ms2) { --cube-ratio: .35; }
+        @include media.min($ms4, $ms3) { --cube-ratio: .5; }
+        @include media.min($ms5, $ms4) { --cube-ratio: .75; }
+        @include media.min($ms6, $ms4) { --cube-ratio: 1; }
     }
+
+    @include media.min($ms3) { padding-top: calc(app.$gap-inline * 2); }
 }
 </style>

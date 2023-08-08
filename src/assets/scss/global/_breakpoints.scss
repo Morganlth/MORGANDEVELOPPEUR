@@ -1,0 +1,14 @@
+// #USES
+
+@use 'sass:map';
+
+@use '../styles/media';
+
+// #VARIABLES
+
+$ms1: map.get(media.$screen, s1);
+$ms2: map.get(media.$screen, s2);
+$ms3: map.get(media.$screen, s3);
+$ms4: map.get(media.$screen, s4);
+$ms5: map.get(media.$screen, s5);
+$ms6: map.get(media.$screen, s6);

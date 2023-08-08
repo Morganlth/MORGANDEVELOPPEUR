@@ -2,7 +2,8 @@
 
 @use 'sass:map';
 
-@use '../../../../static/variables' as *;
+@use '../global/breakpoints' as *;
+@use '../global/variables' as *;
 
 @use './position';
 @use './size';
@@ -20,14 +21,14 @@
     $content-font-weight: (w1: 100, w2: 900); // only 2 values
 
     // --FONT-TITLE
-    $h-1: (color: $light, font-family: $family-title, font-size: map.get($font-sizes, s8), font-weight: 900, line-height: .8);
+    $h-1: (color: $light, font-family: $family-title, font-size: var(--title-size), font-weight: 900, line-height: .9);
 
     $titles: ('h-1': $h-1);
 
 // #FONT
 
     // --FONT-TITLE
-    @mixin h-($number: 1) { @each $key, $value in map.get($titles, 'h-#{$number}') { #{$key}: $value; } }
+    @mixin h-($number: 1) { @each $key, $value in map.get($titles, 'h-#{$number}') { #{$key}: $value; } } // set title properties
 
     // --FONT-INTERACT
     @mixin interact($color: inherit, $font-size: map.get($font-sizes, s2), $line-height: 1, $font-weight: map.get($content-font-weight, w2))

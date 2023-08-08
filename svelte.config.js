@@ -5,7 +5,13 @@ import autoprefixer from 'autoprefixer';
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
 	preprocess: preprocess({
-		scss: { prependData: "@use './static/variables.scss' as *;" },
+		scss:
+		{
+			prependData: /* scss */ `
+				@use './src/assets/scss/global/breakpoints' as *;
+				@use './src/assets/scss/global/variables' as *;
+			`
+		},
 		postcss: { plugins: autoprefixer }
 	}),
 	kit: {

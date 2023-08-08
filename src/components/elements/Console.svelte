@@ -4,6 +4,7 @@
 // #IMPORT
 
     // --JS
+    import AppError from '../../assets/js/class/error'
     import AppSuccess from '../../assets/js/class/success'
 
     // --LIB
@@ -30,7 +31,7 @@
 
     // --ELEMENT-CONSOLE
     let
-    console,
+    console_,
     console_ON = false,
     console_INPUT,
     console_CURRENTVALUE = '',
@@ -59,7 +60,7 @@
         console_update(false)
         console_CURRENTVALUE = ''
 
-        tick().then(() => console.scrollTop = console.scrollHeight - console.offsetHeight)
+        tick().then(() => console_.scrollTop = console_.scrollHeight - console_.offsetHeight)
     }
 
     // --RESTORE
@@ -78,6 +79,19 @@
     }
 
     function console_updateCommand(command) { mirror_COMMAND = APP.app_KEYWORDS.includes(command.trim()) }
+
+    function console_updateHistory()
+    {
+        const
+        VALUE = console_CURRENTVALUE.trim(),
+        INDEX = CONSOLE_HISTORY.indexOf(VALUE)
+
+        if (INDEX !== -1) CONSOLE_HISTORY.splice(INDEX, 1)
+    
+        CONSOLE_HISTORY.push(VALUE)
+
+        console_INDEX = CONSOLE_HISTORY.length
+    }
 
     // --COMMANDS
     function console_log(msg)
@@ -166,8 +180,7 @@
         COMMAND = MIRROR_ITEMS[1].innerText.trim(),
         PARAMS = MIRROR_ITEMS[2].innerText.trim().split(',')
 
-        CONSOLE_HISTORY.push(console_CURRENTVALUE)
-        console_INDEX = CONSOLE_HISTORY.length
+        console_updateHistory()
 
         try { APP.app_COMMANDS[COMMAND](...PARAMS), console_reset() } catch (e) { console_error(e, COMMAND) }
     }
@@ -195,7 +208,7 @@ onMount(console_set)
 <div
 class="console"
 class:on={console_ON}
-bind:this={console}
+bind:this={console_}
 on:mouseenter={SPRING.spring_mouseEnter.bind(SPRING)}
 on:mouseleave={SPRING.spring_mouseLeave.bind(SPRING)}
 >
@@ -233,7 +246,7 @@ on:mouseleave={SPRING.spring_mouseLeave.bind(SPRING)}
         >
             <input
             type="text"
-            maxlength="59"
+            maxlength="55"
             spellcheck="false"
             bind:this={console_INPUT}
             bind:value={console_CURRENTVALUE}
@@ -269,7 +282,7 @@ on:mouseleave={SPRING.spring_mouseLeave.bind(SPRING)}
                     class:console-success={line.success}
                     >
                         {line.name}:
-                    </span>
+                    </span> &nbsp;
                 {/if}
 
                 <pre>{line.message}</pre>
@@ -287,6 +300,7 @@ lang="scss"
 
 @use '../../assets/scss/app';
 
+@use '../../assets/scss/styles/utils';
 @use '../../assets/scss/styles/elements';
 @use '../../assets/scss/styles/position';
 @use '../../assets/scss/styles/display';
@@ -295,7 +309,7 @@ lang="scss"
 
 /* #VARIABLES */
 
-$gap-block: 10rem;
+$gap-block: max(9rem, 50px);
 $line-width: 30vw;
 $line-height: 8rem;
 
@@ -310,13 +324,12 @@ $line-height: 8rem;
 
     transform: translateX($line-width);
 
-    overflow: auto;
+    overflow: hidden;
 
-    width: auto;
-    height: auto;
-    /* max-height: calc(100vh - $gap-block * 2); */
+    width: fit-content;
+    height: fit-content;
 
-    /* pointer-events: none; */
+    pointer-events: none;
 
     transition: transform .3s ease;
 
@@ -327,10 +340,13 @@ $line-height: 8rem;
         width: fit-content;
         height: fit-content;
 
+        pointer-events: auto;
+
         .line
         {
-            width: $line-width;
             height: $line-height;
+            min-height: $line-height;
+            max-height: $line-height;
 
             &>* { @include font.interact(var(--line-color)); }
         }
@@ -339,15 +355,13 @@ $line-height: 8rem;
 
 .input
 {
+    @include utils.solid-border($intermediate, 3px, true, false);
+
     @extend %f-a-center;
 
     background-color: $dark;
 
-    border: solid rgba($light, .1) 1px;
-
     box-sizing: border-box;
-
-    pointer-events: auto;
 
     &>button
     {
@@ -365,6 +379,8 @@ $line-height: 8rem;
     {
         position: relative;
 
+        width: $line-width;
+
         input, .mirror { @extend %any; }
         input
         {
@@ -375,6 +391,13 @@ $line-height: 8rem;
             @extend %input-reset;
     
             caret-color: $primary;
+
+            &::selection
+            {
+                background-color: rgba($primary, .5);
+
+                color: transparent;
+            }
         }
         .mirror 
         {
@@ -382,7 +405,8 @@ $line-height: 8rem;
 
             @extend %f-a-center;
     
-            &.app-available>pre:nth-child(1), &.command-available>pre:nth-child(2) { color: $primary; }
+            &.app-available>pre:nth-child(1) { color: $primary; }
+            &.command-available>pre:nth-child(2) { color: $indicator; }
         }
     }
 }
@@ -391,14 +415,20 @@ $line-height: 8rem;
 {
     @extend %f-column;
 
-    flex-grow: 1;
+    align-items: flex-end;
+    align-self: flex-end;
 
     overflow: auto;
 
+    width: fit-content;
     min-height: 0;
     max-height: calc(100vh - ($gap-block * 2 + $line-height));
 
-    /* &::-webkit-scrollbar
+    padding-right: app.$gap-inline;
+
+    box-sizing: border-box;
+
+    &::-webkit-scrollbar
     {
         width: 10px;
 
@@ -411,13 +441,17 @@ $line-height: 8rem;
         background-color: $primary;
 
         pointer-events: auto;
-    } */
+    }
 
     .line
     {
         @extend %f-a-center;
 
         justify-content: flex-end;
+
+        max-width: $line-width;
+
+        pointer-events: none;
 
         .console-error { #{--line-color}: $indicator; }
         .console-success { #{--line-color}: $primary; }

@@ -191,7 +191,6 @@
     {
         const SPOTLIGHT = new SpotLight(COLORS.primary, 70, 10, .3, .7, .7)
 
-        // SPOTPRIMARYLIGHT.position.set(-7, -2, .7)
         SPOTLIGHT.position.set(5, -5, .7)
         SPOTLIGHT.target.position.set(6, 0, 0)
 

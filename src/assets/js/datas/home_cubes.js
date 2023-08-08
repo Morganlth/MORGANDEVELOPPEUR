@@ -4,18 +4,18 @@
     export default
     [
         {
-            prop_TRANSLATEX: 1600,
-            prop_TRANSLATEY: 120,
-            prop_SIZE: 120
+            prop_X: .83, //1600 120
+            prop_Y: .11,
+            prop_SIZE: 130
         },
         {
-            prop_TRANSLATEX: 750,
-            prop_TRANSLATEY: 540,
-            prop_SIZE: 140
+            prop_X: .38, //750 540
+            prop_Y: .58,
+            prop_SIZE: 150
         },
         {
-            prop_TRANSLATEX: 1500,
-            prop_TRANSLATEY: 450,
-            prop_SIZE: 190
+            prop_X: .77, //1500 430
+            prop_Y: .47,
+            prop_SIZE: 180
         }
     ]

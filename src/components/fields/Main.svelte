@@ -3,68 +3,49 @@
 <script>
 // #IMPORTS
 
+    // --JS
+    import MAIN_LINKS from '../../assets/js/datas/main_links'
+
     // --COMPONENT-PAGES
     import Home from '../pages/Home.svelte'
 
     // --COMPONENT-ELEMENT
     import Console from '../elements/Console.svelte'
 
-// #CONSTANTES
-
-    // --ELEMENT-NAV
-    const SITEMAP_LINKS =
-    [
-        {
-            on: true,
-            content: 'ACCUEIL',
-            attributes: { href: '#home', alt: 'Accueil' }
-        },
-        {
-            on: false,
-            content: 'PRÉSENTATION',
-            attributes: { href: '#presentation', alt: 'Ma présentation' }
-        },
-        {
-            on: false,
-            content: 'COMPÉTENCES',
-            attributes: { href: '#skills', alt: 'Mes compétences' }
-        },
-        {
-            on: false,
-            content: 'PROJETS',
-            attributes: { href: '#projects', alt: 'Mes projets' }
-        }
-    ]
-
 // #FUNCTION
 
     // --EVENT
     function sitemap_click()
     {
-        const LINK = SITEMAP_LINKS[this]
+        const LINK = MAIN_LINKS[this]
 
         if (LINK.on) return
 
-        try { SITEMAP_LINKS.find(link => link.on).on = false } catch { /* recuperer le chemin dans l'url pour définir le lien sélectionné */ }
+        try { MAIN_LINKS.find(link => link.on).on = false } catch { /* recuperer le chemin dans l'url pour définir le lien sélectionné */ }
 
-        SITEMAP_LINKS[this] = { ...LINK, on: true }
+        MAIN_LINKS[this] = { ...LINK, on: true }
     }
 </script>
 
 <!-- #HTML -->
 
 <main>
-    <Home />
+    <div
+    class="pages-wrapper"
+    >
+        <Home />
+    </div>
 
     <nav
-    class="site-map"
+    class="pages-link"
     >
         <ul>
             <!-- svelte-ignore a11y-no-static-element-interactions a11y-missing-attribute -->
-            {#each SITEMAP_LINKS as link, id}
+            {#each MAIN_LINKS as link, id}
                 <li>
                     <a
                     class:selected={link.on}
+                    aria-label={link.label}
                     {...link.attributes}
                     on:click|preventDefault={sitemap_click.bind(id)}
                     >
@@ -90,20 +71,25 @@ lang="scss"
 @use '../../assets/scss/styles/position';
 @use '../../assets/scss/styles/size';
 @use '../../assets/scss/styles/font';
+@use '../../assets/scss/styles/media';
 
 /* #MAIN */
 
 main
 {
-    @extend %any;
+    &, .pages-wrapper { @extend %any; }
+
+    position: relative;
 
     overflow: hidden;
 
     background-color: $dark;
 
-    .site-map
+    .pages-link
     {
-        @include position.placement(fixed, 50vh, auto, auto, app.$gap-inline);
+        @include position.placement(fixed, 50%, app.$gap-inline);
+
+        transform: translateY(-50%);
 
         width: fit-content;
         height: fit-content;
@@ -128,6 +114,16 @@ main
 
             text-decoration: none;
         }
+
+        @include media.min(false, $ms3)
+        {
+            top: 50vh;
+            right: auto;
+            left: app.$gap-inline;
+
+            transform: translateY(0);
+        }
+        @include media.min(false, $ms4) { top: 56vh; }
     }
 }
 </style>

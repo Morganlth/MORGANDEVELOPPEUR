@@ -63,6 +63,7 @@ style:transform="translateY({header_TRANSLATEY}%)"
     data-sveltekit-reload
     >
         <Icon
+        prop_SIZE="2.5rem"
         prop_COLOR={COLORS.light}
         prop_LINK={{ href: $page.url.origin, alt: 'home' }}
         >
@@ -97,14 +98,13 @@ lang="scss"
 
 header
 {
-    --icon-size: 25px;
-
     @include position.placement(fixed, 0, auto, auto, 0);
 
     z-index: 1;
 
     display: flex;
     justify-content: space-between;
+    align-items: flex-end;
 
     width: 100%;
     height: fit-content;
@@ -124,7 +124,7 @@ header
 
         span
         {
-            margin-inline: 2rem 1rem;
+            margin-inline: app.$gap-block 1rem;
 
             font-size: map.get(font.$font-sizes, s1);
         }

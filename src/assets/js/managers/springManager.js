@@ -33,7 +33,7 @@ class SpringManager
         if (this.#spring_ON === on) return
         
         on
-        ? (this.spring_setEvent(), APP.app_updateMode(false))
+        ? (this.spring_setEvent(), APP.app_updateEco(false))
         : (this.spring_destroy(), this.spring_clear())
 
         this.spring_ON = on

@@ -1,0 +1,25 @@
+// #USE
+
+@use 'sass:map';
+
+// #UTILS
+
+    // --BORDER
+    @mixin solid-border($color, $size, $top: true, $right: true, $bottom: true, $left: true, $radius: false)
+    {
+        $border: solid $color $size;
+        $positions: top, right, bottom, left;
+        $positions-status: (top: $top, right: $right, bottom: $bottom, left: $left);
+
+        @each $position in $positions { @if map.get($positions-status, $position) { border-#{$position}: $border; } }
+
+        @if $radius { border-radius: $radius; }
+    }
+
+    @mixin border-radius($value, $top-left: true, $top-right: true, $bottom-right: true, $bottom-left: true)
+    {
+        $angles: 'top-left', 'top-right', 'bottom-right', 'bottom-left';
+        $angles-status: ('top-left': $top-left, 'top-right': $top-right, 'bottom-right': $bottom-right, 'bottom-left': $bottom-left);
+
+        @each $angle in $angles { @if map.get($angles-status, $angle) { border-#{$angle}-radius: $value; } }
+    }

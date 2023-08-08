@@ -12,7 +12,8 @@ export default
         varying vec4 vTexCoords;
         varying vec4 vWorldPosition;
 
-        float mapRange(float value, float min1, float max1, float min2, float max2) { return min2 + (value - min1) * (max2 - min2) / (max1 - min1); }`
+        float mapRange(float value, float min1, float max1, float min2, float max2) { return min2 + (value - min1) * (max2 - min2) / (max1 - min1); }
+    `
     ,
     'vec4 diffuseColor = vec4( diffuse, opacity );': /* glsl */`
         // clamp the w to make sure we don't project behind
@@ -47,5 +48,6 @@ export default
 
             // https://learnopengl.com/Advanced-OpenGL/Blending
             diffuseColor = textureColor * textureColor.a + diffuseColor * (1.0 - textureColor.a);
-        }`
+        }
+    `
 }

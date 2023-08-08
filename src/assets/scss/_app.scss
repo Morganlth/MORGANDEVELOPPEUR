@@ -1,7 +1,7 @@
 // #VARIABLES
 
     // --GAP
-    $gap-block: 2rem;
-    $gap-inline: 5rem;
+    $gap-block: max(2rem, 20px);
+    $gap-inline: max(5rem, 30px);
 
 // #APP

@@ -1,49 +1,17 @@
-// #USE
-
-@use 'sass:map';
-@use 'sass:list';
-
 // #VARIABLE
 
-$media-screen-width: 320px, 375px, 425px, 768px, 1024px, 1440px;
+$screen: (s1: 320px, s2: 375px, s3: 425px, s4: 768px, s5: 1024px, s6: 1440px);
 
-// #MEDIA
+// #MIXIN
 
-@mixin media-min($width: false, $height: false, $or: false)
-{
-    @if $width and $height
+    // --MEDIA
+    @mixin min($width: false, $height: false, $or: false)
     {
-        @if $or { @media screen and (min-width: $width), screen and (min-height: $height) { @content; }  }
-        @else { @media screen and (min-width: $width) and (min-height: $height) { @content; }  }
-    }
-    @else if $width { @media screen and (min-width: $width) { @content; } }
-    @else { @media screen and (min-height: $height) { @content; } }
-}
-
-@mixin media-min-max($width, $max-height, $or: false)
-{
-    @if $or { @media screen and (min-width: $width), screen and (max-height: $max-height) { @content; } }
-    @else { @media screen and (min-width: $width) and (max-height: $max-height) { @content; } }
-}
-
-@mixin media-min-map($property, $map, $height: false)
-{
-    @each $width, $value in $map
-    {
-        @if list.index($media-screen-width, $width)
+        @if $width and $height
         {
-            @include media-min($width, $height) { #{$property}: $value; }
+            @if $or { @media screen and (min-width: $width), screen and (min-height: $height) { @content; }  }
+            @else { @media screen and (min-width: $width) and (min-height: $height) { @content; }  }
         }
+        @else if $width { @media screen and (min-width: $width) { @content; } }
+        @else { @media screen and (min-height: $height) { @content; } }
     }
-}
-
-@mixin media-max($width: false, $height: false, $or: false)
-{
-    @if $width and $height
-    {
-        @if $or { @media screen and (max-width: $width), screen and (max-height: $height) { @content; } }
-        @else { @media screen and (max-width: $width) and (max-height: $height) { @content; } }
-    }
-    @else if $width { @media screen and (max-width: $width) { @content; } }
-    @else { @media screen and (max-height: $height) { @content; } }
-}

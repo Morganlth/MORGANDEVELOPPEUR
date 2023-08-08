@@ -5,9 +5,9 @@
 
     // --PROPS
     export let
-    prop_HOME_ANIMATION = [],
-    prop_TRANSLATEX,
-    prop_TRANSLATEY,
+    prop_CUBES_ANIMATION = [],
+    prop_X,
+    prop_Y,
     prop_ROTATE,
     prop_ROTATEY,
     prop_SIZE,
@@ -46,6 +46,9 @@
     // --ELEMENT-GRAVITY-AREA
     let
     gravityarea,
+    gravityarea_TRANSLATEX,
+    gravityarea_TRANSLATEY,
+    gravityarea_RADIUS,
     gravityarea_LAST = +new Date(),
     gravityarea_TIMEOUT
 
@@ -57,14 +60,21 @@
     cube_FORCEX = 0,
     cube_FORCEY = 0,
     cube_GRABBING = false
-
 // #FUNCTIONS
 
     // --SET
     function cube_set()
     {
+        gravityarea_setVar()
         cube_setEvent()
         cube_start()
+    }
+
+    function gravityarea_setVar()
+    {
+        gravityarea_TRANSLATEX = prop_X * window.innerWidth
+        gravityarea_TRANSLATEY = prop_Y * window.innerHeight
+        gravityarea_RADIUS = gravityarea.offsetWidth / 2
     }
 
     function cube_setEvent() { EVENT.event_add(CUBE_EVENTS) }
@@ -90,11 +100,11 @@
     {
         if (cube_GRABBING)
         {
-            prop_ROTATE += (x - prop_TRANSLATEX) * .005
-            prop_ROTATEY += (y - prop_TRANSLATEY) * .005
+            prop_ROTATE += (x - gravityarea_TRANSLATEX) * .005
+            prop_ROTATEY += (y - gravityarea_TRANSLATEY) * .005
 
-            prop_TRANSLATEX = x
-            prop_TRANSLATEY = y
+            gravityarea_TRANSLATEX = x
+            gravityarea_TRANSLATEY = y
         }
     }, 50)
 
@@ -132,12 +142,14 @@
 
     async function cube_mouseDown() { elements_update(true) }
 
-    async function cube_mouseMove(clientX, clientY) { cube_updatePosition(clientX - prop_SIZE, clientY - prop_SIZE) }
+    async function cube_mouseMove(clientX, clientY) { cube_updatePosition(clientX - gravityarea_RADIUS, clientY - gravityarea_RADIUS) }
 
     async function cube_mouseUp() { if (cube_GRABBING) elements_update(false) }
 
+    export async function cube_resize() { gravityarea_setVar() }
+
     // --ANIMATION
-    export async function cube_animation()
+    async function cube_animation()
     {
         cube_FORCEY = 10 * (Math.sin((cube_FLOATY - .5) * Math.PI) + 1) - 10
 
@@ -162,16 +174,16 @@
     // --CONTROLS
     function cube_start()
     {
-        const INDEX = prop_HOME_ANIMATION.indexOf(cube_animation)
+        const INDEX = prop_CUBES_ANIMATION.indexOf(cube_animation)
 
-        if (INDEX === -1) prop_HOME_ANIMATION.push(cube_animation)
+        if (INDEX === -1) prop_CUBES_ANIMATION.push(cube_animation)
     }
 
     function cube_stop()
     {
-        const INDEX = prop_HOME_ANIMATION.indexOf(cube_animation)
+        const INDEX = prop_CUBES_ANIMATION.indexOf(cube_animation)
 
-        if (INDEX !== -1) prop_HOME_ANIMATION.splice(INDEX, 1)
+        if (INDEX !== -1) prop_CUBES_ANIMATION.splice(INDEX, 1)
     }
 
 // #CYCLES
@@ -184,8 +196,8 @@ onDestroy(cube_destroy)
 
 <button
 class="gravity-area"
-style:--cube-size="{prop_SIZE}px"
-style:transform="translate({prop_TRANSLATEX}px, {prop_TRANSLATEY}px)"
+style:--default-size="{prop_SIZE}px"
+style:transform="translate({gravityarea_TRANSLATEX ?? 0}px, {gravityarea_TRANSLATEY ?? 0}px)"
 bind:this={gravityarea}
 on:mouseenter={gravityarea_mouseEnter}
 on:mousemove={gravityarea_mouseMove}
@@ -238,14 +250,15 @@ lang="scss"
 
 .gravity-area
 {
+    --cube-size: calc(var(--default-size) * var(--cube-ratio));
+    --gravity-area-size: calc(var(--cube-size) * 2);
+
     @extend %f-center;
 
     position: absolute;
 
-    transform-style: preserve-3d;
-
-    width: calc(var(--cube-size) * 2);
-    height: calc(var(--cube-size) * 2);
+    width: var(--gravity-area-size);
+    height: var(--gravity-area-size);
 
     background-color: transparent;
 
@@ -257,23 +270,27 @@ lang="scss"
 
     transition: transform .3s;
 
-    &>div { transition: transform .5s; }
+    &>div
+    {
+        transition: transform .5s;
+
+        width: var(--cube-size);
+        height: var(--cube-size);
+    }
 }
 
 .cube
 {
+    &, .side { @extend %any; }
+
     transform-style: preserve-3d;
     transform-origin: center;
-
-    width: var(--cube-size);
-    height: var(--cube-size);
 
     transition: transform .6s;
 
     .side
     {
         @extend %f-center;
-        @extend %any;
 
         background-color: $dark;
 

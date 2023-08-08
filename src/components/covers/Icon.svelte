@@ -6,7 +6,7 @@
     // --PROPS
     export let
     prop_SIZE = 'var(--icon-size, auto)',
-    prop_COLOR = '#FFF',
+    prop_COLOR = null,
     prop_LINK = null,
     prop_SPRING = true
 
