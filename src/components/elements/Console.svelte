@@ -306,11 +306,13 @@ lang="scss"
 @use '../../assets/scss/styles/display';
 @use '../../assets/scss/styles/size';
 @use '../../assets/scss/styles/font';
+@use '../../assets/scss/styles/media';
 
 /* #VARIABLES */
 
 $gap-block: max(12rem, 50px);
-$line-width: 30vw;
+$btn-width: 10rem;
+$line-width: 35vw;
 $line-height: 8rem;
 
 /* #CONSOLE */
@@ -322,11 +324,11 @@ $line-height: 8rem;
     display: flex;
     flex-direction: column-reverse;
 
-    transform: translateX($line-width);
+    transform: translateX(calc(100% - $btn-width));
 
     overflow: hidden;
 
-    width: fit-content;
+    width: 100%;
     height: fit-content;
 
     pointer-events: none;
@@ -343,7 +345,6 @@ $line-height: 8rem;
 
     &>*
     {
-        width: fit-content;
         height: fit-content;
 
         pointer-events: auto;
@@ -365,6 +366,8 @@ $line-height: 8rem;
 
     @extend %f-a-center;
 
+    width: 100%;
+
     background-color: $dark;
 
     box-sizing: border-box;
@@ -376,9 +379,14 @@ $line-height: 8rem;
         @extend %button-reset;
         @extend %f-center;
 
+        flex-shrink: 0;
+
+        width: $btn-width;
         height: $line-height;
 
-        padding-inline: 3rem app.$gap-inline;
+        padding-right: 1rem;
+
+        box-sizing: border-box;
 
         svg.reverse { transform: scaleX(-1); }
     }
@@ -387,7 +395,7 @@ $line-height: 8rem;
     {
         position: relative;
 
-        width: $line-width;
+        width: calc(100% - $btn-width);
 
         input, .mirror { @extend %any; }
         input
@@ -429,6 +437,7 @@ $line-height: 8rem;
     overflow: auto;
 
     width: fit-content;
+    max-width: 100%;
     min-height: 0;
     max-height: calc(100vh - ($gap-block * 2 + $line-height));
 
@@ -457,8 +466,6 @@ $line-height: 8rem;
 
         justify-content: flex-end;
 
-        max-width: $line-width;
-
         pointer-events: none;
 
         .console-error { #{--line-color}: $indicator; }
@@ -468,4 +475,10 @@ $line-height: 8rem;
     }
 }
 
+@include media.min($ms3)
+{
+    .console { width: fit-content; }
+    .input { width: $line-width; }
+    .output { max-width: $line-width; }
+}
 </style>

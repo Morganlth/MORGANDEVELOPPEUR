@@ -1,6 +1,6 @@
 // #EXPORT
 
-    // --MAIN-LINKS
+    // --HOME-PAGE-LINKS
     export default
     [
         {

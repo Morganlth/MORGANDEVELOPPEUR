@@ -389,5 +389,7 @@ lang="scss"
     backdrop-filter: blur(3px);
 
     mask: radial-gradient(circle at 68% 50%, transparent 30%, $dark 100%);
+
+    pointer-events: none;
 }
 </style>
