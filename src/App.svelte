@@ -48,13 +48,13 @@ context="module"
         app_setCommands()
 
         APP.app_restore()
+        APP.app_setFormat()
 
         app_OPACITY = 1
     }
 
     function app_setContexts()
     {
-        APP.app_set()
         EVENT.event_set()
         SPRING.spring_set()
     }

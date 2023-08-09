@@ -19,13 +19,33 @@ class SpringManager
 
     spring_TIMEOUT = null
 
+// #CONSTRUCTOR
+
+constructor ()
+{
+    this.spring_responsive = this.spring_responsive.bind(this)
+    this.spring_command = this.spring_command.bind(this)
+}
+
     // --SET
-    spring_set() { APP.app_add('spring', this.spring_command.bind(this), true) }
+    spring_set()
+    {
+        APP.app_addResponsive(this.spring_responsive)
+        APP.app_add('spring', this.spring_command, true)
+    }
 
     spring_setEvent() { EVENT.event_add(this.#spring_EVENTS) }
 
     // --DESTROY
-    spring_destroy() { EVENT.event_remove(this.#spring_EVENTS) }
+    spring_destroy()
+    {
+        this.spring_destroyResponsive()
+        this.spring_destroyEvent()
+    }
+
+    spring_destroyResponsive() { APP.app_removeResponsive(this.spring_responsive) }
+
+    spring_destroyEvent() { EVENT.event_remove(this.#spring_EVENTS) }
 
     // --UPDATES
     spring_update(on)
@@ -51,6 +71,9 @@ class SpringManager
 
     // --CLEAR
     spring_clear() { clearTimeout(this.spring_TIMEOUT) }
+
+    // --RESPONSIVE
+    async spring_responsive(mobile) { this.spring_update(!mobile) }
 
     // --COMMAND
     spring_command(on)

@@ -309,7 +309,7 @@ lang="scss"
 
 /* #VARIABLES */
 
-$gap-block: max(9rem, 50px);
+$gap-block: max(12rem, 50px);
 $line-width: 30vw;
 $line-height: 8rem;
 
@@ -333,7 +333,13 @@ $line-height: 8rem;
 
     transition: transform .3s ease;
 
-    &.on { transform: translateX(0); }
+    &.on
+    {
+        transform: translateX(0);
+
+        .input { border-color: rgba($light, .3); }
+    }
+
 
     &>*
     {
@@ -355,13 +361,15 @@ $line-height: 8rem;
 
 .input
 {
-    @include utils.solid-border($intermediate, 3px, true, false);
+    @include utils.solid-border($intermediate, 7px, true, false);
 
     @extend %f-a-center;
 
     background-color: $dark;
 
     box-sizing: border-box;
+
+    transition: border-color .5s;
 
     &>button
     {

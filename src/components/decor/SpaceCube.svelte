@@ -6,16 +6,18 @@
 // #IMPORTS
 
     // --JS
-    import MATH from '../../assets/js/utils/math'
     import SHADER_VERTEX from '../../assets/js/glsl/vertex'
     import SHADER_FRAGMENT from '../../assets/js/glsl/fragment'
+    import MATH from '../../assets/js/utils/math'
+    import { animation_floating } from '../../assets/js/utils/animation'
+    import { wait_throttle } from '../../assets/js/utils/wait'
 
     // --LIB
     import { COLORS } from '$lib/app'
-    import SPACECUBE_CUBES from '../../assets/js/datas/spacecube_cubes'
+    import { SPACECUBE_FIXED_CUBES, SPACECUBE_FLOATING_CUBES } from '../../assets/js/datas/spacecube_cubes'
 
-    // --CONTEXT
-    import { EVENT } from '../../App.svelte'
+    // --CONTEXTS
+    import { APP, EVENT } from '../../App.svelte'
 
     // --THREE
     import WebGL from 'three/addons/capabilities/WebGL'
@@ -50,7 +52,6 @@
     SPACECUBE_TEXTUREOFFSET = new Vector2(-0.22, 0),
     SPACECUBE_EVENTS =
     {
-        mouseMove: spacecube_mouseMove,
         resize: spacecube_resize,
         animation: spacecube_animation
     }
@@ -65,6 +66,7 @@
     spacecube_RENDERER,
     spacecube_MOUSELIGHT,
     spacecube_TEXTURE,
+    spacecube_ANIMATIONS = [],
     spacecube_CONTROLS
 
     // --SHADERS
@@ -100,7 +102,9 @@
     {
         spacecube_SCENE = new Scene()
         spacecube_CAMERA = new PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 7)
-        spacecube_RENDERER = new WebGLRenderer({ alpha: true, antialias: true, canvas: spacecube })
+        spacecube_RENDERER = new WebGLRenderer({ alpha: true, antialias: true })
+
+        spacecube.appendChild(spacecube_RENDERER.domElement)
 
         // spacecube_CONTROLS = new OrbitControls(spacecube_CAMERA, spacecube_RENDERER.domElement)
     }
@@ -121,49 +125,18 @@
 
     function spacecube_setScene()
     {
+        spacecube_updateCameraMatrices()
+        spacecube_setLight()
+        spacecube_setResponsive()
+
         new TextureLoader().load('./images/me.png', async (texture) =>
         {
             spacecube_TEXTURE = texture
 
-            spacecube_updateCameraMatrices()
             shader_setUniforms()
             spacecube_setCubes()
-            spacecube_setLight()
             spacecube_setEvent()
         })
-    }
-
-    function spacecube_setCubes()
-    {
-        for (let i = 0; i < SPACECUBE_CUBES.length; i += 3)
-        {
-            const
-            SIZE = SPACECUBE_CUBES[i],
-            GEOMETRY = new BoxGeometry(SIZE, SIZE, SIZE),
-            MATERIAL = new MeshStandardMaterial({ color: COLORS.dark }),
-            CUBE = new Mesh(GEOMETRY, MATERIAL)
-
-            MATERIAL.onBeforeCompile = shader_set.bind(CUBE)
-
-            CUBE.position.set(SPACECUBE_CUBES[i + 1], SPACECUBE_CUBES[i + 2])
-            CUBE.rotation.x = -MATH.rad.r45 / 2
-            CUBE.rotation.y = MATH.rad.r45
-
-            CUBE.updateWorldMatrix(true, false)
-    
-            spacecube_SCENE.add(CUBE)
-        }
-    }
-    function shader_set(shader)
-    {
-        shader.uniforms =
-        {
-            ...shader_UNIFORMS,
-            ...shader.uniforms,
-            savedModelMatrix: { value: this.matrixWorld }
-        }
-        shader.vertexShader = spacecube_monkeyPatch(shader.vertexShader, SHADER_VERTEX)
-        shader.fragmentShader = spacecube_monkeyPatch(shader.fragmentShader, SHADER_FRAGMENT)
     }
 
     function spacecube_setLight()
@@ -171,7 +144,6 @@
         spacecube_setAmbientLight()
         spacecube_setDirectionalLight()
         spacecube_setSpotLight()
-        spacecube_setMouseLight()
     }
     function spacecube_setAmbientLight()
     {
@@ -181,9 +153,9 @@
     }
     function spacecube_setDirectionalLight()
     {
-        const DIRECTIONALLIGHT = new DirectionalLight(COLORS.light, 2)
+        const DIRECTIONALLIGHT = new DirectionalLight(COLORS.light, 1.5)
 
-        DIRECTIONALLIGHT.position.set(5, -2, 0)
+        DIRECTIONALLIGHT.position.set(5, -3, 0)
 
         spacecube_SCENE.add(DIRECTIONALLIGHT)
     }
@@ -199,7 +171,7 @@
     }
     function spacecube_setMouseLight()
     {
-        spacecube_MOUSELIGHT = new SpotLight(COLORS.primary, 2, 11, .35, 1, .7)
+        spacecube_MOUSELIGHT = new SpotLight(COLORS.light, 1.5, 11, .6, 1, .7)
 
         spacecube_MOUSELIGHT.position.z = 5
 
@@ -207,7 +179,41 @@
         spacecube_SCENE.add(spacecube_MOUSELIGHT.target)
     }
 
+    function spacecube_setCubes()
+    {
+        spacecube_buildCubes(SPACECUBE_FIXED_CUBES)
+        spacecube_buildCubes(SPACECUBE_FLOATING_CUBES, true)
+        
+        spacecube_ANIMATIONS = wait_throttle(
+        (() =>
+        {
+            const ANIMATIONS = spacecube_ANIMATIONS
+
+            return () => { for (const ANIMATION of ANIMATIONS) ANIMATION() }
+        })(), 100)
+    }
+    function spacecube_setCubeAnimation(cube)
+    {
+        const ANIMATION = animation_floating().animation
+
+        return async () => cube.position.y += ANIMATION() * 0.001
+    }
+
+    function spacecube_setResponsive() { APP.app_addResponsive(spacecube_responsive) }
+
     function spacecube_setEvent() { EVENT.event_add(SPACECUBE_EVENTS) }
+
+    function shader_set(shader)
+    {
+        shader.uniforms =
+        {
+            ...shader_UNIFORMS,
+            ...shader.uniforms,
+            savedModelMatrix: { value: new Matrix4().copy(this.matrixWorld) }
+        }
+        shader.vertexShader = spacecube_monkeyPatch(shader.vertexShader, SHADER_VERTEX)
+        shader.fragmentShader = spacecube_monkeyPatch(shader.fragmentShader, SHADER_FRAGMENT)
+    }
 
     function shader_setUniforms()
     {
@@ -223,7 +229,15 @@
     }
 
     // --DESTROY
-    function spacecube_destroy() { EVENT.event_remove(SPACECUBE_EVENTS) }
+    function spacecube_destroy()
+    {
+        spacecube_destroyResponsive()
+        spacecube_destroyEvent()
+    }
+
+    function spacecube_destroyResponsive() { APP.app_removeResponsive(spacecube_responsive) }
+
+    function spacecube_destroyEvent() { EVENT.event_remove({ ...SPACECUBE_EVENTS, mouseMove: spacecube_mouseMove }) }
 
     // --UPDATES
     function spacecube_updateCameraMatrices()
@@ -241,6 +255,15 @@
 
         shader_UNIFORMS.widthScaled.value = TEXTURE_WIDTHSCALED
         shader_UNIFORMS.heightScaled.value = TEXTURE_HEIGHTSCALED
+    }
+
+    // --RESPONSIVE
+    async function spacecube_responsive(mobile)
+    {
+        EVENT['event_' + (mobile ? 'remove' : 'add')]({ mouseMove: spacecube_mouseMove })
+
+        if (!mobile) spacecube_setMouseLight()
+        else if (spacecube_MOUSELIGHT) spacecube_SCENE.remove(spacecube_MOUSELIGHT)
     }
 
     // --EVENTS
@@ -269,12 +292,38 @@
 
     async function spacecube_animation()
     {
+        spacecube_ANIMATIONS()
+
         spacecube_RENDERER.render(spacecube_SCENE, spacecube_CAMERA)
         
         // spacecube_CONTROLS.update()
     }
 
     // --UTILS
+    function spacecube_buildCubes(cubes, float = false)
+    {
+        for (let i = 0; i < cubes.length; i += 3)
+        {
+            const
+            SIZE = cubes[i],
+            GEOMETRY = new BoxGeometry(SIZE, SIZE, SIZE),
+            MATERIAL = new MeshStandardMaterial({ color: COLORS.dark, wireframe: false }),
+            CUBE = new Mesh(GEOMETRY, MATERIAL)
+
+            MATERIAL.onBeforeCompile = shader_set.bind(CUBE)
+
+            CUBE.position.set(cubes[i + 1], cubes[i + 2])
+            CUBE.rotation.x = -MATH.rad.r45 / 2
+            CUBE.rotation.y = MATH.rad.r45
+
+            CUBE.updateWorldMatrix(true, false)
+
+            if (float) spacecube_ANIMATIONS.push(spacecube_setCubeAnimation(CUBE))
+    
+            spacecube_SCENE.add(CUBE)
+        }
+    }
+
     function spacecube_monkeyPatch(shader, _ref)
     {
         let
@@ -307,22 +356,38 @@ onDestroy(spacecube_destroy)
 
 <!-- #HTML -->
 
-<canvas
+<div
 class="space-cube"
 bind:this={spacecube}
 >
-</canvas>
+    <div
+    class="mask"
+    >
+    </div>
+</div>
 
 <!-- #STYLE -->
 
 <style
 lang="scss"
 >
-/* #USE */
+/* #USES */
 
 @use '../../assets/scss/styles/position';
+@use '../../assets/scss/styles/size';
 
 /* #SPACECUBE */
 
 .space-cube { @include position.placement(absolute, 0, auto, auto, 0); }
+
+.mask
+{
+    @include position.placement(absolute, 0, 0, 0, 0);
+
+    @extend %any;
+
+    backdrop-filter: blur(3px);
+
+    mask: radial-gradient(circle at 68% 50%, transparent 30%, $dark 100%);
+}
 </style>

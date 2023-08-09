@@ -140,6 +140,8 @@ lang="scss"
 
     box-sizing: border-box;
 
+    .lang, h1 { position: relative; }
+
     .lang { @include font.interact($light, map.get(font.$font-sizes, s2), 1, map.get(font.$content-font-weight, w1)); }
 
     h1
@@ -148,8 +150,6 @@ lang="scss"
         --icon-size: calc(var(--title-size) * .71);
 
         @include font.h-(1);
-
-        position: relative;
 
         z-index: 1;
 

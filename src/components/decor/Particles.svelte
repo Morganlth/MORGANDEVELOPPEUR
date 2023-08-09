@@ -3,6 +3,9 @@
 <script>
 // #IMPORTS
 
+    // --JS
+    import { wait_throttle } from '../../assets/js/utils/wait'
+
     // --LIB
     import { COLORS } from '$lib/app'
 
@@ -20,7 +23,7 @@
     PARTICLES_EVENTS =
     {
         resize: particles_resize,
-        animation: particles_animation
+        animation: wait_throttle(particles_animation, 5)
     }
 
 // #VARIABLES
@@ -60,7 +63,7 @@
             y: window.innerHeight,
             vel_X: Math.random() * .5 + .2,
             vel_Y: Math.random() * 1,
-            size: Math.random() * 15 + 5,
+            size: Math.random() * 10 + 10,
             color: COLORS[Math.round(Math.random()) ? 'light' : 'primary']
         })
 
@@ -95,7 +98,7 @@
         particles_clear()
         particles_draw()
 
-        if (++particles_COUNT > 100) particles_setParticle()
+        if (++particles_COUNT > 150) particles_setParticle()
     }
 
 // #CYCLES

@@ -20,6 +20,7 @@
     // --JS
     import MATH from '../../assets/js/utils/math'
     import { wait_throttle } from '../../assets/js/utils/wait'
+    import { animation_floating } from '../../assets/js/utils/animation'
 
     // --LIB
     import { COLORS } from '$lib/app'
@@ -55,11 +56,11 @@
     // --ELEMENT-CUBE
     let
     cube,
-    cube_FLOATY = Math.random(),
-    cube_FLOATUP = false,
     cube_FORCEX = 0,
     cube_FORCEY = 0,
-    cube_GRABBING = false
+    cube_GRABBING = false,
+    cube_ANIMATION = animation_floating()
+
 // #FUNCTIONS
 
     // --SET
@@ -134,7 +135,7 @@
 
         gravityarea_TIMEOUT = setTimeout(() =>
         {
-            cube_FLOATY = .5
+            cube_ANIMATION.setTime(.5)
 
             if (!cube_GRABBING) cube_start()
         }, 200)
@@ -148,17 +149,9 @@
 
     export async function cube_resize() { gravityarea_setVar() }
 
+    async function cube_animation() { cube_FORCEY = cube_ANIMATION.animation() }
+
     // --ANIMATION
-    async function cube_animation()
-    {
-        cube_FORCEY = 10 * (Math.sin((cube_FLOATY - .5) * Math.PI) + 1) - 10
-
-        cube_FLOATY += cube_FLOATUP ? -.05 : .05
-
-        if (cube_FLOATY > 1) cube_FLOATY = 1, cube_FLOATUP = true
-        else if (cube_FLOATY < 0) cube_FLOATY = 0, cube_FLOATUP = false
-    }
-
     function gravityarea_animationAttract(clientX, clientY)
     {
         const

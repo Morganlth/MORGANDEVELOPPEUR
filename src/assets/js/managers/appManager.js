@@ -26,10 +26,7 @@ constructor ()
 // #FUNCTIONS
 
     // --SET
-    app_set()
-    {
-        this.#app_MOBILE = navigator.maxTouchPoints > 0 && navigator.userAgent.match(/(iPhone|iPad|Android)/i) ? true : false
-    }
+    app_setFormat() { this.app_MOBILE = navigator.maxTouchPoints > 0 && navigator.userAgent.match(/(iPhone|iPad|Android)/i) ? true : false }
 
     // --RESET
     app_reset(view = false)
@@ -57,14 +54,18 @@ constructor ()
             if (this.app_testCommand(COMMAND)) this.app_COMMANDS[COMMAND](params[COMMAND])
     }
 
+    app_updateFormat(mobile) { for (const FUNC of this.#app_RESPONSIVE) FUNC(mobile) }
+
     app_updateEco(on) { localStorage.setItem('eco', on) }
     
     // --COMMANDS
-    app_mobile(value)
+    app_mobile(on)
     {
-        value = this.app_testDefault(value) ? this.app_MOBILE : this.app_testBoolean(value)
+        on = this.app_testDefault(on) ? this.app_MOBILE : this.app_testBoolean(on)
 
-        for (const FUNC of this.#app_RESPONSIVE) FUNC(value)
+        this.app_updateFormat(on)
+
+        this.app_success('mobile ' + on)
     }
 
     app_success(msg) { if (this.app_testCommand('log')) this.app_COMMANDS.log(new AppSuccess(msg)) }
@@ -117,6 +118,20 @@ constructor ()
         this.app_COMMANDS = { name, command }
     }
 
+    app_addResponsive(func)
+    {
+        const INDEX = this.#app_RESPONSIVE.indexOf(func)
+
+        if (INDEX === -1) this.#app_RESPONSIVE.push(func)
+    }
+
+    app_removeResponsive(func)
+    {
+        const INDEX = this.#app_RESPONSIVE.indexOf(func)
+    
+        if (INDEX !== -1) this.#app_RESPONSIVE.splice(INDEX, 1)
+    }
+
     app_saveConfig()
     {
         this.app_CONFIGSAVE =
@@ -138,9 +153,17 @@ constructor ()
     get app_CONFIGSAVE() { return this.#app_CONFIGSAVE }
 
     // --SETTER
-    set app_MOBILE(value) { this.#app_MOBILE = value }
+    set app_MOBILE(on)
+    {
+        if (this.#app_MOBILE !== on)
+        {
+            this.#app_MOBILE = on
 
-    set app_FREEZE(value) { this.#app_FREEZE.set(value) }
+            this.app_updateFormat(on)
+        }
+    }
+
+    set app_FREEZE(on) { this.#app_FREEZE.set(on) }
 
     set app_COMMANDS({ name, command }) { this.#app_COMMANDS[name] = command }
 
