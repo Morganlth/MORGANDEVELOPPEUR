@@ -1,6 +1,23 @@
 // #EXPORT
 
     // --ANIMATION
+    export function animation(animation, duration, scale)
+    {
+        const [DELAY, STEP] = [duration / scale, 1 / scale]
+        let t = STEP, interval
+
+        animation(t)
+
+        return (interval = setInterval(() =>
+        {
+            t += STEP
+    
+            animation(t)
+    
+            if (t >= 1) clearInterval(interval)
+        }, DELAY))
+    }
+
     export function animation_floating(y)
     {
         let [t, up] = [Math.random(), Math.round(Math.random()) ? true : false]

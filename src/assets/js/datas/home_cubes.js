@@ -4,18 +4,18 @@
     export default
     [
         {
-            prop_X: .83, //1600 120
-            prop_Y: .11,
-            prop_SIZE: 130
+            prop_X: .84,
+            prop_Y: .07,
+            prop_SIZE: 120
         },
         {
-            prop_X: .38, //750 540
-            prop_Y: .58,
-            prop_SIZE: 150
+            prop_X: .37,
+            prop_Y: .57,
+            prop_SIZE: 140
         },
         {
-            prop_X: .77, //1500 430
-            prop_Y: .47,
-            prop_SIZE: 180
+            prop_X: .8,
+            prop_Y: .43,
+            prop_SIZE: 170
         }
     ]

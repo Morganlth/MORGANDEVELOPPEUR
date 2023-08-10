@@ -10,8 +10,8 @@
     prop_Y,
     prop_ROTATE,
     prop_ROTATEY,
-    prop_SIZE,
-    prop_ORBIT = false
+    prop_SIZE
+    // prop_ORBIT = false
 
     // BIND cube_animation
 
@@ -40,7 +40,11 @@
 // #CONSTANTE
 
     // --ELEMENT-CUBE
-    const CUBE_EVENTS = { mouseMove: cube_mouseMove, mouseUp: cube_mouseUp }
+    const CUBE_EVENTS =
+    {
+        mouseMove: cube_mouseMove,
+        mouseUp: cube_mouseUp
+    }
 
 // #VARIABLES
 
@@ -76,6 +80,8 @@
         gravityarea_TRANSLATEX = prop_X * window.innerWidth
         gravityarea_TRANSLATEY = prop_Y * window.innerHeight
         gravityarea_RADIUS = gravityarea.offsetWidth / 2
+
+        // Math.cos(MATH.rad.r45) * (SIZE / Math.cos((MATH.rad.r90 - (prop_ORBIT ? Math.abs(prop_ROTATE) : 0) - MATH.rad.r45))) ancien calcule du radius
     }
 
     function cube_setEvent() { EVENT.event_add(CUBE_EVENTS) }
@@ -157,11 +163,11 @@
         const
         CLIENTRECT = gravityarea.getBoundingClientRect(),
         SIZE = CLIENTRECT.width / 2,
-        [DIFX, DIFY] = [clientX - (CLIENTRECT.left + SIZE), clientY - (CLIENTRECT.top + SIZE)],
-        [ANGLE, RADIUS] = [Math.atan(DIFY / DIFX), Math.cos(MATH.rad.r45) * (SIZE / Math.cos((MATH.rad.r90 - (prop_ORBIT ? Math.abs(prop_ROTATE) : 0) - MATH.rad.r45)))]
+        [DIF_X, DIF_Y] = [clientX - (CLIENTRECT.left + SIZE), clientY - (CLIENTRECT.top + SIZE)],
+        ANGLE = Math.atan(DIF_Y / DIF_X)
 
-        cube_FORCEX = DIFX * (1 - Math.abs(DIFX) / (Math.cos(ANGLE) * RADIUS)) * .5
-        cube_FORCEY = DIFY * (1 - Math.abs(DIFY) / Math.abs(Math.sin(ANGLE) * RADIUS)) * .5
+        cube_FORCEX = DIF_X * (1 - Math.abs(DIF_X) / (Math.cos(ANGLE) * gravityarea_RADIUS)) * .5
+        cube_FORCEY = DIF_Y * (1 - Math.abs(DIF_Y) / Math.abs(Math.sin(ANGLE) * gravityarea_RADIUS)) * .5
     }
 
     // --CONTROLS

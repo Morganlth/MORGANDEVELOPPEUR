@@ -53,7 +53,7 @@ constructor ()
         if (this.#spring_ON === on) return
         
         on
-        ? (this.spring_setEvent(), APP.app_updateEco(false))
+        ? (this.spring_setEvent(), APP.app_ECO = false)
         : (this.spring_destroy(), this.spring_clear())
 
         this.spring_ON = on
@@ -90,7 +90,7 @@ constructor ()
     // --EVENTS
     async spring_mouseMove(x, y) { if (!this.#spring_HOVER) this.spring_COORDS = { x: x, y: y } }
 
-    async spring_mouseDown() { if (!this.#spring_LOCK) this.spring_TIMEOUT = setTimeout(() => this.spring_SIZE = 150, 200) }
+    async spring_mouseDown() { return; if (!this.#spring_LOCK) this.spring_TIMEOUT = setTimeout(() => this.spring_SIZE = 150, 200) }
 
     async spring_mouseUp()
     {

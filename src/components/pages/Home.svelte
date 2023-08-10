@@ -34,33 +34,27 @@
     // --ELEMENT-CUBES-WRAPPER
     const
     CUBESWRAPPER_RESIZE = [],
-    CUBESWRAPPER_ANIMATION = []
-
-// #VARIABLE
-
-    // --ELEMENT-CUBES-WRAPPER
-    let cubeswrapper_EVENTS
+    CUBESWRAPPER_ANIMATION = [],
+    CUBESWRAPPER_EVENTS =
+    {
+        resize: cubeswrapper_resize,
+        animation: wait_throttle(cubeswrapper_animation, 100)
+    }
 
 // #FUNCTIONS
 
     // --SET
-    function home_set()
-    {
-        cubeswrapper_setVar()
-        cubeswrapper_setEvent()
-    }
+    function home_set() { cubeswrapper_setEvent() }
 
-    function cubeswrapper_setVar() { cubeswrapper_EVENTS = { resize: cubeswrapper_resize, animation: cubeswrapper_animation } }
-
-    function cubeswrapper_setEvent() { EVENT.event_add(cubeswrapper_EVENTS) }
+    function cubeswrapper_setEvent() { EVENT.event_add(CUBESWRAPPER_EVENTS) }
 
     // --DESTROY
-    function home_destroy() { EVENT.event_remove(cubeswrapper_EVENTS) }
+    function home_destroy() { EVENT.event_remove(CUBESWRAPPER_EVENTS) }
 
     // --EVENTS
     async function cubeswrapper_resize() { for (const CUBE_RESIZE of CUBESWRAPPER_RESIZE) CUBE_RESIZE() }
 
-    const cubeswrapper_animation = wait_throttle(() => { for (const CUBE_ANIMATION of CUBESWRAPPER_ANIMATION) CUBE_ANIMATION() }, 100)
+    function cubeswrapper_animation() { for (const CUBE_ANIMATION of CUBESWRAPPER_ANIMATION) CUBE_ANIMATION() }
 
     async function homepagelinks_click()
     {
@@ -196,6 +190,8 @@ lang="scss"
         position: relative;
 
         z-index: 1;
+
+        user-select: none;
     }
 
     .lang { @include font.interact($light, map.get(font.$font-sizes, s2), 1, map.get(font.$content-font-weight, w1)); }
@@ -211,8 +207,6 @@ lang="scss"
         height: fit-content;
 
         margin-block: 1rem 3rem;
-
-        user-select: none;
 
         strong, span { display: block; }
         span { padding-bottom: 1rem; }

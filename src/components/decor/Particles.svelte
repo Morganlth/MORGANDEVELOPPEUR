@@ -3,14 +3,11 @@
 <script>
 // #IMPORTS
 
-    // --JS
-    import { wait_throttle } from '../../assets/js/utils/wait'
-
     // --LIB
     import { COLORS } from '$lib/app'
 
-    // --CONTEXT
-    import { EVENT } from '../../App.svelte'
+    // --CONTEXTS
+    import { APP, EVENT } from '../../App.svelte'
 
     // --SVELTE
     import { onMount, onDestroy } from 'svelte'
@@ -23,7 +20,7 @@
     PARTICLES_EVENTS =
     {
         resize: particles_resize,
-        animation: wait_throttle(particles_animation, 5)
+        animation: particles_animation
     }
 
 // #VARIABLES
@@ -31,8 +28,11 @@
     // --ELEMENT-PARTICLES
     let
     particles,
+    particles_ON = true,
     particles_CONTEXT,
-    particles_COUNT = 0
+    particles_COUNT = 0,
+    particles_DELAY = 100,
+    particles_MAX = 50
 
 // #FUNCTIONS
 
@@ -40,6 +40,7 @@
     function particles_set()
     {
         particles_setVar()
+        particles_setCommand()
         particles_setEvent()
     }
 
@@ -49,6 +50,12 @@
         particles.height = window.innerHeight
 
         particles_CONTEXT = particles_CONTEXT ?? particles.getContext('2d')
+    }
+
+    function particles_setCommand()
+    {
+        APP.app_add('particles', particles_command, true)
+        APP.app_add('particlesDelay', particles_delay, true)
     }
 
     function particles_setEvent() { EVENT.event_add(PARTICLES_EVENTS) }
@@ -67,11 +74,23 @@
             color: COLORS[Math.round(Math.random()) ? 'light' : 'primary']
         })
 
-        if (PARTICLES_PARTICLES.length > 50) PARTICLES_PARTICLES.shift()
+        if (PARTICLES_PARTICLES.length > particles_MAX) PARTICLES_PARTICLES.shift()
     }
 
     // --DESTROY
     function particles_destroy() { EVENT.event_remove(PARTICLES_EVENTS) }
+
+    // --UPDATE
+    function particles_update(on)
+    {
+        if (particles_ON === on) return
+
+        EVENT['event_' + (on ? 'add' : 'remove')]({ animation: particles_animation })
+
+        if (!on) particles_clear()
+
+        particles_ON = on
+    }
 
     // --DRAW
     function particles_draw()
@@ -90,6 +109,33 @@
     // --CLEAR
     function particles_clear() { particles_CONTEXT.clearRect(0, 0, window.innerWidth, window.innerHeight) }
 
+    // --COMMAND
+    function particles_command(on)
+    {
+        on = APP.app_testDefault(on) ? true : APP.app_testBoolean(on)
+
+        particles_update(on)
+
+        localStorage.setItem('particles', on)
+
+        APP.app_success('particles ' + on)
+    }
+
+    function particles_delay(delay)
+    {
+        delay = APP.app_testDefault(delay) ? 100 : APP.app_testNumber(delay, 10, 1000)
+
+        particles_DELAY = delay
+
+        delay < 100
+        ? particles_MAX = 3 * (100 - delay)
+        : particles_MAX = 50
+
+        localStorage.setItem('particlesDelay', delay)
+
+        APP.app_success('particles delay ' + delay)
+    }
+
     // --EVENTS
     async function particles_resize() { particles_setVar() }
 
@@ -98,7 +144,7 @@
         particles_clear()
         particles_draw()
 
-        if (++particles_COUNT > 150) particles_setParticle()
+        if (++particles_COUNT > particles_DELAY) particles_setParticle()
     }
 
 // #CYCLES

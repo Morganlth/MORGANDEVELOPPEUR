@@ -6,8 +6,9 @@ class AppManager
 
     // --APP-CONTEXT
     #app_MOBILE
+    #app_ECO
     #app_FREEZE
-    #app_KEYWORDS = ['reset', 'success', 'error', 'fps', 'eco', 'mobile']
+    #app_KEYWORDS = ['reload', 'reset', 'success', 'error', 'mobile', 'eco', 'commands', 'fps']
     #app_KEYSTORAGE = ['eco']
     #app_COMMANDS = {}
     #app_RESPONSIVE = []
@@ -28,14 +29,6 @@ constructor ()
     // --SET
     app_setFormat() { this.app_MOBILE = navigator.maxTouchPoints > 0 && navigator.userAgent.match(/(iPhone|iPad|Android)/i) ? true : false }
 
-    // --RESET
-    app_reset(view = false)
-    {
-        for (const KEY of this.#app_KEYSTORAGE) this.app_COMMANDS[KEY]('d')
-
-        if (!view && this.app_testCommand('clear')) this.app_COMMANDS.clear()
-    }
-
     // --RESTORE
     app_restore()
     {
@@ -46,7 +39,6 @@ constructor ()
         if (this.app_testCommand('clear')) this.app_COMMANDS.clear()
     }
 
-
     // --UPDATES
     app_update(params) // params = { command: value, ... }
     {
@@ -55,12 +47,25 @@ constructor ()
     }
 
     app_updateFormat(mobile) { for (const FUNC of this.#app_RESPONSIVE) FUNC(mobile) }
-
-    app_updateEco(on) { localStorage.setItem('eco', on) }
     
     // --COMMANDS
+    app_reload() { this.app_updateFormat(this.app_MOBILE) }
+
+    app_reset(view = false)
+    {
+        for (const KEY of this.#app_KEYSTORAGE) this.app_COMMANDS[KEY]('d')
+
+        if (!view && this.app_testCommand('clear')) this.app_COMMANDS.clear()
+    }
+
+    app_success(msg) { if (this.app_testCommand('log')) this.app_COMMANDS.log(new AppSuccess(msg)) }
+    
+    app_error(msg, type) { throw new AppError(type ?? 'Error', msg) }
+
     app_mobile(on)
     {
+        if (this.app_testNull(on)) return this.app_COMMANDS.log('mobile ' + this.app_MOBILE)
+    
         on = this.app_testDefault(on) ? this.app_MOBILE : this.app_testBoolean(on)
 
         this.app_updateFormat(on)
@@ -68,29 +73,35 @@ constructor ()
         this.app_success('mobile ' + on)
     }
 
-    app_success(msg) { if (this.app_testCommand('log')) this.app_COMMANDS.log(new AppSuccess(msg)) }
-    
-    app_error(msg, type) { throw new AppError(type ?? 'Error', msg) }
-
-    async app_fps() { if (this.app_testCommand('log')) this.app_COMMANDS.log(await fps_get() + ' fps') }
-
     app_eco(on)
     {
+        if (this.app_testNull(on)) return this.app_COMMANDS.log('eco ' + this.app_MOBILE)
+
         on = this.app_testDefault(on) ? false : this.app_testBoolean(on)
 
         if (on)
         {
             this.app_saveConfig()
-            this.app_update({ spring: false, snake: false })
+            this.app_update({ spring: false, particles: false })
         }
         else this.app_update(this.app_CONFIGSAVE)
 
-        this.app_updateEco(on)
+        this.app_ECO = on
         this.app_success('eco ' + on)
     }
 
+    app_commands()
+    {
+        for (const NAME of this.app_KEYWORDS)
+            if (this.app_testCommand('log')) this.app_COMMANDS.log(NAME)
+    }
+
+    app_fps() { if (this.app_testCommand('log')) fps_get().then(fps => this.app_COMMANDS.log(fps + ' fps')) }
+
     // --TEST
     app_testCommand(command) { return this.app_KEYWORDS.includes(command) }
+
+    app_testNull(value) { return (value == void 0 || value === '') && this.app_testCommand('log') }
 
     app_testDefault(value) { return value === 'd' || value === 'default' }
 
@@ -144,6 +155,8 @@ constructor ()
     // --GETTER
     get app_MOBILE() { return this.#app_MOBILE }
 
+    get app_ECO() { return this.#app_ECO }
+
     get app_FREEZE() { return this.#app_FREEZE }
 
     get app_KEYWORDS() { return this.#app_KEYWORDS }
@@ -160,6 +173,16 @@ constructor ()
             this.#app_MOBILE = on
 
             this.app_updateFormat(on)
+        }
+    }
+
+    set app_ECO(on)
+    {
+        if (this.#app_ECO !== on)
+        {
+            this.#app_ECO = on
+
+            localStorage.setItem('eco', on) 
         }
     }
 

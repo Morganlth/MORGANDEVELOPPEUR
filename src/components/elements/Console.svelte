@@ -31,7 +31,6 @@
 
     // --ELEMENT-CONSOLE
     let
-    console_,
     console_ON = false,
     console_INPUT,
     console_CURRENTVALUE = '',
@@ -42,6 +41,9 @@
     let
     mirror_APP = false,
     mirror_COMMAND = false
+
+    // --ELEMENT-OUTPUT
+    let output
 
 // #FUNCTIONS
 
@@ -60,7 +62,7 @@
         console_update(false)
         console_CURRENTVALUE = ''
 
-        tick().then(() => console_.scrollTop = console_.scrollHeight - console_.offsetHeight)
+        tick().then(() => output.scrollTop = output.scrollHeight - output.offsetHeight)
     }
 
     // --RESTORE
@@ -208,7 +210,6 @@ onMount(console_set)
 <div
 class="console"
 class:on={console_ON}
-bind:this={console_}
 on:mouseenter={SPRING.spring_mouseEnter.bind(SPRING)}
 on:mouseleave={SPRING.spring_mouseLeave.bind(SPRING)}
 >
@@ -271,6 +272,7 @@ on:mouseleave={SPRING.spring_mouseLeave.bind(SPRING)}
 
     <div
     class="output"
+    bind:this={output}
     >
         {#each console_OUTPUT_LINES as line}
             <div
