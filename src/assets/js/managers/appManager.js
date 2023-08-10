@@ -12,7 +12,7 @@ class AppManager
     #app_KEYSTORAGE = ['eco']
     #app_COMMANDS = {}
     #app_RESPONSIVE = []
-    #app_CONFIGSAVE = {}
+    #app_CONFIG_SAVE = {}
 
 // #CONSTRUCTOR
 
@@ -53,6 +53,8 @@ constructor ()
 
     app_reset(view = false)
     {
+        this.app_CONFIG_SAVE = {}
+    
         for (const KEY of this.#app_KEYSTORAGE) this.app_COMMANDS[KEY]('d')
 
         if (!view && this.app_testCommand('clear')) this.app_COMMANDS.clear()
@@ -84,7 +86,7 @@ constructor ()
             this.app_saveConfig()
             this.app_update({ spring: false, particles: false })
         }
-        else this.app_update(this.app_CONFIGSAVE)
+        else this.app_update(this.app_CONFIG_SAVE)
 
         this.app_ECO = on
         this.app_success('eco ' + on)
@@ -145,10 +147,10 @@ constructor ()
 
     app_saveConfig()
     {
-        this.app_CONFIGSAVE =
+        this.app_CONFIG_SAVE =
         {
             spring: localStorage.getItem('spring'),
-            snake: localStorage.getItem('snake')
+            particles: localStorage.getItem('particles')
         }
     }
 
@@ -163,7 +165,7 @@ constructor ()
 
     get app_COMMANDS() { return this.#app_COMMANDS }
 
-    get app_CONFIGSAVE() { return this.#app_CONFIGSAVE }
+    get app_CONFIG_SAVE() { return this.#app_CONFIG_SAVE }
 
     // --SETTER
     set app_MOBILE(on)
@@ -190,7 +192,7 @@ constructor ()
 
     set app_COMMANDS({ name, command }) { this.#app_COMMANDS[name] = command }
 
-    set app_CONFIGSAVE(config) { this.#app_CONFIGSAVE = config }
+    set app_CONFIG_SAVE(config) { this.#app_CONFIG_SAVE = config }
 }
 
 // #IMPORTS
