@@ -1,7 +1,7 @@
 // #EXPORT
 
     // --ERROR
-    export default class AppError extends Error
+    export default class CommandError extends Error
     {
         constructor(type, msg)
         {

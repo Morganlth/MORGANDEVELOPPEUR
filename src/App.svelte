@@ -7,6 +7,7 @@ context="module"
 
     // --CONTEXTS
     export const APP = a
+    export const COMMAND = c
     export const EVENT = e
     export const SPRING = s
 
@@ -14,6 +15,7 @@ context="module"
 
     // --CONTEXTS
     import a from './assets/js/managers/appManager'
+    import c from './assets/js/managers/commandManager'
     import e from './assets/js/managers/eventManager'
     import s from './assets/js/managers/springManager'
 </script>
@@ -29,6 +31,9 @@ context="module"
     import Main from './components/fields/Main.svelte'
     import Footer from './components/fields/Footer.svelte'
 
+    // --COMPONENT-WARN
+    import Opti from './components/warn/Opti.svelte'
+
 // #VARIABLE
 
     // --ELEMENT-APP
@@ -36,40 +41,57 @@ context="module"
 
     // --ELEMENT-SPRING
     let
-    spring_COORDS = SPRING.spring_COORDS,
-    spring_SIZE = SPRING.spring_SIZE
+    spring_$ON = SPRING.spring_$ON,
+    spring_$COORDS = SPRING.spring_$COORDS,
+    spring_$SIZE = SPRING.spring_$SIZE
+
+    // --ELEMENT-OPTI
+    let opti_ON = false
 
 // #FUNCTION
 
     // --SET
     function app_set()
     {
+        opti_setVar()
         app_setContexts()
         app_setCommands()
 
-        APP.app_restore()
-        APP.app_setFormat()
-
-        app_OPACITY = 1
+        app_update()
     }
+
+    function opti_setVar() { opti_ON = performance.now() > 1500 && localStorage.getItem('optimise') !== 'true' }
 
     function app_setContexts()
     {
+        APP.app_set()
         EVENT.event_set()
         SPRING.spring_set()
     }
 
     function app_setCommands()
     {
-        APP.app_add('app', app_app)
-        APP.app_add('event', app_event)
+        COMMAND.command_add('app', app_app)
+        COMMAND.command_add('command', app_command)
+        COMMAND.command_add('event', app_event)
     }
 
     // --DESTROY
     function app_destroy() { EVENT.event_destroy() }
 
+    // --UPDATE
+    function app_update()
+    {
+        APP.app_restore()
+        APP.app_setFormat() // after app_restore()
+
+        app_OPACITY = 1
+    }
+
     // --COMMANDS
     function app_app() { console.log(APP) }
+
+    function app_command() { console.log(COMMAND) }
 
     function app_event() { console.log(EVENT) }
 
@@ -100,15 +122,21 @@ on:touchstart|once={app_touchStart}
 
     <Footer />
 
-    <svg
-    class="spring"
-    >
-	    <circle
-        cx={$spring_COORDS.x}
-        cy={$spring_COORDS.y}
-        r={$spring_SIZE < 0 ? 0 : $spring_SIZE}
+    {#if opti_ON}
+        <Opti
+        bind:opti_ON
         />
-    </svg>
+    {:else if $spring_$ON}
+        <svg
+        class="spring"
+        >
+            <circle
+            cx={$spring_$COORDS.x}
+            cy={$spring_$COORDS.y}
+            r={Math.abs($spring_$SIZE)}
+            />
+        </svg>
+    {/if}
 </div>
 
 <!-- #STYLE -->
@@ -118,6 +146,7 @@ lang="scss"
 >
 /* #USES */
 
+@use './assets/scss/styles/elements';
 @use './assets/scss/styles/position';
 @use './assets/scss/styles/size';
 @use './assets/scss/styles/media';
@@ -133,11 +162,7 @@ lang="scss"
 
     li { list-style: none; }
 
-    a, img
-    {
-        -webkit-user-drag: none;
-        -webkit-app-region: no-drag;
-    }
+    a, img { @extend %no-drag }
 
     /* #FONT */
 
@@ -168,6 +193,8 @@ lang="scss"
 
         font-size: 31.25%;
 
+        body { background-color: $dark; }
+
         @include media.min($ms4) { font-size: 46.875%; }
         @include media.min($ms6) { font-size: 62.5%; }
     }
@@ -177,15 +204,13 @@ lang="scss"
 
 #app
 {
-    background-color: $light;
-
     .spring
     {
         @include position.placement(absolute, 0, 0, 0, 0);
         
         @extend %any;
 
-        z-index: 2;
+        z-index: 3;
 
         mix-blend-mode: difference;
 

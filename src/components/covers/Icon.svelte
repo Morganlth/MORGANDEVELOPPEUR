@@ -36,29 +36,25 @@
     }
 
     // --UPDATE
-    function icon_springUpdate(lock, hover, size)
+    function spring_update(hover, size)
     {
-        SPRING.spring_LOCK = lock
         SPRING.spring_HOVER = hover
-        SPRING.spring_SIZE = size
+        SPRING.spring_$SIZE = size
     }
 
     // --EVENTS
     function icon_mouseEnter()
     {
-        if (SPRING.spring_ON)
-        {
-            const
-            CLIENTRECT = icon.getBoundingClientRect(),
-            [X, Y] = [CLIENTRECT.left + CLIENTRECT.width / 2, CLIENTRECT.top + CLIENTRECT.height / 2]
+        const
+        CLIENTRECT = icon.getBoundingClientRect(),
+        [X, Y] = [CLIENTRECT.left + CLIENTRECT.width / 2, CLIENTRECT.top + CLIENTRECT.height / 2]
 
-            icon_springUpdate(true, true, CLIENTRECT.width)
+        spring_update(true, CLIENTRECT.width)
 
-            requestAnimationFrame(() => SPRING.spring_COORDS = { x: X, y: Y })
-        }
+        requestAnimationFrame(() => SPRING.spring_$COORDS = { x: X, y: Y })
     }
 
-    function icon_mouseLeave() { if (SPRING.spring_ON) icon_springUpdate(false, false, 7) }
+    function icon_mouseLeave() { spring_update(false, 7) }
 
 // #CYCLE
 

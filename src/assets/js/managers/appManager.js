@@ -5,169 +5,99 @@ class AppManager
 // #VARIABLES
 
     // --APP-CONTEXT
+    #app_FREEZE = writable(false)
     #app_MOBILE
-    #app_ECO
-    #app_FREEZE
-    #app_KEYWORDS = ['reload', 'reset', 'success', 'error', 'mobile', 'eco', 'commands', 'fps']
-    #app_KEYSTORAGE = ['eco']
-    #app_COMMANDS = {}
-    #app_RESPONSIVE = []
-    #app_CONFIG_SAVE = {}
+    #app_OPTIMISE = false
+    #app_CONFIG_OPTIMISE = {}
+    #app_STORAGE = {}
 
 // #CONSTRUCTOR
 
 constructor ()
 {
-    this.#app_FREEZE = writable(false)
+    this.app_updateFormat = this.app_updateFormat.bind(this)
+    this.app_updateMode = this.app_updateMode.bind(this)
 
-    for (const NAME of this.app_KEYWORDS)
-        try { this.app_COMMANDS = { name: NAME, command: this['app_' + NAME].bind(this) } } catch {}
+    this.app_commandMobile = this.app_commandMobile.bind(this)
+    this.app_commandOptimise = this.app_commandOptimise.bind(this)
 }
 
 // #FUNCTIONS
 
     // --SET
+    app_set() { this.#app_setCommand() }
+
     app_setFormat() { this.app_MOBILE = navigator.maxTouchPoints > 0 && navigator.userAgent.match(/(iPhone|iPad|Android)/i) ? true : false }
+
+    #app_setCommand()
+    {
+        COMMAND.command_setBasicCommand(
+            'mobile',
+            this.app_commandMobile,
+            { defaultValue: this.#app_MOBILE },
+            { testBoolean: true },
+            false
+        )
+
+        COMMAND.command_setBasicCommand(
+            'optimise',
+            this.app_commandOptimise,
+            { defaultValue: this.#app_OPTIMISE },
+            { testBoolean: true },
+            true
+        )
+    }
 
     // --RESTORE
     app_restore()
     {
-        for (const NAME of this.#app_KEYSTORAGE)
-            try { this.app_COMMANDS[NAME](localStorage.getItem(NAME) ?? 'd') }
-            catch (e) { console.log(e);localStorage.removeItem(NAME) }
+        const COMMANDS = COMMAND.command_COMMANDS
 
-        if (this.app_testCommand('clear')) this.app_COMMANDS.clear()
+        for (const NAME of COMMAND.command_KEYSTORAGE)
+            try { COMMANDS[NAME](localStorage.getItem(NAME) ?? 'd') } catch { localStorage.removeItem(NAME) }
+
+        try { if (COMMAND.command_testCommand('clear')) COMMANDS.clear() } catch {}
     }
 
     // --UPDATES
-    app_update(params) // params = { command: value, ... }
-    {
-        for (const COMMAND in params)
-            if (this.app_testCommand(COMMAND)) this.app_COMMANDS[COMMAND](params[COMMAND])
-    }
+    app_updateFormat(mobile) {  }
 
-    app_updateFormat(mobile) { for (const FUNC of this.#app_RESPONSIVE) FUNC(mobile) }
+    app_updateMode(optimise)
+    {
+        if (optimise) this.app_saveStorage(this.#app_CONFIG_OPTIMISE)
+
+        COMMAND.command_update(optimise ? this.#app_CONFIG_OPTIMISE : this.#app_STORAGE)
+
+        this.app_OPTIMISE = optimise
+    }
     
     // --COMMANDS
-    app_reload() { this.app_updateFormat(this.app_MOBILE) }
+    app_commandMobile(on) { COMMAND.command_test(on, 'boolean', this.app_updateFormat, 'mobile', this.#app_MOBILE) } // does not change the value of app_MOBILE
 
-    app_reset(view = false)
-    {
-        this.app_CONFIG_SAVE = {}
-    
-        for (const KEY of this.#app_KEYSTORAGE) this.app_COMMANDS[KEY]('d')
-
-        if (!view && this.app_testCommand('clear')) this.app_COMMANDS.clear()
-    }
-
-    app_success(msg) { if (this.app_testCommand('log')) this.app_COMMANDS.log(new AppSuccess(msg)) }
-    
-    app_error(msg, type) { throw new AppError(type ?? 'Error', msg) }
-
-    app_mobile(on)
-    {
-        if (this.app_testNull(on)) return this.app_COMMANDS.log('mobile ' + this.app_MOBILE)
-    
-        on = this.app_testDefault(on) ? this.app_MOBILE : this.app_testBoolean(on)
-
-        this.app_updateFormat(on)
-
-        this.app_success('mobile ' + on)
-    }
-
-    app_eco(on)
-    {
-        if (this.app_testNull(on)) return this.app_COMMANDS.log('eco ' + this.app_MOBILE)
-
-        on = this.app_testDefault(on) ? false : this.app_testBoolean(on)
-
-        if (on)
-        {
-            this.app_saveConfig()
-            this.app_update({ spring: false, particles: false })
-        }
-        else this.app_update(this.app_CONFIG_SAVE)
-
-        this.app_ECO = on
-        this.app_success('eco ' + on)
-    }
-
-    app_commands()
-    {
-        for (const NAME of this.app_KEYWORDS)
-            if (this.app_testCommand('log')) this.app_COMMANDS.log(NAME)
-    }
-
-    app_fps() { if (this.app_testCommand('log')) fps_get().then(fps => this.app_COMMANDS.log(fps + ' fps')) }
-
-    // --TEST
-    app_testCommand(command) { return this.app_KEYWORDS.includes(command) }
-
-    app_testNull(value) { return (value == void 0 || value === '') && this.app_testCommand('log') }
-
-    app_testDefault(value) { return value === 'd' || value === 'default' }
-
-    app_testBoolean(value)
-    {
-        if (value === false || value === 'f' || value === 'false') return false
-        else if (value === true || value === 't' || value === 'true') return true
-        else this.app_error('"t" / "true" pour vrai - "f" / "false" pour faux', 'TypeError')
-    }
-
-    app_testNumber(value, min, max)
-    {
-        if (!/^\d*?\.?\d+$/.test(value)) this.app_error('la valeur doit être un nombre', 'TypeError')
-        if (value < min || value > max) this.app_error(`la valeur doit être comprise entre [${min} et ${max}]`, 'RangeError')
-
-        return parseInt(value, 10)
-    }
+    app_commandOptimise(on) { COMMAND.command_test(on, 'boolean', this.app_updateMode, 'optimise', this.#app_OPTIMISE) }
 
     // --UTIL
-    app_add(name, command, storage)
+    app_saveStorage(config = {})
     {
-        if (!this.app_KEYWORDS.includes(name)) this.app_KEYWORDS.push(name)
-        if (storage && !this.#app_KEYSTORAGE.includes(name)) this.#app_KEYSTORAGE.push(name)
-
-        this.app_COMMANDS = { name, command }
-    }
-
-    app_addResponsive(func)
-    {
-        const INDEX = this.#app_RESPONSIVE.indexOf(func)
-
-        if (INDEX === -1) this.#app_RESPONSIVE.push(func)
-    }
-
-    app_removeResponsive(func)
-    {
-        const INDEX = this.#app_RESPONSIVE.indexOf(func)
+        const STORAGE = { ...config }
     
-        if (INDEX !== -1) this.#app_RESPONSIVE.splice(INDEX, 1)
-    }
+        for (const NAME in config) STORAGE[NAME] = localStorage.getItem(NAME)
 
-    app_saveConfig()
-    {
-        this.app_CONFIG_SAVE =
-        {
-            spring: localStorage.getItem('spring'),
-            particles: localStorage.getItem('particles')
-        }
+        this.#app_STORAGE = STORAGE
     }
 
     // --GETTER
-    get app_MOBILE() { return this.#app_MOBILE }
-
-    get app_ECO() { return this.#app_ECO }
-
     get app_FREEZE() { return this.#app_FREEZE }
 
-    get app_KEYWORDS() { return this.#app_KEYWORDS }
+    get app_MOBILE() { return this.#app_MOBILE }
 
-    get app_COMMANDS() { return this.#app_COMMANDS }
+    get app_OPTIMISE() { return this.#app_OPTIMISE }
 
-    get app_CONFIG_SAVE() { return this.#app_CONFIG_SAVE }
+    get app_CONFIG_OPTIMISE() { return this.#app_CONFIG_OPTIMISE }
 
     // --SETTER
+    set app_FREEZE(on) { this.#app_FREEZE.set(on) }
+
     set app_MOBILE(on)
     {
         if (this.#app_MOBILE !== on)
@@ -178,29 +108,23 @@ constructor ()
         }
     }
 
-    set app_ECO(on)
+    set app_OPTIMISE(on)
     {
-        if (this.#app_ECO !== on)
+        if (this.#app_OPTIMISE !== on)
         {
-            this.#app_ECO = on
+            this.#app_OPTIMISE = on
 
-            localStorage.setItem('eco', on) 
+            localStorage.setItem('optimise', on) 
         }
     }
 
-    set app_FREEZE(on) { this.#app_FREEZE.set(on) }
-
-    set app_COMMANDS({ name, command }) { this.#app_COMMANDS[name] = command }
-
-    set app_CONFIG_SAVE(config) { this.#app_CONFIG_SAVE = config }
+    set app_CONFIG_OPTIMISE(name) { this.#app_CONFIG_OPTIMISE[name] = false }
 }
 
 // #IMPORTS
 
-    // --JS
-    import AppSuccess from '../class/success'
-    import AppError from '../class/error'
-    import fps_get from '../utils/fps'
+    // --CONTEXT
+    import COMMAND from './commandManager'
 
     // --SVELTE
     import { writable } from 'svelte/store'

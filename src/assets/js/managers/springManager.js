@@ -5,139 +5,118 @@ class SpringManager
 // --VARIABLES
 
     // --SPRING-CONTEXT
-    #spring_ON = false // active / desactive
-    #spring_LOCK = false // bloque / debloque action
+    #spring_$ON = true
     #spring_HOVER = false // icon hover
-    #spring_COORDS = spring({ x: -7, y: -7 }, { stiffness: 0.1, damping: 0.4 })
-    #spring_SIZE = spring(7)
-    #spring_EVENTS =
-    {
-        mouseMove: this.spring_mouseMove.bind(this),
-        mouseDown: this.spring_mouseDown.bind(this),
-        mouseUp: this.spring_mouseUp.bind(this)
-    }
-
-    spring_TIMEOUT = null
+    #spring_$COORDS
+    #spring_D_SIZE = 7
+    #spring_$SIZE
+    #spring_EVENTS
 
 // #CONSTRUCTOR
 
 constructor ()
 {
-    this.spring_responsive = this.spring_responsive.bind(this)
+    let { subscribe, set } = writable(this.#spring_$ON)
+
+    this.#spring_$ON =
+    {
+        on: this.#spring_$ON,
+        subscribe,
+        set: function (on)
+        {
+            this.on = on
+            set(on)
+        }
+    }
+
+    this.#spring_$COORDS = spring({ x: -this.#spring_D_SIZE, y: -this.#spring_D_SIZE }, { stiffness: 0.1, damping: 0.4 })
+    this.#spring_$SIZE = spring(this.#spring_D_SIZE)
+
+    this.spring_update = this.spring_update.bind(this)
     this.spring_command = this.spring_command.bind(this)
+    this.spring_mouseMove = wait_throttle(this.spring_mouseMove, 50)
+
+    this.#spring_EVENTS = { mouseMove: this.spring_mouseMove.bind(this) }
 }
 
     // --SET
     spring_set()
     {
-        APP.app_addResponsive(this.spring_responsive)
-        APP.app_add('spring', this.spring_command, true)
+        this.#spring_setCommand()
+        this.#spring_setEvent()
     }
 
-    spring_setEvent() { EVENT.event_add(this.#spring_EVENTS) }
+    #spring_setCommand()
+    {
+        COMMAND.command_setBasicCommand(
+            'spring',
+            this.spring_command,
+            { defaultValue: this.#spring_$ON.on, optimise: true },
+            { testBoolean: true },
+            true
+        )
+    }
+
+    #spring_setEvent() { EVENT.event_add(this.#spring_EVENTS) }
 
     // --DESTROY
-    spring_destroy()
-    {
-        this.spring_destroyResponsive()
-        this.spring_destroyEvent()
-    }
-
-    spring_destroyResponsive() { APP.app_removeResponsive(this.spring_responsive) }
+    #spring_destroy() { this.spring_destroyEvent() }
 
     spring_destroyEvent() { EVENT.event_remove(this.#spring_EVENTS) }
 
-    // --UPDATES
+    // --UPDATE
     spring_update(on)
     {
-        if (this.#spring_ON === on) return
-        
-        on
-        ? (this.spring_setEvent(), APP.app_ECO = false)
-        : (this.spring_destroy(), this.spring_clear())
-
-        this.spring_ON = on
-        this.spring_SIZE = on ? 7 : 0
-    }
-
-    spring_updateState(lock, size)
-    {
-        if (this.#spring_ON)
+        if (on)
         {
-            this.spring_LOCK = lock
-            this.spring_SIZE = size
+            this.#spring_setEvent()
+            this.spring_$SIZE = this.#spring_D_SIZE // set the size before the on
         }
+        else this.#spring_destroy()
+
+        this.#spring_$ON.set(on)
     }
-
-    // --CLEAR
-    spring_clear() { clearTimeout(this.spring_TIMEOUT) }
-
-    // --RESPONSIVE
-    async spring_responsive(mobile) { this.spring_update(!mobile) }
 
     // --COMMAND
-    spring_command(on)
-    {
-        on = APP.app_testDefault(on) ? true : APP.app_testBoolean(on)
+    spring_command(on) { COMMAND.command_test(on, 'boolean', this.spring_update, 'spring', this.#spring_$ON.on) }
 
-        this.spring_update(on)
+    // --EVENT
+    spring_mouseMove(x, y) { if (!this.#spring_HOVER) this.spring_$COORDS = { x: x, y: y } }
 
-        localStorage.setItem('spring', on)
+    // --UTILS
+    spring_show() { this.spring_$SIZE = this.#spring_D_SIZE }
 
-        APP.app_success('spring ' + on)
-    }
+    spring_hide() { this.spring_$SIZE = 0 }
 
-    // --EVENTS
-    async spring_mouseMove(x, y) { if (!this.#spring_HOVER) this.spring_COORDS = { x: x, y: y } }
-
-    async spring_mouseDown() { return; if (!this.#spring_LOCK) this.spring_TIMEOUT = setTimeout(() => this.spring_SIZE = 150, 200) }
-
-    async spring_mouseUp()
-    {
-        this.spring_clear()
-
-        if (!this.#spring_LOCK) this.spring_SIZE = 7
-    }
-
-    async spring_mouseEnter()
-    {
-        this.spring_clear()
-
-        this.spring_updateState(true, 0)
-    }
-
-    async spring_mouseLeave() { this.spring_updateState(false, 7) }
-
-    // 66GETTER
-    get spring_ON() { return this.#spring_ON }
-
-    get spring_LOCK() { return this.#spring_LOCK }
+    // --GETTER
+    get spring_$ON() { return this.#spring_$ON }
 
     get spring_HOVER() { return this.#spring_HOVER }
 
-    get spring_COORDS() { return this.#spring_COORDS }
+    get spring_$COORDS() { return this.#spring_$COORDS }
 
-    get spring_SIZE() { return this.#spring_SIZE }
+    get spring_$SIZE() { return this.#spring_$SIZE }
 
     // --SETTER
-    set spring_ON(on) { this.#spring_ON = on }
+    set spring_HOVER(on) { this.#spring_HOVER = on }
 
-    set spring_LOCK(lock) { this.#spring_LOCK = lock }
+    set spring_$COORDS(coords) { this.#spring_$COORDS.set(coords) }
 
-    set spring_HOVER(hover) { this.#spring_HOVER = hover }
-
-    set spring_COORDS(coords) { this.#spring_COORDS.set(coords) }
-
-    set spring_SIZE(size) { this.#spring_SIZE.set(size) }
+    set spring_$SIZE(size) { this.#spring_$SIZE.set(size) }
 }
 
 // #IMPORT
 
+    // --JS
+    import { wait_throttle } from '../utils/wait'
+
     // --CONTEXTS
     import APP from './appManager'
+    import COMMAND from './commandManager'
     import EVENT from './eventManager'
 
     // --SVELTE
+    import { writable } from 'svelte/store'
     import { spring } from 'svelte/motion'
 
 // #EXPORT

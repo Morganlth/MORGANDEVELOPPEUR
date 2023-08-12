@@ -7,7 +7,7 @@
     import { COLORS } from '$lib/app'
 
     // --CONTEXTS
-    import { APP, EVENT } from '../../App.svelte'
+    import { COMMAND, EVENT } from '../../App.svelte'
 
     // --SVELTE
     import { onMount, onDestroy } from 'svelte'
@@ -54,8 +54,21 @@
 
     function particles_setCommand()
     {
-        APP.app_add('particles', particles_command, true)
-        APP.app_add('particlesDelay', particles_delay, true)
+        COMMAND.command_setBasicCommand(
+            'particles',
+            particles_command,
+            { defaultValue: true, optimise: true },
+            { testBoolean: true },
+            true
+        )
+    
+        COMMAND.command_setBasicCommand(
+            'particles_delay',
+            particles_commandDelay,
+            { defaultValue: 100, min: 10, max: 1000 },
+            { testNumber: true },
+            true
+        )
     }
 
     function particles_setEvent() { EVENT.event_add(PARTICLES_EVENTS) }
@@ -80,7 +93,7 @@
     // --DESTROY
     function particles_destroy() { EVENT.event_remove(PARTICLES_EVENTS) }
 
-    // --UPDATE
+    // --UPDATES
     function particles_update(on)
     {
         if (particles_ON === on) return
@@ -90,6 +103,15 @@
         if (!on) particles_clear()
 
         particles_ON = on
+    }
+
+    function particles_updateDelay(delay)
+    {
+        particles_DELAY = delay
+
+        delay < 100
+        ? particles_MAX = 3 * (100 - delay)
+        : particles_MAX = 50
     }
 
     // --DRAW
@@ -109,32 +131,10 @@
     // --CLEAR
     function particles_clear() { particles_CONTEXT.clearRect(0, 0, window.innerWidth, window.innerHeight) }
 
-    // --COMMAND
-    function particles_command(on)
-    {
-        on = APP.app_testDefault(on) ? true : APP.app_testBoolean(on)
+    // --COMMANDS
+    function particles_command(on) { COMMAND.command_test(on, 'boolean', particles_update, 'particles', particles_ON) }
 
-        particles_update(on)
-
-        localStorage.setItem('particles', on)
-
-        APP.app_success('particles ' + on)
-    }
-
-    function particles_delay(delay)
-    {
-        delay = APP.app_testDefault(delay) ? 100 : APP.app_testNumber(delay, 10, 1000)
-
-        particles_DELAY = delay
-
-        delay < 100
-        ? particles_MAX = 3 * (100 - delay)
-        : particles_MAX = 50
-
-        localStorage.setItem('particlesDelay', delay)
-
-        APP.app_success('particles delay ' + delay)
-    }
+    function particles_commandDelay(delay) { COMMAND.command_test(delay, 'number', particles_updateDelay, 'particles_delay', particles_DELAY) }
 
     // --EVENTS
     async function particles_resize() { particles_setVar() }

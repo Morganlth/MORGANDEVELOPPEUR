@@ -4,14 +4,14 @@
 // #IMPORT
 
     // --JS
-    import AppError from '../../assets/js/class/error'
-    import AppSuccess from '../../assets/js/class/success'
+    import CommandError from '../../assets/js/class/error'
+    import CommandSuccess from '../../assets/js/class/success'
 
     // --LIB
     import { COLORS } from '$lib/app'
 
     // --CONTEXTS
-    import { APP, SPRING } from '../../App.svelte'
+    import { COMMAND, SPRING } from '../../App.svelte'
 
     // --SVELTE
     import { onMount, tick } from 'svelte'
@@ -52,8 +52,8 @@
 
     function console_setCommand()
     {
-        APP.app_add('log', console_log)
-        APP.app_add('clear', console_clear)
+        COMMAND.command_add('log', console_log)
+        COMMAND.command_add('clear', console_clear)
     }
 
     // --RESET
@@ -80,7 +80,7 @@
         for (let i = 0; i < MIRROR_ITEMS.length; i++) MIRROR_ITEMS[i].innerText = values[i] ?? ''
     }
 
-    function console_updateCommand(command) { mirror_COMMAND = APP.app_KEYWORDS.includes(command.trim()) }
+    function console_updateCommand(command) { mirror_COMMAND = COMMAND.command_KEYWORDS.includes(command.trim()) }
 
     function console_updateHistory()
     {
@@ -99,7 +99,7 @@
     function console_log(msg)
     {
         const
-        [ERROR, SUCCESS] = [msg instanceof Error, msg instanceof AppSuccess],
+        [ERROR, SUCCESS] = [msg instanceof Error, msg instanceof CommandSuccess],
         [NAME, MESSAGE] = ERROR || SUCCESS ? [msg.name, msg.message.trim()] : [void 0, msg.trim()]
 
         console_OUTPUT_LINES = [...console_OUTPUT_LINES, { error: ERROR, success: SUCCESS, name: NAME, message: MESSAGE }]
@@ -117,7 +117,7 @@
 
     function console_input()
     {
-        (console_CURRENTVALUE.length === 3 || console_CURRENTVALUE[3] === ' ') && console_CURRENTVALUE.substring(0, 3) === 'app'
+        (console_CURRENTVALUE.length === 3 || console_CURRENTVALUE[3] === ' ') && console_CURRENTVALUE.substring(0, 3).toLowerCase() === 'app'
         ? console_analyse()
         : console_update(false, [console_CURRENTVALUE])
     }
@@ -127,7 +127,7 @@
         switch (e.key)
         {
             case 'Enter':
-                if (MIRROR_ITEMS[0].innerText === 'app') console_execute()
+                if (MIRROR_ITEMS[0].innerText.toLowerCase() === 'app') console_execute()
                 break
             case 'ArrowUp':
                 console_INDEX--
@@ -167,7 +167,7 @@
 
     function console_analyse()
     {
-        const VALUES = console_CURRENTVALUE.match(/^(app)(\s+\S*)?(\s.*)?$/)
+        const VALUES = console_CURRENTVALUE.match(/^(app)(\s+\S*)?(\s.*)?$/i)
 
         VALUES.shift()
 
@@ -179,20 +179,20 @@
     function console_execute()
     {
         const
-        COMMAND = MIRROR_ITEMS[1].innerText.trim(),
+        NAME = MIRROR_ITEMS[1].innerText.trim(),
         PARAMS = MIRROR_ITEMS[2].innerText.trim().split(',')
 
         console_updateHistory()
 
-        try { APP.app_COMMANDS[COMMAND](...PARAMS), console_reset() } catch (e) { console_error(e, COMMAND) }
+        try { COMMAND.command_COMMANDS[NAME](...PARAMS), console_reset() } catch (e) { console_error(e, NAME) }
     }
 
     function console_error(e, command)
     {
-        const ERROR = e instanceof AppError
+        const ERROR = e instanceof CommandError
         ? e
-        : new AppError(
-            ...(APP.app_KEYWORDS.includes(command)
+        : new CommandError(
+            ...(COMMAND.command_KEYWORDS.includes(command)
             ? ['Error', 'une erreur est survenue :/']
             : ['TypeError', `"${command}" n'est pas une commande`])
         )
@@ -210,8 +210,8 @@ onMount(console_set)
 <div
 class="console"
 class:on={console_ON}
-on:mouseenter={SPRING.spring_mouseEnter.bind(SPRING)}
-on:mouseleave={SPRING.spring_mouseLeave.bind(SPRING)}
+on:mouseenter={SPRING.spring_hide.bind(SPRING)}
+on:mouseleave={SPRING.spring_show.bind(SPRING)}
 >
     <div
     class="input"

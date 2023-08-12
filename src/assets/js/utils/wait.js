@@ -5,16 +5,20 @@
     // --UTILS
     export function wait_debounce(callback, delay)
     {
-        const CONTEXT = this
-
         let timeout
-    
-        return async function ()
+
+        const
+        CONTEXT = this,
+        DEBOUNCE = async function ()
         {
             clearTimeout(timeout)
 
             timeout = setTimeout(callback.bind(CONTEXT, ...arguments), delay)
         }
+
+        DEBOUNCE.callbackName = callback.name
+
+        return DEBOUNCE
     }
 
     export function wait_throttle(callback, delay, timeoutDelay)
@@ -23,7 +27,7 @@
         last = +new Date(),
         timeout
 
-        return async function ()
+        const THROTTLE = async function ()
         {
             const NOW = +new Date()
 
@@ -39,4 +43,8 @@
                     last = +new Date()
                 }, timeoutDelay ?? delay)
         }
+
+        THROTTLE.callbackName = callback.name
+
+        return THROTTLE
     }

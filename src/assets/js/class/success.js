@@ -1,12 +1,12 @@
 // #EXPORT
 
     // --SUCCESS
-    export default class AppSuccess extends Error
+    export default class CommandSuccess extends Error
     {
-        constructor(msg)
+        constructor(msg, name)
         {
             super(msg)
 
-            this.name = 'Success'
+            this.name = name ?? 'Success'
         }
     }

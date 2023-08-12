@@ -100,7 +100,7 @@ header
 {
     @include position.placement(fixed, 0, auto, auto, 0);
 
-    z-index: 1;
+    z-index: 2;
 
     display: flex;
     justify-content: space-between;

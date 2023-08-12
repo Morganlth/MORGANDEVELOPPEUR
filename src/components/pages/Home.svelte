@@ -31,30 +31,40 @@
 
 // #CONSTANTES
 
-    // --ELEMENT-CUBES-WRAPPER
+    // --ELEMENT-CUBES
     const
-    CUBESWRAPPER_RESIZE = [],
-    CUBESWRAPPER_ANIMATION = [],
-    CUBESWRAPPER_EVENTS =
+    CUBES_MOUSEMOVE = [],
+    CUBES_MOUSEUP = [],
+    CUBES_RESIZE = [],
+    CUBES_ANIMATION = [],
+    CUBES_EVENTS =
     {
-        resize: cubeswrapper_resize,
-        animation: wait_throttle(cubeswrapper_animation, 100)
+        mouseMove: cubes_mouseMove,
+        mouseUp: cubes_mouseUp,
+        resize: cubes_resize,
+        animation: wait_throttle(cubes_animation, 100)
     }
 
 // #FUNCTIONS
 
     // --SET
-    function home_set() { cubeswrapper_setEvent() }
+    function home_set() { cubes_setEvent() }
 
-    function cubeswrapper_setEvent() { EVENT.event_add(CUBESWRAPPER_EVENTS) }
+    function cubes_setEvent() { EVENT.event_add(CUBES_EVENTS) }
 
     // --DESTROY
-    function home_destroy() { EVENT.event_remove(CUBESWRAPPER_EVENTS) }
+    function home_destroy() { cubes_destroyEvent() }
+
+    function cubes_destroyEvent() { EVENT.event_remove(CUBES_EVENTS) }
 
     // --EVENTS
-    async function cubeswrapper_resize() { for (const CUBE_RESIZE of CUBESWRAPPER_RESIZE) CUBE_RESIZE() }
+    async function cubes_mouseMove(clientX, clientY) { cubes_run.call(CUBES_MOUSEMOVE, clientX, clientY) }
 
-    function cubeswrapper_animation() { for (const CUBE_ANIMATION of CUBESWRAPPER_ANIMATION) CUBE_ANIMATION() }
+    async function cubes_mouseUp() { cubes_run.call(CUBES_MOUSEUP) }
+
+    async function cubes_resize() { cubes_run.call(CUBES_RESIZE) }
+
+    function cubes_animation() { for (const CUBE_ANIMATION of CUBES_ANIMATION) CUBE_ANIMATION() }
 
     async function homepagelinks_click()
     {
@@ -67,6 +77,8 @@
         HOME_PAGE_LINKS[this] = { ...LINK, on: true }
     }
 
+    // --UTIL
+    function cubes_run() { for (const EVENT of this) EVENT(...arguments) }
 // #CYCLES
 
 onMount(home_set)
@@ -127,15 +139,17 @@ id="home"
     </div>
 
     <div
-    class="cubes-wrapper"
+    class="cubes"
     >
         {#each HOME_CUBES as cube, i}
             <Cube
             {...cube}
-            prop_CUBES_ANIMATION={CUBESWRAPPER_ANIMATION}
+            prop_CUBES_ANIMATION={CUBES_ANIMATION}
             prop_ROTATE={Math.random() * MATH.PI.x2}
             prop_ROTATEY={Math.random() * MATH.PI.x2}
-            bind:cube_resize={CUBESWRAPPER_RESIZE[i]}
+            bind:cube_mouseMove={CUBES_MOUSEMOVE[i]}
+            bind:cube_mouseUp={CUBES_MOUSEUP[i]}
+            bind:cube_resize={CUBES_RESIZE[i]}
             />
         {/each}
     </div>
@@ -152,6 +166,7 @@ lang="scss"
 
 @use '../../assets/scss/app';
 
+@use '../../assets/scss/styles/elements';
 @use '../../assets/scss/styles/position';
 @use '../../assets/scss/styles/display';
 @use '../../assets/scss/styles/size';
@@ -172,6 +187,8 @@ lang="scss"
 
     box-sizing: border-box;
 
+    pointer-events: none;
+
     .main
     {
         @extend %f-column;
@@ -181,8 +198,6 @@ lang="scss"
         width: fit-content;
         height: 100%;
         max-height: 65%;
-
-        pointer-events: none;
     }
 
     .lang, h1, .page-links
@@ -280,7 +295,7 @@ lang="scss"
         }
     }
 
-    .cubes-wrapper
+    .cubes
     {
         --cube-ratio: .27;
 

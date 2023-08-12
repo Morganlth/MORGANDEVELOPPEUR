@@ -44,6 +44,11 @@ constructor ()
 
         window.addEventListener('resize', this.event_resize)
 
+        this.event_setAnimationLoop()
+    }
+
+    event_setAnimationLoop()
+    {
         if (!this.event_ANIMATION)
         {
             this.event_ANIMATION = this.event_MANAGER.animation

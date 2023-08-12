@@ -13,7 +13,9 @@
     prop_SIZE
     // prop_ORBIT = false
 
-    // BIND cube_animation
+    // BIND cube_mouseMove
+    // BIND cube_mouseUp
+    // BIND cube_resize
 
 // #IMPORTS
 
@@ -25,8 +27,8 @@
     // --LIB
     import { COLORS } from '$lib/app'
 
-    // --CONTEXTS
-    import { EVENT, SPRING } from '../../App.svelte'
+    // --CONTEXT
+    import { SPRING } from '../../App.svelte'
 
     // --SVELTE
     import { onMount, onDestroy } from 'svelte'
@@ -36,15 +38,6 @@
 
     // --COMPONENT-ICON
     import Logo from '../icons/Logo.svelte'
-
-// #CONSTANTE
-
-    // --ELEMENT-CUBE
-    const CUBE_EVENTS =
-    {
-        mouseMove: cube_mouseMove,
-        mouseUp: cube_mouseUp
-    }
 
 // #VARIABLES
 
@@ -71,7 +64,6 @@
     function cube_set()
     {
         gravityarea_setVar()
-        cube_setEvent()
         cube_start()
     }
 
@@ -84,16 +76,8 @@
         // Math.cos(MATH.rad.r45) * (SIZE / Math.cos((MATH.rad.r90 - (prop_ORBIT ? Math.abs(prop_ROTATE) : 0) - MATH.rad.r45))) ancien calcule du radius
     }
 
-    function cube_setEvent() { EVENT.event_add(CUBE_EVENTS) }
-
     // --DESTROY
-    function cube_destroy()
-    {
-       cube_destroyEvent()
-       cube_stop()
-    }
-
-    function cube_destroyEvent() { EVENT.event_remove(CUBE_EVENTS) }
+    function cube_destroy() { cube_stop() }
 
     // --UPDATES
     function elements_update(value)
@@ -149,9 +133,9 @@
 
     async function cube_mouseDown() { elements_update(true) }
 
-    async function cube_mouseMove(clientX, clientY) { cube_updatePosition(clientX - gravityarea_RADIUS, clientY - gravityarea_RADIUS) }
+    export async function cube_mouseMove(clientX, clientY) { cube_updatePosition(clientX - gravityarea_RADIUS, clientY - gravityarea_RADIUS) }
 
-    async function cube_mouseUp() { if (cube_GRABBING) elements_update(false) }
+    export async function cube_mouseUp() { if (cube_GRABBING) elements_update(false) }
 
     export async function cube_resize() { gravityarea_setVar() }
 

@@ -53,7 +53,7 @@ footer
 {
     @include position.placement(fixed, auto, 0, 0, auto);
 
-    z-index: 1;
+    z-index: 2;
 
     display: flex;
 

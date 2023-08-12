@@ -17,7 +17,7 @@
     import { SPACECUBE_FIXED_CUBES, SPACECUBE_FLOATING_CUBES } from '../../assets/js/datas/spacecube_cubes'
 
     // --CONTEXTS
-    import { APP, EVENT } from '../../App.svelte'
+    import { COMMAND, EVENT } from '../../App.svelte'
 
     // --THREE
     import WebGL from 'three/addons/capabilities/WebGL'
@@ -49,6 +49,7 @@
     // --ELEMENT-SPACECUBE
     const
     SPACECUBE_CUBES = new Group(),
+    SPACECUBE_CUBES_ANIMATIONS = [],
     SPACECUBE_ROTATION_X = -MATH.rad.r45 / 2,
     SPACECUBE_ROTATION_Y = MATH.rad.r45,
     SPACECUBE_PARAMS =
@@ -60,20 +61,17 @@
         cameraZ: 5,
         pixelRatio: 2,
         radius: 2,
-        forcePosition: .3,
+        forcePosition: .1,
         forceRotate: .03,
         mouseIntensity: 1
     },
     SPACECUBE_EVENTS =
     {
-        resize: spacecube_resize,
-        animation: spacecube_animation
-    },
-    SPACECUBE_EVENTS_DESKTOP =
-    {
         mouseMove: wait_throttle(spacecube_mouseMove, 20),
         mouseDown: spacecube_mouseDown,
-        mouseUp: spacecube_mouseUp
+        mouseUp: spacecube_mouseUp,
+        resize: spacecube_resize,
+        animation: spacecube_animation
     }
 
     // --SHADERS
@@ -94,12 +92,12 @@
     // --ELEMENT-SPACECUBE
     let
     spacecube,
+    spacecube_ON = true,
     spacecube_SCENE,
     spacecube_CAMERA,
     spacecube_RENDERER,
     spacecube_MOUSELIGHT,
     spacecube_TEXTURE,
-    spacecube_ANIMATIONS = [],
     spacecube_RADIUS = SPACECUBE_PARAMS.radius,
     spacecube_FORCE_POSITION = SPACECUBE_PARAMS.forcePosition,
     spacecube_FORCE_ROTATE = SPACECUBE_PARAMS.forceRotate,
@@ -115,9 +113,11 @@
         if (WebGL.isWebGLAvailable())
         {
             spacecube_setVar()
+            spacecube_setCommand()
+            spacecube_setEvent()
+        
             spacecube_setCamera()
             spacecube_setRenderer()
-            spacecube_setBackground()
             spacecube_setScene()
         }
     }
@@ -131,6 +131,19 @@
         spacecube.appendChild(spacecube_RENDERER.domElement)
     }
 
+    function spacecube_setCommand()
+    {
+        COMMAND.command_setBasicCommand(
+            'spacecube',
+            spacecube_command,
+            { defaultValue: spacecube_ON, optimise: true },
+            { testBoolean: true },
+            true
+        )
+    }
+
+    function spacecube_setEvent() { EVENT.event_add(SPACECUBE_EVENTS) }
+
     function spacecube_setCamera()
     {
         spacecube_CAMERA.position.z = SPACECUBE_PARAMS.cameraZ
@@ -141,17 +154,25 @@
     {
         spacecube_RENDERER.setSize(window.innerWidth, window.innerHeight)
         spacecube_RENDERER.setPixelRatio(Math.min(window.devicePixelRatio, SPACECUBE_PARAMS.pixelRatio))
+        spacecube_RENDERER.setClearColor(0x000000, 0)
     }
-
-    function spacecube_setBackground() { spacecube_RENDERER.setClearColor(0x000000, 0) }
 
     function spacecube_setScene()
     {
-        spacecube_updateCameraMatrices()
         spacecube_setLight()
-        spacecube_setResponsive()
 
-        new TextureLoader().load('./images/me.png', spacecube_textureLoaded)
+        new TextureLoader().load('./images/me.png', (texture) =>
+        {
+            spacecube_TEXTURE = texture
+
+            shader_setUniforms()
+    
+            spacecube_setCubes(SPACECUBE_FIXED_CUBES)
+            spacecube_setCubes(SPACECUBE_FLOATING_CUBES, true)
+
+            spacecube_SCENE.add(SPACECUBE_CUBES)
+            spacecube_RENDERER.render(spacecube_SCENE, spacecube_CAMERA)
+        })
     }
 
     function spacecube_setLight()
@@ -159,6 +180,7 @@
         spacecube_setAmbientLight()
         spacecube_setDirectionalLight()
         spacecube_setSpotLight()
+        spacecube_setMouseLight()
     }
     function spacecube_setAmbientLight()
     {
@@ -194,32 +216,32 @@
         spacecube_SCENE.add(spacecube_MOUSELIGHT.target)
     }
 
-    function spacecube_setCubes()
+    function spacecube_setCubes(cubes, float = false)
     {
-        spacecube_buildCubes(SPACECUBE_FIXED_CUBES)
-        spacecube_buildCubes(SPACECUBE_FLOATING_CUBES, true)
-
-        spacecube_SCENE.add(SPACECUBE_CUBES)
-        
-        spacecube_ANIMATIONS = wait_throttle(
-        (() =>
+        for (let i = 0; i < cubes.length; i += 3)
         {
-            const ANIMATIONS = spacecube_ANIMATIONS
+            const
+            SIZE = cubes[i],
+            MATERIAL = new MeshStandardMaterial({ color: COLORS.dark }),
+            CUBE = new Mesh(new BoxGeometry(SIZE, SIZE, SIZE), MATERIAL)
 
-            return () => { for (const ANIMATION of ANIMATIONS) ANIMATION() }
-        })(), 100)
+            MATERIAL.onBeforeCompile = shader_set.bind(CUBE)
+    
+            ;[CUBE.position.x, CUBE.position.y, CUBE.rotation.x, CUBE.rotation.y] = [cubes[i + 1], cubes[i + 2], SPACECUBE_ROTATION_X, SPACECUBE_ROTATION_Y]
+            CUBE.initialPosition = {...CUBE.position}
+            CUBE.updateWorldMatrix(true, false)                                                        
+    
+            SPACECUBE_CUBES.add(CUBE)
+
+            if (float) SPACECUBE_CUBES_ANIMATIONS.push(spacecube_setCubeAnimation(CUBE))
+        }
     }
-
     function spacecube_setCubeAnimation(cube)
     {
         const ANIMATION = animation_floating().animation
 
         return async () => cube.position.y += ANIMATION() * 0.0015
     }
-
-    function spacecube_setResponsive() { APP.app_addResponsive(spacecube_responsive) }
-
-    function spacecube_setEvent() { EVENT.event_add(SPACECUBE_EVENTS) }
 
     function shader_set(shader)
     {
@@ -247,22 +269,16 @@
     }
 
     // --DESTROY
-    function spacecube_destroy()
-    {
-        spacecube_destroyResponsive()
-        spacecube_destroyEvent()
-    }
+    function spacecube_destroy() { spacecube_destroyEvent() }
 
-    function spacecube_destroyResponsive() { APP.app_removeResponsive(spacecube_responsive) }
-
-    function spacecube_destroyEvent() { EVENT.event_remove({ ...SPACECUBE_EVENTS, ...SPACECUBE_EVENTS_DESKTOP }) }
+    function spacecube_destroyEvent() { EVENT.event_remove(SPACECUBE_EVENTS) }
 
     // --UPDATES
-    function spacecube_updateCameraMatrices()
+    function spacecube_update(on)
     {
-        spacecube_CAMERA.updateProjectionMatrix()
-        spacecube_CAMERA.updateMatrixWorld()
-        spacecube_CAMERA.updateWorldMatrix()
+        on ? spacecube_setEvent() : spacecube_destroyEvent()
+    
+        spacecube_ON = on
     }
 
     function shader_updateProjectionMatrixCamera() { SHADER_UNIFORMS.projectionMatrixCamera.value.copy(spacecube_CAMERA.projectionMatrix) }
@@ -309,17 +325,11 @@
         }, 200, 10)
     }
 
-    // --RESPONSIVE
-    async function spacecube_responsive(mobile)
-    {
-        EVENT['event_' + (mobile ? 'remove' : 'add')](SPACECUBE_EVENTS_DESKTOP)
-
-        if (!mobile) spacecube_setMouseLight()
-        else if (spacecube_MOUSELIGHT) spacecube_SCENE.remove(spacecube_MOUSELIGHT)
-    }
+    // --COMMAND
+    function spacecube_command(on) { COMMAND.command_test(on, 'boolean', spacecube_update, 'spacecube', spacecube_ON) }
 
     // --EVENTS
-    function spacecube_mouseMove(clientX, clientY) 
+    function spacecube_mouseMove(clientX, clientY) // async throttle
     {
         const
         [RATIO_X, RATIO_Y] = [(clientX / window.innerWidth) * 2 - 1, -(clientY / window.innerHeight) * 2 + 1],
@@ -356,12 +366,14 @@
 
     async function spacecube_animation()
     {
-        spacecube_ANIMATIONS()
+        spacecube_animationFloating()
 
         spacecube_RENDERER.render(spacecube_SCENE, spacecube_CAMERA)
     }
 
     // --ANIMATIONS
+    const spacecube_animationFloating = wait_throttle(() => { for (const ANIMATION of SPACECUBE_CUBES_ANIMATIONS) ANIMATION() }, 100)
+
     async function spacecube_animationCamera()
     {
         const
@@ -400,36 +412,6 @@
     }
 
     // --UTILS
-    async function spacecube_textureLoaded(texture)
-    {
-        spacecube_TEXTURE = texture
-
-        shader_setUniforms()
-        spacecube_setCubes()
-        spacecube_setEvent()
-    }
-
-    function spacecube_buildCubes(cubes, float = false)
-    {
-        for (let i = 0; i < cubes.length; i += 3)
-        {
-            const
-            SIZE = cubes[i],
-            MATERIAL = new MeshStandardMaterial({ color: COLORS.dark }),
-            CUBE = new Mesh(new BoxGeometry(SIZE, SIZE, SIZE), MATERIAL)
-
-            MATERIAL.onBeforeCompile = shader_set.bind(CUBE)
-    
-            ;[CUBE.position.x, CUBE.position.y, CUBE.rotation.x, CUBE.rotation.y] = [cubes[i + 1], cubes[i + 2], SPACECUBE_ROTATION_X, SPACECUBE_ROTATION_Y]
-            CUBE.initialPosition = {...CUBE.position}
-            CUBE.updateWorldMatrix(true, false)                                                        
-    
-            SPACECUBE_CUBES.add(CUBE)
-
-            if (float) spacecube_ANIMATIONS.push(spacecube_setCubeAnimation(CUBE))
-        }
-    }
-
     function spacecube_monkeyPatch(shader, _ref)
     {
         let { header = '', main = '', ...replaces } = _ref

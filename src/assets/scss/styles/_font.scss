@@ -22,8 +22,11 @@
 
     // --FONT-TITLE
     $h-1: (color: $light, font-family: $family-title, font-size: var(--title-size), font-weight: 900, line-height: .9);
+    $h-2: (color: $indicator, font-family: $family-title, font-size: var(--title-size, map.get($font-sizes, s5)), font-weight: 900, line-height: 1.2);
+    $h-3: (color: $indicator, font-family: $family-title, font-size: map.get($font-sizes, s4), font-weight: 900, line-height: 1.2);
+    $h-4: (color: $light, font-family: $family-title, font-size: map.get($font-sizes, s3), font-weight: 900, line-height: 1.2);
 
-    $titles: ('h-1': $h-1);
+    $titles: ('h-1': $h-1, 'h-2': $h-2, 'h-3': $h-3, 'h-4': $h-4);
 
 // #FONT
 
