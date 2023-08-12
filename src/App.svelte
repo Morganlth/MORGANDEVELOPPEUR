@@ -34,6 +34,11 @@ context="module"
     // --COMPONENT-WARN
     import Opti from './components/warn/Opti.svelte'
 
+// #CONSTANTE
+
+    // --ELEMENT-APP
+    const APP_START = performance.now()
+
 // #VARIABLE
 
     // --ELEMENT-APP
@@ -60,7 +65,7 @@ context="module"
         app_update()
     }
 
-    function opti_setVar() { opti_ON = performance.now() > 1500 && localStorage.getItem('optimise') !== 'true' }
+    function opti_setVar() { opti_ON = (performance.now() - APP_START) > 250 && localStorage.getItem('optimise') !== 'true' }
 
     function app_setContexts()
     {
