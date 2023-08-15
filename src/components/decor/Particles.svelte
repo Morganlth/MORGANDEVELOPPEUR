@@ -80,9 +80,9 @@
         PARTICLES_PARTICLES.push(
         {
             x: 0,
-            y: window.innerHeight,
-            vel_X: Math.random() * .5 + .2,
-            vel_Y: Math.random() * 1,
+            y: 0,
+            vel_X: Math.random(),
+            vel_Y: -Math.random(),
             size: Math.random() * 10 + 10,
             color: COLORS[Math.round(Math.random()) ? 'light' : 'primary']
         })

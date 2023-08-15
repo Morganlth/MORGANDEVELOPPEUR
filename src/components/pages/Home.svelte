@@ -31,6 +31,13 @@
 
 // #CONSTANTES
 
+    // --ELEMENT-SCENE
+    const SCENE_EVENTS =
+    {
+        scroll: scene_scroll,
+        resize: scene_resize
+    }
+
     // --ELEMENT-CUBES
     const
     CUBES_MOUSEMOVE = [],
@@ -45,19 +52,52 @@
         animation: wait_throttle(cubes_animation, 100)
     }
 
+// #VARIABLES
+
+    // --ELEMENT-SCENE
+    let
+    scene,
+    scene_HEIGHT,
+    scene_AVAILABLE_HEIGHT,
+    scene_SCROLL_RATIO
+
 // #FUNCTIONS
 
     // --SET
-    function home_set() { cubes_setEvent() }
+    function home_set()
+    {
+        scene_setVar()
+        scene_setEvent()
+    
+        cubes_setEvent()
+    }
+
+    function scene_setVar()
+    {
+        scene_HEIGHT = scene.offsetHeight,
+        scene_AVAILABLE_HEIGHT = scene.parentNode.offsetHeight - scene_HEIGHT
+    }
+
+    function scene_setEvent() { EVENT.event_add(SCENE_EVENTS) }
 
     function cubes_setEvent() { EVENT.event_add(CUBES_EVENTS) }
 
     // --DESTROY
-    function home_destroy() { cubes_destroyEvent() }
+    function home_destroy()
+    {
+        scene_destroyEvent()
+        cubes_destroyEvent()
+    }
+
+    function scene_destroyEvent() { EVENT.event_remove(SCENE_EVENTS) }
 
     function cubes_destroyEvent() { EVENT.event_remove(CUBES_EVENTS) }
 
     // --EVENTS
+    async function scene_scroll() { scene_SCROLL_RATIO = scene.offsetTop / scene_AVAILABLE_HEIGHT }
+
+    async function scene_resize() { scene_setVar() }
+
     async function cubes_mouseMove(clientX, clientY) { cubes_run.call(CUBES_MOUSEMOVE, clientX, clientY) }
 
     async function cubes_mouseUp() { cubes_run.call(CUBES_MOUSEUP) }
@@ -90,68 +130,75 @@ onDestroy(home_destroy)
 <div
 id="home"
 >
-    <Particles />
-    <SpaceCube />
-
     <div
-    class="main"
+    class="scene"
+    bind:this={scene}
     >
-        <section>
-            <span
-            class="lang"
-            >
-                FR
-            </span>
-        
-            <h1>
-                <strong>DEVELOPPEUR</strong>
-        
-                <span>WEB</span>
-        
-                <Icon
-                prop_COLOR={COLORS.light}
-                prop_SPRING={false}
-                >
-                    <Logo />
-                </Icon>
-            </h1>
-        </section>
+        <Particles />
+        <SpaceCube
+        prop_RATIO={scene_SCROLL_RATIO}
+        />
 
-        <nav
-        class="page-links"
+        <div
+        class="main"
         >
-            <ul>
-                <!-- svelte-ignore a11y-no-static-element-interactions a11y-missing-attribute -->
-                {#each HOME_PAGE_LINKS as link, id}
-                    <li>
-                        <a
-                        class:selected={link.on}
-                        aria-label={link.label}
-                        {...link.attributes}
-                        on:click|preventDefault={homepagelinks_click.bind(id)}
-                        >
-                            {link.content}
-                        </a>
-                    </li>
-                {/each}
-            </ul>
-        </nav>
-    </div>
+            <section>
+                <span
+                class="lang"
+                >
+                    FR
+                </span>
+            
+                <h1>
+                    <strong>DEVELOPPEUR</strong>
+            
+                    <span>WEB</span>
+            
+                    <Icon
+                    prop_COLOR={COLORS.light}
+                    prop_SPRING={false}
+                    >
+                        <Logo />
+                    </Icon>
+                </h1>
+            </section>
 
-    <div
-    class="cubes"
-    >
-        {#each HOME_CUBES as cube, i}
-            <Cube
-            {...cube}
-            prop_CUBES_ANIMATION={CUBES_ANIMATION}
-            prop_ROTATE={Math.random() * MATH.PI.x2}
-            prop_ROTATEY={Math.random() * MATH.PI.x2}
-            bind:cube_mouseMove={CUBES_MOUSEMOVE[i]}
-            bind:cube_mouseUp={CUBES_MOUSEUP[i]}
-            bind:cube_resize={CUBES_RESIZE[i]}
-            />
-        {/each}
+            <nav
+            class="page-links"
+            >
+                <ul>
+                    <!-- svelte-ignore a11y-no-static-element-interactions a11y-missing-attribute -->
+                    {#each HOME_PAGE_LINKS as link, id}
+                        <li>
+                            <a
+                            class:selected={link.on}
+                            aria-label={link.label}
+                            {...link.attributes}
+                            on:click|preventDefault={homepagelinks_click.bind(id)}
+                            >
+                                {link.content}
+                            </a>
+                        </li>
+                    {/each}
+                </ul>
+            </nav>
+        </div>
+
+        <div
+        class="cubes"
+        >
+            {#each HOME_CUBES as cube, i}
+                <Cube
+                {...cube}
+                prop_CUBES_ANIMATION={CUBES_ANIMATION}
+                prop_ROTATE={Math.random() * MATH.PI.x2}
+                prop_ROTATEY={Math.random() * MATH.PI.x2}
+                bind:cube_mouseMove={CUBES_MOUSEMOVE[i]}
+                bind:cube_mouseUp={CUBES_MOUSEUP[i]}
+                bind:cube_resize={CUBES_RESIZE[i]}
+                />
+            {/each}
+        </div>
     </div>
 </div>
 
@@ -177,18 +224,28 @@ lang="scss"
 
 #home
 {
-    @include position.placement(sticky, 0, auto, auto, 0);
+    &, .scene { width: 100%; }
 
-    overflow: hidden;
+    position: relative;
 
-    width: 100%;
-    height: 100vh;
+    height: 300vh;
 
-    padding: 10rem app.$gap-inline 0;
+    .scene
+    {
+        @include position.placement(sticky, 0, auto, auto, 0);
 
-    box-sizing: border-box;
+        overflow: hidden;
 
-    pointer-events: none;
+        height: 100vh;
+
+        padding: 10rem app.$gap-inline 0;
+
+        pointer-events: none;
+
+        box-sizing: border-box;
+
+        @include media.min(false, $ms2) { padding-top: max(11rem, 70px); }
+    }
 
     .main
     {
@@ -311,7 +368,5 @@ lang="scss"
         @include media.min($ms5, $ms4) { --cube-ratio: .75; }
         @include media.min($ms6, $ms4) { --cube-ratio: 1; }
     }
-
-    @include media.min(false, $ms2) { padding-top: max(11rem, 70px); }
 }
 </style>

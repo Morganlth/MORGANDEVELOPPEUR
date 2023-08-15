@@ -3,6 +3,11 @@
 <script>
 // Code inspired, adapted / modified for texture projection in Three js from: https://github.com/marcofugaro/three-projected-material
 
+// #EXPORT
+
+    // --PROP
+    export let prop_RATIO = 0
+
 // #IMPORTS
 
     // --JS
@@ -58,7 +63,6 @@
         antialias: true,
         fov: 75,
         near: .1,
-        far: 7,
         cameraZ: 5,
         pixelRatio: 2,
         radius: 2,
@@ -118,6 +122,7 @@
 
     // --ELEMENT-SPACECUBE
     $: $app_START && spacecube_CHARGED ? spacecube_start() : null
+    $: prop_RATIO && spacecube_CHARGED ? spacecube_updateCubesZ() : null
 
 // #FUNCTIONS
 
@@ -255,7 +260,8 @@
 
             MATERIAL.onBeforeCompile = shader_set.bind(CUBE)
     
-            ;[CUBE.position.x, CUBE.position.y, CUBE.rotation.x, CUBE.rotation.y] = [cubes[i + 1], cubes[i + 2], SPACECUBE_ROTATION_X, SPACECUBE_ROTATION_Y]
+            CUBE.position.set(cubes[i + 1], cubes[i + 2], 0)
+            CUBE.rotation.set(SPACECUBE_ROTATION_X, SPACECUBE_ROTATION_Y, 0)
             CUBE.initialPosition = {...CUBE.position}
             CUBE.updateWorldMatrix(true, false)
     
@@ -300,6 +306,9 @@
     function spacecube_destroy() { spacecube_destroyEvent() }
 
     function spacecube_destroyEvent() { EVENT.event_remove(SPACECUBE_EVENTS) }
+
+    // --GET
+    function spacecube_getBarycentre(a, b, c, t) { return a + a*t*t + 2*b*t - 2*t*t*b + t*t*c - 2*a*t }
 
     // --UPDATES
     function spacecube_update(on)
@@ -353,6 +362,15 @@
         }, 200, 10)
     }
 
+    function spacecube_updateCubesZ()
+    {
+        // const
+        // CUBES = SPACECUBE_CUBES.children,
+        // Z = spacecube_DEPTH * prop_RATIO
+
+        // for (const CUBE of CUBES) CUBE.position.z = Z
+    }
+
     // --COMMAND
     function spacecube_command(on) { COMMAND.command_test(on, 'boolean', spacecube_update, 'spacecube', spacecube_ON) }
 
@@ -388,6 +406,8 @@
         spacecube_CAMERA.updateProjectionMatrix()
 
         spacecube_setRenderer()
+    
+        shader_setUniforms()
         shader_updateProjectionMatrixCamera()
         shader_updateTextureDimensions()
     }
@@ -410,14 +430,41 @@
     // --ANIMATIONS
     function spacecube_animationStart()
     {
-        const CUBES = SPACECUBE_CUBES.children
-
+        const
+        CUBES = SPACECUBE_CUBES.children,
+        RATIO = spacecube_CAMERA.aspect, // width / height
+        Z = -2,
+        FORCE = 2
+    
         for (const CUBE of CUBES)
         {
-            const [DURATION, DELAY] = [Math.random() * 700 + 300, Math.random() * 4000]
-    
-            setTimeout(animation((t) => CUBE.position.z = -spacecube_DEPTH * (1 - t), DURATION, Math.round(DURATION / 16.67)), DELAY)
+            let { x, y } = CUBE.initialPosition
+
+            const
+            GAP_X = y * RATIO + x,
+            GAP_Y = GAP_X / RATIO,
+            [A_X, A_Y] = GAP_X < 0
+            ?       [-spacecube_WIDTH - 2, spacecube_HEIGHT + GAP_Y * 1.5]
+            :   GAP_X > 0
+                ?   [-spacecube_WIDTH + GAP_X * 1.5, spacecube_HEIGHT + 2]
+                :   [-spacecube_WIDTH - 2, spacecube_HEIGHT + 2],
+            [B_X, B_Y] = [x - FORCE, y + FORCE / RATIO],
+            [DURATION, DELAY] = [Math.random() * 900 + 500, Math.random() * 900]
+
+            CUBE.position.set(A_X, A_Y, Z)
+
+            setTimeout(() =>
+                animation((t) => CUBE.position.set(spacecube_getBarycentre(A_X, B_X, x, t), spacecube_getBarycentre(A_Y, B_Y, y, t), Z * (1 - t)), DURATION, DURATION / 16.67)
+            , DELAY)
         }
+        // const CUBES = SPACECUBE_CUBES.children
+
+        // for (const CUBE of CUBES)
+        // {
+        //     const [DURATION, DELAY] = [Math.random() * 700 + 300, Math.random() * 4000]
+    
+        //     setTimeout(animation((t) => CUBE.position.z = -spacecube_DEPTH * (1 - t), DURATION, Math.round(DURATION / 16.67)), DELAY)
+        // }
     }
 
     const spacecube_animationFloating = wait_throttle(() => { for (const ANIMATION of SPACECUBE_CUBES_ANIMATIONS) ANIMATION() }, 100)
@@ -525,9 +572,23 @@ lang="scss"
 
         backdrop-filter: blur(10px);
 
-        mask: radial-gradient(circle at 68% 50%, transparent 5%, $dark 100%);
+        mask: radial-gradient(circle at 68% 50%, transparent 3%, $dark 100%);
 
         pointer-events: none;
+
+        /* &::after
+        {
+            @include position.placement(absolute, 0, auto, auto, 0, true);
+
+            transform-origin: top left;
+
+            transform: rotate(25.5deg);
+
+            width: 100%;
+            height: 1px;
+
+            background-color: red;
+        } */
     }
 }
 </style>

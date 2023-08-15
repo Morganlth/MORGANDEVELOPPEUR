@@ -31,6 +31,9 @@ context="module"
     import Main from './components/fields/Main.svelte'
     import Footer from './components/fields/Footer.svelte'
 
+    // --COMPONENT-ELEMENT
+    import Console from './components/elements/Console.svelte'
+
     // --COMPONENT-WARN
     import Opti from './components/warn/Opti.svelte'
 
@@ -40,6 +43,9 @@ context="module"
     const APP_START = performance.now()
 
 // #VARIABLE
+
+    // --APP-CONTEXT
+    let app_FREEZE = APP.app_FREEZE
 
     // --ELEMENT-APP
     let app_OPACITY = 0
@@ -117,7 +123,9 @@ onDestroy(app_destroy)
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
 id="app"
+class:freeze={$app_FREEZE}
 style:opacity={app_OPACITY}
+on:scroll={EVENT.event_scroll.bind(EVENT)}
 on:mousemove={EVENT.event_mouseMove.bind(EVENT)}
 on:mousedown={EVENT.event_mouseDown.bind(EVENT)}
 on:mouseup={EVENT.event_mouseUp.bind(EVENT)}
@@ -125,10 +133,10 @@ on:mouseleave={EVENT.event_mouseUp.bind(EVENT)}
 on:touchstart|once={app_touchStart}
 >
     <Header />
-
     <Main />
-
     <Footer />
+
+    <Console />
 
     {#if opti_ON}
         <Opti
@@ -154,6 +162,7 @@ lang="scss"
 >
 /* #USES */
 
+@use './assets/scss/styles/utils';
 @use './assets/scss/styles/elements';
 @use './assets/scss/styles/position';
 @use './assets/scss/styles/size';
@@ -191,7 +200,7 @@ lang="scss"
     {
         /* overflow: hidden; padding-top: 16vh; box-sizing: border-box; width: 100vw; height: 100vh; body { transform: scale(1); } body, body>div, #app { overflow: hidden; width: 100%; height: 100%; } */
 
-        &, body, body>div, #app
+        &, body, body>div
         {
             overflow: hidden;
 
@@ -212,11 +221,19 @@ lang="scss"
 
 #app
 {
+    &, &>.spring { @extend %any; }
+
+    @extend %scroll-bar;
+
+    overflow: hidden scroll;
+
+    background-color: $dark;
+
+    &.freeze { overflow: hidden; }
+
     .spring
     {
         @include position.placement(absolute, 0, 0, 0, 0);
-        
-        @extend %any;
 
         z-index: 3;
 
