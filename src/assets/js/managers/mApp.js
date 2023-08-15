@@ -1,14 +1,15 @@
-// #APP-MANAGER
+// #APP
 
-class AppManager
+class App
 {
 // #VARIABLES
 
     // --APP-CONTEXT
+    #app_START = writable(false)
     #app_FREEZE = writable(false)
     #app_MOBILE
     #app_OPTIMISE = false
-    #app_CONFIG_OPTIMISE = {}
+    #app_OPTIMISE_CONFIG = {}
     #app_STORAGE = {}
 
 // #CONSTRUCTOR
@@ -64,9 +65,9 @@ constructor ()
 
     app_updateMode(optimise)
     {
-        if (optimise) this.app_saveStorage(this.#app_CONFIG_OPTIMISE)
+        if (optimise) this.app_saveStorage(this.#app_OPTIMISE_CONFIG)
 
-        COMMAND.command_update(optimise ? this.#app_CONFIG_OPTIMISE : this.#app_STORAGE)
+        COMMAND.command_update(optimise ? this.#app_OPTIMISE_CONFIG : this.#app_STORAGE)
 
         this.app_OPTIMISE = optimise
     }
@@ -77,25 +78,22 @@ constructor ()
     app_commandOptimise(on) { COMMAND.command_test(on, 'boolean', this.app_updateMode, 'optimise', this.#app_OPTIMISE) }
 
     // --UTIL
-    app_saveStorage(config = {})
-    {
-        const STORAGE = { ...config }
-    
-        for (const NAME in config) STORAGE[NAME] = localStorage.getItem(NAME)
-
-        this.#app_STORAGE = STORAGE
-    }
+    app_saveStorage(config = {}) { for (const NAME in config) this.#app_STORAGE[NAME] = localStorage.getItem(NAME) }
 
     // --GETTER
+    get app_START() { return this.#app_START }
+
     get app_FREEZE() { return this.#app_FREEZE }
 
     get app_MOBILE() { return this.#app_MOBILE }
 
     get app_OPTIMISE() { return this.#app_OPTIMISE }
 
-    get app_CONFIG_OPTIMISE() { return this.#app_CONFIG_OPTIMISE }
+    get app_OPTIMISE_CONFIG() { return this.#app_OPTIMISE_CONFIG }
 
     // --SETTER
+    set app_START(start) { this.#app_START.set(start) }
+
     set app_FREEZE(on) { this.#app_FREEZE.set(on) }
 
     set app_MOBILE(on)
@@ -118,13 +116,13 @@ constructor ()
         }
     }
 
-    set app_CONFIG_OPTIMISE(name) { this.#app_CONFIG_OPTIMISE[name] = false }
+    set app_OPTIMISE_CONFIG(name) { this.#app_OPTIMISE_CONFIG[name] = false }
 }
 
 // #IMPORTS
 
     // --CONTEXT
-    import COMMAND from './commandManager'
+    import COMMAND from './mCommand'
 
     // --SVELTE
     import { writable } from 'svelte/store'
@@ -132,4 +130,4 @@ constructor ()
 // #EXPORT
 
     // --CONTEXT
-    export default new AppManager()
+    export default new App()

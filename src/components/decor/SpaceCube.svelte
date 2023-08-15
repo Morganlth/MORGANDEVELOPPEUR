@@ -13,11 +13,11 @@
     import { wait_throttle } from '../../assets/js/utils/wait'
 
     // --LIB
-    import { COLORS } from '$lib/app'
+    import { COLORS } from '$lib/colors'
     import { SPACECUBE_FIXED_CUBES, SPACECUBE_FLOATING_CUBES } from '../../assets/js/datas/spacecube_cubes'
 
     // --CONTEXTS
-    import { COMMAND, EVENT } from '../../App.svelte'
+    import { APP, COMMAND, EVENT } from '../../App.svelte'
 
     // --THREE
     import WebGL from 'three/addons/capabilities/WebGL'
@@ -26,6 +26,7 @@
         AmbientLightProbe,
         BoxGeometry,
         DirectionalLight,
+        Fog,
         Group,
         Matrix4,
         Mesh,
@@ -56,7 +57,7 @@
     {
         antialias: true,
         fov: 75,
-        near: 3,
+        near: .1,
         far: 7,
         cameraZ: 5,
         pixelRatio: 2,
@@ -89,13 +90,21 @@
 
 // #VARIABLES
 
+    // --APP-CONTEXT
+    let app_START = APP.app_START
+
     // --ELEMENT-SPACECUBE
     let
     spacecube,
     spacecube_ON = true,
+    spacecube_CHARGED = false,
+    spacecube_OPACITY = 0,
     spacecube_SCENE,
     spacecube_CAMERA,
     spacecube_RENDERER,
+    spacecube_WIDTH,
+    spacecube_HEIGHT,
+    spacecube_DEPTH,
     spacecube_MOUSELIGHT,
     spacecube_TEXTURE,
     spacecube_RADIUS = SPACECUBE_PARAMS.radius,
@@ -104,6 +113,11 @@
     spacecube_MOUSE_X = 0,
     spacecube_MOUSE_Y = 0,
     spacecube_TIMEOUT
+
+// #REACTIVE
+
+    // --ELEMENT-SPACECUBE
+    $: $app_START && spacecube_CHARGED ? spacecube_start() : null
 
 // #FUNCTIONS
 
@@ -124,9 +138,18 @@
 
     function spacecube_setVar()
     {
+        const
+        ASPECT = window.innerWidth / window.innerHeight,
+        HEIGHT = Math.tan(MATH.toRad(SPACECUBE_PARAMS.fov / 2)) * SPACECUBE_PARAMS.cameraZ,
+        DEPTH = SPACECUBE_PARAMS.cameraZ + 1
+    
         spacecube_SCENE = new Scene()
-        spacecube_CAMERA = new PerspectiveCamera(SPACECUBE_PARAMS.fov, window.innerWidth / window.innerHeight, SPACECUBE_PARAMS.near, SPACECUBE_PARAMS.far)
+        spacecube_CAMERA = new PerspectiveCamera(SPACECUBE_PARAMS.fov, ASPECT, SPACECUBE_PARAMS.near, DEPTH)
         spacecube_RENDERER = new WebGLRenderer({ alpha: true, antialias: SPACECUBE_PARAMS.antialias })
+
+        spacecube_WIDTH = HEIGHT * ASPECT
+        spacecube_HEIGHT = HEIGHT
+        spacecube_DEPTH = DEPTH
 
         spacecube.appendChild(spacecube_RENDERER.domElement)
     }
@@ -160,6 +183,7 @@
     function spacecube_setScene()
     {
         spacecube_setLight()
+        spacecube_setFog()
 
         new TextureLoader().load('./images/me.png', (texture) =>
         {
@@ -172,6 +196,8 @@
 
             spacecube_SCENE.add(SPACECUBE_CUBES)
             spacecube_RENDERER.render(spacecube_SCENE, spacecube_CAMERA)
+
+            spacecube_CHARGED = true
         })
     }
 
@@ -216,6 +242,8 @@
         spacecube_SCENE.add(spacecube_MOUSELIGHT.target)
     }
 
+    function spacecube_setFog() { spacecube_SCENE.fog = new Fog(COLORS.dark, 4, spacecube_DEPTH) }
+
     function spacecube_setCubes(cubes, float = false)
     {
         for (let i = 0; i < cubes.length; i += 3)
@@ -229,7 +257,7 @@
     
             ;[CUBE.position.x, CUBE.position.y, CUBE.rotation.x, CUBE.rotation.y] = [cubes[i + 1], cubes[i + 2], SPACECUBE_ROTATION_X, SPACECUBE_ROTATION_Y]
             CUBE.initialPosition = {...CUBE.position}
-            CUBE.updateWorldMatrix(true, false)                                                        
+            CUBE.updateWorldMatrix(true, false)
     
             SPACECUBE_CUBES.add(CUBE)
 
@@ -371,7 +399,27 @@
         spacecube_RENDERER.render(spacecube_SCENE, spacecube_CAMERA)
     }
 
+    // --CONTROL
+    async function spacecube_start()
+    {
+        if (!APP.app_OPTIMISE) spacecube_animationStart()
+
+        spacecube_OPACITY = 1
+    }
+
     // --ANIMATIONS
+    function spacecube_animationStart()
+    {
+        const CUBES = SPACECUBE_CUBES.children
+
+        for (const CUBE of CUBES)
+        {
+            const [DURATION, DELAY] = [Math.random() * 700 + 300, Math.random() * 4000]
+    
+            setTimeout(animation((t) => CUBE.position.z = -spacecube_DEPTH * (1 - t), DURATION, Math.round(DURATION / 16.67)), DELAY)
+        }
+    }
+
     const spacecube_animationFloating = wait_throttle(() => { for (const ANIMATION of SPACECUBE_CUBES_ANIMATIONS) ANIMATION() }, 100)
 
     async function spacecube_animationCamera()
@@ -444,6 +492,7 @@ onDestroy(spacecube_destroy)
 
 <div
 class="space-cube"
+style:opacity={spacecube_OPACITY}
 bind:this={spacecube}
 >
     <div
@@ -464,18 +513,21 @@ lang="scss"
 
 /* #SPACECUBE */
 
-.space-cube { @include position.placement(absolute, 0, auto, auto, 0); }
-
-.mask
+.space-cube
 {
-    @include position.placement(absolute, 0, 0, 0, 0);
+    @include position.placement(absolute, 0, auto, auto, 0);
 
-    @extend %any;
+    .mask
+    {
+        @include position.placement(absolute, 0, 0, 0, 0);
 
-    backdrop-filter: blur(15px);
+        @extend %any;
 
-    mask: radial-gradient(circle at 68% 50%, transparent 7%, $dark 100%);
+        backdrop-filter: blur(10px);
 
-    pointer-events: none;
+        mask: radial-gradient(circle at 68% 50%, transparent 5%, $dark 100%);
+
+        pointer-events: none;
+    }
 }
 </style>

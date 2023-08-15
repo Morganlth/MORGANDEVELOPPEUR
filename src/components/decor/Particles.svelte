@@ -4,7 +4,7 @@
 // #IMPORTS
 
     // --LIB
-    import { COLORS } from '$lib/app'
+    import { COLORS } from '$lib/colors'
 
     // --CONTEXTS
     import { COMMAND, EVENT } from '../../App.svelte'

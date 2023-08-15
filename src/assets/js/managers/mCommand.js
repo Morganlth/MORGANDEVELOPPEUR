@@ -1,15 +1,16 @@
-// #COMMAND-MANAGER
+// #COMMAND
 
-class CommandManager
+class Command
 {
 // --VARIABLES
 
     // --COMMAND-CONTEXT
+    static __command_PARAMS = { defaultValue: true, min: null, max: null, optimise: false }
+    static __command_TESTS = { testBoolean: false, testNumber: false }
+
     #command_COMMANDS = {}
     #command_KEYWORDS = ['reload', 'reset', 'success', 'error', 'commands', 'fps']
     #command_KEYSTORAGE = []
-    #command_PARAMS = { defaultValue: true, min: null, max: null, optimise: false }
-    #command_TESTS = { testBoolean: false, testNumber: false }
 
 // #CONSTRUCTOR
 
@@ -20,11 +21,9 @@ constructor ()
 }
 
     // --SET
-    command_setBasicCommand(name, callback, params = this.#command_PARAMS, tests = this.#command_TESTS, storage)
+    command_setBasicCommand(name, callback, params = Command.__command_PARAMS, tests = Command.__command_TESTS, storage)
     {
-        const OPTIMISE = params.optimise
-
-        if (OPTIMISE) APP.app_CONFIG_OPTIMISE = name
+        if (params.optimise) APP.app_OPTIMISE_CONFIG = name
 
         this.command_add(name, (value) =>
         {
@@ -32,9 +31,9 @@ constructor ()
 
             callback(value)
 
-            if (value === true && OPTIMISE) APP.app_OPTIMISE = false
             if (value !== null)
             {
+                if (value === true && params.optimise) APP.app_OPTIMISE = false
                 if (storage) localStorage.setItem(name, value)
 
                 this.command_success(name + ' ' + value)
@@ -74,13 +73,13 @@ constructor ()
     command_fps() { if (this.command_testCommand('log')) fps_get().then(fps => this.#command_COMMANDS.log(fps + ' fps')) }
 
     // --TESTS
-    command_test(value, type, callback, name, target)
+    command_test(toTest, type, callback, name, value)
     {
-        typeof value === type
-        ?   value !== target
-            ? callback(value)
+        typeof toTest === type
+        ?   toTest !== value
+            ? callback(toTest)
             : null
-        : this.command_success(name, target)
+        : this.command_success(value, name)
     }
 
     command_testCommand(toTest)
@@ -148,16 +147,37 @@ constructor ()
     get command_KEYSTORAGE() { return this.#command_KEYSTORAGE }
 }
 
+// #ERROR
+
+// --ERROR
+export class CommandError extends Error
+{
+    constructor(type, msg)
+    {
+        super(msg)
+
+        this.name = type
+    }
+}
+
+export class CommandSuccess extends Error
+{
+    constructor(msg, name)
+    {
+        super(msg)
+
+        this.name = name ?? 'Success'
+    }
+}
+
 // #IMPORTS
 
     // --JS
-    import CommandSuccess from '../class/success'
-    import CommandError from '../class/error'
     import fps_get from '../utils/fps'
 
     // --CONTEXT
-    import APP from './appManager'
+    import APP from './mApp'
 
 // #EXPORT
 
-export default new CommandManager()
+export default new Command()

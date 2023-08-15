@@ -69,6 +69,7 @@ class="icon"
 style:--icon-color={prop_COLOR}
 style:width={prop_SIZE}
 style:height={prop_SIZE}
+style:pointer-events={prop_SPRING ? 'auto' : 'none'}
 {...(prop_LINK ?? {})}
 bind:this={icon}
 >
@@ -86,10 +87,5 @@ lang="scss"
 
 /* #ICON */
 
-.icon
-{
-    @extend %f-center;
-
-    pointer-events: auto;
-}
+.icon { @extend %f-center; }
 </style>

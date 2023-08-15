@@ -1,6 +1,6 @@
-// #EVENT-MANAGER
+// #EVENT
 
-class EventManager
+class Event
 {
 // #VARIABLES
 
@@ -161,4 +161,4 @@ constructor ()
 // #EXPORT
 
     // --CONTEXT
-    export default new EventManager()
+    export default new Event()

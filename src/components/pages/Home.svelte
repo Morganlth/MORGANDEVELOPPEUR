@@ -10,7 +10,7 @@
     import { wait_throttle } from '../../assets/js/utils/wait'
 
     // --LIB
-    import { COLORS } from '$lib/app'
+    import { COLORS } from '$lib/colors'
 
     // --CONTEXT
     import { EVENT } from '../../App.svelte'
@@ -177,11 +177,12 @@ lang="scss"
 
 #home
 {
-    @extend %any;
-
-    position: relative;
+    @include position.placement(sticky, 0, auto, auto, 0);
 
     overflow: hidden;
+
+    width: 100%;
+    height: 100vh;
 
     padding: 10rem app.$gap-inline 0;
 

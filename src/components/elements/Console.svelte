@@ -4,17 +4,16 @@
 // #IMPORT
 
     // --JS
-    import CommandError from '../../assets/js/class/error'
-    import CommandSuccess from '../../assets/js/class/success'
+    import { CommandError, CommandSuccess } from '../../assets/js/managers/mCommand'
 
     // --LIB
-    import { COLORS } from '$lib/app'
+    import { COLORS } from '$lib/colors'
 
     // --CONTEXTS
-    import { COMMAND, SPRING } from '../../App.svelte'
+    import { APP, COMMAND, EVENT, SPRING } from '../../App.svelte'
 
     // --SVELTE
-    import { onMount, tick } from 'svelte'
+    import { onMount, onDestroy, tick } from 'svelte'
 
     // --COMPONENT-COVER
     import Icon from '../covers/Icon.svelte'
@@ -22,7 +21,10 @@
 // #CONSTANTES
 
     // --ELEMENT-CONSOLE
-    const CONSOLE_HISTORY = ['app']
+    const
+    CONSOLE_TARGET_CLASS = 'console-target',
+    CONSOLE_HISTORY = ['app'],
+    CONSOLE_EVENT = { mouseDown: console_mouseDown }
 
     // --ELEMENT-MIRROR
     const MIRROR_ITEMS = []
@@ -56,13 +58,18 @@
         COMMAND.command_add('clear', console_clear)
     }
 
+    function console_setEvent() { EVENT.event_add(CONSOLE_EVENT) }
+
+    // --DESTROY
+    function console_destroy() { console_destroyEvent() }
+
+    function console_destroyEvent() { EVENT.event_remove(CONSOLE_EVENT) }
+
     // --RESET
     function console_reset()
     {
         console_update(false)
         console_CURRENTVALUE = ''
-
-        tick().then(() => output.scrollTop = output.scrollHeight - output.offsetHeight)
     }
 
     // --RESTORE
@@ -95,6 +102,8 @@
         console_INDEX = CONSOLE_HISTORY.length
     }
 
+    function output_update() { tick().then(() => output.scrollTop = output.scrollHeight - output.offsetHeight) }
+
     // --COMMANDS
     function console_log(msg)
     {
@@ -103,16 +112,27 @@
         [NAME, MESSAGE] = ERROR || SUCCESS ? [msg.name, msg.message.trim()] : [void 0, msg.trim()]
 
         console_OUTPUT_LINES = [...console_OUTPUT_LINES, { error: ERROR, success: SUCCESS, name: NAME, message: MESSAGE }]
+
+        output_update()
     }
 
     function console_clear() { console_OUTPUT_LINES = [] }
 
     // --EVENTS
+    async function console_mouseDown(e) { if (!e.target.classList.contains(CONSOLE_TARGET_CLASS)) console_click() }
+
     async function console_click()
     {
         console_ON = !console_ON
 
-        if (console_ON) console_focus(console_CURRENTVALUE)
+        if (console_ON)
+        {
+            console_setEvent()
+            console_focus(console_CURRENTVALUE)
+        }
+        else console_destroyEvent()
+
+        APP.app_FREEZE = console_ON
     }
 
     function console_input()
@@ -200,9 +220,10 @@
         console_log(ERROR)
     }
 
-// #CYCLE
+// #CYCLES
 
 onMount(console_set)
+onDestroy(console_destroy)
 </script>
 <!-- #HTML -->
 
@@ -217,6 +238,7 @@ on:mouseleave={SPRING.spring_show.bind(SPRING)}
     class="input"
     >
         <button
+        class={CONSOLE_TARGET_CLASS}
         type="button"
         on:click={console_click}
         >
@@ -246,6 +268,7 @@ on:mouseleave={SPRING.spring_show.bind(SPRING)}
         class="line"
         >
             <input
+            class={CONSOLE_TARGET_CLASS}
             type="text"
             maxlength="55"
             spellcheck="false"
@@ -271,7 +294,7 @@ on:mouseleave={SPRING.spring_show.bind(SPRING)}
     </div>
 
     <div
-    class="output"
+    class="output {CONSOLE_TARGET_CLASS}"
     bind:this={output}
     >
         {#each console_OUTPUT_LINES as line}
@@ -349,8 +372,6 @@ $line-height: 8rem;
     {
         height: fit-content;
 
-        pointer-events: auto;
-
         .line
         {
             height: $line-height;
@@ -360,6 +381,8 @@ $line-height: 8rem;
             &>* { @include font.interact(var(--line-color)); }
         }
     }
+
+    & .console-target { pointer-events: auto; }
 }
 
 .input
@@ -389,7 +412,7 @@ $line-height: 8rem;
         padding-right: 1rem;
 
         box-sizing: border-box;
-
+    
         svg.reverse { transform: scaleX(-1); }
     }
 
@@ -432,6 +455,7 @@ $line-height: 8rem;
 .output
 {
     @extend %f-column;
+    @extend %scroll-bar;
 
     align-items: flex-end;
     align-self: flex-end;
@@ -446,21 +470,6 @@ $line-height: 8rem;
     padding-right: app.$gap-inline;
 
     box-sizing: border-box;
-
-    &::-webkit-scrollbar
-    {
-        width: 10px;
-
-        background-color: $dark;
-
-        pointer-events: auto;
-    }
-    &::-webkit-scrollbar-thumb
-    {
-        background-color: $primary;
-
-        pointer-events: auto;
-    }
 
     .line
     {

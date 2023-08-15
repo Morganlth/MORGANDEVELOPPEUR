@@ -20,15 +20,11 @@
 // #IMPORTS
 
     // --JS
-    import MATH from '../../assets/js/utils/math'
     import { wait_throttle } from '../../assets/js/utils/wait'
     import { animation_floating } from '../../assets/js/utils/animation'
 
     // --LIB
-    import { COLORS } from '$lib/app'
-
-    // --CONTEXT
-    import { SPRING } from '../../App.svelte'
+    import { COLORS } from '$lib/colors'
 
     // --SVELTE
     import { onMount, onDestroy } from 'svelte'
@@ -44,8 +40,9 @@
     // --ELEMENT-GRAVITY-AREA
     let
     gravityarea,
-    gravityarea_TRANSLATEX,
-    gravityarea_TRANSLATEY,
+    gravityarea_TRANSLATE_X,
+    gravityarea_TRANSLATE_Y,
+    gravityarea_TRANSITION_DELAY,
     gravityarea_RADIUS,
     gravityarea_LAST = +new Date(),
     gravityarea_TIMEOUT
@@ -69,9 +66,11 @@
 
     function gravityarea_setVar()
     {
-        gravityarea_TRANSLATEX = prop_X * window.innerWidth
-        gravityarea_TRANSLATEY = prop_Y * window.innerHeight
+        gravityarea_TRANSLATE_X = prop_X * window.innerWidth
+        gravityarea_TRANSLATE_Y = prop_Y * window.innerHeight
         gravityarea_RADIUS = gravityarea.offsetWidth / 2
+
+        setTimeout(() => gravityarea_TRANSITION_DELAY = .3, 50)
 
         // Math.cos(MATH.rad.r45) * (SIZE / Math.cos((MATH.rad.r90 - (prop_ORBIT ? Math.abs(prop_ROTATE) : 0) - MATH.rad.r45))) ancien calcule du radius
     }
@@ -80,22 +79,17 @@
     function cube_destroy() { cube_stop() }
 
     // --UPDATES
-    function elements_update(value)
-    {
-        SPRING.spring_LOCK = value
-
-        cube_GRABBING = value
-    }
+    function cube_update(value) { cube_GRABBING = value }
 
     const cube_updatePosition = wait_throttle((x, y) =>
     {
         if (cube_GRABBING)
         {
-            prop_ROTATE += (x - gravityarea_TRANSLATEX) * .005
-            prop_ROTATEY += (y - gravityarea_TRANSLATEY) * .005
+            prop_ROTATE += (x - gravityarea_TRANSLATE_X) * .005
+            prop_ROTATEY += (y - gravityarea_TRANSLATE_Y) * .005
 
-            gravityarea_TRANSLATEX = x
-            gravityarea_TRANSLATEY = y
+            gravityarea_TRANSLATE_X = x
+            gravityarea_TRANSLATE_Y = y
         }
     }, 50)
 
@@ -131,11 +125,11 @@
         }, 200)
     }
 
-    async function cube_mouseDown() { elements_update(true) }
+    async function cube_mouseDown() { cube_update(true) }
 
     export async function cube_mouseMove(clientX, clientY) { cube_updatePosition(clientX - gravityarea_RADIUS, clientY - gravityarea_RADIUS) }
 
-    export async function cube_mouseUp() { if (cube_GRABBING) elements_update(false) }
+    export async function cube_mouseUp() { if (cube_GRABBING) cube_update(false) }
 
     export async function cube_resize() { gravityarea_setVar() }
 
@@ -180,7 +174,8 @@ onDestroy(cube_destroy)
 <button
 class="gravity-area"
 style:--default-size="{prop_SIZE}px"
-style:transform="translate({gravityarea_TRANSLATEX ?? 0}px, {gravityarea_TRANSLATEY ?? 0}px)"
+style:transform="translate({gravityarea_TRANSLATE_X ?? -prop_SIZE * 2}px, {gravityarea_TRANSLATE_Y ?? -prop_SIZE * 2}px)"
+style:transition="transform {gravityarea_TRANSITION_DELAY}s ease-out"
 bind:this={gravityarea}
 on:mouseenter={gravityarea_mouseEnter}
 on:mousemove={gravityarea_mouseMove}
@@ -251,8 +246,6 @@ lang="scss"
 
     pointer-events: auto;
 
-    transition: transform .3s;
-
     &>div
     {
         transition: transform .5s;
@@ -269,7 +262,7 @@ lang="scss"
     transform-style: preserve-3d;
     transform-origin: center;
 
-    transition: transform .6s;
+    transition: transform .35s ease-out;
 
     .side
     {

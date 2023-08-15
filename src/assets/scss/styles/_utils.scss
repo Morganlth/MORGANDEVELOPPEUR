@@ -1,6 +1,8 @@
-// #USE
+// #USES
 
 @use 'sass:map';
+
+@use '../global/variables' as *;
 
 // #UTILS
 
@@ -22,4 +24,23 @@
         $angles-status: ('top-left': $top-left, 'top-right': $top-right, 'bottom-right': $bottom-right, 'bottom-left': $bottom-left);
 
         @each $angle in $angles { @if map.get($angles-status, $angle) { border-#{$angle}-radius: $value; } }
+    }
+
+    // --SCROLL-BAR
+    %scroll-bar
+    {
+        &::-webkit-scrollbar
+        {
+            width: 10px;
+
+            background-color: $dark;
+
+            pointer-events: auto;
+        }
+        &::-webkit-scrollbar-thumb
+        {
+            background-color: $primary;
+
+            pointer-events: auto;
+        }
     }

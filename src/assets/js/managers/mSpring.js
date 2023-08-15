@@ -1,14 +1,16 @@
-// #SPRING-MANAGER
+// #SPRING
 
-class SpringManager
+class Spring
 {
 // --VARIABLES
 
     // --SPRING-CONTEXT
+    static __spring_NAME = 'spring'
+    static __spring_D_SIZE = 7
+
     #spring_$ON = true
     #spring_HOVER = false // icon hover
     #spring_$COORDS
-    #spring_D_SIZE = 7
     #spring_$SIZE
     #spring_EVENTS
 
@@ -22,15 +24,11 @@ constructor ()
     {
         on: this.#spring_$ON,
         subscribe,
-        set: function (on)
-        {
-            this.on = on
-            set(on)
-        }
+        set: function (on) { set(this.on = on) }
     }
 
-    this.#spring_$COORDS = spring({ x: -this.#spring_D_SIZE, y: -this.#spring_D_SIZE }, { stiffness: 0.1, damping: 0.4 })
-    this.#spring_$SIZE = spring(this.#spring_D_SIZE)
+    this.#spring_$COORDS = spring({ x: -Spring.__spring_D_SIZE, y: -Spring.__spring_D_SIZE }, { stiffness: 0.1, damping: 0.4 })
+    this.#spring_$SIZE = spring(Spring.__spring_D_SIZE)
 
     this.spring_update = this.spring_update.bind(this)
     this.spring_command = this.spring_command.bind(this)
@@ -49,7 +47,7 @@ constructor ()
     #spring_setCommand()
     {
         COMMAND.command_setBasicCommand(
-            'spring',
+            Spring.__spring_NAME,
             this.spring_command,
             { defaultValue: this.#spring_$ON.on, optimise: true },
             { testBoolean: true },
@@ -70,7 +68,7 @@ constructor ()
         if (on)
         {
             this.#spring_setEvent()
-            this.spring_$SIZE = this.#spring_D_SIZE // set the size before the on
+            this.spring_$SIZE = Spring.__spring_D_SIZE // set the size before the on
         }
         else this.#spring_destroy()
 
@@ -78,13 +76,13 @@ constructor ()
     }
 
     // --COMMAND
-    spring_command(on) { COMMAND.command_test(on, 'boolean', this.spring_update, 'spring', this.#spring_$ON.on) }
+    spring_command(on) { COMMAND.command_test(on, 'boolean', this.spring_update, Spring.__spring_NAME, this.#spring_$ON.on) }
 
     // --EVENT
     spring_mouseMove(x, y) { if (!this.#spring_HOVER) this.spring_$COORDS = { x: x, y: y } }
 
     // --UTILS
-    spring_show() { this.spring_$SIZE = this.#spring_D_SIZE }
+    spring_show() { this.spring_$SIZE = Spring.__spring_D_SIZE }
 
     spring_hide() { this.spring_$SIZE = 0 }
 
@@ -111,9 +109,8 @@ constructor ()
     import { wait_throttle } from '../utils/wait'
 
     // --CONTEXTS
-    import APP from './appManager'
-    import COMMAND from './commandManager'
-    import EVENT from './eventManager'
+    import COMMAND from './mCommand'
+    import EVENT from './mEvent'
 
     // --SVELTE
     import { writable } from 'svelte/store'
@@ -121,4 +118,4 @@ constructor ()
 
 // #EXPORT
 
-export default new SpringManager()
+export default new Spring()

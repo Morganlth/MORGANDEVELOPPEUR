@@ -25,7 +25,12 @@
 
         APP.app_commandOptimise(on)
 
-        setTimeout(() => { opti_ON = false }, 500)
+        setTimeout(() =>
+        {
+            opti_ON = false
+
+            APP.app_START = true
+        }, 500)
     }
 </script>
 

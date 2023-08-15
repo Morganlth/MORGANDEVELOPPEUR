@@ -25,4 +25,4 @@
 // #IMPORT
 
     // --CONTEXT
-    import EVENT from '../managers/eventManager'
+    import EVENT from '../managers/mEvent'

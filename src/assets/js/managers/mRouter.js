@@ -1,6 +1,6 @@
-// #ROUTER-MANAGER
+// #ROUTER
 
-class RouterManager
+class Router
 {
     // #VARIABLES
 
@@ -75,9 +75,9 @@ class RouterManager
 // #IMPORT
 
     // --CONTEXT
-    import event from './eventManager'
+    import event from './mEvent'
 
 // #EXPORT
 
     // --CONTEXT
-    export default new RouterManager()
+    export default new Router()

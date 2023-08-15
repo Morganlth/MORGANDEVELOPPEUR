@@ -7,7 +7,7 @@
     import fps_get from '../../assets/js/utils/fps'
 
     // --LIB
-    import { COLORS } from '$lib/app'
+    import { COLORS } from '$lib/colors'
 
     // --SVELTE
     import { page } from '$app/stores'

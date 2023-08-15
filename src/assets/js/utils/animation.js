@@ -1,7 +1,7 @@
 // #EXPORT
 
     // --ANIMATION
-    export function animation(animation, duration, scale)
+    export function animation(animation = () => {}, duration, scale)
     {
         const [DELAY, STEP] = [duration / scale, 1 / scale]
         let t = STEP, interval

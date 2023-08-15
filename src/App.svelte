@@ -14,10 +14,10 @@ context="module"
 // #IMPORTS
 
     // --CONTEXTS
-    import a from './assets/js/managers/appManager'
-    import c from './assets/js/managers/commandManager'
-    import e from './assets/js/managers/eventManager'
-    import s from './assets/js/managers/springManager'
+    import a from './assets/js/managers/mApp'
+    import c from './assets/js/managers/mCommand'
+    import e from './assets/js/managers/mEvent'
+    import s from './assets/js/managers/mSpring'
 </script>
 
 <script>
@@ -59,6 +59,7 @@ context="module"
     function app_set()
     {
         opti_setVar()
+
         app_setContexts()
         app_setCommands()
 
@@ -91,6 +92,8 @@ context="module"
         APP.app_setFormat() // after app_restore()
 
         app_OPACITY = 1
+
+        if (!opti_ON) APP.app_START = true
     }
 
     // --COMMANDS
