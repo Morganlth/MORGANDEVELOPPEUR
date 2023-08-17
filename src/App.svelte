@@ -1,3 +1,15 @@
+<!-- #MAP
+
+    APP
+        HEADER
+        MAIN
+        FOOTER
+
+        #if OPTI
+        #else ASIDE
+
+-->
+
 <!-- #SCRIPT -->
 
 <script
@@ -24,15 +36,13 @@ context="module"
 // #IMPORTS
 
     // --SVELTE
-    import { onMount, onDestroy } from 'svelte'
+    import { onMount } from 'svelte'
 
     // --COMPONENT-FIELDS
     import Header from './components/fields/Header.svelte'
     import Main from './components/fields/Main.svelte'
     import Footer from './components/fields/Footer.svelte'
-
-    // --COMPONENT-ELEMENT
-    import Console from './components/elements/Console.svelte'
+    import Aside from './components/fields/Aside.svelte'
 
     // --COMPONENT-WARN
     import Opti from './components/warn/Opti.svelte'
@@ -40,39 +50,41 @@ context="module"
 // #CONSTANTE
 
     // --ELEMENT-APP
-    const APP_START = performance.now()
+    const APP_PERFORMANCE = performance.now()
 
 // #VARIABLE
 
-    // --APP-CONTEXT
-    let app_FREEZE = APP.app_FREEZE
-
     // --ELEMENT-APP
-    let app_OPACITY = 0
-
-    // --ELEMENT-SPRING
     let
-    spring_$ON = SPRING.spring_$ON,
-    spring_$COORDS = SPRING.spring_$COORDS,
-    spring_$SIZE = SPRING.spring_$SIZE
+    app_CHARGED = false,
+    app_FREEZE = APP.app_FREEZE
 
     // --ELEMENT-OPTI
     let opti_ON = false
 
-// #FUNCTION
+// #REACTIVE
+
+    // --ELEMENT-APP
+    $: APP.app_START = app_CHARGED && !opti_ON
+
+// #FUNCTIONS
 
     // --SET
     function app_set()
     {
-        opti_setVar()
+        opti_setVars()
 
         app_setContexts()
         app_setCommands()
 
-        app_update()
+        app_restore()
+
+        app_setFormat() // after app_restore()
+
+        app_CHARGED = true
     }
 
-    function opti_setVar() { opti_ON = (performance.now() - APP_START) > 250 && localStorage.getItem('optimise') !== 'true' }
+    function opti_setVars() { opti_ON = (performance.now() - APP_PERFORMANCE) > 250 && localStorage.getItem('optimise') !== 'true' }
 
     function app_setContexts()
     {
@@ -88,19 +100,10 @@ context="module"
         COMMAND.command_add('event', app_event)
     }
 
-    // --DESTROY
-    function app_destroy() { EVENT.event_destroy() }
+    function app_setFormat() { APP.app_setFormat() }
 
-    // --UPDATE
-    function app_update()
-    {
-        APP.app_restore()
-        APP.app_setFormat() // after app_restore()
-
-        app_OPACITY = 1
-
-        if (!opti_ON) APP.app_START = true
-    }
+    // --RESTORE
+    function app_restore() { APP.app_restore() }
 
     // --COMMANDS
     function app_app() { console.log(APP) }
@@ -109,13 +112,12 @@ context="module"
 
     function app_event() { console.log(EVENT) }
 
-    // #EVENT
+    // --EVENT
     async function app_touchStart() { APP.app_MOBILE = true }
 
-// #CYCLES
+// #CYCLE
 
 onMount(app_set)
-onDestroy(app_destroy)
 </script>
 
 <!-- #HTML -->
@@ -124,7 +126,7 @@ onDestroy(app_destroy)
 <div
 id="app"
 class:freeze={$app_FREEZE}
-style:opacity={app_OPACITY}
+style:opacity={app_CHARGED ? 1 : 0}
 on:scroll={EVENT.event_scroll.bind(EVENT)}
 on:mousemove={EVENT.event_mouseMove.bind(EVENT)}
 on:mousedown={EVENT.event_mouseDown.bind(EVENT)}
@@ -136,22 +138,12 @@ on:touchstart|once={app_touchStart}
     <Main />
     <Footer />
 
-    <Console />
-
     {#if opti_ON}
         <Opti
         bind:opti_ON
         />
-    {:else if $spring_$ON}
-        <svg
-        class="spring"
-        >
-            <circle
-            cx={$spring_$COORDS.x}
-            cy={$spring_$COORDS.y}
-            r={Math.abs($spring_$SIZE)}
-            />
-        </svg>
+    {:else}
+        <Aside />
     {/if}
 </div>
 
@@ -162,67 +154,25 @@ lang="scss"
 >
 /* #USES */
 
+@use './assets/scss/app';
+
 @use './assets/scss/styles/utils';
-@use './assets/scss/styles/elements';
-@use './assets/scss/styles/position';
 @use './assets/scss/styles/size';
-@use './assets/scss/styles/media';
 
 /* #GLOBAL */
 
 :global
 {
-    /* #RESET */
+    @extend %global;
 
-    body, h1, h2, h3, h4, h5, h6, ul, p, figure, blockquote, pre { margin: 0; }
-    ul, button, input, input[type="text"], textarea { padding: 0; }
-
-    li { list-style: none; }
-
-    a, img { @extend %no-drag }
-
-    /* #FONT */
-
-    @font-face
-    {
-        font-family: 'CodeNext';
-        src: url('./fonts/CodeNext/CodeNext-Trial-Black.ttf');
-    }
-    @font-face
-    {
-        font-family: 'AnonymousPro';
-        src: url('./fonts/AnonymousPro/AnonymousPro.ttf');
-    }
-
-    /* #SET */
-
-    html
-    {
-        /* overflow: hidden; padding-top: 16vh; box-sizing: border-box; width: 100vw; height: 100vh; body { transform: scale(1); } body, body>div, #app { overflow: hidden; width: 100%; height: 100%; } */
-
-        &, body, body>div
-        {
-            overflow: hidden;
-
-            width: 100vw;
-            height: 100vh;
-        }
-
-        font-size: 31.25%;
-
-        body { background-color: $dark; }
-
-        @include media.min($ms4) { font-size: 46.875%; }
-        @include media.min($ms6) { font-size: 62.5%; }
-    }
+    a, img { @extend %no-drag; }
 }
 
 /* #APP */
 
 #app
 {
-    &, &>.spring { @extend %any; }
-
+    @extend %any;
     @extend %scroll-bar;
 
     overflow: hidden scroll;
@@ -230,18 +180,5 @@ lang="scss"
     background-color: $dark;
 
     &.freeze { overflow: hidden; }
-
-    .spring
-    {
-        @include position.placement(absolute, 0, 0, 0, 0);
-
-        z-index: 3;
-
-        mix-blend-mode: difference;
-
-        pointer-events: none;
-
-        circle { fill: $light; }
-    }
 }
 </style>

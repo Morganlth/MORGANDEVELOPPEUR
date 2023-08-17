@@ -1,3 +1,14 @@
+<!-- #MAP
+
+    CONSOLE
+        INPUT
+            \ LINE
+                MIRROR
+        OUTPUT
+            \ LINE
+
+-->
+
 <!-- #SCRIPT -->
 
 <script>
@@ -27,25 +38,29 @@
     CONSOLE_EVENT = { mouseDown: console_mouseDown }
 
     // --ELEMENT-MIRROR
-    const MIRROR_ITEMS = []
+    const MIRROR_FIELDS = []
 
 // #VARIABLES
 
     // --ELEMENT-CONSOLE
     let
     console_ON = false,
-    console_INPUT,
-    console_CURRENTVALUE = '',
-    console_OUTPUT_LINES = [],
     console_INDEX = 0
+
+    // --ELEMENT-INPUT
+    let
+    input_FIELD,
+    input_CURRENT_VALUE = ''
 
     // --ELEMENT-MIRROR
     let
-    mirror_APP = false,
-    mirror_COMMAND = false
+    mirror_APP_AVAILABLE = false,
+    mirror_COMMAND_AVAILABLE = false
 
     // --ELEMENT-OUTPUT
-    let output
+    let
+    output,
+    output_LINES = []
 
 // #FUNCTIONS
 
@@ -58,7 +73,7 @@
         COMMAND.command_add('clear', console_clear)
     }
 
-    function console_setEvent() { EVENT.event_add(CONSOLE_EVENT) }
+    function console_setEvents() { EVENT.event_add(CONSOLE_EVENT) }
 
     // --DESTROY
     function console_destroy() { console_destroyEvent() }
@@ -66,43 +81,53 @@
     function console_destroyEvent() { EVENT.event_remove(CONSOLE_EVENT) }
 
     // --RESET
-    function console_reset()
+    function input_reset()
     {
-        console_update(false)
-        console_CURRENTVALUE = ''
+        input_CURRENT_VALUE = '' // before update
+    
+        mirror_update()
     }
 
     // --RESTORE
     function console_restore()
     {
         console_testRange()
-        console_write(CONSOLE_HISTORY[console_INDEX])
+
+        input_CURRENT_VALUE = CONSOLE_HISTORY[console_INDEX]
+
+        input_fieldFocus()
+        input_input()
     }
 
     // --UPDATES
-    function console_update(status, values = [])
-    {
-        mirror_APP = status
-
-        for (let i = 0; i < MIRROR_ITEMS.length; i++) MIRROR_ITEMS[i].innerText = values[i] ?? ''
-    }
-
-    function console_updateCommand(command) { mirror_COMMAND = COMMAND.command_KEYWORDS.includes(command.trim()) }
-
     function console_updateHistory()
     {
         const
-        VALUE = console_CURRENTVALUE.trim(),
+        VALUE = input_CURRENT_VALUE.trim(),
         INDEX = CONSOLE_HISTORY.indexOf(VALUE)
 
-        if (INDEX !== -1) CONSOLE_HISTORY.splice(INDEX, 1)
+        if (~INDEX) CONSOLE_HISTORY.splice(INDEX, 1)
     
         CONSOLE_HISTORY.push(VALUE)
 
         console_INDEX = CONSOLE_HISTORY.length
     }
 
-    function output_update() { tick().then(() => output.scrollTop = output.scrollHeight - output.offsetHeight) }
+    function mirror_update(status = false, values = [input_CURRENT_VALUE])
+    {
+        mirror_APP_AVAILABLE = status
+
+        for (let i = 0; i < MIRROR_FIELDS.length; i++) MIRROR_FIELDS[i].innerText = values[i] ?? ''
+    }
+
+    function mirror_updateCommand(command) { mirror_COMMAND_AVAILABLE = COMMAND.command_KEYWORDS.includes(command.trim()) }
+
+    async function output_update()
+    {
+        await tick()
+
+        if (output) output.scrollTop = output.scrollHeight - output.offsetHeight
+    }
 
     // --COMMANDS
     function console_log(msg)
@@ -111,12 +136,12 @@
         [ERROR, SUCCESS] = [msg instanceof Error, msg instanceof CommandSuccess],
         [NAME, MESSAGE] = ERROR || SUCCESS ? [msg.name, msg.message.trim()] : [void 0, msg.trim()]
 
-        console_OUTPUT_LINES = [...console_OUTPUT_LINES, { error: ERROR, success: SUCCESS, name: NAME, message: MESSAGE }]
+        output_LINES = [...output_LINES, { error: ERROR, success: SUCCESS, name: NAME, message: MESSAGE }] // svelte update array
 
         output_update()
     }
 
-    function console_clear() { console_OUTPUT_LINES = [] }
+    function console_clear() { output_LINES = [] }
 
     // --EVENTS
     async function console_mouseDown(e) { if (!e.target.classList.contains(CONSOLE_TARGET_CLASS)) console_click() }
@@ -127,27 +152,21 @@
 
         if (console_ON)
         {
-            console_setEvent()
-            console_focus(console_CURRENTVALUE)
+            console_setEvents()
+
+            input_fieldFocus()
         }
         else console_destroyEvent()
 
         APP.app_FREEZE = console_ON
     }
 
-    function console_input()
-    {
-        (console_CURRENTVALUE.length === 3 || console_CURRENTVALUE[3] === ' ') && console_CURRENTVALUE.substring(0, 3).toLowerCase() === 'app'
-        ? console_analyse()
-        : console_update(false, [console_CURRENTVALUE])
-    }
-
-    function console_keyup(e)
+    async function console_keyup(e)
     {
         switch (e.key)
         {
             case 'Enter':
-                if (MIRROR_ITEMS[0].innerText.toLowerCase() === 'app') console_execute()
+                if (mirror_APP_AVAILABLE) console_execute()
                 break
             case 'ArrowUp':
                 console_INDEX--
@@ -161,6 +180,13 @@
         }
     }
 
+    function input_input() // no async
+    {
+        (input_CURRENT_VALUE.length === 3 || input_CURRENT_VALUE[3] === ' ') && input_CURRENT_VALUE.substring(0, 3).toLowerCase() === 'app'
+        ? input_analyse()
+        : mirror_update()
+    }
+
     // --TEST
     function console_testRange()
     {
@@ -169,42 +195,37 @@
     }
 
     // --UTILS
-    function console_write(value)
+    function input_fieldFocus()
     {
-        console_CURRENTVALUE = value
+        const LENGTH = input_CURRENT_VALUE.length
 
-        console_focus(value)
-        console_input()
+        input_FIELD.focus()
+        input_FIELD.setSelectionRange(LENGTH, LENGTH)
     }
 
-    function console_focus(value)
+    function input_analyse()
     {
-        const LENGTH = value.length
-
-        console_INPUT.focus()
-        console_INPUT.setSelectionRange(LENGTH, LENGTH)
-    }
-
-    function console_analyse()
-    {
-        const VALUES = console_CURRENTVALUE.match(/^(app)(\s+\S*)?(\s.*)?$/i)
+        const VALUES = input_CURRENT_VALUE.match(/^(app)(\s+\S*)?(\s.*)?$/i)
 
         VALUES.shift()
 
-        if (VALUES[1]) console_updateCommand(VALUES[1])
+        if (VALUES[1]) mirror_updateCommand(VALUES[1])
 
-        console_update(true, VALUES)
+        mirror_update(true, VALUES)
     }
 
     function console_execute()
     {
-        const
-        NAME = MIRROR_ITEMS[1].innerText.trim(),
-        PARAMS = MIRROR_ITEMS[2].innerText.trim().split(',')
+        const [NAME, PARAMS] = [MIRROR_FIELDS[1].innerText.trim(), MIRROR_FIELDS[2].innerText.trim().split(',')]
 
         console_updateHistory()
 
-        try { COMMAND.command_COMMANDS[NAME](...PARAMS), console_reset() } catch (e) { console_error(e, NAME) }
+        try
+        {
+            COMMAND.command_COMMANDS[NAME](...PARAMS)
+            
+            input_reset()
+        } catch (e) { console_error(e, NAME) }
     }
 
     function console_error(e, command)
@@ -272,20 +293,20 @@ on:mouseleave={SPRING.spring_show.bind(SPRING)}
             type="text"
             maxlength="55"
             spellcheck="false"
-            bind:this={console_INPUT}
-            bind:value={console_CURRENTVALUE}
-            on:input={console_input}
+            bind:this={input_FIELD}
+            bind:value={input_CURRENT_VALUE}
+            on:input={input_input}
             on:keyup|preventDefault={console_keyup}
             />
 
             <div
             class="mirror"
-            class:app-available={mirror_APP}
-            class:command-available={mirror_COMMAND}
+            class:app-available={mirror_APP_AVAILABLE}
+            class:command-available={mirror_COMMAND_AVAILABLE}
             >
                 {#each [0, 1, 2] as i}
                     <pre
-                    bind:this={MIRROR_ITEMS[i]}
+                    bind:this={MIRROR_FIELDS[i]}
                     >
                     </pre>
                 {/each}
@@ -297,7 +318,7 @@ on:mouseleave={SPRING.spring_show.bind(SPRING)}
     class="output {CONSOLE_TARGET_CLASS}"
     bind:this={output}
     >
-        {#each console_OUTPUT_LINES as line}
+        {#each output_LINES as line}
             <div
             class="line"
             >
@@ -383,113 +404,114 @@ $line-height: 8rem;
     }
 
     & .console-target { pointer-events: auto; }
-}
 
-.input
-{
-    @include utils.solid-border($intermediate, 7px, true, false);
-
-    @extend %f-a-center;
-
-    width: 100%;
-
-    background-color: $dark;
-
-    box-sizing: border-box;
-
-    transition: border-color .5s;
-
-    &>button
+    .input
     {
-        @extend %button-reset;
-        @extend %f-center;
+        @include utils.solid-border($intermediate, 7px, true, false);
 
-        flex-shrink: 0;
-
-        width: $btn-width;
-        height: $line-height;
-
-        padding-right: 1rem;
-
-        box-sizing: border-box;
-    
-        svg.reverse { transform: scaleX(-1); }
-    }
-
-    .line
-    {
-        position: relative;
-
-        width: calc(100% - $btn-width);
-
-        input, .mirror { @extend %any; }
-        input
-        {
-            --line-color: transparent;
-    
-            @include position.placement(absolute, auto, 0, 0, 0);
-
-            @extend %input-reset;
-    
-            caret-color: $primary;
-
-            &::selection
-            {
-                background-color: rgba($primary, .5);
-
-                color: transparent;
-            }
-        }
-        .mirror 
-        {
-            #{--line-color}: $light;
-
-            @extend %f-a-center;
-    
-            &.app-available>pre:nth-child(1) { color: $primary; }
-            &.command-available>pre:nth-child(2) { color: $indicator; }
-        }
-    }
-}
-
-.output
-{
-    @extend %f-column;
-    @extend %scroll-bar;
-
-    align-items: flex-end;
-    align-self: flex-end;
-
-    overflow: auto;
-
-    width: fit-content;
-    max-width: 100%;
-    min-height: 0;
-    max-height: calc(100vh - ($gap-block * 2 + $line-height));
-
-    padding-right: app.$gap-inline;
-
-    box-sizing: border-box;
-
-    .line
-    {
         @extend %f-a-center;
 
-        justify-content: flex-end;
+        width: 100%;
 
-        pointer-events: none;
+        background-color: $dark;
 
-        .console-error { #{--line-color}: $indicator; }
-        .console-success { #{--line-color}: $primary; }
+        box-sizing: border-box;
 
-        pre { #{--line-color}: $light; }
+        transition: border-color .5s;
+
+        &>button
+        {
+            @extend %button-reset;
+            @extend %f-center;
+
+            flex-shrink: 0;
+
+            width: $btn-width;
+            height: $line-height;
+
+            padding-right: 1rem;
+
+            box-sizing: border-box;
+        
+            svg.reverse { transform: scaleX(-1); }
+        }
+
+        .line
+        {
+            position: relative;
+
+            width: calc(100% - $btn-width);
+
+            input, .mirror { @extend %any; }
+            input
+            {
+                --line-color: transparent;
+        
+                @include position.placement(absolute, auto, 0, 0, 0);
+
+                @extend %input-reset;
+        
+                caret-color: $primary;
+
+                &::selection
+                {
+                    background-color: rgba($primary, .5);
+
+                    color: transparent;
+                }
+            }
+            .mirror 
+            {
+                #{--line-color}: $light;
+
+                @extend %f-a-center;
+        
+                &.app-available>pre:nth-child(1) { color: $primary; }
+                &.command-available>pre:nth-child(2) { color: $indicator; }
+            }
+        }
     }
-}
 
-@include media.min($ms3)
-{
-    .console { width: fit-content; }
-    .input { width: $line-width; }
-    .output { max-width: $line-width; }
+    .output
+    {
+        @extend %f-column;
+        @extend %scroll-bar;
+
+        align-items: flex-end;
+        align-self: flex-end;
+
+        overflow: auto;
+
+        width: fit-content;
+        max-width: 100%;
+        min-height: 0;
+        max-height: calc(100vh - ($gap-block * 2 + $line-height));
+
+        padding-right: app.$gap-inline;
+
+        box-sizing: border-box;
+
+        .line
+        {
+            @extend %f-a-center;
+
+            justify-content: flex-end;
+
+            pointer-events: none;
+
+            .console-error { #{--line-color}: $indicator; }
+            .console-success { #{--line-color}: $primary; }
+
+            pre { #{--line-color}: $light; }
+        }
+    }
+
+    @include media.min($ms3)
+    {
+        width: fit-content;
+
+        .input { width: $line-width; }
+        .output { max-width: $line-width; }
+    }
 }
 </style>

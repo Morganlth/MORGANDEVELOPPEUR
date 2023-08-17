@@ -134,7 +134,7 @@ constructor ()
         {
             const INDEX = this.event_contain(CATEGORY, events[CATEGORY])
 
-            if (INDEX !== -1) this.event_MANAGER[CATEGORY].splice(INDEX, 1)
+            if (~INDEX) this.event_MANAGER[CATEGORY].splice(INDEX, 1)
         }
     }
 

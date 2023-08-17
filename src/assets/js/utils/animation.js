@@ -1,21 +1,22 @@
 // #EXPORT
 
     // --ANIMATION
-    export function animation(animation = () => {}, duration, scale)
+    export function animation(callback = () => {}, duration)
     {
-        const [DELAY, STEP] = [duration / scale, 1 / scale]
-        let t = STEP, interval
+        const
+        START = +new Date(),
+        CONTEXT = this ?? {}
 
-        animation(t)
-
-        return (interval = setInterval(() =>
+        ;(async function frame()
         {
-            t += STEP
+            const TIME = +new Date() - START
+
+            if (TIME > duration) return
     
-            animation(t)
-    
-            if (t >= 1) clearInterval(interval)
-        }, DELAY))
+            callback(TIME / duration)
+
+            CONTEXT.animation_FRAMEID = requestAnimationFrame(frame)
+        })()
     }
 
     export function animation_floating(y)

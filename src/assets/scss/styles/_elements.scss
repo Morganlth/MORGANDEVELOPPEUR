@@ -16,11 +16,3 @@
         border: none;
         outline: none;
     }
-
-    // --ELEMENT-P-A-IMG
-    %no-drag
-    {
-        user-select: none;
-        -webkit-user-drag: none;
-        -webkit-app-region: no-drag;
-    }

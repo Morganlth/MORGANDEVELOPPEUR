@@ -1,3 +1,10 @@
+// #USES
+
+@use './global/colors' as *;
+@use './global/breakpoints' as *;
+
+@use './styles/media';
+
 // #VARIABLES
 
     // --GAP
@@ -5,3 +12,49 @@
     $gap-inline: max(5rem, 30px);
 
 // #APP
+
+    // --GLOBAL
+    %global
+    {
+        // #RESET
+
+        body, h1, h2, h3, h4, h5, h6, ul, p, figure, blockquote, pre { margin: 0; }
+        ul, button, input, input[type="text"], textarea { padding: 0; }
+
+        li { list-style: none; }
+
+        // #FONT
+
+        @font-face
+        {
+            font-family: 'CodeNext';
+            src: url('./fonts/CodeNext/CodeNext-Trial-Black.ttf');
+        }
+        @font-face
+        {
+            font-family: 'AnonymousPro';
+            src: url('./fonts/AnonymousPro/AnonymousPro.ttf');
+        }
+
+        // #SET
+
+        html
+        {
+            /* overflow: hidden; padding-top: 16vh; box-sizing: border-box; width: 100vw; height: 100vh; body { transform: scale(1); } body, body>div, #app { overflow: hidden; width: 100%; height: 100%; } */
+
+            &, body, body>div
+            {
+                overflow: hidden;
+
+                width: 100vw;
+                height: 100vh;
+            }
+
+            font-size: 31.25%;
+
+            body { background-color: $dark; }
+
+            @include media.min($ms4) { font-size: 46.875%; }
+            @include media.min($ms6) { font-size: 62.5%; }
+        }
+    }

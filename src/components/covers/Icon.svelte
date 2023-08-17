@@ -1,3 +1,9 @@
+<!-- #MAP
+
+    ICON
+
+-->
+
 <!-- #SCRIPT -->
 
 <script>
@@ -26,17 +32,16 @@
 // #FUNCTIONS
 
     // --SET
-    function icon_set()
+    function icon_set() { if (prop_SPRING) icon_setEvents() }
+
+    function icon_setEvents()
     {
-        if (prop_SPRING)
-        {
-            icon.addEventListener('mouseenter', icon_mouseEnter)
-            icon.addEventListener('mouseleave', icon_mouseLeave)
-        }
+        icon.addEventListener('mouseenter', icon_mouseEnter)
+        icon.addEventListener('mouseleave', icon_mouseLeave)
     }
 
     // --UPDATE
-    function spring_update(hover, size)
+    function icon_updateSpring(hover, size)
     {
         SPRING.spring_HOVER = hover
         SPRING.spring_$SIZE = size
@@ -49,12 +54,12 @@
         CLIENTRECT = icon.getBoundingClientRect(),
         [X, Y] = [CLIENTRECT.left + CLIENTRECT.width / 2, CLIENTRECT.top + CLIENTRECT.height / 2]
 
-        spring_update(true, CLIENTRECT.width)
+        icon_updateSpring(true, CLIENTRECT.width)
 
         requestAnimationFrame(() => SPRING.spring_$COORDS = { x: X, y: Y })
     }
 
-    function icon_mouseLeave() { spring_update(false, 7) }
+    function icon_mouseLeave() { icon_updateSpring(false, 7) }
 
 // #CYCLE
 

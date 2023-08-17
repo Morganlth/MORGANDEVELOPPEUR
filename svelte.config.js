@@ -8,8 +8,8 @@ const config = {
 		scss:
 		{
 			prependData: /* scss */ `
+				@use './src/assets/scss/global/colors' as *;
 				@use './src/assets/scss/global/breakpoints' as *;
-				@use './src/assets/scss/global/variables' as *;
 			`
 		},
 		postcss: { plugins: autoprefixer }

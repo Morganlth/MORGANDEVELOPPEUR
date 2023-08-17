@@ -1,0 +1,3 @@
+@use '../global/colors';
+
+:export { @each $name, $color in colors.$colors { #{$name}: $color; } }

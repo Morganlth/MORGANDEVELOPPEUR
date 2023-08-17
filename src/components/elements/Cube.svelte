@@ -160,7 +160,7 @@
     {
         const INDEX = prop_CUBES_ANIMATION.indexOf(cube_animation)
 
-        if (INDEX !== -1) prop_CUBES_ANIMATION.splice(INDEX, 1)
+        if (~INDEX) prop_CUBES_ANIMATION.splice(INDEX, 1)
     }
 
 // #CYCLES

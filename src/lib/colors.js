@@ -3,7 +3,7 @@
 // #IMPORT
 
     // --SCSS
-    import colors from '../assets/scss/modules/variables.module.scss'
+    import colors from '../assets/scss/modules/_colors.module.scss'
 
 // #EXPORT
  

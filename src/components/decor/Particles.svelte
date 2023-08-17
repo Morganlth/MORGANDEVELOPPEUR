@@ -1,3 +1,9 @@
+<!-- #MAP
+
+    PARTICLES
+
+-->
+
 <!-- #SCRIPT -->
 
 <script>
@@ -39,12 +45,12 @@
     // --SET
     function particles_set()
     {
-        particles_setVar()
-        particles_setCommand()
-        particles_setEvent()
+        particles_setVars()
+        particles_setCommands()
+        particles_setEvents()
     }
 
-    function particles_setVar()
+    function particles_setVars()
     {
         particles.width = window.innerWidth
         particles.height = window.innerHeight
@@ -52,7 +58,7 @@
         particles_CONTEXT = particles_CONTEXT ?? particles.getContext('2d')
     }
 
-    function particles_setCommand()
+    function particles_setCommands()
     {
         COMMAND.command_setBasicCommand(
             'particles',
@@ -71,12 +77,10 @@
         )
     }
 
-    function particles_setEvent() { EVENT.event_add(PARTICLES_EVENTS) }
+    function particles_setEvents() { EVENT.event_add(PARTICLES_EVENTS) }
 
     function particles_setParticle()
     {
-        particles_COUNT = 0
-
         PARTICLES_PARTICLES.push(
         {
             x: 0,
@@ -86,12 +90,12 @@
             size: Math.random() * 10 + 10,
             color: COLORS[Math.round(Math.random()) ? 'light' : 'primary']
         })
-
-        if (PARTICLES_PARTICLES.length > particles_MAX) PARTICLES_PARTICLES.shift()
     }
 
     // --DESTROY
-    function particles_destroy() { EVENT.event_remove(PARTICLES_EVENTS) }
+    function particles_destroy() { particles_destroyEvents }
+
+    function particles_destroyEvents() { EVENT.event_remove(PARTICLES_EVENTS) }
 
     // --UPDATES
     function particles_update(on)
@@ -131,20 +135,29 @@
     // --CLEAR
     function particles_clear() { particles_CONTEXT.clearRect(0, 0, window.innerWidth, window.innerHeight) }
 
+    // --TEST
+    function particles_testMax() { if (PARTICLES_PARTICLES.length > particles_MAX) PARTICLES_PARTICLES.shift() }
+
     // --COMMANDS
     function particles_command(on) { COMMAND.command_test(on, 'boolean', particles_update, 'particles', particles_ON) }
 
     function particles_commandDelay(delay) { COMMAND.command_test(delay, 'number', particles_updateDelay, 'particles_delay', particles_DELAY) }
 
     // --EVENTS
-    async function particles_resize() { particles_setVar() }
+    async function particles_resize() { particles_setVars() }
 
     async function particles_animation()
     {
         particles_clear()
         particles_draw()
 
-        if (++particles_COUNT > particles_DELAY) particles_setParticle()
+        if (++particles_COUNT > particles_DELAY)
+        {
+            particles_COUNT = 0
+
+            particles_setParticle()
+            particles_testMax()
+        }
     }
 
 // #CYCLES

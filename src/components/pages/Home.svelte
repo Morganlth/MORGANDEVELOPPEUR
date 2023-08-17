@@ -31,11 +31,11 @@
 
 // #CONSTANTES
 
-    // --ELEMENT-SCENE
-    const SCENE_EVENTS =
+    // --ELEMENT-WRAPPER
+    const WRAPPER_EVENTS =
     {
-        scroll: scene_scroll,
-        resize: scene_resize
+        scroll: wrapper_scroll,
+        resize: wrapper_resize
     }
 
     // --ELEMENT-CUBES
@@ -54,49 +54,52 @@
 
 // #VARIABLES
 
-    // --ELEMENT-SCENE
+    // --ELEMENT-WRAPPER
     let
-    scene,
-    scene_HEIGHT,
-    scene_AVAILABLE_HEIGHT,
-    scene_SCROLL_RATIO
+    wrapper,
+    wrapper_HEIGHT,
+    wrapper_AVAILABLE_HEIGHT,
+    wrapper_SCROLL_RATIO
+
+    // --ELEMENT-TITLE
+    let title
 
 // #FUNCTIONS
 
     // --SET
     function home_set()
     {
-        scene_setVar()
-        scene_setEvent()
+        wrapper_setVars()
+        wrapper_setEvent()
     
         cubes_setEvent()
     }
 
-    function scene_setVar()
+    function wrapper_setVars()
     {
-        scene_HEIGHT = scene.offsetHeight,
-        scene_AVAILABLE_HEIGHT = scene.parentNode.offsetHeight - scene_HEIGHT
+        wrapper_HEIGHT = wrapper.offsetHeight,
+        wrapper_AVAILABLE_HEIGHT = wrapper.parentNode.offsetHeight - wrapper_HEIGHT
     }
 
-    function scene_setEvent() { EVENT.event_add(SCENE_EVENTS) }
+    function wrapper_setEvent() { EVENT.event_add(WRAPPER_EVENTS) }
 
     function cubes_setEvent() { EVENT.event_add(CUBES_EVENTS) }
 
     // --DESTROY
     function home_destroy()
     {
-        scene_destroyEvent()
+        wrapper_destroyEvent()
         cubes_destroyEvent()
     }
 
-    function scene_destroyEvent() { EVENT.event_remove(SCENE_EVENTS) }
+    function wrapper_destroyEvent() { EVENT.event_remove(WRAPPER_EVENTS) }
 
     function cubes_destroyEvent() { EVENT.event_remove(CUBES_EVENTS) }
 
     // --EVENTS
-    async function scene_scroll() { scene_SCROLL_RATIO = scene.offsetTop / scene_AVAILABLE_HEIGHT }
+    async function wrapper_scroll() { wrapper_SCROLL_RATIO = wrapper.offsetTop / wrapper_AVAILABLE_HEIGHT }
 
-    async function scene_resize() { scene_setVar() }
+    async function wrapper_resize() { wrapper_setVars() }
 
     async function cubes_mouseMove(clientX, clientY) { cubes_run.call(CUBES_MOUSEMOVE, clientX, clientY) }
 
@@ -104,7 +107,7 @@
 
     async function cubes_resize() { cubes_run.call(CUBES_RESIZE) }
 
-    function cubes_animation() { for (const CUBE_ANIMATION of CUBES_ANIMATION) CUBE_ANIMATION() }
+    async function cubes_animation() { for (const CUBE_ANIMATION of CUBES_ANIMATION) CUBE_ANIMATION() }
 
     async function homepagelinks_click()
     {
@@ -117,6 +120,12 @@
         HOME_PAGE_LINKS[this] = { ...LINK, on: true }
     }
 
+    // --ANIMATION
+    async function animation()
+    {
+
+    }
+    
     // --UTIL
     function cubes_run() { for (const EVENT of this) EVENT(...arguments) }
 // #CYCLES
@@ -131,16 +140,37 @@ onDestroy(home_destroy)
 id="home"
 >
     <div
-    class="scene"
-    bind:this={scene}
+    class="wrapper"
+    bind:this={wrapper}
     >
-        <Particles />
-        <SpaceCube
-        prop_RATIO={scene_SCROLL_RATIO}
-        />
+        <div
+        class="scene"
+        >
+            <Particles />
+
+            <SpaceCube
+            prop_RATIO={wrapper_SCROLL_RATIO}
+            />
+
+            <div
+            class="cubes"
+            >
+                {#each HOME_CUBES as cube, i}
+                    <Cube
+                    {...cube}
+                    prop_CUBES_ANIMATION={CUBES_ANIMATION}
+                    prop_ROTATE={Math.random() * MATH.PI.x2}
+                    prop_ROTATEY={Math.random() * MATH.PI.x2}
+                    bind:cube_mouseMove={CUBES_MOUSEMOVE[i]}
+                    bind:cube_mouseUp={CUBES_MOUSEUP[i]}
+                    bind:cube_resize={CUBES_RESIZE[i]}
+                    />
+                {/each}
+            </div>
+        </div>
 
         <div
-        class="main"
+        class="content"
         >
             <section>
                 <span
@@ -149,11 +179,13 @@ id="home"
                     FR
                 </span>
             
-                <h1>
+                <h1
+                bind:this={title}
+                >
                     <strong>DEVELOPPEUR</strong>
             
                     <span>WEB</span>
-            
+
                     <Icon
                     prop_COLOR={COLORS.light}
                     prop_SPRING={false}
@@ -183,22 +215,6 @@ id="home"
                 </ul>
             </nav>
         </div>
-
-        <div
-        class="cubes"
-        >
-            {#each HOME_CUBES as cube, i}
-                <Cube
-                {...cube}
-                prop_CUBES_ANIMATION={CUBES_ANIMATION}
-                prop_ROTATE={Math.random() * MATH.PI.x2}
-                prop_ROTATEY={Math.random() * MATH.PI.x2}
-                bind:cube_mouseMove={CUBES_MOUSEMOVE[i]}
-                bind:cube_mouseUp={CUBES_MOUSEUP[i]}
-                bind:cube_resize={CUBES_RESIZE[i]}
-                />
-            {/each}
-        </div>
     </div>
 </div>
 
@@ -213,7 +229,6 @@ lang="scss"
 
 @use '../../assets/scss/app';
 
-@use '../../assets/scss/styles/elements';
 @use '../../assets/scss/styles/position';
 @use '../../assets/scss/styles/display';
 @use '../../assets/scss/styles/size';
@@ -224,13 +239,13 @@ lang="scss"
 
 #home
 {
-    &, .scene { width: 100%; }
+    &, .wrapper { width: 100%; }
 
     position: relative;
 
     height: 300vh;
 
-    .scene
+    .wrapper
     {
         @include position.placement(sticky, 0, auto, auto, 0);
 
@@ -247,7 +262,26 @@ lang="scss"
         @include media.min(false, $ms2) { padding-top: max(11rem, 70px); }
     }
 
-    .main
+    .scene
+    {
+        &, .cubes {  @extend %any; }
+    
+        @include position.placement(absolute, 0, 0, 0, 0);
+    
+        .cubes
+        {
+            --cube-ratio: .27;
+
+            position: relative;
+
+            @include media.min($ms3, $ms2) { --cube-ratio: .35; }
+            @include media.min($ms4, $ms3) { --cube-ratio: .5; }
+            @include media.min($ms5, $ms4) { --cube-ratio: .75; }
+            @include media.min($ms6, $ms4) { --cube-ratio: 1; }
+        }
+    }
+
+    .content
     {
         @extend %f-column;
 
@@ -256,117 +290,104 @@ lang="scss"
         width: fit-content;
         height: 100%;
         max-height: 65%;
-    }
-
-    .lang, h1, .page-links
-    {
-        position: relative;
-
-        z-index: 1;
-
-        user-select: none;
-    }
-
-    .lang { @include font.interact($light, map.get(font.$font-sizes, s2), 1, map.get(font.$content-font-weight, w1)); }
-
-    h1
-    {
-        #{--title-size}: map.get(font.$font-sizes, s6); 
-        --icon-size: calc(var(--title-size) * .71);
-
-        @include font.h-(1);
-
-        width: fit-content;
-        height: fit-content;
-
-        margin-block: 1rem 3rem;
-
-        strong, span { display: block; }
-        span { padding-bottom: 1rem; }
-
-        @include media.min($ms2) { #{--title-size}: map.get(font.$font-sizes, s7); }
-        @include media.min($ms3, $ms3)
-        {
-            #{--title-size}: map.get(font.$font-sizes, s8);
-
-            margin-top: 3rem;
-
-            strong, span
-            {
-                &::before
-                {
-                    @include position.placement(absolute, -.7rem, auto, auto, 0, true);
-
-                    width: 2.4rem;
-                    height: 2.4rem;
-
-                    background-color: $primary;
-                }
-
-                position: relative;
-    
-                padding-left: app.$gap-inline;
-            }
-            strong { margin-left: app.$gap-inline; }
-        }
-    }
-
-    .page-links
-    {
-        width: fit-content;
-        height: fit-content;
-
-        ul
-        {
-            display: flex;
-
-            gap: 1rem;
-
-            @include media.min(false, $ms3)
-            {
-                display: block;
-        
-                gap: 0;
-            }
-        }
-
-        a
-        {
-            @include font.interact($light, 2.4rem, 1.5);
-
-            @extend %any;
-            @extend %selected;
-
-            position: relative;
-
-            display: inline-block;
-    
-            transform: rotate(-.7deg);
-    
-            margin-bottom: .5rem;
-            padding-inline: 1rem;
-
-            box-sizing: border-box;
-
-            text-decoration: none;
-            pointer-events: auto;
-        }
-    }
-
-    .cubes
-    {
-        --cube-ratio: .27;
-
-        @include position.placement(absolute, 0, 0, 0, 0);
-
-        @extend %any;
 
         pointer-events: none;
 
-        @include media.min($ms3, $ms2) { --cube-ratio: .35; }
-        @include media.min($ms4, $ms3) { --cube-ratio: .5; }
-        @include media.min($ms5, $ms4) { --cube-ratio: .75; }
-        @include media.min($ms6, $ms4) { --cube-ratio: 1; }
+        .lang, h1, .page-links
+        {
+            position: relative;
+
+            z-index: 1;
+
+            user-select: none;
+        }
+
+        .lang { @include font.interact($light, map.get(font.$font-sizes, s2), 1, map.get(font.$content-font-weight, w1)); }
+
+        h1
+        {
+            #{--title-size}: map.get(font.$font-sizes, s6); 
+            --icon-size: calc(var(--title-size) * .71);
+
+            @include font.h-(1);
+
+            width: fit-content;
+            height: fit-content;
+
+            margin-block: 1rem 3rem;
+
+            &>strong, &>span { display: block; }
+            &>span { padding-bottom: 1rem; }
+
+            @include media.min($ms2) { #{--title-size}: map.get(font.$font-sizes, s7); }
+            @include media.min($ms3, $ms3)
+            {
+                #{--title-size}: map.get(font.$font-sizes, s8);
+
+                margin-top: 3rem;
+
+                &>strong, &>span
+                {
+                    &::before
+                    {
+                        @include position.placement(absolute, -.7rem, auto, auto, 0, true);
+
+                        width: 2.4rem;
+                        height: 2.4rem;
+
+                        background-color: $primary;
+                    }
+
+                    position: relative;
+        
+                    padding-left: app.$gap-inline;
+                }
+                &>strong { margin-left: app.$gap-inline; }
+            }
+        }
+
+        .page-links
+        {
+            width: fit-content;
+            height: fit-content;
+
+            ul
+            {
+                display: flex;
+
+                gap: 1rem;
+
+                @include media.min(false, $ms3)
+                {
+                    display: block;
+            
+                    gap: 0;
+                }
+            }
+
+            a
+            {
+                @include font.interact($light, 2.4rem, 1.5);
+
+                @extend %any;
+                @extend %selected;
+
+                position: relative;
+
+                display: inline-block;
+        
+                transform: rotate(-.7deg);
+        
+                margin-bottom: .5rem;
+                padding-inline: 1rem;
+
+                pointer-events: auto;
+        
+                box-sizing: border-box;
+
+                text-decoration: none;
+            }
+        }
     }
 }
 </style>

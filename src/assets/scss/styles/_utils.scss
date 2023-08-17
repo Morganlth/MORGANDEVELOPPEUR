@@ -2,7 +2,7 @@
 
 @use 'sass:map';
 
-@use '../global/variables' as *;
+@use '../global/colors' as *;
 
 // #UTILS
 
@@ -43,4 +43,12 @@
 
             pointer-events: auto;
         }
+    }
+
+    // --NO-DRAG
+    %no-drag
+    {
+        user-select: none;
+        -webkit-user-drag: none;
+        -webkit-app-region: no-drag;
     }

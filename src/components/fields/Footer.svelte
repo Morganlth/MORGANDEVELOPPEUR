@@ -1,3 +1,9 @@
+<!-- #MAP
+
+    FOOTER
+
+-->
+
 <!-- #SCRIPT -->
 
 <script>

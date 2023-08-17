@@ -2,8 +2,8 @@
 
 @use 'sass:map';
 
+@use '../global/colors' as *;
 @use '../global/breakpoints' as *;
-@use '../global/variables' as *;
 
 @use './position';
 @use './size';

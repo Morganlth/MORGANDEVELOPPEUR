@@ -1,3 +1,9 @@
+<!-- #MAP
+
+    HEADER
+
+-->
+
 <!-- #SCRIPT -->
 
 <script>
@@ -23,7 +29,6 @@
 
     // --ELEMENT-HEADER
     let
-    header_TRANSLATEY = 0,
     header_FPS = 0,
     header_LOOP
 
@@ -32,10 +37,13 @@
     // --SET
     function header_set()
     {
-        header_LOOP = true
-
-        header_animationLoop()
+        header_setVars()
+        header_setAnimations()
     }
+
+    function header_setVars() { header_LOOP = true }
+
+    function header_setAnimations() { header_animationLoop() }
 
     // --DESTROY
     function header_destroy() { header_LOOP = false }
@@ -56,9 +64,7 @@ onDestroy(header_destroy)
 
 <!-- #HTML -->
 
-<header
-style:transform="translateY({header_TRANSLATEY}%)"
->
+<header>
     <strong
     data-sveltekit-reload
     >
