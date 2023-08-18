@@ -9,7 +9,7 @@
     export function canvas_drawCircle(x, y, r)
     {
         this.beginPath()
-        this.arc(x, y, r, 0, MATH.PI.x2)
+        this.arc(x, y, r, 0, CANVAS_PIx2)
         this.fill()
         this.closePath()
     }
@@ -28,7 +28,7 @@
     export function canvas_drawEllipse(a, b, x, y)
     {
         this.beginPath()
-        this.ellipse(x, y, a, b + 60, 0, 0, MATH.PI.x2)
+        this.ellipse(x, y, a, b + 60, 0, 0, CANVAS_PIx2)
         this.fill()
         this.closePath()
     }
@@ -37,3 +37,8 @@
 
     // --JS
     import MATH from './math'
+
+// #CONSTANTE
+
+    // --ELEMENT-CANVAS
+    const CANVAS_PIx2 = MATH.PI.x2

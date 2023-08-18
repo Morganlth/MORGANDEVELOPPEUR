@@ -3,9 +3,9 @@
 // #IMPORT
 
     // --SCSS
-    import colors from '../assets/scss/modules/_colors.module.scss'
+    import COLORS from '../assets/scss/modules/_colors.module.scss'
 
 // #EXPORT
  
-    // --SCSS
-    export const COLORS = colors
+    // --COLORS
+    export default COLORS

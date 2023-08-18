@@ -4,8 +4,8 @@
     export default
     [
         {
-            prop_X: .84,
-            prop_Y: .07,
+            prop_X: .73,
+            prop_Y: .01,
             prop_SIZE: 120
         },
         {

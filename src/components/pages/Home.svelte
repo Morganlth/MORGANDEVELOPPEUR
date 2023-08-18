@@ -1,3 +1,22 @@
+<!-- #MAP
+
+    HOME
+        WRAPPER
+            SCENE
+                PARTICLES
+                SPACECUBE
+                CUBES
+                    GRAVITYAREA * 3
+                        CUBE
+            CONTENT
+                LANG
+                TITLE
+
+                UNDERTITLE
+                    PAGELINK
+                    TICTACTOE
+-->
+
 <!-- #SCRIPT -->
 
 <script>
@@ -10,7 +29,7 @@
     import { wait_throttle } from '../../assets/js/utils/wait'
 
     // --LIB
-    import { COLORS } from '$lib/colors'
+    import COLORS from '$lib/colors'
 
     // --CONTEXT
     import { EVENT } from '../../App.svelte'
@@ -19,38 +38,33 @@
     import { onMount, onDestroy } from 'svelte'
 
     // --COMPONENT-ELEMENT
-    import Particles from '../decor/Particles.svelte'
-    import SpaceCube from '../decor/SpaceCube.svelte'
     import Cube from '../elements/Cube.svelte'
+    import TicTacToe from '../elements/TicTacToe.svelte'
 
-    // --COMPONENT-COVER
+    // --COMPONENT-COVERS
+    import GravityArea from '../covers/GravityArea.svelte'
     import Icon from '../covers/Icon.svelte'
 
     // --COMPONENT-ICON
     import Logo from '../icons/Logo.svelte'
 
+    // --COMPONENT-DECORS
+    import Particles from '../decors/Particles.svelte'
+    import SpaceCube from '../decors/SpaceCube.svelte'
+
 // #CONSTANTES
 
+    // --ELEMENT-HOME
+    const HOME_EVENTS = { resize: home_e$Resize }
+
     // --ELEMENT-WRAPPER
-    const WRAPPER_EVENTS =
-    {
-        scroll: wrapper_scroll,
-        resize: wrapper_resize
-    }
+    const WRAPPER_EVENTS = { scroll: wrapper_e$Scroll }
 
     // --ELEMENT-CUBES
     const
-    CUBES_MOUSEMOVE = [],
-    CUBES_MOUSEUP = [],
     CUBES_RESIZE = [],
-    CUBES_ANIMATION = [],
-    CUBES_EVENTS =
-    {
-        mouseMove: cubes_mouseMove,
-        mouseUp: cubes_mouseUp,
-        resize: cubes_resize,
-        animation: wait_throttle(cubes_animation, 100)
-    }
+    CUBES_ANIMATION_UPDATE = [],
+    CUBES_EVENTS = { animation: wait_throttle(cubes_e$Animation, 100) }
 
 // #VARIABLES
 
@@ -61,6 +75,9 @@
     wrapper_AVAILABLE_HEIGHT,
     wrapper_SCROLL_RATIO
 
+    // --ELEMENT-SPACECUBE
+    let spacecube_TICTACTOE = false
+
     // --ELEMENT-TITLE
     let title
 
@@ -69,10 +86,12 @@
     // --SET
     function home_set()
     {
+        home_setEvents()
+
         wrapper_setVars()
-        wrapper_setEvent()
+        wrapper_setEvents()
     
-        cubes_setEvent()
+        cubes_setEvents()
     }
 
     function wrapper_setVars()
@@ -81,35 +100,46 @@
         wrapper_AVAILABLE_HEIGHT = wrapper.parentNode.offsetHeight - wrapper_HEIGHT
     }
 
-    function wrapper_setEvent() { EVENT.event_add(WRAPPER_EVENTS) }
+    function home_setEvents() { EVENT.event_add(HOME_EVENTS) }
 
-    function cubes_setEvent() { EVENT.event_add(CUBES_EVENTS) }
+    function wrapper_setEvents() { EVENT.event_add(WRAPPER_EVENTS) }
+
+    function cubes_setEvents() { EVENT.event_add(CUBES_EVENTS) }
 
     // --DESTROY
     function home_destroy()
     {
-        wrapper_destroyEvent()
-        cubes_destroyEvent()
+        home_destroyEvents()
+
+        wrapper_destroyEvents()
+
+        cubes_destroyEvents()
     }
 
-    function wrapper_destroyEvent() { EVENT.event_remove(WRAPPER_EVENTS) }
+    function home_destroyEvents() { EVENT.event_remove(HOME_EVENTS) }
 
-    function cubes_destroyEvent() { EVENT.event_remove(CUBES_EVENTS) }
+    function wrapper_destroyEvents() { EVENT.event_remove(WRAPPER_EVENTS) }
+
+    function cubes_destroyEvents() { EVENT.event_remove(CUBES_EVENTS) }
 
     // --EVENTS
-    async function wrapper_scroll() { wrapper_SCROLL_RATIO = wrapper.offsetTop / wrapper_AVAILABLE_HEIGHT }
+    async function home_e$Resize()
+    {
+        wrapper_setVars()
 
-    async function wrapper_resize() { wrapper_setVars() }
+        for (const RESIZE of CUBES_RESIZE) RESIZE()
+    }
 
-    async function cubes_mouseMove(clientX, clientY) { cubes_run.call(CUBES_MOUSEMOVE, clientX, clientY) }
+    async function wrapper_e$Scroll() { wrapper_SCROLL_RATIO = wrapper.offsetTop / wrapper_AVAILABLE_HEIGHT }
 
-    async function cubes_mouseUp() { cubes_run.call(CUBES_MOUSEUP) }
+    async function cubes_e$Animation() { for (const UPDATE of CUBES_ANIMATION_UPDATE) UPDATE() }
 
-    async function cubes_resize() { cubes_run.call(CUBES_RESIZE) }
+    async function cube_eClick(id)
+    {
+        if (id === 0) spacecube_TICTACTOE = true
+    }
 
-    async function cubes_animation() { for (const CUBE_ANIMATION of CUBES_ANIMATION) CUBE_ANIMATION() }
-
-    async function homepagelinks_click()
+    async function pagelinks_eClick()
     {
         const LINK = HOME_PAGE_LINKS[this]
 
@@ -125,9 +155,7 @@
     {
 
     }
-    
-    // --UTIL
-    function cubes_run() { for (const EVENT of this) EVENT(...arguments) }
+
 // #CYCLES
 
 onMount(home_set)
@@ -150,21 +178,28 @@ id="home"
 
             <SpaceCube
             prop_RATIO={wrapper_SCROLL_RATIO}
+            prop_TICTACTOE={spacecube_TICTACTOE}
             />
 
             <div
             class="cubes"
             >
                 {#each HOME_CUBES as cube, i}
-                    <Cube
+                    <GravityArea
+                    let:rotation
+                    let:grabbing
                     {...cube}
-                    prop_CUBES_ANIMATION={CUBES_ANIMATION}
-                    prop_ROTATE={Math.random() * MATH.PI.x2}
-                    prop_ROTATEY={Math.random() * MATH.PI.x2}
-                    bind:cube_mouseMove={CUBES_MOUSEMOVE[i]}
-                    bind:cube_mouseUp={CUBES_MOUSEUP[i]}
-                    bind:cube_resize={CUBES_RESIZE[i]}
-                    />
+                    prop_ANIMATION_UPDATE={CUBES_ANIMATION_UPDATE}
+                    bind:gravityarea_e$Resize={CUBES_RESIZE[i]}
+                    >
+                        <Cube
+                        prop_$ROTATION={rotation}
+                        prop_$GRABBING={grabbing}
+                        prop_ROTATE={Math.random() * MATH.PI.x2}
+                        prop_ROTATE_Y={Math.random() * MATH.PI.x2}
+                        on:click={cube_eClick.bind(null, i)}
+                        />
+                    </GravityArea>
                 {/each}
             </div>
         </div>
@@ -178,8 +213,9 @@ id="home"
                 >
                     FR
                 </span>
-            
+        
                 <h1
+                class="title"
                 bind:this={title}
                 >
                     <strong>DEVELOPPEUR</strong>
@@ -194,9 +230,9 @@ id="home"
                     </Icon>
                 </h1>
             </section>
-
+        
             <nav
-            class="page-links"
+            class="pagelinks"
             >
                 <ul>
                     <!-- svelte-ignore a11y-no-static-element-interactions a11y-missing-attribute -->
@@ -206,7 +242,7 @@ id="home"
                             class:selected={link.on}
                             aria-label={link.label}
                             {...link.attributes}
-                            on:click|preventDefault={homepagelinks_click.bind(id)}
+                            on:click|preventDefault={pagelinks_eClick.bind(id)}
                             >
                                 {link.content}
                             </a>
@@ -270,41 +306,37 @@ lang="scss"
     
         .cubes
         {
-            --cube-ratio: .27;
+            --content-ratio: .27;
 
             position: relative;
 
-            @include media.min($ms3, $ms2) { --cube-ratio: .35; }
-            @include media.min($ms4, $ms3) { --cube-ratio: .5; }
-            @include media.min($ms5, $ms4) { --cube-ratio: .75; }
-            @include media.min($ms6, $ms4) { --cube-ratio: 1; }
+            @include media.min($ms3, $ms2) { --content-ratio: .35; }
+            @include media.min($ms4, $ms3) { --content-ratio: .5; }
+            @include media.min($ms5, $ms4) { --content-ratio: .75; }
+            @include media.min($ms6, $ms4) { --content-ratio: 1; }
         }
     }
 
     .content
     {
         @extend %f-column;
+        @extend %any;
+
+        position: relative;
+
+        z-index: 1;
 
         justify-content: space-between;
     
-        width: fit-content;
-        height: 100%;
         max-height: 65%;
 
         pointer-events: none;
 
-        .lang, h1, .page-links
-        {
-            position: relative;
-
-            z-index: 1;
-
-            user-select: none;
-        }
+        .lang, .title, .pagelinks { user-select: none; }
 
         .lang { @include font.interact($light, map.get(font.$font-sizes, s2), 1, map.get(font.$content-font-weight, w1)); }
 
-        h1
+        .title
         {
             #{--title-size}: map.get(font.$font-sizes, s6); 
             --icon-size: calc(var(--title-size) * .71);
@@ -346,7 +378,7 @@ lang="scss"
             }
         }
 
-        .page-links
+        .pagelinks
         {
             width: fit-content;
             height: fit-content;

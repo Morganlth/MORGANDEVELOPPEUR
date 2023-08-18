@@ -57,7 +57,7 @@ context="module"
     // --ELEMENT-APP
     let
     app_CHARGED = false,
-    app_FREEZE = APP.app_FREEZE
+    app_$FREEZE = APP.app_$FREEZE
 
     // --ELEMENT-OPTI
     let opti_ON = false
@@ -65,7 +65,7 @@ context="module"
 // #REACTIVE
 
     // --ELEMENT-APP
-    $: APP.app_START = app_CHARGED && !opti_ON
+    $: APP.app_$START = app_CHARGED && !opti_ON
 
 // #FUNCTIONS
 
@@ -95,9 +95,9 @@ context="module"
 
     function app_setCommands()
     {
-        COMMAND.command_add('app', app_app)
-        COMMAND.command_add('command', app_command)
-        COMMAND.command_add('event', app_event)
+        COMMAND.command_add('app', app_c$App)
+        COMMAND.command_add('command', app_c$Command)
+        COMMAND.command_add('event', app_c$Event)
     }
 
     function app_setFormat() { APP.app_setFormat() }
@@ -106,14 +106,14 @@ context="module"
     function app_restore() { APP.app_restore() }
 
     // --COMMANDS
-    function app_app() { console.log(APP) }
+    function app_c$App() { console.log(APP) }
 
-    function app_command() { console.log(COMMAND) }
+    function app_c$Command() { console.log(COMMAND) }
 
-    function app_event() { console.log(EVENT) }
+    function app_c$Event() { console.log(EVENT) }
 
     // --EVENT
-    async function app_touchStart() { APP.app_MOBILE = true }
+    async function app_eTouchStart() { APP.app_MOBILE = true }
 
 // #CYCLE
 
@@ -125,14 +125,14 @@ onMount(app_set)
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
 id="app"
-class:freeze={$app_FREEZE}
+class:freeze={$app_$FREEZE}
 style:opacity={app_CHARGED ? 1 : 0}
 on:scroll={EVENT.event_scroll.bind(EVENT)}
 on:mousemove={EVENT.event_mouseMove.bind(EVENT)}
 on:mousedown={EVENT.event_mouseDown.bind(EVENT)}
 on:mouseup={EVENT.event_mouseUp.bind(EVENT)}
 on:mouseleave={EVENT.event_mouseUp.bind(EVENT)}
-on:touchstart|once={app_touchStart}
+on:touchstart|once={app_eTouchStart}
 >
     <Header />
     <Main />
@@ -179,6 +179,6 @@ lang="scss"
 
     background-color: $dark;
 
-    &.freeze { overflow: hidden; }
+    &.freeze { overflow: hidden !important; }
 }
 </style>

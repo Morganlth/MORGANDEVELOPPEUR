@@ -13,7 +13,11 @@
         $positions: top, right, bottom, left;
         $positions-status: (top: $top, right: $right, bottom: $bottom, left: $left);
 
-        @each $position in $positions { @if map.get($positions-status, $position) { border-#{$position}: $border; } }
+        @each $position in $positions
+        {
+            @if map.get($positions-status, $position) { border-#{$position}: $border; }
+            @else { border-#{$position}: none; }
+        }
 
         @if $radius { border-radius: $radius; }
     }

@@ -5,8 +5,8 @@ class App
 // #VARIABLES
 
     // --APP-CONTEXT
-    #app_START = writable(false)
-    #app_FREEZE = writable(false)
+    #app_$START = writable(false)
+    #app_$FREEZE = writable(false)
     #app_MOBILE
     #app_OPTIMISE = false
     #app_OPTIMISE_CONFIG = {}
@@ -19,22 +19,20 @@ constructor ()
     this.app_updateFormat = this.app_updateFormat.bind(this)
     this.app_updateMode = this.app_updateMode.bind(this)
 
-    this.app_commandMobile = this.app_commandMobile.bind(this)
-    this.app_commandOptimise = this.app_commandOptimise.bind(this)
+    this.app_c$Mobile = this.app_c$Mobile.bind(this)
+    this.app_c$Optimise = this.app_c$Optimise.bind(this)
 }
 
 // #FUNCTIONS
 
     // --SET
-    app_set() { this.#app_setCommand() }
+    app_set() { this.#app_setCommands() }
 
-    app_setFormat() { this.app_MOBILE = navigator.maxTouchPoints > 0 && navigator.userAgent.match(/(iPhone|iPad|Android)/i) ? true : false }
-
-    #app_setCommand()
+    #app_setCommands()
     {
         COMMAND.command_setBasicCommand(
             'mobile',
-            this.app_commandMobile,
+            this.app_c$Mobile,
             { defaultValue: this.#app_MOBILE },
             { testBoolean: true },
             false
@@ -42,12 +40,14 @@ constructor ()
 
         COMMAND.command_setBasicCommand(
             'optimise',
-            this.app_commandOptimise,
+            this.app_c$Optimise,
             { defaultValue: this.#app_OPTIMISE },
             { testBoolean: true },
             true
         )
     }
+
+    app_setFormat() { this.app_MOBILE = navigator.maxTouchPoints > 0 && navigator.userAgent.match(/(iPhone|iPad|Android)/i) ? true : false }
 
     // --RESTORE
     app_restore()
@@ -73,17 +73,17 @@ constructor ()
     }
     
     // --COMMANDS
-    app_commandMobile(on) { COMMAND.command_test(on, 'boolean', this.app_updateFormat, 'mobile', this.#app_MOBILE) } // does not change the value of app_MOBILE
+    app_c$Mobile(on) { COMMAND.command_test(on, 'boolean', this.app_updateFormat, 'mobile', this.#app_MOBILE) } // does not change the value of app_MOBILE
 
-    app_commandOptimise(on) { COMMAND.command_test(on, 'boolean', this.app_updateMode, 'optimise', this.#app_OPTIMISE) }
+    app_c$Optimise(on) { COMMAND.command_test(on, 'boolean', this.app_updateMode, 'optimise', this.#app_OPTIMISE) }
 
     // --UTIL
     app_saveStorage(config = {}) { for (const NAME in config) this.#app_STORAGE[NAME] = localStorage.getItem(NAME) }
 
     // --GETTER
-    get app_START() { return this.#app_START }
+    get app_$START() { return this.#app_$START }
 
-    get app_FREEZE() { return this.#app_FREEZE }
+    get app_$FREEZE() { return this.#app_$FREEZE }
 
     get app_MOBILE() { return this.#app_MOBILE }
 
@@ -92,9 +92,9 @@ constructor ()
     get app_OPTIMISE_CONFIG() { return this.#app_OPTIMISE_CONFIG }
 
     // --SETTER
-    set app_START(start) { this.#app_START.set(start) }
+    set app_$START(start) { this.#app_$START.set(start) }
 
-    set app_FREEZE(on) { this.#app_FREEZE.set(on) }
+    set app_$FREEZE(on) { this.#app_$FREEZE.set(on) }
 
     set app_MOBILE(on)
     {

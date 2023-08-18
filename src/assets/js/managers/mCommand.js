@@ -17,7 +17,7 @@ class Command
 constructor ()
 {
     for (const NAME of this.#command_KEYWORDS)
-        try { this.command_add(NAME, this['command_' + NAME].bind(this)) } catch {}
+        try { this.command_add(NAME, this['command_c$' + NAME.charAt(0).toUpperCase() + NAME.slice(1).toLowerCase()].bind(this)) } catch {}
 }
 
     // --SET
@@ -36,7 +36,7 @@ constructor ()
                 if (value === true && params.optimise) APP.app_OPTIMISE = false
                 if (storage) localStorage.setItem(name, value)
 
-                this.command_success(name + ' ' + value)
+                this.command_c$Success(name + ' ' + value)
             }
         }, storage)
     }
@@ -49,9 +49,9 @@ constructor ()
     }
 
     // --COMMANDS
-    command_reload() { APP.app_updateFormat(this.app_MOBILE) }
+    command_c$Reload() { APP.app_updateFormat(this.app_MOBILE) }
 
-    command_reset(view = false)
+    command_c$Reset(view = false)
     {
         APP.app_saveStorage()
 
@@ -60,17 +60,17 @@ constructor ()
         if (!view && this.command_testCommand('clear')) this.#command_COMMANDS.clear()
     }
 
-    command_success(msg, name) { if (this.command_testCommand('log')) this.#command_COMMANDS.log(new CommandSuccess(msg, name)) }
+    command_c$Success(msg, name) { if (this.command_testCommand('log')) this.#command_COMMANDS.log(new CommandSuccess(msg, name)) }
     
-    command_error(msg, type) { throw new CommandError(type ?? 'Error', msg) }
+    command_c$Error(msg, type) { throw new CommandError(type ?? 'Error', msg) }
 
-    command_commands()
+    command_c$Commands()
     {
         if (this.command_testCommand('log'))
             for (const NAME of this.#command_KEYWORDS) this.#command_COMMANDS.log(NAME)
     }
 
-    command_fps() { if (this.command_testCommand('log')) fps_get().then(fps => this.#command_COMMANDS.log(fps + ' fps')) }
+    command_c$Fps() { if (this.command_testCommand('log')) fps_get().then(fps => this.#command_COMMANDS.log(fps + ' fps')) }
 
     // --TESTS
     command_test(toTest, type, callback, name, value)

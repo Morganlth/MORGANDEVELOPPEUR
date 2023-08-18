@@ -1,3 +1,12 @@
+<!-- #MAP
+
+    OPTI
+        \ CONTENT
+            \ COMMAND
+            \ CHOICE
+
+-->
+
 <!-- #SCRIPT -->
 
 <script>
@@ -23,14 +32,9 @@
     {
         opti_OPACITY = 0
 
-        APP.app_commandOptimise(on)
+        APP.app_c$Optimise(on)
 
-        setTimeout(() =>
-        {
-            opti_ON = false
-
-            APP.app_START = true
-        }, 500)
+        setTimeout(() => opti_ON = false, 500)
     }
 </script>
 

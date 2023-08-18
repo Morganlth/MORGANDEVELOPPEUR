@@ -18,7 +18,7 @@
     import { CommandError, CommandSuccess } from '../../assets/js/managers/mCommand'
 
     // --LIB
-    import { COLORS } from '$lib/colors'
+    import COLORS from '$lib/colors'
 
     // --CONTEXTS
     import { APP, COMMAND, EVENT, SPRING } from '../../App.svelte'
@@ -35,7 +35,7 @@
     const
     CONSOLE_TARGET_CLASS = 'console-target',
     CONSOLE_HISTORY = ['app'],
-    CONSOLE_EVENT = { mouseDown: console_mouseDown }
+    CONSOLE_EVENTS = { mouseDown: console_e$MouseDown }
 
     // --ELEMENT-MIRROR
     const MIRROR_FIELDS = []
@@ -65,20 +65,20 @@
 // #FUNCTIONS
 
     // --SET
-    function console_set() { console_setCommand() }
+    function console_set() { console_setCommands() }
 
-    function console_setCommand()
+    function console_setCommands()
     {
-        COMMAND.command_add('log', console_log)
-        COMMAND.command_add('clear', console_clear)
+        COMMAND.command_add('log', console_c$Log)
+        COMMAND.command_add('clear', console_c$Clear)
     }
 
-    function console_setEvents() { EVENT.event_add(CONSOLE_EVENT) }
+    function console_setEvents() { EVENT.event_add(CONSOLE_EVENTS) }
 
     // --DESTROY
-    function console_destroy() { console_destroyEvent() }
+    function console_destroy() { console_destroyEvents() }
 
-    function console_destroyEvent() { EVENT.event_remove(CONSOLE_EVENT) }
+    function console_destroyEvents() { EVENT.event_remove(CONSOLE_EVENTS) }
 
     // --RESET
     function input_reset()
@@ -96,7 +96,7 @@
         input_CURRENT_VALUE = CONSOLE_HISTORY[console_INDEX]
 
         input_fieldFocus()
-        input_input()
+        input_eInput()
     }
 
     // --UPDATES
@@ -130,7 +130,7 @@
     }
 
     // --COMMANDS
-    function console_log(msg)
+    function console_c$Log(msg)
     {
         const
         [ERROR, SUCCESS] = [msg instanceof Error, msg instanceof CommandSuccess],
@@ -141,12 +141,12 @@
         output_update()
     }
 
-    function console_clear() { output_LINES = [] }
+    function console_c$Clear() { output_LINES = [] }
 
     // --EVENTS
-    async function console_mouseDown(e) { if (!e.target.classList.contains(CONSOLE_TARGET_CLASS)) console_click() }
+    async function console_e$MouseDown(e) { if (!e.target.classList.contains(CONSOLE_TARGET_CLASS)) console_eClick() }
 
-    async function console_click()
+    async function console_eClick()
     {
         console_ON = !console_ON
 
@@ -156,12 +156,12 @@
 
             input_fieldFocus()
         }
-        else console_destroyEvent()
+        else console_destroyEvents()
 
-        APP.app_FREEZE = console_ON
+        APP.app_$FREEZE = console_ON
     }
 
-    async function console_keyup(e)
+    async function console_eKeyup(e)
     {
         switch (e.key)
         {
@@ -180,7 +180,7 @@
         }
     }
 
-    function input_input() // no async
+    function input_eInput() // no async
     {
         (input_CURRENT_VALUE.length === 3 || input_CURRENT_VALUE[3] === ' ') && input_CURRENT_VALUE.substring(0, 3).toLowerCase() === 'app'
         ? input_analyse()
@@ -238,7 +238,7 @@
             : ['TypeError', `"${command}" n'est pas une commande`])
         )
 
-        console_log(ERROR)
+        console_c$Log(ERROR)
     }
 
 // #CYCLES
@@ -252,8 +252,8 @@ onDestroy(console_destroy)
 <div
 class="console"
 class:on={console_ON}
-on:mouseenter={SPRING.spring_hide.bind(SPRING)}
-on:mouseleave={SPRING.spring_show.bind(SPRING)}
+on:mouseenter={SPRING.spring_e$Hide.bind(SPRING)}
+on:mouseleave={SPRING.spring_e$Show.bind(SPRING)}
 >
     <div
     class="input"
@@ -261,7 +261,7 @@ on:mouseleave={SPRING.spring_show.bind(SPRING)}
         <button
         class={CONSOLE_TARGET_CLASS}
         type="button"
-        on:click={console_click}
+        on:click={console_eClick}
         >
             <Icon
             prop_SIZE="1.2rem"
@@ -295,8 +295,8 @@ on:mouseleave={SPRING.spring_show.bind(SPRING)}
             spellcheck="false"
             bind:this={input_FIELD}
             bind:value={input_CURRENT_VALUE}
-            on:input={input_input}
-            on:keyup|preventDefault={console_keyup}
+            on:input={input_eInput}
+            on:keyup|preventDefault={console_eKeyup}
             />
 
             <div

@@ -1,6 +1,7 @@
 <!-- #MAP
 
     ICON
+        SLOT
 
 -->
 
@@ -11,6 +12,7 @@
 
     // --PROPS
     export let
+    prop_OPACITY = 1,
     prop_SIZE = 'var(--icon-size, auto)',
     prop_COLOR = null,
     prop_LINK = null,
@@ -22,7 +24,7 @@
     import { SPRING } from '../../App.svelte'
 
     // --SVELTE
-    import { onMount } from 'svelte'
+    import { onMount, onDestroy } from 'svelte'
 
 // #VARIABLE
 
@@ -36,8 +38,17 @@
 
     function icon_setEvents()
     {
-        icon.addEventListener('mouseenter', icon_mouseEnter)
-        icon.addEventListener('mouseleave', icon_mouseLeave)
+        icon.addEventListener('mouseenter', icon_eMouseEnter)
+        icon.addEventListener('mouseleave', icon_eMouseLeave)
+    }
+
+    // --DESTROY
+    function icon_destroy() { if (icon) icon_destroyEvents() }
+
+    function icon_destroyEvents()
+    {
+        icon.removeEventListener('mouseenter', icon_eMouseEnter)
+        icon.removeEventListener('mouseleave', icon_eMouseLeave)
     }
 
     // --UPDATE
@@ -48,7 +59,7 @@
     }
 
     // --EVENTS
-    function icon_mouseEnter()
+    function icon_eMouseEnter() // no async
     {
         const
         CLIENTRECT = icon.getBoundingClientRect(),
@@ -59,11 +70,12 @@
         requestAnimationFrame(() => SPRING.spring_$COORDS = { x: X, y: Y })
     }
 
-    function icon_mouseLeave() { icon_updateSpring(false, 7) }
+    function icon_eMouseLeave() { icon_updateSpring(false, 7) } // no async
 
-// #CYCLE
+// #CYCLES
 
 onMount(icon_set)
+onDestroy(icon_destroy)
 </script>
 
 <!-- #HTML -->
@@ -72,6 +84,7 @@ onMount(icon_set)
 this={prop_LINK ? 'a' : 'div'}
 class="icon"
 style:--icon-color={prop_COLOR}
+style:opacity={prop_OPACITY}
 style:width={prop_SIZE}
 style:height={prop_SIZE}
 style:pointer-events={prop_SPRING ? 'auto' : 'none'}
@@ -92,5 +105,10 @@ lang="scss"
 
 /* #ICON */
 
-.icon { @extend %f-center; }
+.icon
+{
+    @extend %f-center;
+
+    transition: opacity .4s;
+}
 </style>
