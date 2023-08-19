@@ -27,6 +27,7 @@
     import HOME_CUBES from '../../assets/js/datas/home_cubes'
     import MATH from '../../assets/js/utils/math'
     import { wait_throttle } from '../../assets/js/utils/wait'
+    import { animation } from '../../assets/js/utils/animation'
 
     // --LIB
     import COLORS from '$lib/colors'
@@ -66,6 +67,9 @@
     CUBES_ANIMATION_UPDATE = [],
     CUBES_EVENTS = { animation: wait_throttle(cubes_e$Animation, 100) }
 
+    // --ELEMENT-TITLE
+    const TITLE_CHILDREN = []
+
 // #VARIABLES
 
     // --ELEMENT-WRAPPER
@@ -79,7 +83,9 @@
     let spacecube_TICTACTOE = false
 
     // --ELEMENT-TITLE
-    let title
+    let
+    title,
+    title_OPACITY = 0
 
 // #FUNCTIONS
 
@@ -92,19 +98,23 @@
         wrapper_setEvents()
     
         cubes_setEvents()
+
+        title_setVars()
+        title_animationStart()
     }
+
+    function home_setEvents() { EVENT.event_add(HOME_EVENTS) }
 
     function wrapper_setVars()
     {
         wrapper_HEIGHT = wrapper.offsetHeight,
         wrapper_AVAILABLE_HEIGHT = wrapper.parentNode.offsetHeight - wrapper_HEIGHT
     }
-
-    function home_setEvents() { EVENT.event_add(HOME_EVENTS) }
-
     function wrapper_setEvents() { EVENT.event_add(WRAPPER_EVENTS) }
 
     function cubes_setEvents() { EVENT.event_add(CUBES_EVENTS) }
+
+    function title_setVars() { title_OPACITY = 1 }
 
     // --DESTROY
     function home_destroy()
@@ -151,9 +161,21 @@
     }
 
     // --ANIMATION
-    async function animation()
+    async function title_animationStart()
     {
+        const WIDTH = window.innerWidth
 
+        for (const CHILD of TITLE_CHILDREN)
+        {
+            const TRANSLATE_X = WIDTH - (CHILD.offsetLeft - CHILD.offsetWidth)
+
+
+    
+            await animation((t) =>
+            {
+                // CHILD.style.transform = `translateX(${TRANSLATE_X * (1 - t)}px)`
+            }, 1000)
+        }
     }
 
 // #CYCLES
@@ -216,11 +238,28 @@ id="home"
         
                 <h1
                 class="title"
+                style:opacity={title_OPACITY}
                 bind:this={title}
                 >
-                    <strong>DEVELOPPEUR</strong>
+                    <div>
+                        <div>
+                            <span>DEVELOPPEUR</span>
+                        </div>
+                        
+                        <div>
+                            <span>DEVELOPPEUR</span>
+                        </div>
+                    </div>
             
-                    <span>WEB</span>
+                    <div>
+                        <div>
+                            <span>WEB</span>
+                        </div>
+                        
+                        <div>
+                            <span>WEB</span>
+                        </div>
+                    </div>
 
                     <Icon
                     prop_COLOR={COLORS.light}
@@ -348,8 +387,57 @@ lang="scss"
 
             margin-block: 1rem 3rem;
 
-            &>strong, &>span { display: block; }
-            &>span { padding-bottom: 1rem; }
+            &>div
+            {
+                $animation-details: 3.5s ease-out forwards;
+    
+                display: flex;
+    
+                perspective: 750px;
+
+                transform-style: preserve-3d;
+
+                &>div
+                {
+                    overflow: hidden;
+
+                    span { display: inline-block; }
+                }
+
+                &>div:nth-child(1) span
+                {
+                    transform: translateX(-200%);
+
+                    animation: aTranslateX_1 $animation-details;
+
+                    @keyframes aTranslateX_1 { to { transform: translateX(0); } }
+                }
+                &>div:nth-child(2)
+                {
+                    transform-origin: top right;
+
+                    span
+                    {
+                        transform: translateX(-100%);
+
+                        animation: aTranslateX_2 $animation-details;
+
+                        @keyframes aTranslateX_2 { to { transform: translateX(100%); } }
+                    }
+                }
+            }
+            &>div:nth-child(1)
+            {
+                &>div span { animation-delay: .5s; }
+                &>div:nth-child(2) { transform: translateX(-200%) rotateY(-20deg); }
+            }
+            &>div:nth-child(2)
+            {
+                padding-bottom: 1rem;
+
+                &>div span { animation-delay: 1.5s; }
+                &>div:nth-child(2) { transform: translateX(-200%) rotateY(30deg); }
+            }
 
             @include media.min($ms2) { #{--title-size}: map.get(font.$font-sizes, s7); }
             @include media.min($ms3, $ms3)
@@ -358,7 +446,7 @@ lang="scss"
 
                 margin-top: 3rem;
 
-                &>strong, &>span
+                &>div
                 {
                     &::before
                     {
@@ -374,7 +462,7 @@ lang="scss"
         
                     padding-left: app.$gap-inline;
                 }
-                &>strong { margin-left: app.$gap-inline; }
+                &>div:nth-child(1) { margin-left: app.$gap-inline; }
             }
         }
 

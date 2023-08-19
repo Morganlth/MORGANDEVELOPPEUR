@@ -60,8 +60,8 @@
 
     // --ELEMENT-CONTENT
     let
-    content_FORCE_X,
-    content_FORCE_Y,
+    content_FORCE_X = 0,
+    content_FORCE_Y = 0,
     content_FLOATING_UPDATE = update_floating()
 
     // --ELEMENT-SLOT
