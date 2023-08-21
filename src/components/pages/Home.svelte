@@ -555,6 +555,8 @@ lang="scss"
 
         @extend %any;
 
+        pointer-events: none;
+
         @include media.min($ms3, $ms2) { --content-ratio: .35; }
         @include media.min($ms4, $ms3) { --content-ratio: .5; }
         @include media.min($ms5, $ms4) { --content-ratio: .75; }
