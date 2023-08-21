@@ -118,7 +118,7 @@ constructor ()
     }
 
     // --UTILS
-    event_add(events)
+    event_add(events = {})
     {
         for (const CATEGORY in events)
         {
@@ -128,7 +128,7 @@ constructor ()
         }
     }
 
-    event_remove(events)
+    event_remove(events = {})
     {
         for (const CATEGORY in events)
         {

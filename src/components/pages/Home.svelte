@@ -1,20 +1,25 @@
 <!-- #MAP
 
+-EVENT
     HOME
         WRAPPER
-            SCENE
-                PARTICLES
-                SPACECUBE
-                CUBES
-                    GRAVITYAREA * 3
-                        CUBE
+            PARTICLES
+            SPACECUBE
+
             CONTENT
                 LANG
                 TITLE
+                    TEXT * 2
+                    LOGO
 
                 UNDERTITLE
                     PAGELINK
                     TICTACTOE
+
+        CUBES
+            GRAVITYAREA * 3
+                CUBE
+
 -->
 
 <!-- #SCRIPT -->
@@ -27,7 +32,6 @@
     import HOME_CUBES from '../../assets/js/datas/home_cubes'
     import MATH from '../../assets/js/utils/math'
     import { wait_throttle } from '../../assets/js/utils/wait'
-    import { animation } from '../../assets/js/utils/animation'
 
     // --LIB
     import COLORS from '$lib/colors'
@@ -68,7 +72,12 @@
     CUBES_EVENTS = { animation: wait_throttle(cubes_e$Animation, 100) }
 
     // --ELEMENT-TITLE
-    const TITLE_CHILDREN = []
+    const
+    TITLE_CHILDREN = [],
+    TITLE_EVENTS = {}
+
+    // --ELEMENT-PAGELINKS
+    const PAGELINKS_CHILDREN = []
 
 // #VARIABLES
 
@@ -80,12 +89,25 @@
     wrapper_SCROLL_RATIO
 
     // --ELEMENT-SPACECUBE
-    let spacecube_TICTACTOE = false
+    let
+    spacecube_COMPLETED = false,
+    spacecube_TICTACTOE = false
 
     // --ELEMENT-TITLE
     let
-    title,
-    title_OPACITY = 0
+    title_OPACITY = 0,
+    title_TRANSITION_DELAY = 0,
+    title_LAST = +new Date(),
+    title_I = 0,
+    title_J = 0
+
+    // --ELEMENT-PAGELINKS
+    let pagelinks_CHARGED = false
+
+// #REACTIVE
+
+    // --ELEMENT-SPACECUBE
+    $: spacecube_COMPLETED ? home_intro() : void 0
 
 // #FUNCTIONS
 
@@ -98,9 +120,6 @@
         wrapper_setEvents()
     
         cubes_setEvents()
-
-        title_setVars()
-        title_animationStart()
     }
 
     function home_setEvents() { EVENT.event_add(HOME_EVENTS) }
@@ -113,8 +132,6 @@
     function wrapper_setEvents() { EVENT.event_add(WRAPPER_EVENTS) }
 
     function cubes_setEvents() { EVENT.event_add(CUBES_EVENTS) }
-
-    function title_setVars() { title_OPACITY = 1 }
 
     // --DESTROY
     function home_destroy()
@@ -132,6 +149,24 @@
 
     function cubes_destroyEvents() { EVENT.event_remove(CUBES_EVENTS) }
 
+    // --GET
+    function title_getTranslate3d()
+    {
+        const
+        GET = () => Math.random() * 4000 - 2000,
+        [X, Y, Z] = [GET(), GET(), GET()]
+
+        return `translate3d(${X}px, ${Y}px, ${Z}px)`
+    }
+
+    // --UPDATE
+    function pagelinks_update()
+    {
+        HOME_PAGE_LINKS[0].on = true
+
+        pagelinks_CHARGED = true
+    }
+
     // --EVENTS
     async function home_e$Resize()
     {
@@ -140,7 +175,18 @@
         for (const RESIZE of CUBES_RESIZE) RESIZE()
     }
 
-    async function wrapper_e$Scroll() { wrapper_SCROLL_RATIO = wrapper.offsetTop / wrapper_AVAILABLE_HEIGHT }
+    async function wrapper_e$Scroll()
+    {
+        wrapper_SCROLL_RATIO = wrapper.offsetTop / wrapper_AVAILABLE_HEIGHT
+
+        wrapper_SCROLL_RATIO >= .66
+        ?   title_OPACITY
+            ? title_outro()
+            : void 0
+        :   !title_OPACITY
+            ? title_intro()
+            : void 0
+    }
 
     async function cubes_e$Animation() { for (const UPDATE of CUBES_ANIMATION_UPDATE) UPDATE() }
 
@@ -149,35 +195,86 @@
         if (id === 0) spacecube_TICTACTOE = true
     }
 
-    async function pagelinks_eClick()
+    async function pagelinks_eClick(id)
     {
-        const LINK = HOME_PAGE_LINKS[this]
-
-        if (LINK.on) return
-
-        try { HOME_PAGE_LINKS.find(link => link.on).on = false } catch { /* recuperer le chemin dans l'url pour définir le lien sélectionné */ }
-
-        HOME_PAGE_LINKS[this] = { ...LINK, on: true }
-    }
-
-    // --ANIMATION
-    async function title_animationStart()
-    {
-        const WIDTH = window.innerWidth
-
-        for (const CHILD of TITLE_CHILDREN)
+        if (pagelinks_CHARGED)
         {
-            const TRANSLATE_X = WIDTH - (CHILD.offsetLeft - CHILD.offsetWidth)
+            const LINK = HOME_PAGE_LINKS[id]
 
+            if (LINK.on) return
 
-    
-            await animation((t) =>
-            {
-                // CHILD.style.transform = `translateX(${TRANSLATE_X * (1 - t)}px)`
-            }, 1000)
+            try { HOME_PAGE_LINKS.find(link => link.on).on = false } catch { /* recuperer le chemin dans l'url pour définir le lien sélectionné */ }
+
+            HOME_PAGE_LINKS[id] = { ...LINK, on: true }
         }
     }
 
+    // --INTROS
+    async function home_intro()
+    {
+        title_TRANSITION_DELAY = '1.2s'
+
+        title_intro()
+        
+        setTimeout(pagelinks_intro, 1200)
+    }
+
+    async function title_intro()
+    {
+        title_OPACITY = 1
+
+        for (const CHILD of TITLE_CHILDREN) CHILD.style.transform = 'translate3d(0, 0, 0)'
+    }
+
+    async function pagelinks_intro()
+    {
+        await new Promise(resolve =>
+        {
+            TITLE_EVENTS.animation = pagelinks_a$Writing.bind(null, resolve)
+            
+            EVENT.event_add(TITLE_EVENTS)
+        })
+
+        EVENT.event_remove(TITLE_EVENTS)
+
+        pagelinks_update()
+    }
+
+    // --OUTRO
+    async function title_outro()
+    {
+        title_OPACITY = 0
+
+        for (const CHILD of TITLE_CHILDREN) CHILD.style.transform = title_getTranslate3d()
+    }
+
+    // --ANIMATION
+    async function pagelinks_a$Writing(resolve)
+    {
+        const
+        NOW = +new Date(),
+        GAP = NOW - title_LAST
+
+        for (let k = title_I; k < title_J; k++) PAGELINKS_CHILDREN[k].innerText = [' ', '>'][Math.round(Math.random())]
+
+        if (GAP > 16.67)
+        {
+            const MAX = PAGELINKS_CHILDREN.length - 1
+
+            if (title_J < MAX && title_J < title_I + 5) title_J++
+    
+            if (GAP > 33.34)
+            {
+                const CHILD = PAGELINKS_CHILDREN[title_I]
+
+                CHILD.innerText = CHILD.dataset.char
+
+                if (title_I++ >= MAX) resolve()
+
+                title_LAST = NOW
+            }
+        }
+    }
 // #CYCLES
 
 onMount(home_set)
@@ -193,80 +290,56 @@ id="home"
     class="wrapper"
     bind:this={wrapper}
     >
-        <div
-        class="scene"
-        >
-            <Particles />
+        <Particles />
 
-            <SpaceCube
-            prop_RATIO={wrapper_SCROLL_RATIO}
-            prop_TICTACTOE={spacecube_TICTACTOE}
-            />
-
-            <div
-            class="cubes"
-            >
-                {#each HOME_CUBES as cube, i}
-                    <GravityArea
-                    let:rotation
-                    let:grabbing
-                    {...cube}
-                    prop_ANIMATION_UPDATE={CUBES_ANIMATION_UPDATE}
-                    bind:gravityarea_e$Resize={CUBES_RESIZE[i]}
-                    >
-                        <Cube
-                        prop_$ROTATION={rotation}
-                        prop_$GRABBING={grabbing}
-                        prop_ROTATE={Math.random() * MATH.PI.x2}
-                        prop_ROTATE_Y={Math.random() * MATH.PI.x2}
-                        on:click={cube_eClick.bind(null, i)}
-                        />
-                    </GravityArea>
-                {/each}
-            </div>
-        </div>
+        <SpaceCube
+        prop_RATIO={wrapper_SCROLL_RATIO}
+        prop_TICTACTOE={spacecube_TICTACTOE}
+        bind:spacecube_COMPLETED
+        />
 
         <div
         class="content"
+        style:opacity={title_OPACITY}
+        style:transition="opacity {title_TRANSITION_DELAY} ease-in"
         >
             <section>
-                <span
+                <div
                 class="lang"
                 >
                     FR
-                </span>
+            </div>
         
                 <h1
                 class="title"
-                style:opacity={title_OPACITY}
-                bind:this={title}
                 >
-                    <div>
-                        <div>
-                            <span>DEVELOPPEUR</span>
+                    {#each ['DEVELOPPEUR', 'WEB'] as string}
+                        <div
+                        class="text"
+                        >
+                            {#each string as char}
+                                <span
+                                style:transform={title_getTranslate3d()}
+                                style:transition="transform {title_TRANSITION_DELAY} ease-out"
+                                bind:this={TITLE_CHILDREN[TITLE_CHILDREN.length]}
+                                >{char}</span>
+                            {/each}
                         </div>
-                        
-                        <div>
-                            <span>DEVELOPPEUR</span>
-                        </div>
-                    </div>
-            
-                    <div>
-                        <div>
-                            <span>WEB</span>
-                        </div>
-                        
-                        <div>
-                            <span>WEB</span>
-                        </div>
-                    </div>
+                    {/each}
 
-                    <Icon
-                    prop_COLOR={COLORS.light}
-                    prop_SPRING={false}
+                    <div
+                    class="logo"
+                    style:transform={title_getTranslate3d()}
+                    style:transition="transform {title_TRANSITION_DELAY} ease-out"
+                    bind:this={TITLE_CHILDREN[TITLE_CHILDREN.length]}
                     >
-                        <Logo />
-                    </Icon>
+                        <Icon
+                        prop_COLOR={COLORS.light}
+                        prop_SPRING={false}
+                        >
+                            <Logo />
+                        </Icon>
+                    </div>
                 </h1>
             </section>
         
@@ -281,15 +354,43 @@ id="home"
                             class:selected={link.on}
                             aria-label={link.label}
                             {...link.attributes}
-                            on:click|preventDefault={pagelinks_eClick.bind(id)}
+                            on:click|preventDefault={pagelinks_eClick.bind(null, id)}
                             >
-                                {link.content}
+                                {#each link.content as char}
+                                    <span
+                                    data-char={char}
+                                    bind:this={PAGELINKS_CHILDREN[PAGELINKS_CHILDREN.length]}
+                                    >&nbsp;</span>
+                                {/each}
                             </a>
                         </li>
                     {/each}
                 </ul>
             </nav>
         </div>
+    </div>
+
+    <div
+    class="cubes"
+    >
+        {#each HOME_CUBES as cube, i}
+            <GravityArea
+            let:rotation
+            let:grabbing
+            {...cube}
+            prop_GRABBING={!wrapper_SCROLL_RATIO}
+            prop_ANIMATION_UPDATE={CUBES_ANIMATION_UPDATE}
+            bind:gravityarea_e$Resize={CUBES_RESIZE[i]}
+            >
+                <Cube
+                prop_$ROTATION={rotation}
+                prop_$GRABBING={grabbing}
+                prop_ROTATE={Math.random() * MATH.PI.x2}
+                prop_ROTATE_Y={Math.random() * MATH.PI.x2}
+                on:click={cube_eClick.bind(null, i)}
+                />
+            </GravityArea>
+        {/each}
     </div>
 </div>
 
@@ -308,6 +409,7 @@ lang="scss"
 @use '../../assets/scss/styles/display';
 @use '../../assets/scss/styles/size';
 @use '../../assets/scss/styles/font';
+@use '../../assets/scss/styles/animation';
 @use '../../assets/scss/styles/media';
 
 /* #HOME */
@@ -337,25 +439,6 @@ lang="scss"
         @include media.min(false, $ms2) { padding-top: max(11rem, 70px); }
     }
 
-    .scene
-    {
-        &, .cubes {  @extend %any; }
-    
-        @include position.placement(absolute, 0, 0, 0, 0);
-    
-        .cubes
-        {
-            --content-ratio: .27;
-
-            position: relative;
-
-            @include media.min($ms3, $ms2) { --content-ratio: .35; }
-            @include media.min($ms4, $ms3) { --content-ratio: .5; }
-            @include media.min($ms5, $ms4) { --content-ratio: .75; }
-            @include media.min($ms6, $ms4) { --content-ratio: 1; }
-        }
-    }
-
     .content
     {
         @extend %f-column;
@@ -382,62 +465,16 @@ lang="scss"
 
             @include font.h-(1);
 
+            perspective: 400px;
+
             width: fit-content;
             height: fit-content;
 
             margin-block: 1rem 3rem;
 
-            &>div
-            {
-                $animation-details: 3.5s ease-out forwards;
-    
-                display: flex;
-    
-                perspective: 750px;
-
-                transform-style: preserve-3d;
-
-                &>div
-                {
-                    overflow: hidden;
-
-                    span { display: inline-block; }
-                }
-
-                &>div:nth-child(1) span
-                {
-                    transform: translateX(-200%);
-
-                    animation: aTranslateX_1 $animation-details;
-
-                    @keyframes aTranslateX_1 { to { transform: translateX(0); } }
-                }
-                &>div:nth-child(2)
-                {
-                    transform-origin: top right;
-
-                    span
-                    {
-                        transform: translateX(-100%);
-
-                        animation: aTranslateX_2 $animation-details;
-
-                        @keyframes aTranslateX_2 { to { transform: translateX(100%); } }
-                    }
-                }
-            }
-            &>div:nth-child(1)
-            {
-                &>div span { animation-delay: .5s; }
-                &>div:nth-child(2) { transform: translateX(-200%) rotateY(-20deg); }
-            }
-            &>div:nth-child(2)
-            {
-                padding-bottom: 1rem;
-
-                &>div span { animation-delay: 1.5s; }
-                &>div:nth-child(2) { transform: translateX(-200%) rotateY(30deg); }
-            }
+            &>div { transform-style: preserve-3d; }
+            .text span { display: inline-block; }
+            .logo { margin-top: .9rem; }
 
             @include media.min($ms2) { #{--title-size}: map.get(font.$font-sizes, s7); }
             @include media.min($ms3, $ms3)
@@ -446,7 +483,7 @@ lang="scss"
 
                 margin-top: 3rem;
 
-                &>div
+                .text
                 {
                     &::before
                     {
@@ -462,7 +499,7 @@ lang="scss"
         
                     padding-left: app.$gap-inline;
                 }
-                &>div:nth-child(1) { margin-left: app.$gap-inline; }
+                .text:nth-child(1) { margin-left: app.$gap-inline; }
             }
         }
 
@@ -508,6 +545,20 @@ lang="scss"
                 text-decoration: none;
             }
         }
+    }
+
+    .cubes
+    {
+        --content-ratio: .27;
+
+        @include position.placement(absolute, 0, 0, 0, 0);
+
+        @extend %any;
+
+        @include media.min($ms3, $ms2) { --content-ratio: .35; }
+        @include media.min($ms4, $ms3) { --content-ratio: .5; }
+        @include media.min($ms5, $ms4) { --content-ratio: .75; }
+        @include media.min($ms6, $ms4) { --content-ratio: 1; }
     }
 }
 </style>

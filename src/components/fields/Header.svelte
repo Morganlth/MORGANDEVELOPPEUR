@@ -99,12 +99,15 @@ lang="scss"
 
 @use '../../assets/scss/styles/position';
 @use '../../assets/scss/styles/font';
+@use '../../assets/scss/styles/animation';
 
 /* #HEADER */
 
 header
 {
     @include position.placement(fixed, 0, auto, auto, 0);
+
+    @extend %aScaled;
 
     z-index: 2;
 
@@ -119,13 +122,11 @@ header
 
     box-sizing: border-box;
 
-    transition: transform .4s ease;
-
     &>strong
     {
         display: flex;
         align-items: flex-end;
-
+        
         p { @include font.interact($light, map.get(font.$font-sizes, s2), 1, map.get(font.$content-font-weight, w1)); }
 
         span

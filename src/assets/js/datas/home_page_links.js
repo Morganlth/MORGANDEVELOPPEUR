@@ -4,7 +4,7 @@
     export default
     [
         {
-            on: true,
+            on: false,
             content: 'ACCUEIL',
             label: 'Page accueil / home du site Morgan Développeur',
             attributes: { href: '#home', alt: 'Accueil' }

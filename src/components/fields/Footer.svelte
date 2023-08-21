@@ -49,8 +49,10 @@ lang="scss"
 
 @use '../../assets/scss/app';
 
+@use '../../assets/scss/styles/utils';
 @use '../../assets/scss/styles/position';
 @use '../../assets/scss/styles/font';
+@use '../../assets/scss/styles/animation';
 @use '../../assets/scss/styles/media';
 
 /* #FOOTER */
@@ -58,6 +60,9 @@ lang="scss"
 footer
 {
     @include position.placement(fixed, auto, 0, 0, auto);
+
+    @extend %no-drag;
+    @extend %aScaled;
 
     z-index: 2;
 

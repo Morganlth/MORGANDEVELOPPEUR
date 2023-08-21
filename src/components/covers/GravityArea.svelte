@@ -15,6 +15,7 @@
 
     // --PROPS
     export let
+    prop_GRABBING,
     prop_ANIMATION_UPDATE = [],
     prop_X,
     prop_Y,
@@ -53,7 +54,7 @@
     gravityarea_CHARGED = false,
     gravityarea_TRANSLATE_X,
     gravityarea_TRANSLATE_Y,
-    gravityarea_TRANSITION_DELAY,
+    gravityarea_TRANSITION_DELAY = 0,
     gravityarea_RADIUS,
     gravityarea_LAST = +new Date(),
     gravityarea_TIMEOUT
@@ -70,7 +71,7 @@
 // #REACTIVE
 
     // --ELEMENT-GRAVITYAREA
-    $: gravityarea_CHARGED ? gravityarea_updateGrabbing($SLOT_$GRABBING) : null
+    $: gravityarea_CHARGED ? gravityarea_updateGrabbing($SLOT_$GRABBING && prop_GRABBING) : void 0
 
 // #FUNCTIONS
 
@@ -90,7 +91,7 @@
         gravityarea_TRANSLATE_Y = prop_Y * window.innerHeight
         gravityarea_RADIUS = gravityarea.offsetWidth / 2
 
-        setTimeout(() => gravityarea_TRANSITION_DELAY = .3, 50)
+        setTimeout(() => { gravityarea_TRANSITION_DELAY = 300 }, 50)
     }
 
     function gravityarea_setEvents() { EVENT.event_add(GRAVITYAREA_EVENTS) }
@@ -198,7 +199,7 @@ onDestroy(gravityarea_destroy)
 class="gravityarea"
 style:--default-size="{prop_SIZE}px"
 style:transform="translate({gravityarea_TRANSLATE_X ?? -prop_SIZE * 2}px, {gravityarea_TRANSLATE_Y ?? -prop_SIZE * 2}px)"
-style:transition="transform {gravityarea_TRANSITION_DELAY}s ease-out"
+style:transition="transform {gravityarea_TRANSITION_DELAY}ms ease-out"
 type="button"
 bind:this={gravityarea}
 on:mouseenter={gravityarea_eMouseEnter}

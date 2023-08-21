@@ -87,16 +87,16 @@
             {
                 border-top-color: $primary;
 
-                animation: selected-before .3s ease-out;
+                animation: aSelected-before .3s ease-out;
 
-                @keyframes selected-before { 100% { transform: scaleX(1); } }
+                @keyframes aSelected-before { 100% { transform: scaleX(1); } }
             }
 
             opacity: 1;
 
-            animation: selected .4s forwards;
+            animation: aSelected .4s forwards;
 
-            @keyframes selected
+            @keyframes aSelected
             {
                 40% { color: $indicator; }
                 100% { color: $primary; }    
@@ -104,9 +104,9 @@
 
             &::after
             {
-                animation: selected-after .2s linear .25s forwards;
+                animation: aSelected-after .2s linear .25s forwards;
 
-                @keyframes selected-after { 100% { transform: scale(1); } }
+                @keyframes aSelected-after { 100% { transform: scale(1); } }
             }
         }
     }

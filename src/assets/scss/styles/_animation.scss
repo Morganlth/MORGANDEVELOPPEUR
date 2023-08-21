@@ -1,0 +1,11 @@
+// #ANIMATION
+
+    // --TRANSFORM
+    %aScaled
+    {
+        transform: translateY(100%) scaleY(0);
+
+        animation: aScaled .3s ease forwards;
+
+        @keyframes aScaled { to { transform: translateY(0) scaleY(1); } }
+    }

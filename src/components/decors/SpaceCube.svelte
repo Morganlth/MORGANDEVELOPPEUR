@@ -1,10 +1,10 @@
 <!-- #MAP
 
-    -APP
-        SPACECUBE
-            ~SHADER
+-APP
+    SPACECUBE
+        ~SHADER
 
-        MASK  
+    MASK  
 
 -->
 
@@ -19,6 +19,9 @@
     export let
     prop_RATIO = 0,
     prop_TICTACTOE = false
+
+    // --BIND
+    export let spacecube_COMPLETED = false
 
 // #IMPORTS
 
@@ -104,9 +107,6 @@
 
 // #VARIABLES
 
-    // --ELEMENT-APP
-    let app_$START = APP.app_$START
-
     // --ELEMENT-SPACECUBE
     let
     spacecube,
@@ -132,9 +132,8 @@
 // #REACTIVES
 
     // --ELEMENT-SPACECUBE
-    $: $app_$START && spacecube_CHARGED ? spacecube_start() : null
-    $: prop_RATIO && !spacecube_SCROLL_ANIMATION && spacecube_CHARGED ? spacecube_updateCubesPosition() : null
-    $: prop_TICTACTOE && spacecube_CHARGED ? spacecube_setTicTacToe() : null
+    $: prop_RATIO && !spacecube_SCROLL_ANIMATION && spacecube_CHARGED ? spacecube_updateCubesPosition() : void 0
+    $: prop_TICTACTOE && spacecube_CHARGED ? spacecube_setTicTacToe() : void 0
 
 // #FUNCTIONS
 
@@ -211,8 +210,9 @@
 
             spacecube_SCENE.add(SPACECUBE_CUBES)
             spacecube_RENDERER.render(spacecube_SCENE, spacecube_CAMERA)
-
             spacecube_CHARGED = true
+
+            spacecube_start()
         })
     }
 
@@ -402,7 +402,7 @@
     }
     function spacecube_updateScene()
     {
-        spacecube_animationMouseCamera()
+        spacecube_aMouseCamera()
         spacecube_updateMouseLight()
         spacecube_updateCubesLayout()
     }
@@ -425,7 +425,7 @@
             [DIF_X_ABS, DIF_Y_ABS] = [Math.abs(DIF_X), Math.abs(DIF_Y)],
             HYP = Math.sqrt(DIF_X_ABS * DIF_X_ABS + DIF_Y_ABS * DIF_Y_ABS)
 
-            if (HYP < spacecube_RADIUS) spacecube_animationCubeLayout(CUBE, DIF_X, DIF_Y, DIF_X_ABS, DIF_Y_ABS)
+            if (HYP < spacecube_RADIUS) spacecube_aCubeLayout(CUBE, DIF_X, DIF_Y, DIF_X_ABS, DIF_Y_ABS)
         }
     }
 
@@ -488,33 +488,41 @@
     // --CONTROL
     async function spacecube_start()
     {
-        if (!APP.app_OPTIMISE) spacecube_animationStart()
+        APP.app_OPTIMISE
+        ? spacecube_COMPLETED = true
+        : setTimeout(() => spacecube_COMPLETED = true, spacecube_aStart())
 
         spacecube_OPACITY = 1
     }
 
     // --ANIMATIONS
-    function spacecube_animationStart()
+    function spacecube_aStart()
     {
         const
         CUBES = SPACECUBE_CUBES.children,
         Z = -2
+
+        let total_DURATION = 0
     
         for (const CUBE of CUBES)
         {
             const
             [A, B, C] = [CUBE.checkPoints[0], CUBE.checkPoints[1], CUBE.checkPoints[2]],
-            [DURATION, DELAY] = [Math.random() * 900 + 500, Math.random() * 900]
+            [DURATION, DELAY] = [Math.random() * 700 + 500, Math.random() * 900]
 
             CUBE.position.set(A.x, A.y, Z)
 
             setTimeout(() =>
                 animation((t) => CUBE.position.set(spacecube_getBarycentre(A.x, B.x, C.x, t), spacecube_getBarycentre(A.y, B.y, C.y, t), Z * (1 - t)), DURATION)
             , DELAY)
+
+            total_DURATION = Math.max(total_DURATION, DURATION)
         }
+
+        return total_DURATION
     }
 
-    async function spacecube_animationMouseCamera()
+    async function spacecube_aMouseCamera()
     {
         const
         [P_X, P_Y] = [spacecube_CAMERA.position.x, spacecube_CAMERA.position.y],
@@ -528,7 +536,7 @@
             spacecube_CAMERA.position.y = P_Y + STEP_Y * t
         }, 300)
     }
-    async function spacecube_animationCubeLayout(cube, dif_X, dif_Y, dif_X_ABS, dif_Y_ABS)
+    async function spacecube_aCubeLayout(cube, dif_X, dif_Y, dif_X_ABS, dif_Y_ABS)
     {
         const
         ANGLE = Math.atan(dif_Y / dif_X),

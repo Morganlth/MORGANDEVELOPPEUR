@@ -1,7 +1,8 @@
 <!-- #MAP
 
     CUBE
-        \ SIDE * 6
+        SIDE * 6
+            ICON
 
 -->
 
@@ -51,6 +52,9 @@
     cube_ROTATE_Y = prop_ROTATE_Y,
     cube_LAST_MOUSEDOWN
 
+    // --ELEMENT-ICON
+    let icon_OPACITY = 0
+
 // #REACTIVE
 
     // --ELEMENT-CUBE
@@ -59,7 +63,12 @@
 // #FUNCTIONS
 
     // --SET
-    function cube_set() { cube_CHARGED = true }
+    function cube_set()
+    {
+        cube_CHARGED = true
+
+        setTimeout(() => icon_OPACITY = 1, 1200)
+    }
 
     function cube_setEvents() { EVENT.event_add(CUBE_EVENTS) }
 
@@ -118,6 +127,7 @@ on:mousedown={cube_eMouseDown}
         data-side-id={id}
         >
             <Icon
+            prop_OPACITY={icon_OPACITY}
             prop_SIZE="30%"
             prop_COLOR={COLORS.light}
             prop_SPRING={false}
@@ -163,11 +173,23 @@ lang="scss"
 
         transition: border .7s ease-in;
 
+        animation: aBuild 1.2s;
+
         &.grabbing { border-color: $indicator; }
+
+        @keyframes aBuild
+        {
+            from
+            {
+                transform: translate3d(0, 0, 0) rotate3d(0, 0, 0, 0);
+                
+                border-color: $dark;
+            }
+        }
     }
     .side:nth-child(1) { transform: translateZ(calc(var(--content-size) / 2)); }
     .side:nth-child(2) { transform: translateY(-150%) rotateX(-90deg); }
-    .side:nth-child(3) { transform: translate(-50%, -200%) rotateY(90deg) scaleX(-1); }
+    .side:nth-child(3) { transform: translate(-50%, -200%) rotateY(90deg); }
     .side:nth-child(4) { transform: translateY(-250%) rotateX(90deg); }
     .side:nth-child(5) { transform: translate(50%, -400%) rotateY(-90deg); }
     .side:nth-child(6) { transform: translateY(-500%) translateZ(calc(var(--content-size) / -2)); }

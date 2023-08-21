@@ -45,7 +45,7 @@ class="opti"
 style:opacity={opti_OPACITY}
 >
     <section>
-        <h5>RESSOURCES <br> LIMITEES</h5>
+        <h5>RESSOURCES LIMITEES</h5>
 
         <div
         class="content"
@@ -141,9 +141,8 @@ lang="scss"
 
         &>section
         {
-            @extend %f-a-center;
-
-            width: 96%
+            width: 90%;
+            height: fit-content;
         }
 
         h5
@@ -152,9 +151,9 @@ lang="scss"
     
             @include font.h-(2);
 
-            margin-right: 1rem;
+            height: min-content;
 
-            writing-mode: vertical-rl;
+            margin-bottom: 2rem;
         }
 
         h6
@@ -164,10 +163,7 @@ lang="scss"
             margin-block: 1rem .3rem;
         }
     
-        .content>section
-        {
-            box-sizing: border-box;
-        }
+        .content>section { box-sizing: border-box; }
 
         p
         {
@@ -205,8 +201,6 @@ lang="scss"
                 margin-bottom: 1rem;
                 padding: .8rem 1.6rem;
 
-                /* box-sizing: border-box; */
-
                 &:nth-child(1)
                 {
                     border: solid $primary 1px;
@@ -226,13 +220,22 @@ lang="scss"
 
         @include media.min($ms4, $ms4)
         {
-            &>section { width: 74%; }
+            &>section
+            {
+                display: flex; /* @extend %f-a-center; ne fonctionne pas dans media queries */
+                align-items: center;
+    
+                width: 74%;
+            }
 
             h5
             {
                 #{--title-size}: map.get(font.$font-sizes, s5);
     
                 margin-right: app.$gap-block;
+                margin-bottom: 0;
+
+                writing-mode: vertical-rl;
             }
 
             h6 { margin-block: app.$gap-block 1rem; }

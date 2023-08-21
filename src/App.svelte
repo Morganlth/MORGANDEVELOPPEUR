@@ -1,5 +1,9 @@
 <!-- #MAP
 
+-APP
+-COMMANDS
+-EVENT
+-SPRING
     APP
         HEADER
         MAIN
@@ -54,18 +58,22 @@ context="module"
 
 // #VARIABLE
 
+    // --APP
+    let app_$FREEZE = APP.app_$FREEZE
+
     // --ELEMENT-APP
-    let
-    app_CHARGED = false,
-    app_$FREEZE = APP.app_$FREEZE
+    let app_FONTS_CHARGED = false
+    // let app_CHARGED = false
 
     // --ELEMENT-OPTI
     let opti_ON = false
 
 // #REACTIVE
 
-    // --ELEMENT-APP
-    $: APP.app_$START = app_CHARGED && !opti_ON
+    // --APP
+    
+    $: app_$CHARGED = app_FONTS_CHARGED && !opti_ON
+    $: APP.app_$START = app_$CHARGED && !opti_ON
 
 // #FUNCTIONS
 
@@ -81,10 +89,10 @@ context="module"
 
         app_setFormat() // after app_restore()
 
-        app_CHARGED = true
+        document.fonts.ready.then(() => app_FONTS_CHARGED = true)
     }
 
-    function opti_setVars() { opti_ON = (performance.now() - APP_PERFORMANCE) > 250 && localStorage.getItem('optimise') !== 'true' }
+    function opti_setVars() { opti_ON = (performance.now() - APP_PERFORMANCE) > 40 && localStorage.getItem('optimise') !== 'true' }
 
     function app_setContexts()
     {
@@ -126,7 +134,7 @@ onMount(app_set)
 <div
 id="app"
 class:freeze={$app_$FREEZE}
-style:opacity={app_CHARGED ? 1 : 0}
+style:opacity={app_FONTS_CHARGED ? 1 : 0}
 on:scroll={EVENT.event_scroll.bind(EVENT)}
 on:mousemove={EVENT.event_mouseMove.bind(EVENT)}
 on:mousedown={EVENT.event_mouseDown.bind(EVENT)}
@@ -134,9 +142,11 @@ on:mouseup={EVENT.event_mouseUp.bind(EVENT)}
 on:mouseleave={EVENT.event_mouseUp.bind(EVENT)}
 on:touchstart|once={app_eTouchStart}
 >
-    <Header />
-    <Main />
-    <Footer />
+    {#if app_$CHARGED}
+        <Header />
+        <Main />
+        <Footer />
+    {/if}
 
     {#if opti_ON}
         <Opti

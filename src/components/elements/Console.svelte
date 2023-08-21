@@ -381,6 +381,8 @@ $line-height: 8rem;
 
     transition: transform .3s ease;
 
+    animation: aTranslateX .8s ease-in-out;
+
     &.on
     {
         transform: translateX(0);
@@ -505,6 +507,8 @@ $line-height: 8rem;
             pre { #{--line-color}: $light; }
         }
     }
+
+    @keyframes aTranslateX { from { transform: translateX(100%); } }
 
     @include media.min($ms3)
     {
