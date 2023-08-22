@@ -79,14 +79,14 @@ constructor ()
         ?   toTest !== value
             ? callback(toTest)
             : null
-        : this.command_success(value, name)
+        : this.command_c$Success(value, name)
     }
 
     command_testCommand(toTest)
     {
         return this.#command_KEYWORDS.includes(toTest)
         ? true
-        : this.command_error('Une erreur s\'est produite, tenter de recharger la page')
+        : this.command_c$Error('Une erreur s\'est produite, tenter de recharger la page')
     }
 
     #command_testValue(value, params, tests)
@@ -118,14 +118,14 @@ constructor ()
             case true:
             case 't':
             case 'true': return true
-            default: return this.command_error('"t" / "true" pour vrai - "f" / "false" pour faux', 'TypeError')
+            default: return this.command_c$Error('"t" / "true" pour vrai - "f" / "false" pour faux', 'TypeError')
         }
     }
 
     command_testNumber(toTest, min, max)
     {
-        if (!/^\d*?\.?\d+$/.test(toTest)) this.command_error('la valeur doit être un nombre', 'TypeError')
-        if (min && max && (toTest < min || toTest > max)) this.command_error(`la valeur doit être comprise entre [${min} et ${max}]`, 'RangeError')
+        if (!/^\d*?\.?\d+$/.test(toTest)) this.command_c$Error('la valeur doit être un nombre', 'TypeError')
+        if (min && max && (toTest < min || toTest > max)) this.command_c$Error(`la valeur doit être comprise entre [${min} et ${max}]`, 'RangeError')
 
         return parseInt(toTest, 10)
     }

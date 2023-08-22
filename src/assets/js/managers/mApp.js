@@ -5,12 +5,15 @@ class App
 // #VARIABLES
 
     // --APP-CONTEXT
+    #app
     #app_$START = writable(false)
     #app_$FREEZE = writable(false)
     #app_MOBILE
     #app_OPTIMISE = false
     #app_OPTIMISE_CONFIG = {}
     #app_STORAGE = {}
+
+    app_scrollTop = 0
 
 // #CONSTRUCTOR
 
@@ -26,7 +29,13 @@ constructor ()
 // #FUNCTIONS
 
     // --SET
-    app_set() { this.#app_setCommands() }
+    app_set()
+    {
+        this.#app_setVars()
+        this.#app_setCommands()
+    }
+
+    #app_setVars() { this.#app = document.getElementById('app') }
 
     #app_setCommands()
     {
@@ -81,6 +90,8 @@ constructor ()
     app_saveStorage(config = {}) { for (const NAME in config) this.#app_STORAGE[NAME] = localStorage.getItem(NAME) }
 
     // --GETTER
+    get app() { return this.#app }
+
     get app_$START() { return this.#app_$START }
 
     get app_$FREEZE() { return this.#app_$FREEZE }

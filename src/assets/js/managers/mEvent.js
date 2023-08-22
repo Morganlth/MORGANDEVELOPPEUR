@@ -22,10 +22,6 @@ class Event
     event_TOUCHFRAME
     event_GRABBING
 
-    // --ELEMENT-MAIN
-    main
-    main_scrollTop
-
 // #CONSTRUCTOR
 
 constructor ()
@@ -38,10 +34,8 @@ constructor ()
 // #FUNCTIONS
 
     // --SET
-    event_set(main)
+    event_set()
     {
-        this.main = main
-
         window.addEventListener('resize', this.event_resize)
 
         this.event_setAnimationLoop()
@@ -67,9 +61,11 @@ constructor ()
 
         this.event_SCROLLFRAME = requestAnimationFrame(() =>
         {
-            this.main_scrollTop = target.scrollTop
+            const SCROLLTOP = target.scrollTop
 
-            this.event_run.call(this.event_MANAGER.scroll)
+            APP.app_scrollTop = SCROLLTOP
+
+            this.event_run.call(this.event_MANAGER.scroll, SCROLLTOP)
 
             this.event_SCROLLFRAME = false
         })
@@ -147,13 +143,16 @@ constructor ()
 
     event_run() { for (const FUNC of this) FUNC(...arguments) }
 
-    event_scrollTo(top) { (this.main ?? document.querySelector('main')).scrollTo({ top: top, behavior: 'instant' }) }
+    event_scrollTo(top, behavior = 'smooth') { (APP.app ?? document.getElementById('app')).scrollTo({ top: top, behavior: behavior }) }
 }
 
-// #IMPORT
+// #IMPORTS
 
     // --JS
     import { wait_debounce } from '../utils/wait'
+
+    // --CONTEXT
+    import APP from './mApp'
 
     // --SVELTE
     import { writable } from "svelte/store"

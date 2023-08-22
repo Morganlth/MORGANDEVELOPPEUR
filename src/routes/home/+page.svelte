@@ -7,4 +7,6 @@
         import App from '../../App.svelte'
 </script>
 
-<App />
+<App
+prop_PAGE_ID={0}
+/>

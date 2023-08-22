@@ -1,6 +1,8 @@
 <!-- #MAP
 
 -APP
+-COMMAND
+-EVENT
     SPACECUBE
         ~SHADER
 
@@ -21,7 +23,7 @@
     prop_TICTACTOE = false
 
     // --BIND
-    export let spacecube_COMPLETED = false
+    export let spacecube_CHARGED = false
 
 // #IMPORTS
 
@@ -111,7 +113,6 @@
     let
     spacecube,
     spacecube_ON = true,
-    spacecube_CHARGED = false,
     spacecube_OPACITY = 0,
     spacecube_SCROLL_ANIMATION = false,
     spacecube_SCENE,
@@ -121,7 +122,7 @@
     spacecube_HEIGHT,
     spacecube_DEPTH,
     spacecube_MOUSELIGHT,
-    spacecube_TEXTURE,
+    spacecube_TEXTURE = null,
     spacecube_RADIUS = SPACECUBE_RADIUS,
     spacecube_FORCE_POSITION = SPACECUBE_FORCE_POSITION,
     spacecube_FORCE_ROTATION = SPACECUBE_FORCE_ROTATION,
@@ -132,7 +133,7 @@
 // #REACTIVES
 
     // --ELEMENT-SPACECUBE
-    $: prop_RATIO && !spacecube_SCROLL_ANIMATION && spacecube_CHARGED ? spacecube_updateCubesPosition() : void 0
+    $: prop_RATIO && spacecube_CHARGED && !spacecube_SCROLL_ANIMATION ? spacecube_updateCubesPosition() : void 0
     $: prop_TICTACTOE && spacecube_CHARGED ? spacecube_setTicTacToe() : void 0
 
 // #FUNCTIONS
@@ -210,7 +211,6 @@
 
             spacecube_SCENE.add(SPACECUBE_CUBES)
             spacecube_RENDERER.render(spacecube_SCENE, spacecube_CAMERA)
-            spacecube_CHARGED = true
 
             spacecube_start()
         })
@@ -488,9 +488,12 @@
     // --CONTROL
     async function spacecube_start()
     {
-        APP.app_OPTIMISE
-        ? spacecube_COMPLETED = true
-        : setTimeout(() => spacecube_COMPLETED = true, spacecube_aStart())
+        setTimeout(() => spacecube_CHARGED = true,
+        prop_RATIO === 0
+        ? APP.app_OPTIMISE
+            ? 0
+            : spacecube_aStart()
+        : spacecube_updateCubesPosition() ?? 0)
 
         spacecube_OPACITY = 1
     }
@@ -591,6 +594,7 @@ bind:this={spacecube}
 >
     <div
     class="mask"
+    style:opacity={1 - prop_RATIO}
     >
     </div>
 </div>

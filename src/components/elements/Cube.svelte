@@ -173,7 +173,7 @@ lang="scss"
 
         transition: border .7s ease-in;
 
-        animation: aBuild 1.2s;
+        animation: aBuild 1.2s ease-in;
 
         &.grabbing { border-color: $indicator; }
 

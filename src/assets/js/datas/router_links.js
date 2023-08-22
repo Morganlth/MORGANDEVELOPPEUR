@@ -1,6 +1,6 @@
 // #EXPORT
 
-    // --HOME-PAGE-LINKS
+    // --ROUTER-LINKS
     export default
     [
         {

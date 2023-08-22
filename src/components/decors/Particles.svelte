@@ -1,5 +1,7 @@
 <!-- #MAP
 
+-COMMAND
+-EVENT
     PARTICLES
 
 -->
@@ -22,6 +24,7 @@
 
     // --ELEMENT-PARTICLES
     const
+    PARTICLES_GAP = 100,
     PARTICLES_PARTICLES = [],
     PARTICLES_EVENTS =
     {
@@ -37,6 +40,8 @@
     particles_ON = true,
     particles_WIDTH,
     particles_HEIGHT,
+    particles_ANGLE_X = 0,
+    particles_ANGLE_Y = 0,
     particles_CONTEXT,
     particles_COUNT = 0,
     particles_DELAY = 100,
@@ -56,6 +61,9 @@
     {
         particles.width = (particles_WIDTH = window.innerWidth)
         particles.height = (particles_HEIGHT = window.innerHeight)
+
+        particles_ANGLE_X = Math.atan(PARTICLES_GAP / particles_HEIGHT)
+        particles_ANGLE_Y = Math.atan(PARTICLES_GAP / particles_WIDTH)
 
         particles_CONTEXT = particles_CONTEXT ?? particles.getContext('2d')
     }
@@ -85,10 +93,10 @@
     {
         PARTICLES_PARTICLES.push(
         {
-            x: 0,
-            y: 0,
-            vel_X: Math.random(),
-            vel_Y: -Math.random(),
+            x: -PARTICLES_GAP,
+            y: -PARTICLES_GAP,
+            vel_X: Math.random() + particles_ANGLE_X,
+            vel_Y: -Math.random() - particles_ANGLE_Y,
             size: Math.random() * 10 + 10,
             color: COLORS[Math.round(Math.random()) ? 'light' : 'primary']
         })

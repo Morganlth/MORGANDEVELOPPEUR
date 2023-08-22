@@ -23,6 +23,7 @@ context="module"
 
     // --CONTEXTS
     export const APP = a
+    export const ROUTER = r
     export const COMMAND = c
     export const EVENT = e
     export const SPRING = s
@@ -31,12 +32,17 @@ context="module"
 
     // --CONTEXTS
     import a from './assets/js/managers/mApp'
+    import r from './assets/js/managers/mRouter'
     import c from './assets/js/managers/mCommand'
     import e from './assets/js/managers/mEvent'
     import s from './assets/js/managers/mSpring'
 </script>
 
 <script>
+// #EXPORT
+
+    // --PROP
+    export let prop_PAGE_ID = 0
 // #IMPORTS
 
     // --SVELTE
@@ -56,24 +62,24 @@ context="module"
     // --ELEMENT-APP
     const APP_PERFORMANCE = performance.now()
 
-// #VARIABLE
+// #VARIABLES
 
     // --APP
     let app_$FREEZE = APP.app_$FREEZE
 
     // --ELEMENT-APP
     let app_FONTS_CHARGED = false
-    // let app_CHARGED = false
 
     // --ELEMENT-OPTI
     let opti_ON = false
 
-// #REACTIVE
+// #REACTIVES
 
     // --APP
-    
-    $: app_$CHARGED = app_FONTS_CHARGED && !opti_ON
     $: APP.app_$START = app_$CHARGED && !opti_ON
+
+    // --ELEMENT-APP
+    $: app_$CHARGED = app_FONTS_CHARGED && !opti_ON
 
 // #FUNCTIONS
 
@@ -85,18 +91,13 @@ context="module"
         app_setContexts()
         app_setCommands()
 
-        app_restore()
-
-        app_setFormat() // after app_restore()
-
         document.fonts.ready.then(() => app_FONTS_CHARGED = true)
     }
-
-    function opti_setVars() { opti_ON = (performance.now() - APP_PERFORMANCE) > 40 && localStorage.getItem('optimise') !== 'true' }
 
     function app_setContexts()
     {
         APP.app_set()
+        ROUTER.router_set(prop_PAGE_ID)
         EVENT.event_set()
         SPRING.spring_set()
     }
@@ -104,17 +105,17 @@ context="module"
     function app_setCommands()
     {
         COMMAND.command_add('app', app_c$App)
+        COMMAND.command_add('router', app_c$Router)
         COMMAND.command_add('command', app_c$Command)
         COMMAND.command_add('event', app_c$Event)
     }
 
-    function app_setFormat() { APP.app_setFormat() }
-
-    // --RESTORE
-    function app_restore() { APP.app_restore() }
+    function opti_setVars() { opti_ON = (performance.now() - APP_PERFORMANCE) > 40 && localStorage.getItem('optimise') !== 'true' }
 
     // --COMMANDS
     function app_c$App() { console.log(APP) }
+
+    function app_c$Router() { console.log(ROUTER) }
 
     function app_c$Command() { console.log(COMMAND) }
 

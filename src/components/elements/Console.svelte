@@ -1,5 +1,11 @@
 <!-- #MAP
 
+-APP
+-COMMAND
+-EVENT
+-SPRING
+
+-HOME_$Z
     CONSOLE
         INPUT
             \ LINE
@@ -22,6 +28,7 @@
 
     // --CONTEXTS
     import { APP, COMMAND, EVENT, SPRING } from '../../App.svelte'
+    import { HOME_$Z } from '../pages/Home.svelte'
 
     // --SVELTE
     import { onMount, onDestroy, tick } from 'svelte'
@@ -34,7 +41,7 @@
     // --ELEMENT-CONSOLE
     const
     CONSOLE_TARGET_CLASS = 'console-target',
-    CONSOLE_HISTORY = ['app'],
+    CONSOLE_HISTORY = ['app '],
     CONSOLE_EVENTS = { mouseDown: console_e$MouseDown }
 
     // --ELEMENT-MIRROR
@@ -257,6 +264,7 @@ on:mouseleave={SPRING.spring_e$Show.bind(SPRING)}
 >
     <div
     class="input"
+    class:transparent={!$HOME_$Z}
     >
         <button
         class={CONSOLE_TARGET_CLASS}
@@ -367,6 +375,8 @@ $line-height: 8rem;
 {
     @include position.placement(fixed, auto, 0, $gap-block);
 
+    z-index: 1;
+
     display: flex;
     flex-direction: column-reverse;
 
@@ -381,13 +391,15 @@ $line-height: 8rem;
 
     transition: transform .3s ease;
 
-    animation: aTranslateX .8s ease-in-out;
+    animation: aTranslateX .4s ease-in-out;
 
     &.on
     {
         transform: translateX(0);
 
         .input { border-color: rgba($light, .3); }
+
+        .output { opacity: 1; }
     }
 
 
@@ -419,7 +431,9 @@ $line-height: 8rem;
 
         box-sizing: border-box;
 
-        transition: border-color .5s;
+        transition: border-color .4s;
+
+        &.transparent { background-color: rgba($dark, .5); }
 
         &>button
         {
@@ -484,6 +498,8 @@ $line-height: 8rem;
 
         overflow: auto;
 
+        opacity: 0;
+
         width: fit-content;
         max-width: 100%;
         min-height: 0;
@@ -492,6 +508,8 @@ $line-height: 8rem;
         padding-right: app.$gap-inline;
 
         box-sizing: border-box;
+
+        transition: opacity .4s;
 
         .line
         {
