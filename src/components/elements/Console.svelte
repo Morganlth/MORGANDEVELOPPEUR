@@ -1,11 +1,10 @@
 <!-- #MAP
 
 -APP
+-ROUTER
 -COMMAND
 -EVENT
 -SPRING
-
--HOME_$Z
     CONSOLE
         INPUT
             \ LINE
@@ -27,8 +26,7 @@
     import COLORS from '$lib/colors'
 
     // --CONTEXTS
-    import { APP, COMMAND, EVENT, SPRING } from '../../App.svelte'
-    import { HOME_$Z } from '../pages/Home.svelte'
+    import { APP, ROUTER, COMMAND, EVENT, SPRING } from '../../App.svelte'
 
     // --SVELTE
     import { onMount, onDestroy, tick } from 'svelte'
@@ -48,6 +46,9 @@
     const MIRROR_FIELDS = []
 
 // #VARIABLES
+
+    // --ROUTER
+    let router_$ID = ROUTER.router_$ID
 
     // --ELEMENT-CONSOLE
     let
@@ -264,7 +265,7 @@ on:mouseleave={SPRING.spring_e$Show.bind(SPRING)}
 >
     <div
     class="input"
-    class:transparent={!$HOME_$Z}
+    class:transparent={$router_$ID === 1}
     >
         <button
         class={CONSOLE_TARGET_CLASS}

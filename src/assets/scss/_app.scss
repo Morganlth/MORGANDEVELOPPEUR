@@ -27,8 +27,13 @@
 
         @font-face
         {
-            font-family: 'CodeNext';
+            font-family: 'CodeNext-BLACK';
             src: url('./fonts/CodeNext/CodeNext-Trial-Black.ttf');
+        }
+        @font-face
+        {
+            font-family: 'CodeNext';
+            src: url('./fonts/CodeNext/CodeNext-ExtraBold.ttf');
         }
         @font-face
         {

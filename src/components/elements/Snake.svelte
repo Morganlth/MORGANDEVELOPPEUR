@@ -3,8 +3,6 @@
 -APP
 -COMMAND
 -EVENT
-
--HOME_$Z
     SNAKE
         CANVAS
 
@@ -13,6 +11,11 @@
 <!-- #SCRIPT -->
 
 <script>
+// #EXPORT
+
+    // --PROP
+    export let prop_FOCUS = false
+
 // #IMPORTS
 
     // --JS
@@ -23,7 +26,6 @@
 
     // --CONTEXTS
     import { APP, COMMAND, EVENT } from '../../App.svelte'
-    import { HOME_$Z } from '../pages/Home.svelte'
 
     // --SVELTE
     import { onMount, onDestroy } from 'svelte'
@@ -53,7 +55,6 @@
 
     // --ELEMENT-SNAKE
     let
-    snake_INVINCIBLE = true,
     snake_WIDTH = 0,
     snake_HEIGHT = 0,
     snake_OFFSET_TOP = 0,
@@ -77,7 +78,7 @@
 
 // #REACTIVE
 
-    $: snake_INVINCIBLE = $app_$FREEZE || $HOME_$Z === 1
+    $: snake$_INVINCIBLE = $app_$FREEZE || prop_FOCUS
 
 // #FUNCTIONS
 
@@ -204,7 +205,7 @@
     {
         snake_setApple()
 
-        if (!snake_INVINCIBLE)
+        if (!snake$_INVINCIBLE)
         {
             const [TAIL_X, TAIL_Y] = SNAKE_SNAKE[snake_SCORE - 1]
 
@@ -278,7 +279,7 @@
 
     function snake_testBody([x, y])
     {
-        if (!snake_INVINCIBLE && snake_SCOPE && x === snake_X && y === snake_Y)
+        if (!snake$_INVINCIBLE && snake_SCOPE && x === snake_X && y === snake_Y)
         {   
             SNAKE_SNAKE.pop()
     
@@ -396,9 +397,7 @@ lang="scss"
 
 .snake
 {
-    @include position.placement(sticky, 0, 0, auto, 0);
-
-    box-sizing: border-box;
+    @include position.placement(absolute, 0, 0, auto, 0);
 
     canvas
     {

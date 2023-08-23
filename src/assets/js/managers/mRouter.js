@@ -31,9 +31,12 @@ constructor ()
 // #FUNCTIONS
 
     // --SET
-    router_set(id) { this.#router_setVars(id) }
+    router_set(id)
+    {
+        this.#router_setEvents()
 
-    #router_setVars(id) { this.router_$ID = id }
+        this.router_update(id, 'instant')
+    }
 
     #router_setEvents() { EVENT.event_add(this.#router_EVENTS) }
 
@@ -45,23 +48,22 @@ constructor ()
     }
 
     // --UPDATE
-    #router_update(id)
+    router_update(id, behavior = 'smooth')
     {
         const PAGE = this.#router_PAGES[id]
 
-        history.pushState({}, '', location.origin + '/' + PAGE.name + (PAGE.subPath ?? ''))
+        EVENT.event_scrollTo(PAGE.offsetTop, behavior)
 
-        this.router_$ID = id
+        this.#router_updatePath(id, PAGE)
     }
 
-    // --CONTROL
-    router_start()
+    #router_updatePath(id, page)
     {
-        this.#router_setEvents()
+        const PAGE = page ?? this.#router_PAGES[id]
 
-        const PAGE = this.#router_PAGES[this.#router_$ID.value]
-
-        EVENT.event_scrollTo(PAGE.offsetTop, 'instant')
+        history.pushState({}, '', location.origin + '/' + PAGE.name + (PAGE.subPath ?? ''))
+    
+        this.router_$ID = id
     }
 
     // --EVENT
@@ -70,7 +72,7 @@ constructor ()
         const PAGES = this.#router_PAGES
 
         for (let i = PAGES.length - 1; i >= 0; i--)
-            if (PAGES[i].offsetTop <= APP.app_scrollTop) return this.#router_update(i)
+            if (PAGES[i].offsetTop <= APP.app_scrollTop) return this.#router_updatePath(i, PAGES[i])
     }
 
     // --UTIL
@@ -78,8 +80,6 @@ constructor ()
 
     // --GETTER
     get router_$ID() { return this.#router_$ID }
-    
-    get router_PAGES() { return this.#router_PAGES }
 
     // --SETTER
     set router_$ID(value) { this.#router_$ID.set(value) }

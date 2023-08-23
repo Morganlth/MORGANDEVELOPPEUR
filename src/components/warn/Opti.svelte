@@ -1,5 +1,6 @@
 <!-- #MAP
 
+-APP
     OPTI
         \ CONTENT
             \ COMMAND
@@ -32,7 +33,7 @@
     {
         opti_OPACITY = 0
 
-        APP.app_c$Optimise(on)
+        APP.app_OPTIMISE = on
 
         setTimeout(() => opti_ON = false, 500)
     }

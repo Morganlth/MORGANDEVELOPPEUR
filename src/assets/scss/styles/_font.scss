@@ -7,11 +7,13 @@
 
 @use './position';
 @use './size';
+@use './media';
 
 // #VARIABLES
 
     // --FONT-FAMILY
-    $family-title: 'CodeNext';
+    $family-title: 'CodeNext-BLACK';
+    $family-subtitle: 'CodeNext';
     $family-content: 'AnonymousPro';
 
     // --FONT-SIZE -> 0 - 12 - 18 - 24 - 36 - 48 - 60 - 72 - 88
@@ -21,10 +23,10 @@
     $content-font-weight: (w1: 100, w2: 900); // only 2 values
 
     // --FONT-TITLE
-    $h-1: (color: $light, font-family: $family-title, font-size: var(--title-size), font-weight: 900, line-height: .9);
+    $h-1: (color: $light, font-family: $family-title, font-size: var(--title-size, map.get($font-sizes, s6)), font-weight: 900, line-height: .9);
     $h-2: (color: $indicator, font-family: $family-title, font-size: var(--title-size, map.get($font-sizes, s5)), font-weight: 900, line-height: 1.2);
     $h-3: (color: $indicator, font-family: $family-title, font-size: map.get($font-sizes, s4), font-weight: 900, line-height: 1.2);
-    $h-4: (color: $light, font-family: $family-title, font-size: map.get($font-sizes, s3), font-weight: 900, line-height: 1.2);
+    $h-4: (color: $light, font-family: $family-title, font-size: map.get($font-sizes, s3), font-weight: 900, line-height: 1.2); 
 
     $titles: ('h-1': $h-1, 'h-2': $h-2, 'h-3': $h-3, 'h-4': $h-4);
 
@@ -109,4 +111,13 @@
                 @keyframes aSelected-after { 100% { transform: scale(1); } }
             }
         }
+    }
+
+    // --FONT-MEDIAS
+    %m-h-1
+    {
+        #{--title-size}: map.get($font-sizes, s6);
+    
+        @include media.min($ms2) { #{--title-size}: map.get($font-sizes, s7); }
+        @include media.min($ms3, $ms3) { #{--title-size}: map.get($font-sizes, s8); }
     }

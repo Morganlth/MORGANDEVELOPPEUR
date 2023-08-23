@@ -6,7 +6,6 @@ class App
 
     // --APP-CONTEXT
     #app
-    #app_$START = writable(false)
     #app_$FREEZE = writable(false)
     #app_MOBILE
     #app_OPTIMISE = false
@@ -33,6 +32,9 @@ constructor ()
     {
         this.#app_setVars()
         this.#app_setCommands()
+        this.#app_setFormat()
+
+        this.#app_restore()
     }
 
     #app_setVars() { this.#app = document.getElementById('app') }
@@ -56,15 +58,26 @@ constructor ()
         )
     }
 
-    app_setFormat() { this.app_MOBILE = navigator.maxTouchPoints > 0 && navigator.userAgent.match(/(iPhone|iPad|Android)/i) ? true : false }
+    #app_setFormat() { this.app_MOBILE = navigator.maxTouchPoints > 0 && navigator.userAgent.match(/(iPhone|iPad|Android)/i) ? true : false }
 
     // --RESTORE
-    app_restore()
+    #app_restore()
     {
-        const COMMANDS = COMMAND.command_COMMANDS
+        const
+        OPTIMISE = this.#app_OPTIMISE,
+        OPTIMISE_CONFIG = this.#app_OPTIMISE_CONFIG,
+        COMMANDS = COMMAND.command_COMMANDS
 
         for (const NAME of COMMAND.command_KEYSTORAGE)
-            try { COMMANDS[NAME](localStorage.getItem(NAME) ?? 'd') } catch { localStorage.removeItem(NAME) }
+            try
+            {
+                COMMANDS[NAME](
+                    OPTIMISE && NAME in OPTIMISE_CONFIG
+                    ? OPTIMISE_CONFIG[NAME]
+                    : localStorage.getItem(NAME) ?? 'd'
+                )
+            }
+            catch { localStorage.removeItem(NAME) }
 
         try { if (COMMAND.command_testCommand('clear')) COMMANDS.clear() } catch {}
     }
@@ -92,8 +105,6 @@ constructor ()
     // --GETTER
     get app() { return this.#app }
 
-    get app_$START() { return this.#app_$START }
-
     get app_$FREEZE() { return this.#app_$FREEZE }
 
     get app_MOBILE() { return this.#app_MOBILE }
@@ -103,8 +114,6 @@ constructor ()
     get app_OPTIMISE_CONFIG() { return this.#app_OPTIMISE_CONFIG }
 
     // --SETTER
-    set app_$START(start) { this.#app_$START.set(start) }
-
     set app_$FREEZE(on) { this.#app_$FREEZE.set(on) }
 
     set app_MOBILE(on)

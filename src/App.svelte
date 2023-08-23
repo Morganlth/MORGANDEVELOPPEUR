@@ -5,12 +5,13 @@
 -EVENT
 -SPRING
     APP
-        HEADER
-        MAIN
-        FOOTER
+        #if
+            HEADER
+            PAGES
+            ASIDE
+            FOOTER
 
         #if OPTI
-        #else ASIDE
 
 -->
 
@@ -46,11 +47,11 @@ context="module"
 // #IMPORTS
 
     // --SVELTE
-    import { onMount } from 'svelte'
+    import { onMount, afterUpdate } from 'svelte'
 
     // --COMPONENT-FIELDS
     import Header from './components/fields/Header.svelte'
-    import Main from './components/fields/Main.svelte'
+    import Pages from './components/fields/Pages.svelte'
     import Footer from './components/fields/Footer.svelte'
     import Aside from './components/fields/Aside.svelte'
 
@@ -73,13 +74,10 @@ context="module"
     // --ELEMENT-OPTI
     let opti_ON = false
 
-// #REACTIVES
-
-    // --APP
-    $: APP.app_$START = app_$CHARGED && !opti_ON
+// #REACTIVE
 
     // --ELEMENT-APP
-    $: app_$CHARGED = app_FONTS_CHARGED && !opti_ON
+    $: app$_CHARGED = app_FONTS_CHARGED && !opti_ON
 
 // #FUNCTIONS
 
@@ -88,7 +86,6 @@ context="module"
     {
         opti_setVars()
 
-        app_setContexts()
         app_setCommands()
 
         document.fonts.ready.then(() => app_FONTS_CHARGED = true)
@@ -96,10 +93,10 @@ context="module"
 
     function app_setContexts()
     {
+        SPRING.spring_set() // set command
         APP.app_set()
         ROUTER.router_set(prop_PAGE_ID)
         EVENT.event_set()
-        SPRING.spring_set()
     }
 
     function app_setCommands()
@@ -110,7 +107,18 @@ context="module"
         COMMAND.command_add('event', app_c$Event)
     }
 
-    function opti_setVars() { opti_ON = (performance.now() - APP_PERFORMANCE) > 40 && localStorage.getItem('optimise') !== 'true' }
+    function opti_setVars() { opti_ON = (performance.now() - APP_PERFORMANCE) > 10 && localStorage.getItem('optimise') !== 'true' }
+
+    // --UPDATE
+    function app_update()
+    {
+        if (app$_CHARGED)
+        {
+            app_setContexts()
+
+            app_update = () => {} // destroy func
+        }
+    }
 
     // --COMMANDS
     function app_c$App() { console.log(APP) }
@@ -124,9 +132,10 @@ context="module"
     // --EVENT
     async function app_eTouchStart() { APP.app_MOBILE = true }
 
-// #CYCLE
+// #CYCLES
 
 onMount(app_set)
+afterUpdate(() => app_update())
 </script>
 
 <!-- #HTML -->
@@ -143,9 +152,10 @@ on:mouseup={EVENT.event_mouseUp.bind(EVENT)}
 on:mouseleave={EVENT.event_mouseUp.bind(EVENT)}
 on:touchstart|once={app_eTouchStart}
 >
-    {#if app_$CHARGED}
+    {#if app$_CHARGED}
         <Header />
-        <Main />
+        <Pages />
+        <Aside />
         <Footer />
     {/if}
 
@@ -153,8 +163,6 @@ on:touchstart|once={app_eTouchStart}
         <Opti
         bind:opti_ON
         />
-    {:else}
-        <Aside />
     {/if}
 </div>
 

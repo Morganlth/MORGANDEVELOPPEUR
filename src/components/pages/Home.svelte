@@ -21,16 +21,12 @@
 
 <!-- #SCRIPT -->
 
-<script
-context="module"
->
-// #EXPORTS
-
-    // --CONTEXTS
-    export const HOME_$Z = writable(1)
-</script>
-
 <script>
+// #EXPORT
+
+    // --PROP
+    export let prop_FOCUS = false
+
 // #IMPORTS
 
     // --JS
@@ -46,7 +42,6 @@ context="module"
 
     // --SVELTE
     import { onMount, onDestroy } from 'svelte'
-    import { writable } from 'svelte/store'
 
     // --COMPONENT-ELEMENT
     import Cube from '../elements/Cube.svelte'
@@ -99,7 +94,10 @@ context="module"
     content_OPACITY = 0,
     content_TRANSITION_DELAY = 0
 
-// #REACTIVE
+// #REACTIVES
+
+    // --ELEMENT-HOME
+    $: content_update(prop_FOCUS)
 
     // --ELEMENT-SPACECUBE
     $: spacecube_CHARGED ? home_intro() : void 0
@@ -157,12 +155,12 @@ context="module"
         return `translate3d(${X}px, ${Y}px, ${Z}px)`
     }
 
-     // --INTROS
-     async function home_intro()
+    // --INTROS
+    async function home_intro()
     {
         content_TRANSITION_DELAY = '1.2s'
 
-        if (wrapper_SCROLL_RATIO < .66) content_intro()
+        if (wrapper_SCROLL_RATIO < 1) content_intro()
     }
 
     async function content_intro()
@@ -180,23 +178,15 @@ context="module"
         for (const CHILD of TITLE_CHILDREN) CHILD.style.transform = title_getTranslate3d()
     }
 
-    // --UPDATES
-    function home_update(off)
+    // --UPDATE
+    function content_update(focus)
     {
-        HOME_$Z.set(off ? 0 : 1)
-    
-        if (spacecube_CHARGED) content_update(off)
-    }
-
-    function content_update(off)
-    {
-        off
-        ?   content_OPACITY
-            ? content_outro()
-            : void 0
-        :   !content_OPACITY
-            ? content_intro()
-            : void 0
+        if (spacecube_CHARGED)
+        {
+            focus
+            ?   content_intro()
+            :   content_outro()
+        }
     }
 
     // --EVENTS
@@ -207,12 +197,7 @@ context="module"
         for (const RESIZE of CUBES_RESIZE) RESIZE()
     }
 
-    async function wrapper_e$Scroll()
-    {
-        wrapper_SCROLL_RATIO = wrapper.offsetTop / wrapper_AVAILABLE_HEIGHT
-
-        home_update(wrapper_SCROLL_RATIO > .66)
-    }
+    async function wrapper_e$Scroll() { wrapper_SCROLL_RATIO = wrapper.offsetTop / wrapper_AVAILABLE_HEIGHT }
 
     async function cubes_e$Animation() { for (const UPDATE of CUBES_ANIMATION_UPDATE) UPDATE() }
 
@@ -231,7 +216,7 @@ onDestroy(home_destroy)
 
 <div
 id="home"
-style:z-index={$HOME_$Z}
+style:z-index={prop_FOCUS ? 1 : 0}
 >
     <div
     class="wrapper"
@@ -253,7 +238,7 @@ style:z-index={$HOME_$Z}
             <div
             class="lang"
             >
-                FR
+            {'{FR}'}
             </div>
     
             <h1
@@ -325,6 +310,7 @@ lang="scss"
 
 @use '../../assets/scss/app';
 
+@use '../../assets/scss/styles/elements';
 @use '../../assets/scss/styles/position';
 @use '../../assets/scss/styles/size';
 @use '../../assets/scss/styles/font';
@@ -340,22 +326,7 @@ lang="scss"
 
     height: 300vh;
 
-    .wrapper
-    {
-        @include position.placement(sticky, 0, auto, auto, 0);
-
-        overflow: hidden;
-
-        height: 100vh;
-
-        padding: 10rem app.$gap-inline 0;
-
-        pointer-events: none;
-
-        box-sizing: border-box;
-
-        @include media.min(false, $ms2) { padding-top: max(11rem, 70px); }
-    }
+    .wrapper { @extend %wrapper; }
 
     .content
     {
@@ -371,10 +342,11 @@ lang="scss"
 
         .title
         {
-            #{--title-size}: map.get(font.$font-sizes, s6); 
             --icon-size: calc(var(--title-size) * .71);
 
             @include font.h-(1);
+
+            @extend %m-h-1;
 
             perspective: 400px;
 
@@ -387,11 +359,8 @@ lang="scss"
             .text span { display: inline-block; }
             .logo { margin-top: .9rem; }
 
-            @include media.min($ms2) { #{--title-size}: map.get(font.$font-sizes, s7); }
             @include media.min($ms3, $ms3)
             {
-                #{--title-size}: map.get(font.$font-sizes, s8);
-
                 margin-top: 3rem;
 
                 .text

@@ -36,6 +36,7 @@
     let
     router_CHARGED = false,
     router_OPACITY = 0,
+    router_TIMEOUT,
     router_LAST = +new Date(),
     router_I = 0,
     router_J = 0
@@ -51,7 +52,7 @@
     {
         router_setVars()
 
-        setTimeout(router_intro, 500)
+        router_TIMEOUT = setTimeout(router_intro, 500)
     }
 
     function router_setVars() { router_OPACITY = 1 }
@@ -59,7 +60,12 @@
     function router_setEvents() { EVENT.event_add(ROUTER_EVENTS) }
 
     // --DESTROY
-    function router_destroy() { router_destroyEvents() }
+    function router_destroy()
+    {
+        clearTimeout(router_TIMEOUT)
+
+        router_destroyEvents()
+    }
 
     function router_destroyEvents() { EVENT.event_remove(ROUTER_EVENTS) }
 
@@ -91,17 +97,7 @@
     }
 
     // --EVENT
-    async function router_eClick(id)
-    {
-        if (router_CHARGED)
-        {
-            const OFFSET_TOP = ROUTER.router_PAGES[id].offsetTop
-
-            EVENT.event_scrollTo(OFFSET_TOP ?? 0)
-    
-            router_update(id)
-        }
-    }
+    async function router_eClick(id) { if (router_CHARGED) ROUTER.router_update(id) }
 
     // --ANIMATION
     async function router_a$Writing(resolve)
