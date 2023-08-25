@@ -12,7 +12,7 @@
 // #IMPORTS
 
     // --JS
-    import ROUTER_LINKS from '../../assets/js/datas/router_links'
+    import ROUTER_LINKS_DATAS from '../../assets/js/datas/dRouter_links'
 
     // --CONTEXTS
     import { ROUTER, EVENT } from '../../App.svelte'
@@ -87,13 +87,13 @@
     // --UPDATE
     function router_update(id)
     {
-        const LINK = ROUTER_LINKS[id]
+        const LINK = ROUTER_LINKS_DATAS[id]
 
         if (LINK.on) return
 
-        try { ROUTER_LINKS.find(link => link.on).on = false } catch { /* recuperer le chemin dans l'url pour définir le lien sélectionné */ }
+        try { ROUTER_LINKS_DATAS.find(link => link.on).on = false } catch { /* recuperer le chemin dans l'url pour définir le lien sélectionné */ }
 
-        ROUTER_LINKS[id] = { ...LINK, on: true }   
+        ROUTER_LINKS_DATAS[id] = { ...LINK, on: true }   
     }
 
     // --EVENT
@@ -141,7 +141,7 @@ style:opacity={router_OPACITY}
 >
     <ul>
         <!-- svelte-ignore a11y-no-static-element-interactions a11y-missing-attribute -->
-        {#each ROUTER_LINKS as link, id}
+        {#each ROUTER_LINKS_DATAS as link, id}
             <li>
                 <a
                 class:selected={link.on}

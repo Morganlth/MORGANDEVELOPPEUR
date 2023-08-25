@@ -1,8 +1,7 @@
 // #EXPORT
 
     // --SPACECUBE-CUBES
-    export const
-    SPACECUBE_CUBES_DATAS = new Float64Array(
+    export default new Float64Array(
     [
     // dimension / x - y / floating
         2, 1, -1, 0,

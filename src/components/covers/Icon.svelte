@@ -1,7 +1,7 @@
 <!-- #MAP
 
     ICON
-        SLOT
+        ~SLOT
 
 -->
 

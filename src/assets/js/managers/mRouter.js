@@ -23,7 +23,7 @@ constructor ()
         set: function (value) { set(this.value = value) }
     }
 
-    this.router_e$Scroll = wait_debounce.call(this, this.router_e$Scroll, 100)
+    this.router_e$Scroll = wait_debounce.call(this, this.router_e$Scroll, 50)
 
     this.#router_EVENTS = { scroll: this.router_e$Scroll }
 }

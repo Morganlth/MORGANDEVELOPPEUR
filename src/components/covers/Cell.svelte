@@ -1,7 +1,7 @@
 <!-- #MAP
 
     CELL
-        SLOT
+        ~SLOT
 
 -->
 

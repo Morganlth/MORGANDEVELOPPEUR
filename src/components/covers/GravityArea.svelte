@@ -2,7 +2,7 @@
 
     GRAVITYAREA
         CONTENT
-            SLOT
+            ~SLOT
 
     MASK
 

@@ -28,6 +28,7 @@
 // #IMPORTS
 
     // --JS
+    import SPACECUBE_CUBES_DATAS from '../../assets/js/datas/dSpacecube_cubes'
     import SHADER_VERTEX from '../../assets/js/glsl/vertex'
     import SHADER_FRAGMENT from '../../assets/js/glsl/fragment'
     import MATH from '../../assets/js/utils/math'
@@ -37,7 +38,6 @@
 
     // --LIB
     import COLORS from '$lib/colors'
-    import { SPACECUBE_CUBES_DATAS } from '../../assets/js/datas/spacecube_cubes'
 
     // --CONTEXTS
     import { APP, COMMAND, EVENT } from '../../App.svelte'
@@ -623,7 +623,7 @@ lang="scss"
 
         backdrop-filter: blur(12px);
 
-        mask: radial-gradient(circle at 68% 50%, transparent 0, $dark 88%);
+        mask: radial-gradient(circle at 68% 50%, transparent 0, $dark 80%);
 
         pointer-events: none;
     }
