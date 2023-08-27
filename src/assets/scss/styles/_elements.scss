@@ -41,5 +41,5 @@
 
         box-sizing: border-box;
 
-        @include media.min(false, $ms2) { padding-top: max(11rem, 70px); }
+        @include media.min(false, $ms2) { padding-top: max(11rem, 80px); }
     }

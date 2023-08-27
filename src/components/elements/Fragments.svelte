@@ -1,7 +1,10 @@
 <!-- #MAP
 
     FRAGMENTS
+        FRAG * n
 
+        #if TAGS
+            TAG * n
 -->
 
 <!-- #SCRIPT -->
@@ -11,13 +14,20 @@
 
     // --PROPS
     export let
-    prop_CHILDREN = [],
-    prop_CONTENT
+    prop_CHILDREN = { frags: [], tags: [] },
+    prop_CONTENT =
+    {
+        value: '',
+        tags: void 0
+    }
 
-// #IMPORT
+// #IMPORTS
 
     // --JS
     import { transform_getTranslate3d } from '../../assets/js/utils/transform'
+
+    // --COMPONENT-ELEMENT
+    import Char from './Char.svelte'
 </script>
 
 <!-- #HTML -->
@@ -25,12 +35,34 @@
 <div
 class="fragments"
 >
-    {#each prop_CONTENT as e}
+    {#each prop_CONTENT.value as e}
         <span
+        class="frag"
         style:transform={transform_getTranslate3d()}
-        bind:this={prop_CHILDREN[prop_CHILDREN.length]}
+        bind:this={prop_CHILDREN.frags[prop_CHILDREN.frags.length]}
         >{e}</span>
     {/each}
+
+    {#if prop_CONTENT.tags instanceof Array}
+        <ul
+        class="tags"
+        >
+            {#each prop_CONTENT.tags as tag}
+                <li>
+                    <strong
+                    class="tag"
+                    >
+                        {#each tag + '.' as char}
+                            <Char
+                            prop_CHILDREN={prop_CHILDREN.tags}
+                            prop_CHAR={char}
+                            />
+                        {/each}
+                    </strong>
+                </li>
+            {/each}
+        </ul>
+    {/if}
 </div>
 
 <!-- #STYLE -->
@@ -43,22 +75,37 @@ lang="scss"
 @use '../../assets/scss/app';
 
 @use '../../assets/scss/styles/position';
+@use '../../assets/scss/styles/font';
 @use '../../assets/scss/styles/media';
 
 /* #FRAGMENTS */
 
 .fragments
 {
+    display: flex;
+    align-items: flex-end;
+
     transform-style: preserve-3d;
 
-    span
+    .frag
     {
         display: inline-block;
 
         transition: transform 1.2s ease-out;
     }
 
-    @include media.min($ms3, $ms3)
+    ul
+    {
+        display: flex;
+
+        gap: 1rem;
+
+        margin-left: 2rem;
+
+        .tag { @include font.interact($primary); }
+    }
+
+    @include media.min($ms2, $ms3)
     {
         &::before
         {

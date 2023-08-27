@@ -422,7 +422,7 @@ $line-height: 8rem;
 
     .input
     {
-        @include utils.solid-border($intermediate, 7px, true, false);
+        @include utils.solid-border($intermediate, .7rem, true, false);
 
         @extend %f-a-center;
 

@@ -7,6 +7,7 @@ class App
     // --APP-CONTEXT
     #app
     #app_$FREEZE = writable(false)
+    #app_$HIDE = writable(false)
     #app_MOBILE
     #app_OPTIMISE = false
     #app_OPTIMISE_CONFIG = {}
@@ -107,6 +108,8 @@ constructor ()
 
     get app_$FREEZE() { return this.#app_$FREEZE }
 
+    get app_$HIDE() { return this.#app_$HIDE }
+
     get app_MOBILE() { return this.#app_MOBILE }
 
     get app_OPTIMISE() { return this.#app_OPTIMISE }
@@ -115,6 +118,8 @@ constructor ()
 
     // --SETTER
     set app_$FREEZE(on) { this.#app_$FREEZE.set(on) }
+
+    set app_$HIDE(on) { this.#app_$HIDE.set(on) }
 
     set app_MOBILE(on)
     {

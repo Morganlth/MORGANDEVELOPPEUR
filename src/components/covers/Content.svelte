@@ -1,5 +1,6 @@
 <!-- #MAP
 
+-EVENT
     CONTENT
         INFO
         TITLE
@@ -21,7 +22,7 @@
     prop_TITLE =
     {
         htmlElement: 'h2',
-        contents: '',
+        contents: {},
         element: false
     },
     prop_INFO = '',
@@ -32,14 +33,24 @@
 
     // --JS
     import { transform_getTranslate3d } from '../../assets/js/utils/transform'
+    import { animation_writing } from '../../assets/js/utils/animation'
+
+    // --CONTEXT
+    import { EVENT } from '../../App.svelte'
+
+    // --SVELTE
+    import { onDestroy } from 'svelte'
 
     // --COMPONENT-ELEMENT
     import Fragments from '../elements/Fragments.svelte'
 
-// #CONSTANTE
+// #CONSTANTES
 
     // --ELEMENT-TITLE
-    const TITLE_CHILDREN = []
+    const TITLE_CHILDREN = { frags: [], tags: [] }
+
+    // --ELEMENT-FRAGMENTS
+    const FRAGMENTS_EVENTS = {}
 
 // #VARIABLE
 
@@ -53,12 +64,36 @@
 
 // #FUNCTIONS
 
+    // --SET
+    function fragments_setEvents() { EVENT.event_add(FRAGMENTS_EVENTS) }
+
+    // --DESTROY
+    function fragments_destroy() { fragments_destroyEvents() }
+
+    function fragments_destroyEvents() { EVENT.event_remove(FRAGMENTS_EVENTS) }
+
     // --INTRO
     async function content_intro()
     {
         content_OPACITY = 1
 
-        for (const CHILD of TITLE_CHILDREN) CHILD.style.transform = `translate3d(0, 0, 0)`
+        title_intro()
+
+        fragments_introTags()
+    }
+
+    function title_intro() { for (const FRAG of TITLE_CHILDREN.frags) FRAG.style.transform = `translate3d(0, 0, 0)` }
+
+    function fragments_introTags()
+    {
+        if (TITLE_CHILDREN.tags.length)
+        {
+            fragments_destroyEvents()
+
+            FRAGMENTS_EVENTS.animation = animation_writing(TITLE_CHILDREN.tags, fragments_destroyEvents)
+
+            setTimeout(fragments_setEvents, 1100)
+        }
     }
 
     // --OUTRO
@@ -66,8 +101,10 @@
     {
         content_OPACITY = 0
 
-        for (const CHILD of TITLE_CHILDREN) CHILD.style.transform = transform_getTranslate3d()
+        title_outro()
     }
+
+    function title_outro() { for (const FRAG of TITLE_CHILDREN.frags) FRAG.style.transform = transform_getTranslate3d() }
 
     // --UPDATE
     function content_update(focus)
@@ -76,6 +113,10 @@
         ?   content_intro()
         :   content_outro()
     }
+
+// #CYCLE
+
+onDestroy(fragments_destroy)
 </script>
 
 <!-- #HTML -->
@@ -112,7 +153,7 @@ style:opacity={content_OPACITY}
             <div
             class="element"
             style:transform={transform_getTranslate3d()}
-            bind:this={TITLE_CHILDREN[TITLE_CHILDREN.length]}
+            bind:this={TITLE_CHILDREN.frags[TITLE_CHILDREN.frags.length]}
             >
                 <slot name="title-element" />
             </div>
@@ -135,6 +176,7 @@ lang="scss"
 
 @use '../../assets/scss/styles/position';
 @use '../../assets/scss/styles/font';
+@use '../../assets/scss/styles/media';
 
 /* #CONTENT */
 
@@ -145,7 +187,7 @@ lang="scss"
     width: 100%;
     height: fit-content;
 
-    transition: opacity .6s ease-in;
+    transition: opacity .4s ease-in;
 
     .info, .title { user-select: none; }
 
@@ -171,7 +213,7 @@ lang="scss"
             transition: transform 1.2s ease-out;
         }
 
-        :global { .fragments:nth-child(1) { margin-left: app.$gap-inline; } }
+        :global { @include media.min($ms1) { .fragments:nth-child(1) { margin-left: app.$gap-inline; } } }
     }
 }
 </style>

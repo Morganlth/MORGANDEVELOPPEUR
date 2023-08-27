@@ -1,6 +1,5 @@
 <!-- #MAP
 
--ROUTER
 -EVENT
     HOME
         WRAPPER
@@ -19,15 +18,18 @@
 <!-- #SCRIPT -->
 
 <script>
-// #EXPORT
+// #EXPORTS
 
-    // --PROP
-    export let prop_FOCUS = false
+    // --PROPS
+    export let
+    prop_FOCUS = false,
+    prop_HEIGHT = 0,
+    prop_BREAK = 0
 
 // #IMPORTS
 
     // --JS
-    import HOME_CUBES_DATAS from '../../assets/js/datas/dHome_cubes'
+    import { HOME_CONTENT_DATAS, HOME_CUBES_DATAS } from '../../assets/js/datas/dHome'
     import MATH from '../../assets/js/utils/math'
     import { wait_throttle } from '../../assets/js/utils/wait'
 
@@ -35,7 +37,7 @@
     import COLORS from '$lib/colors'
 
     // --CONTEXT
-    import { ROUTER, EVENT } from '../../App.svelte'
+    import { EVENT } from '../../App.svelte'
 
     // --SVELTE
     import { onMount, onDestroy } from 'svelte'
@@ -45,8 +47,9 @@
     import GravityArea from '../covers/GravityArea.svelte'
     import Icon from '../covers/Icon.svelte'
 
-    // --COMPONENT-ELEMENT
+    // --COMPONENT-ELEMENTS
     import Cube from '../elements/Cube.svelte'
+    import Mask from '../elements/Mask.svelte'
     import TicTacToe from '../elements/TicTacToe.svelte'
 
     // --COMPONENT-ICON
@@ -75,7 +78,7 @@
 
     // --ELEMENT-HOME
     let
-    home_BREAKPOINT,
+    home_END,
     home_SCROLL_RATIO = 0
 
     // --ELEMENT-SPACECUBE
@@ -88,39 +91,39 @@
     // --SET
     function home_set()
     {
-        home_setPage()
         home_setVars()
         home_setEvents()
-    
-        cubes_setEvents()
     }
 
-    function home_setPage() { ROUTER.router_add(0, 'home', 0) }
+    function home_setVars() { home_END = window.innerHeight * prop_BREAK }
 
-    function home_setVars() { home_BREAKPOINT = window.innerHeight * 2 }
+    function home_setEvents()
+    {
+        EVENT.event_add(HOME_EVENTS)
 
-    function home_setEvents() { EVENT.event_add(HOME_EVENTS) }
+        cubes_setEvents()
+    }
 
     function cubes_setEvents() { EVENT.event_add(CUBES_EVENTS) }
 
     // --DESTROY
-    function home_destroy()
+    function home_destroy() { home_destroyEvents() }
+
+    function home_destroyEvents()
     {
-        home_destroyEvents()
+        EVENT.event_remove(HOME_EVENTS)
 
         cubes_destroyEvents()
     }
 
-    function home_destroyEvents() { EVENT.event_remove(HOME_EVENTS) }
-
     function cubes_destroyEvents() { EVENT.event_remove(CUBES_EVENTS) }
 
     // --EVENTS
-    async function home_e$Scroll(scrollTop) { home_SCROLL_RATIO = scrollTop / home_BREAKPOINT}
+    async function home_e$Scroll(scrollTop) { home_SCROLL_RATIO = scrollTop / home_END }
 
     async function home_e$Resize()
     {
-        wrapper_setVars()
+        home_setVars()
 
         for (const RESIZE of CUBES_RESIZE) RESIZE()
     }
@@ -143,6 +146,7 @@ onDestroy(home_destroy)
 <div
 id="home"
 style:z-index={prop_FOCUS ? 1 : 0}
+style:height="{prop_HEIGHT * 100}vh"
 >
     <div
     class="wrapper"
@@ -154,20 +158,20 @@ style:z-index={prop_FOCUS ? 1 : 0}
         prop_TICTACTOE={spacecube_TICTACTOE}
         bind:spacecube_CHARGED
         />
+        
+        <Mask
+        prop_BLUR={true}
+        prop_COORDS={[68, 50]}
+        prop_GRADIENT={[0, 80]}
+        prop_RATIO={1 - home_SCROLL_RATIO}
+        />
 
         <Content
-        prop_TITLE={
-        {
-            htmlElement: 'h1',
-            contents: ['DEVELOPPEUR', 'WEB'],
-            element: true
-        }}
-        prop_INFO="FR"
         prop_CHARGED={spacecube_CHARGED}
+        {...HOME_CONTENT_DATAS}
         {prop_FOCUS}
         >
             <Icon
-            prop_SIZE="calc(var(--title-size) * .71)"
             prop_COLOR={COLORS.light}
             prop_SPRING={false}
             slot="title-element"
@@ -211,6 +215,7 @@ lang="scss"
 @use '../../assets/scss/styles/elements';
 @use '../../assets/scss/styles/position';
 @use '../../assets/scss/styles/size';
+@use '../../assets/scss/styles/font';
 @use '../../assets/scss/styles/media';
 
 /* #HOME */
@@ -223,7 +228,12 @@ lang="scss"
 
     height: 1200vh;
 
-    .wrapper { @extend %wrapper; }
+    .wrapper
+    {
+        @extend %wrapper;
+
+        :global{ .icon { #{--icon-size}: calc(var(--title-size) * font.$line-height-title-min) } }
+    }
 
     .cubes
     {

@@ -1,6 +1,6 @@
 // #EXPORT
 
-    // --SPACECUBE-CUBES
+    // --DATAS-SPACECUBE
     export default new Float64Array(
     [
     // dimension / x - y / floating

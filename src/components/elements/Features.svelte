@@ -1,12 +1,22 @@
 <!-- #MAP
 
-    FEATURE
-
+    FEATURES
+        TRACK * 2
+            TOPIC * n
+        TRACK
+            
 -->
 
 <!-- #SCRIPT -->
 
 <script>
+// #EXPORTS
+
+    // --PROPS
+    export let
+    prop_OFFSET_TOP = 0,
+    prop_BREAK = 0
+
 // #IMPORTS
 
     // --JS
@@ -18,6 +28,9 @@
 
     // --SVELTE
     import { onMount, onDestroy } from 'svelte'
+
+    // --COMPONENT-ELEMENT
+    import Mask from './Mask.svelte'
 
 // #CONSTANTE
 
@@ -32,17 +45,15 @@
 
     // --ELEMENT-FEATURES
     let
-    features_GAP,
+    features_START,
     features_END,
-    features_TRANSLATE_X = 0
+    features_SCROLL_RATIO = 0
 
     // --ELEMENT-TRACK
-    let
-    track,
-    track_START,
-    track_END,
-    track_WIDTH,
-    track_TRANSLATE_X = 0
+    let track_ROTATE = 0
+
+    // --ELEMENT-TOPIC
+    let topic_WIDTH = 0
 
 // #FUNCTIONS
 
@@ -51,52 +62,39 @@
     {
         features_setVars()
         features_setEvents()
-
-        track_setVars()
     }
 
     function features_setVars()
     {
-        features_GAP = window.innerWidth * .25
+        const HEIGHT = window.innerHeight
+    
+        features_START = HEIGHT * prop_OFFSET_TOP
+        features_END = HEIGHT * prop_BREAK
+
+        track_setVars()
+        topic_setVars()
     }
 
     function features_setEvents() { EVENT.event_add(FEATURES_EVENTS) }
 
-    function track_setVars()
-    {
-        const HEIGHT = window.innerHeight
-    
-        features_END = HEIGHT * 4
+    function track_setVars() { track_ROTATE = Math.atan(window.innerHeight / window.innerWidth) }
 
-        track_START = HEIGHT * 3
-        track_END = HEIGHT * 8
-        track_WIDTH = track.offsetWidth
+    function topic_setVars()
+    {
+        const [WIDTH, HEIGHT] = [window.innerWidth, window.innerHeight]
+    
+        topic_WIDTH = Math.sqrt(WIDTH * WIDTH + HEIGHT * HEIGHT)
     }
 
     // --DESTROY
-    function features_destroy()
-    {
-        features_destroyEvents()
-    }
+    function features_destroy() { features_destroyEvents() }
 
     function features_destroyEvents() { EVENT.event_remove(FEATURES_EVENTS) }
 
     // --EVENTS
-    function features_e$Scroll(scrollTop)
-    {
-        const FEATURES_RATIO = scrollTop / features_END / 2
+    function features_e$Scroll(scrollTop) { features_SCROLL_RATIO = (scrollTop - features_START) / features_END } // THROTTLE
 
-        features_TRANSLATE_X = features_GAP * FEATURES_RATIO
-
-        track_TRANSLATE_X = track_WIDTH * ((scrollTop - track_START) / track_END)
-    }
-
-    function features_e$Resize()
-    {
-        features_setVars()
-
-        track_setVars()
-    }
+    async function features_e$Resize() { features_setVars() }
 
 // #CYCLES
 
@@ -108,36 +106,61 @@ onDestroy(features_destroy)
 
 <div
 class="features"
-style:transform="translateX({features_TRANSLATE_X}px)"
 >
     <div
     class="track"
-    style:transform="translateX({-track_TRANSLATE_X}px)"
-    bind:this={track}
+    style:transform="rotate({-track_ROTATE}rad) translate(calc(100% * {1 - features_SCROLL_RATIO}), -50%)"
     >
         {#each FEATURES_DATAS as data}
-            <div>
-                <p
-                class="topic"
-                >
-                    #{data.topic}
-                </p>
-
-                <ul>
-                    {#each data.contents as content}
-                        <li>
-                            <svelte:element
-                            this={content.htmlElement}
-                            class="content"
-                            >
-                                {content.data}
-                            </svelte:element>
-                        </li>
-                    {/each}
-                </ul>
-            </div>
+            <p
+            class="topic"
+            style:transform="rotate({track_ROTATE}rad)"
+            style:width="{topic_WIDTH}px"
+            >
+                {data.topic[0]}
+            </p>
         {/each}
     </div>
+
+    <div
+    class="track"
+    style:transform="rotate({-track_ROTATE + Math.PI}rad) translate(calc(-100% * {features_SCROLL_RATIO}), 50%)"
+    >
+        {#each FEATURES_DATAS as data}
+            <p
+            class="topic"
+            style:transform="rotate({track_ROTATE + Math.PI}rad)"
+            style:width="{topic_WIDTH}px"
+            >
+                {data.topic[data.topic.length - 1]}
+            </p>
+        {/each}
+    </div>
+
+    <div
+    class="track"
+    style:transform="translate(calc(-100% * {features_SCROLL_RATIO}), -50%)"
+    >
+        {#each FEATURES_DATAS as data}
+            <ul>
+                {#each data.contents as content}
+                    <li>
+                        <svelte:element
+                        this={content.htmlElement}
+                        >
+                            {content.data}.
+                        </svelte:element>
+                    </li>
+                {/each}
+            </ul>
+        {/each}
+    </div>
+
+    <Mask
+    prop_SHADOW={true}
+    prop_GRADIENT={[30, 93]}
+    prop_RATIO={features_SCROLL_RATIO <= 0 ? 0 : 1}
+    />
 </div>
 
 <!-- #STYLE -->
@@ -147,81 +170,78 @@ lang="scss"
 >
 /* #USES */
 
-@use 'sass:math';
 @use 'sass:map';
 
 @use '../../assets/scss/app';
 
-@use '../../assets/scss/styles/utils';
 @use '../../assets/scss/styles/position';
 @use '../../assets/scss/styles/display';
 @use '../../assets/scss/styles/size';
 @use '../../assets/scss/styles/font';
 
 /* #FEATURES */
+
 .features
 {
-    &, .track { transition: transform .5s ease-out; }
+    @include position.placement(absolute, 0, 0, 0, 0);
 
-    @include utils.solid-border($intermediate, 2px, true, false, true, false);
-
-    overflow: hidden;
-
-    width: 100%;
-    height: 22vh;
-
-    background-color: $dark;
+    @extend %any;
 
     .track
     {
         display: flex;
 
         width: fit-content;
-        height: 100%;
+        height: fit-content;
 
-        margin-left: 50%;
-    
-        &>div
+        transition: transform .5s ease-out;
+
+        &:nth-child(1)
         {
-            &, &>* { flex-shrink: 0; }
+            @include position.placement(absolute, 0, 0, auto, auto);
 
-            @extend %f-a-center;
+            transform-origin: top right;
+        }
+        &:nth-child(2)
+        {
+            @include position.placement(absolute, auto, auto, 0, 0);
 
-            min-width: 100vw;
-            height: 100%;
+            transform-origin: bottom left;
+        }
+        &:nth-child(3)
+        {
+            @include position.placement(absolute, 50%, auto, auto, 0);
+
+            margin-left: 100vw;
         }
 
-        .topic { @include font.interact($primary, map.get(font.$font-sizes, s3)); }
-        .content { @include font.interact($light, map.get(font.$font-sizes, s3), 1, map.get(font.$content-font-weight, w1)); }
+        &>* { flex-shrink: 0; }
+
+        .topic
+        {
+            @include font.h-custom($primary, 11rem);
+
+            font-style: italic;
+            text-align: center;
+        }
         
         ul
         {
-            display: flex;
+            @extend %f-j-center;
     
-            width: fit-content;
+            min-width: max(100vw, 100vh);
             height: fit-content;
 
             li
             {
-                &::before
-                {
-                    $width: 1.5rem;
-            
-                    @include utils.solid-border($primary, 1.5px, true, false, true, false);
-                    @include position.placement(absolute, 50%, auto, 50%, calc(app.$gap-inline - math.div($width, 2)), true);
-        
-                    width: $width;
-                    height: 0;
-                }
-
-                position: relative;
+                @include font.interact($light, map.get(font.$font-sizes, s3), 1, map.get(font.$content-font-weight, w1));
     
-                padding-left: calc(app.$gap-inline * 2);
+                padding-left: app.$gap-inline;
             }
 
             a
             {
-                @extend %simple-hover;
+                @include font.simple-hover($indicator);
 
                 pointer-events: auto;
 

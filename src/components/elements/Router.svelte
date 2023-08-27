@@ -12,13 +12,17 @@
 // #IMPORTS
 
     // --JS
-    import ROUTER_LINKS_DATAS from '../../assets/js/datas/dRouter_links'
+    import ROUTER_LINKS_DATAS from '../../assets/js/datas/dRouter'
+    import { animation_writing } from '../../assets/js/utils/animation'
 
     // --CONTEXTS
     import { ROUTER, EVENT } from '../../App.svelte'
 
     // --SVELTE
     import { onMount, onDestroy } from 'svelte'
+
+    // --COMPONENT-ELEMENT
+    import Char from './Char.svelte'
 
 // #CONSTANTES
 
@@ -36,10 +40,7 @@
     let
     router_CHARGED = false,
     router_OPACITY = 0,
-    router_TIMEOUT,
-    router_LAST = +new Date(),
-    router_I = 0,
-    router_J = 0
+    router_TIMEOUT
 
 // #REACTIVE
 
@@ -74,7 +75,7 @@
     {
         await new Promise(resolve =>
         {
-            ROUTER_EVENTS.animation = router_a$Writing.bind(null, resolve)
+            ROUTER_EVENTS.animation = animation_writing(ROUTER_CHILDREN, resolve)
             
             router_setEvents()
         })
@@ -93,39 +94,11 @@
 
         try { ROUTER_LINKS_DATAS.find(link => link.on).on = false } catch { /* recuperer le chemin dans l'url pour définir le lien sélectionné */ }
 
-        ROUTER_LINKS_DATAS[id] = { ...LINK, on: true }   
+        ROUTER_LINKS_DATAS[id] = { ...LINK, on: true }
     }
 
     // --EVENT
     async function router_eClick(id) { if (router_CHARGED) ROUTER.router_update(id) }
-
-    // --ANIMATION
-    async function router_a$Writing(resolve)
-    {
-        const
-        NOW = +new Date(),
-        GAP = NOW - router_LAST
-
-        for (let k = router_I; k < router_J; k++) ROUTER_CHILDREN[k].innerText = [' ', '>'][Math.round(Math.random())]
-
-        if (GAP > 16.67)
-        {
-            const MAX = ROUTER_CHILDREN.length - 1
-
-            if (router_J < MAX && router_J < router_I + 5) router_J++
-    
-            if (GAP > 33.34)
-            {
-                const CHILD = ROUTER_CHILDREN[router_I]
-
-                CHILD.innerText = CHILD.dataset.char
-
-                if (router_I++ >= MAX) resolve()
-
-                router_LAST = NOW
-            }
-        }
-    }
 
 // #CYCLE
 
@@ -150,10 +123,10 @@ style:opacity={router_OPACITY}
                 on:click|preventDefault={router_eClick.bind(null, id)}
                 >
                     {#each link.content as char}
-                        <span
-                        data-char={char}
-                        bind:this={ROUTER_CHILDREN[ROUTER_CHILDREN.length]}
-                        >&nbsp;</span>
+                        <Char
+                        prop_CHILDREN={ROUTER_CHILDREN}
+                        prop_CHAR={char}
+                        />
                     {/each}
                 </a>
             </li>
@@ -168,6 +141,8 @@ lang="scss"
 >
 /* #USES */
 
+@use 'sass:map';
+
 @use '../../assets/scss/app';
 
 @use '../../assets/scss/styles/position';
@@ -179,7 +154,7 @@ lang="scss"
 
 .router
 {
-    @include position.placement(fixed, 50%, auto, auto, app.$gap-inline);
+    @include position.placement(fixed, app.$gap-block, calc(app.$gap-inline * 3));
 
     z-index: 1;
 
@@ -195,32 +170,35 @@ lang="scss"
     ul
     {
         display: flex;
+        align-items: flex-end;
 
-        gap: 1rem;
+        gap: 1.2rem;
 
-        @include media.min(false, $ms3)
+        width: fit-content;
+        height: 2.5rem;
+
+        li
         {
-            display: block;
-    
-            gap: 0;
+            width: 100%;
+            height: fit-content;
         }
     }
 
     a
     {
-        @include font.interact($light, 2.4rem, 1.5);
+        @include font.interact($light, map.get(font.$font-sizes, s2));
 
         @extend %any;
         @extend %selected;
-
-        position: relative;
 
         display: inline-block;
 
         transform: rotate(-.7deg);
 
-        margin-bottom: .5rem;
-        padding-inline: 1rem;
+        width: 100%;
+        height: fit-content;
+        
+        padding-inline: 1.1rem;
 
         pointer-events: auto;
 
@@ -228,5 +206,21 @@ lang="scss"
 
         text-decoration: none;
     }
+
+    @include media.min(false, $ms3)
+    {
+        top: 63%;
+        right: auto;
+        left: app.$gap-inline;
+
+        ul
+        {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        a { font-size: map.get(font.$font-sizes, s3); }
+    }
+    @include media.min(false, $ms4) { top: 50%; }
 }
 </style>

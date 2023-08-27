@@ -92,8 +92,7 @@ footer
         a
         {
             @include font.interact($light);
-    
-            @extend %simple-hover;
+            @include font.simple-hover;
 
             padding: .5rem 1rem 0;
 

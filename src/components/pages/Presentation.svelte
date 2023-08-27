@@ -1,28 +1,37 @@
 <!-- #MAP
 
--ROUTER
+-EVENT
     PRESENTATION
         WRAPPER
             SNAKE
 
+            FEATURE
+
             CONTENT
-                BUTTON
-                FEATURE
+                GAME
+                CONTACT
 
 -->
 
 <!-- #SCRIPT -->
 
 <script>
-// #EXPORT
+// #EXPORTS
 
-    // --PROP
-    export let prop_FOCUS = false
+    // --PROPS
+    export let
+    prop_FOCUS = false,
+    prop_HEIGHT = 0,
+    prop_OFFSET_TOP = 0,
+    prop_BREAK = 0
 
 // #IMPORTS
 
+    // --JS
+    import { PRESENTATION_CONTENT_DATAS } from '../../assets/js/datas/dPresentation'
+
     // --CONTEXT
-    import { ROUTER } from '../../App.svelte'
+    import { EVENT } from '../../App.svelte'
 
     // --SVELTE
     import { onMount } from 'svelte'
@@ -32,7 +41,7 @@
 
     // --COMPONENT-ELEMENTS
     import Snake from '../elements/Snake.svelte'
-    import Feature from '../elements/Features.svelte'
+    import Features from '../elements/Features.svelte'
 
 // #VARIABLE
 
@@ -42,15 +51,12 @@
 // #FUNCTIONS
 
     // --SET
-    function presentation_set()
-    {
-        presentation_setVars()
-        presentation_setPage()
-    }
+    function presentation_set() { presentation_setVars() }
 
     function presentation_setVars() { presentation_CHARGED = true }
 
-    function presentation_setPage() { ROUTER.router_add(1, 'presentation', window.innerHeight * 3 * (2 / 3))}
+    // --EVENT
+    async function contact_eClick() { EVENT.event_scrollTo((prop_HEIGHT - 1) * window.innerHeight) }
 
 // #CYCLE
 
@@ -61,34 +67,45 @@ onMount(presentation_set)
 
 <div
 id="presentation"
+style:height="{prop_HEIGHT * 100}vh"
 >
     <div
     class="wrapper"
     >
-        <Snake
-        {prop_FOCUS}
+        <Snake />
+
+        <Features
+        {prop_OFFSET_TOP}
+        {prop_BREAK}
         />
 
         <Content
-        prop_TITLE={{ htmlElement: 'h2', contents: 'Presentation' }}
-        prop_INFO="SNAKE GAME"
         prop_CHARGED={presentation_CHARGED}
+        {...PRESENTATION_CONTENT_DATAS}
         {prop_FOCUS}
         >
-            <button
-            type="button"
-            >
-                ~~JOUER
-            </button>
-
-            <a
-            class="contact"
-            href="#contact"
-            >
-                #Contact
-            </a>
-
-            <Feature />
+            <nav>
+                <ul>
+                    <li>
+                        <button
+                        class="game"
+                        type="button"
+                        >
+                            ~~JOUER
+                        </button>
+                    </li>
+    
+                    <li>
+                        <button
+                        class="contact"
+                        type="button"
+                        on:click={contact_eClick}
+                        >
+                            ~~CONTACT
+                        </button>
+                    </li>
+                </ul>
+            </nav>
         </Content>
     </div>
 </div>
@@ -106,6 +123,7 @@ lang="scss"
 
 @use '../../assets/scss/styles/elements';
 @use '../../assets/scss/styles/position';
+@use '../../assets/scss/styles/display';
 @use '../../assets/scss/styles/font';
 
 /* #PRESENTATION */
@@ -115,37 +133,33 @@ lang="scss"
     @include position.placement(absolute, 0, 0, auto, 0);
 
     width: 100%;
-    height: 1200vh;
 
     .wrapper { @extend %wrapper; }
 
-    button, .contact
+    nav
     {
-        @include font.interact($light, map.get(font.$font-sizes, s3), 1, map.get(font.$content-font-weight, w1));
+        ul
+        {
+            @extend %f-a-center;
+        
+            gap: 1rem;
+        }
 
-        @extend %simple-hover;
+        .game, .contact
+        {
+            @include font.interact($light, map.get(font.$font-sizes, s3), 1, map.get(font.$content-font-weight, w1));
+            @include font.simple-hover;
 
-        pointer-events: auto;
-    }
+            @extend %button-reset;
 
-    button
-    {
-        @extend %button-reset;
+            padding-block: .5rem;
 
-        padding-right: 1rem;
-        padding-bottom: 1rem;
-    }
+            pointer-events: auto;
+        }
 
-    .contact
-    {
-        display: block;
+        .game { padding-right: 1rem; }
 
-        width: 100%;
-
-        margin-block: 5.2% app.$gap-block;
-
-        text-align: right;
-        text-decoration: none;
+        .contact { padding-inline: 1rem; }
     }
 }
 </style>

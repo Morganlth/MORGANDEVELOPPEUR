@@ -1,6 +1,5 @@
 <!-- #MAP
 
--APP
 -COMMAND
 -EVENT
     SNAKE
@@ -11,11 +10,6 @@
 <!-- #SCRIPT -->
 
 <script>
-// #EXPORT
-
-    // --PROP
-    export let prop_FOCUS = false
-
 // #IMPORTS
 
     // --JS
@@ -25,7 +19,7 @@
     import COLORS from '$lib/colors'
 
     // --CONTEXTS
-    import { APP, COMMAND, EVENT } from '../../App.svelte'
+    import { COMMAND, EVENT } from '../../App.svelte'
 
     // --SVELTE
     import { onMount, onDestroy } from 'svelte'
@@ -45,9 +39,6 @@
 
 // #VARIABLES
 
-    // --APP
-    let app_$FREEZE = APP.app_$FREEZE
-
     // --EVENT
     let
     event_CLIENT_X,
@@ -63,6 +54,7 @@
     snake_X = -1,
     snake_Y = -1,
     snake_BLOCKSIZE = 40,
+    snake_INVINCIBLE = true,
     snake_SCOPE = false, // true si snake head est à l'intérieur
     snake_OUTSIDE = true, // true si snake est entièrement à l'exterieur
     snake_SCORE = 10,
@@ -75,10 +67,6 @@
     canvas_COLUMNS,
     canvas_ROWS,
     canvas_CLIENTRECT
-
-// #REACTIVE
-
-    $: snake$_INVINCIBLE = $app_$FREEZE || prop_FOCUS
 
 // #FUNCTIONS
 
@@ -205,7 +193,7 @@
     {
         snake_setApple()
 
-        if (!snake$_INVINCIBLE)
+        if (!snake_INVINCIBLE)
         {
             const [TAIL_X, TAIL_Y] = SNAKE_SNAKE[snake_SCORE - 1]
 
@@ -279,7 +267,7 @@
 
     function snake_testBody([x, y])
     {
-        if (!snake$_INVINCIBLE && snake_SCOPE && x === snake_X && y === snake_Y)
+        if (!snake_INVINCIBLE && snake_SCOPE && x === snake_X && y === snake_Y)
         {   
             SNAKE_SNAKE.pop()
     

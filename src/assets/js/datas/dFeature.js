@@ -1,23 +1,17 @@
 // #EXPORT
 
-    // --FEATURE
+    // --DATAS-FEATURES
     export default
     [
         {
-            topic: 'Nom & Prénom',
+            topic: ['NOM', 'AGE'],
             contents:
             [
                 {
-                    htmlElement: 'p',
+                    htmlElement: 'strong',
                     props: {},
-                    data: 'Morgan LE THUAUT '
-                }
-            ]
-        },
-        {
-            topic: 'Age',
-            contents:
-            [
+                    data: 'LE THUAUT Morgan'
+                },
                 {
                     htmlElement: 'p',
                     props: {},
@@ -26,7 +20,7 @@
             ]
         },
         {
-            topic: 'Localité',
+            topic: ['LOCALITE', 'FR'],
             contents:
             [
                 {
@@ -35,14 +29,14 @@
                     data: 'Bretagne'
                 },
                 {
-                    htmlElement: 'p',
+                    htmlElement: 'strong',
                     props: {},
                     data: 'FRANCE'
                 }
             ]
         },
         {
-            topic: 'Études & Formations',
+            topic: ['ETUDES', 'FORMATIONS'],
             contents:
             [
                 {
@@ -51,25 +45,30 @@
                     data: 'Bac S SVT spécialité MATHS, Lycée Jeanne d\'Arc Pontivy'
                 },
                 {
-                    htmlElement: 'p',
+                    htmlElement: 'strong',
                     props: {},
                     data: 'Développeur Web, OpenClassrooms'
                 }
             ]
         },
         {
-            topic: 'Profession',
+            topic: ['PROFESSION', 'OBJECTIFS'],
             contents:
             [
                 {
-                    htmlElement: 'p',
+                    htmlElement: 'strong',
                     props: {},
                     data: 'Développeur Web'
+                },
+                {
+                    htmlElement: 'p',
+                    props: {},
+                    data: 'Objectifs: dev FULLSTACK, dev MOBILE & DESIGNER'
                 }
             ]
         },
         {
-            topic: 'Contact',
+            topic: ['CONTACT'],
             contents:
             [
                 {

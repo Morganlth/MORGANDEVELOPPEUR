@@ -120,6 +120,8 @@ header
 
     padding: app.$gap-block app.$gap-inline 0;
 
+    pointer-events: none;
+
     box-sizing: border-box;
 
     &>strong

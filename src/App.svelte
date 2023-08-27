@@ -107,7 +107,7 @@ context="module"
         COMMAND.command_add('event', app_c$Event)
     }
 
-    function opti_setVars() { opti_ON = (performance.now() - APP_PERFORMANCE) > 10 && localStorage.getItem('optimise') !== 'true' }
+    function opti_setVars() { opti_ON = (performance.now() - APP_PERFORMANCE) > 7 && localStorage.getItem('optimise') !== 'true' }
 
     // --UPDATE
     function app_update()
@@ -144,7 +144,7 @@ afterUpdate(() => app_update())
 <div
 id="app"
 class:freeze={$app_$FREEZE}
-style:opacity={app_FONTS_CHARGED ? 1 : 0}
+style:visibility={app_FONTS_CHARGED ? 'visible' : 'hidden'}
 on:scroll={EVENT.event_scroll.bind(EVENT)}
 on:mousemove={EVENT.event_mouseMove.bind(EVENT)}
 on:mousedown={EVENT.event_mouseDown.bind(EVENT)}

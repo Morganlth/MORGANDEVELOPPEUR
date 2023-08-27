@@ -7,8 +7,11 @@ class Router
     // --CONTEXT-ROUTER
     #router_TITLE = 'LE THUAUT MORGAN - Développeur Web'
     #router_$ID = {}
+    #router_$HIDE = writable(false)
     #router_EVENTS
     #router_PAGES = []
+    #router_HIDE_TIMEOUT
+    #router_EVENTS_TIMEOUT
 
 // #CONSTRUCTOR
 
@@ -33,8 +36,6 @@ constructor ()
     // --SET
     router_set(id)
     {
-        this.#router_setEvents()
-
         this.router_update(id, 'instant')
     }
 
@@ -47,14 +48,39 @@ constructor ()
         document.title = subPath ? subPath.toUpperCase() : this.#router_TITLE
     }
 
+    // --DESTROY
+    #router_destroyEvents() { EVENT.event_remove(this.#router_EVENTS) }
+
     // --UPDATE
     router_update(id, behavior = 'smooth')
     {
         const PAGE = this.#router_PAGES[id]
 
+        this.#router_updateEvents()
+    
+        if (Math.abs(APP.app_scrollTop - PAGE.offsetTop) > window.innerHeight * 2) this.#router_updateHide()
+    
         EVENT.event_scrollTo(PAGE.offsetTop, behavior)
 
         this.#router_updatePath(id, PAGE)
+    }
+
+    #router_updateEvents()
+    {
+        clearTimeout(this.#router_EVENTS_TIMEOUT)
+
+        this.#router_destroyEvents()
+
+        this.#router_EVENTS_TIMEOUT = setTimeout(() => this.#router_setEvents(), 1000)
+    }
+
+    #router_updateHide()
+    {
+        clearTimeout(this.#router_HIDE_TIMEOUT)
+    
+        this.#router_$HIDE.set(true)
+
+        this.#router_HIDE_TIMEOUT = setTimeout(() => this.#router_$HIDE.set(false), 700)
     }
 
     #router_updatePath(id, page)
@@ -81,9 +107,10 @@ constructor ()
     // --GETTER
     get router_$ID() { return this.#router_$ID }
 
+    get router_$HIDE() { return this.#router_$HIDE }
+
     // --SETTER
     set router_$ID(value) { this.#router_$ID.set(value) }
-
 }
 
 // #IMPORTS

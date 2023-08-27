@@ -28,7 +28,7 @@
 // #IMPORTS
 
     // --JS
-    import SPACECUBE_CUBES_DATAS from '../../assets/js/datas/dSpacecube_cubes'
+    import SPACECUBE_CUBES_DATAS from '../../assets/js/datas/dSpacecube'
     import SHADER_VERTEX from '../../assets/js/glsl/vertex'
     import SHADER_FRAGMENT from '../../assets/js/glsl/fragment'
     import MATH from '../../assets/js/utils/math'
@@ -133,7 +133,11 @@
 // #REACTIVES
 
     // --ELEMENT-SPACECUBE
-    $: prop_RATIO && spacecube_CHARGED && !spacecube_SCROLL_ANIMATION ? spacecube_updateCubesPosition() : void 0
+    $: prop_RATIO
+    && spacecube_CHARGED
+    && !spacecube_SCROLL_ANIMATION
+    ? spacecube_update()
+    : void 0
     $: prop_TICTACTOE && spacecube_CHARGED ? spacecube_setTicTacToe() : void 0
 
 // #FUNCTIONS
@@ -363,7 +367,14 @@
     function spacecube_getBarycentre(a, b, c, t) { return a + a*t*t + 2*b*t - 2*t*t*b + t*t*c - 2*a*t }
 
     // --UPDATES
-    function spacecube_update(on)
+    async function spacecube_update()
+    {
+        spacecube_OPACITY = prop_RATIO > 1 ? 0 : 1
+    
+        if (!APP.app_OPTIMISE) spacecube_updateCubesPosition()
+    }
+
+    function spacecube_updateState(on)
     {
         on ? spacecube_setEvents() : spacecube_destroyEvents()
     
@@ -440,7 +451,7 @@
     }
 
     // --COMMAND
-    function spacecube_c$(on) { COMMAND.command_test(on, 'boolean', spacecube_update, 'spacecube', spacecube_ON) }
+    function spacecube_c$(on) { COMMAND.command_test(on, 'boolean', spacecube_updateState, 'spacecube', spacecube_ON) }
 
     // --EVENTS
     function spacecube_e$MouseMove(clientX, clientY) // async throttle
@@ -543,9 +554,10 @@
     {
         const
         ANGLE = Math.atan(dif_Y / dif_X),
+        FORCE = spacecube_FORCE_POSITION * (1 - prop_RATIO),
         [X0, Y0] = [(1 - dif_X_ABS / (Math.cos(ANGLE) * spacecube_RADIUS)) * dif_X, (1 - dif_Y_ABS / (Math.abs(Math.sin(ANGLE)) * spacecube_RADIUS)) * dif_Y],
         [P_X, P_Y, R_X, R_Y] = [cube.position.x, cube.position.y, cube.rotation.x, cube.rotation.y],
-        [STEP_P_X, STEP_P_Y] = [cube.iPosition.x + X0 * spacecube_FORCE_POSITION - P_X, cube.iPosition.y + Y0 * spacecube_FORCE_POSITION - P_Y],
+        [STEP_P_X, STEP_P_Y] = [cube.iPosition.x + X0 * FORCE - P_X, cube.iPosition.y + Y0 * FORCE - P_Y],
         [STEP_R_X, STEP_R_Y] = [SPACECUBE_ROTATION_X + X0 * spacecube_FORCE_ROTATION - R_X, SPACECUBE_ROTATION_Y + Y0 * spacecube_FORCE_ROTATION - R_Y]
 
         cancelAnimationFrame(cube.animation_FRAMEID)
@@ -592,11 +604,6 @@ class="spacecube"
 style:opacity={spacecube_OPACITY}
 bind:this={spacecube}
 >
-    <div
-    class="mask"
-    style:opacity={1 - prop_RATIO}
-    >
-    </div>
 </div>
 
 <!-- #STYLE -->
@@ -604,10 +611,9 @@ bind:this={spacecube}
 <style
 lang="scss"
 >
-/* #USES */
+/* #USE */
 
 @use '../../assets/scss/styles/position';
-@use '../../assets/scss/styles/size';
 
 /* #SPACECUBE */
 
@@ -615,17 +621,6 @@ lang="scss"
 {
     @include position.placement(absolute, 0, auto, auto, 0);
 
-    .mask
-    {
-        @include position.placement(absolute, 0, 0, 0, 0);
-
-        @extend %any;
-
-        backdrop-filter: blur(12px);
-
-        mask: radial-gradient(circle at 68% 50%, transparent 0, $dark 80%);
-
-        pointer-events: none;
-    }
+    transition: opacity .3s;
 }
 </style>
