@@ -1,6 +1,7 @@
 <!-- #MAP
 
     ASSETS
+        ROUTER
         CONSOLE
         SPRING
 -->

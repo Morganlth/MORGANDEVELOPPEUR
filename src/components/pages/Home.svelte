@@ -23,7 +23,6 @@
     // --PROPS
     export let
     prop_FOCUS = false,
-    prop_HEIGHT = 0,
     prop_BREAK = 0
 
 // #IMPORTS
@@ -146,7 +145,6 @@ onDestroy(home_destroy)
 <div
 id="home"
 style:z-index={prop_FOCUS ? 1 : 0}
-style:height="{prop_HEIGHT * 100}vh"
 >
     <div
     class="wrapper"
@@ -226,7 +224,7 @@ lang="scss"
 
     position: relative;
 
-    height: 1200vh;
+    @extend %any;
 
     .wrapper
     {

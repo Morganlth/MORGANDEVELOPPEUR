@@ -1,5 +1,6 @@
 <!-- #MAP
 
+-EVENT
     FEATURES
         TRACK * 2
             TOPIC * n
@@ -10,18 +11,17 @@
 <!-- #SCRIPT -->
 
 <script>
-// #EXPORTS
+// #EXPORT
 
-    // --PROPS
+    // --PROP
     export let
-    prop_OFFSET_TOP = 0,
-    prop_BREAK = 0
+    prop_FOCUS = false,
+    prop_RATIO = 0
 
 // #IMPORTS
 
     // --JS
     import FEATURES_DATAS from '../../assets/js/datas/dFeature'
-    import { wait_throttle } from '../../assets/js/utils/wait'
 
     // --CONTEXT
     import { EVENT } from '../../App.svelte'
@@ -29,31 +29,23 @@
     // --SVELTE
     import { onMount, onDestroy } from 'svelte'
 
-    // --COMPONENT-ELEMENT
-    import Mask from './Mask.svelte'
-
 // #CONSTANTE
 
     // --ELEMENT-FEATURES
-    const FEATURES_EVENTS =
-    {
-        scroll: wait_throttle(features_e$Scroll, 20),
-        resize: features_e$Resize
-    }
+    const FEATURES_EVENTS = { resize: features_e$Resize }
 
 // #VARIABLES
-
-    // --ELEMENT-FEATURES
-    let
-    features_START,
-    features_END,
-    features_SCROLL_RATIO = 0
 
     // --ELEMENT-TRACK
     let track_ROTATE = 0
 
     // --ELEMENT-TOPIC
     let topic_WIDTH = 0
+
+// #REACTIVE
+
+    // --ELEMENT-TRACK
+    $: track_TRANSLATE_Z = Math.abs(Math.sin(prop_RATIO * Math.PI * FEATURES_DATAS.length)) * 100
 
 // #FUNCTIONS
 
@@ -66,11 +58,6 @@
 
     function features_setVars()
     {
-        const HEIGHT = window.innerHeight
-    
-        features_START = HEIGHT * prop_OFFSET_TOP
-        features_END = HEIGHT * prop_BREAK
-
         track_setVars()
         topic_setVars()
     }
@@ -91,9 +78,7 @@
 
     function features_destroyEvents() { EVENT.event_remove(FEATURES_EVENTS) }
 
-    // --EVENTS
-    function features_e$Scroll(scrollTop) { features_SCROLL_RATIO = (scrollTop - features_START) / features_END } // THROTTLE
-
+    // --EVENT
     async function features_e$Resize() { features_setVars() }
 
 // #CYCLES
@@ -106,10 +91,11 @@ onDestroy(features_destroy)
 
 <div
 class="features"
+class:focus={prop_FOCUS}
 >
     <div
     class="track"
-    style:transform="rotate({-track_ROTATE}rad) translate(calc(100% * {1 - features_SCROLL_RATIO}), -50%)"
+    style:transform="rotate({-track_ROTATE}rad) translate3d(calc(100% * {1 - prop_RATIO}), -50%, {track_TRANSLATE_Z}px)"
     >
         {#each FEATURES_DATAS as data}
             <p
@@ -124,7 +110,7 @@ class="features"
 
     <div
     class="track"
-    style:transform="rotate({-track_ROTATE + Math.PI}rad) translate(calc(-100% * {features_SCROLL_RATIO}), 50%)"
+    style:transform="rotate({-track_ROTATE + Math.PI}rad) translate3d(calc(-100% * {prop_RATIO}), 50%, {track_TRANSLATE_Z}px)"
     >
         {#each FEATURES_DATAS as data}
             <p
@@ -139,7 +125,7 @@ class="features"
 
     <div
     class="track"
-    style:transform="translate(calc(-100% * {features_SCROLL_RATIO}), -50%)"
+    style:transform="translate3d(calc(-100% * {prop_RATIO}), -50%, {-track_TRANSLATE_Z}px)"
     >
         {#each FEATURES_DATAS as data}
             <ul>
@@ -155,12 +141,6 @@ class="features"
             </ul>
         {/each}
     </div>
-
-    <Mask
-    prop_SHADOW={true}
-    prop_GRADIENT={[30, 93]}
-    prop_RATIO={features_SCROLL_RATIO <= 0 ? 0 : 1}
-    />
 </div>
 
 <!-- #STYLE -->
@@ -174,6 +154,7 @@ lang="scss"
 
 @use '../../assets/scss/app';
 
+@use '../../assets/scss/styles/utils';
 @use '../../assets/scss/styles/position';
 @use '../../assets/scss/styles/display';
 @use '../../assets/scss/styles/size';
@@ -187,9 +168,17 @@ lang="scss"
 
     @extend %any;
 
+    perspective: 200px;
+
+    &.focus .track { will-change: transform; }
+
     .track
     {
+        @include utils.solid-border(1px, $intermediate, true, false, true, false);
+    
         display: flex;
+
+        transform-style: preserve-3d;
 
         width: fit-content;
         height: fit-content;
@@ -201,12 +190,16 @@ lang="scss"
             @include position.placement(absolute, 0, 0, auto, auto);
 
             transform-origin: top right;
+
+            color: $primary;
         }
         &:nth-child(2)
         {
             @include position.placement(absolute, auto, auto, 0, 0);
 
             transform-origin: bottom left;
+
+            color: $intermediate;
         }
         &:nth-child(3)
         {
@@ -219,7 +212,9 @@ lang="scss"
 
         .topic
         {
-            @include font.h-custom($primary, 11rem);
+            @include font.h-custom(inherit, var(--title-size), 2.5);
+    
+            @extend %m-h-2;
 
             font-style: italic;
             text-align: center;
@@ -234,17 +229,19 @@ lang="scss"
 
             li
             {
-                @include font.interact($light, map.get(font.$font-sizes, s3), 1, map.get(font.$content-font-weight, w1));
+                @include font.interact($light, map.get(font.$font-sizes, s3), 2, map.get(font.$content-font-weight, w1));
     
                 padding-left: app.$gap-inline;
             }
 
             a
             {
-                @include font.simple-hover($indicator);
+                @include font.simple-hover($primary);
 
                 pointer-events: auto;
 
+                font-weight: map.get(font.$content-font-weight, w2);
+        
                 cursor: pointer;
             }
         }

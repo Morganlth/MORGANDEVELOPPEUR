@@ -52,10 +52,13 @@
     // --ELEMENT-FRAGMENTS
     const FRAGMENTS_EVENTS = {}
 
-// #VARIABLE
+// #VARIABLES
 
     // --ELEMENT-CONTENT
     let content_OPACITY = 0
+
+    // --ELEMENT-FRAGMENTS
+    let fragments_TIMEOUT
 
 // #REACTIVE
 
@@ -68,7 +71,12 @@
     function fragments_setEvents() { EVENT.event_add(FRAGMENTS_EVENTS) }
 
     // --DESTROY
-    function fragments_destroy() { fragments_destroyEvents() }
+    function fragments_destroy()
+    {
+        clearTimeout(fragments_TIMEOUT)
+    
+        fragments_destroyEvents()
+    }
 
     function fragments_destroyEvents() { EVENT.event_remove(FRAGMENTS_EVENTS) }
 
@@ -88,11 +96,11 @@
     {
         if (TITLE_CHILDREN.tags.length)
         {
-            fragments_destroyEvents()
+            fragments_destroy()
 
             FRAGMENTS_EVENTS.animation = animation_writing(TITLE_CHILDREN.tags, fragments_destroyEvents)
 
-            setTimeout(fragments_setEvents, 1100)
+            fragments_TIMEOUT = setTimeout(fragments_setEvents, 1100)
         }
     }
 
@@ -174,7 +182,6 @@ lang="scss"
 
 @use '../../assets/scss/app';
 
-@use '../../assets/scss/styles/position';
 @use '../../assets/scss/styles/font';
 @use '../../assets/scss/styles/media';
 
@@ -182,14 +189,19 @@ lang="scss"
 
 .content
 {
-    position: relative;
-
     width: 100%;
     height: fit-content;
 
     transition: opacity .4s ease-in;
 
-    .info, .title { user-select: none; }
+    .info, .title
+    {
+        position: relative;
+
+        z-index: 1;
+    
+        user-select: none;
+    }
 
     .info { @include font.interact($light, map.get(font.$font-sizes, s2), 1, map.get(font.$content-font-weight, w1)); }
 

@@ -1,5 +1,6 @@
 <!-- #MAP
 
+-APP
 -ROUTER
     PAGES
         HOME
@@ -12,8 +13,8 @@
 <script>
 // #IMPORTS
 
-    // --CONTEXT
-    import { ROUTER } from '../../App.svelte'
+    // --CONTEXTS
+    import { APP, ROUTER } from '../../App.svelte'
 
     // --SVELTE
     import { onMount } from 'svelte'
@@ -21,6 +22,7 @@
     // --COMPONENT-PAGES
     import Home from '../pages/Home.svelte'
     import Presentation from '../pages/Presentation.svelte'
+    import Skills from '../pages/Skills.svelte'
 
 // #CONSTANTE
 
@@ -28,13 +30,13 @@
     const PAGES_PAGES =
     [
         {
-            id: 0,
-            name: 'home',
-            component: Home,
+            id: 2,
+            name: 'skills',
+            component: Skills,
             props:
             {
-                prop_HEIGHT: 10,
-                prop_BREAK: 1
+                prop_OFFSET_TOP: 9,
+                prop_BREAK: 11
             }
         },
         {
@@ -43,19 +45,25 @@
             component: Presentation,
             props:
             {
-                prop_HEIGHT: 10,
                 prop_OFFSET_TOP: 1,
                 prop_BREAK: 8
             }
+        },
+        {
+            id: 0,
+            name: 'home',
+            component: Home,
+            props: { prop_BREAK: 1 }
         }
     ]
 
-// #VARIABLE
+// #VARIABLES
+
+    // --APP
+    let app_$HIDE = APP.app_$HIDE
 
     // --ROUTER
-    let
-    router_$ID = ROUTER.router_$ID,
-    router_$HIDE = ROUTER.router_$HIDE
+    let router_$ID = ROUTER.router_$ID
 
 // #FUNCTIONS
 
@@ -73,7 +81,7 @@ onMount(pages_set)
 
 <main
 class="pages"
-class:hide={$router_$HIDE}
+class:hide={$app_$HIDE}
 >
     {#each PAGES_PAGES as page}
         <svelte:component
@@ -96,7 +104,7 @@ class:hide={$router_$HIDE}
     opacity: 1;
 
     width: 100%;
-    height: fit-content;
+    height: 1200vh;
 
     transition: opacity .2s;
 

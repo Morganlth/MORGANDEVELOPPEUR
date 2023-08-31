@@ -221,6 +221,6 @@ lang="scss"
 
         a { font-size: map.get(font.$font-sizes, s3); }
     }
-    @include media.min(false, $ms4) { top: 50%; }
+    @include media.min($ms4, $ms4) { top: 50%; }
 }
 </style>

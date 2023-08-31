@@ -8,5 +8,5 @@
 </script>
 
 <App
-prop_PAGE_ID={3}
+prop_PAGE_ID={2}
 />

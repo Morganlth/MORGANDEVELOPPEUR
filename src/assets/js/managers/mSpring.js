@@ -12,7 +12,8 @@ class Spring
     #spring_HOVER = false // icon hover
     #spring_$COORDS = spring({ x: -Spring.__spring_D_SIZE, y: -Spring.__spring_D_SIZE }, { stiffness: 0.1, damping: 0.4 })
     #spring_$SIZE = spring(Spring.__spring_D_SIZE)
-    #spring_EVENTS
+    #spring_COMMANDS = []
+    #spring_EVENTS = {}
 
 // #CONSTRUCTOR
 
@@ -30,7 +31,17 @@ constructor ()
     this.spring_update = this.spring_update.bind(this)
     this.spring_c$ = this.spring_c$.bind(this)
 
-    this.#spring_EVENTS = { mouseMove: wait_throttle(this.spring_e$MouseMove, 50).bind(this) }
+    this.#spring_COMMANDS.push(
+        {
+            name: Spring.__spring_NAME,
+            callback: this.spring_c$,
+            params: { defaultValue: this.#spring_$ON.on, optimise: true },
+            tests: { testBoolean: true },
+            storage: true
+        }
+    )
+
+    this.#spring_EVENTS.mouseMove = wait_throttle(this.spring_e$MouseMove, 50).bind(this)
 }
 
     // --SET
@@ -40,16 +51,7 @@ constructor ()
         this.#spring_setEvents()
     }
 
-    #spring_setCommands()
-    {
-        COMMAND.command_setBasicCommand(
-            Spring.__spring_NAME,
-            this.spring_c$,
-            { defaultValue: this.#spring_$ON.on, optimise: true },
-            { testBoolean: true },
-            true
-        )
-    }
+    #spring_setCommands() { COMMAND.command_setBasicCommands(this.#spring_COMMANDS) }
 
     #spring_setEvents() { EVENT.event_add(this.#spring_EVENTS) }
 

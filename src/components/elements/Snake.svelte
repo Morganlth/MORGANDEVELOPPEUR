@@ -10,9 +10,15 @@
 <!-- #SCRIPT -->
 
 <script>
+// #EXPORT
+
+    // --BIND
+    export let snake_GAME = false
+
 // #IMPORTS
 
     // --JS
+    import fps_get from '../../assets/js/utils/fps'
     import { color_rgba } from '../../assets/js/utils/color'
 
     // --LIB
@@ -24,12 +30,33 @@
     // --SVELTE
     import { onMount, onDestroy } from 'svelte'
 
+    // --COMPONENT-COVERS
+    import Cell from '../covers/Cell.svelte'
+    import Icon from '../covers/Icon.svelte'
+
+    // --COMPONENT-ICON
+    import Cross from '../icons/Cross.svelte'
+
+    // --COMPONENT-DECOR
+    import Particles from '../decors/Particles.svelte'
+
 // #CONSTANTES
 
     // --ELEMENT-SNAKE
     const
+    SNAKE_BLOCKSIZE = 40,
     SNAKE_SNAKE = [],
     SNAKE_APPLE = [],
+    SNAKE_COMMANDS =
+    [
+        {
+            name: 'snake_size',
+            callback: snake_c$Size,
+            params: { defaultValue: SNAKE_BLOCKSIZE, min: 10, max: 70 },
+            tests: { testBoolean: true, testNumber: true },
+            storage: true
+        }
+    ],
     SNAKE_EVENTS =
     {
         scroll: snake_e$Scroll,
@@ -41,24 +68,24 @@
 
     // --EVENT
     let
-    event_CLIENT_X,
-    event_CLIENT_Y
+    event_CLIENT_X = 0,
+    event_CLIENT_Y = 0
 
     // --ELEMENT-SNAKE
     let
+    snake,
     snake_WIDTH = 0,
     snake_HEIGHT = 0,
     snake_OFFSET_TOP = 0,
     snake_OFFSET_LEFT = 0,
-    snake_COLOR = color_rgba(COLORS.primary, .6),
+    snake_COLOR_BODY = color_rgba(COLORS.primary, .6),
     snake_X = -1,
     snake_Y = -1,
-    snake_BLOCKSIZE = 40,
+    snake_BLOCKSIZE,
     snake_INVINCIBLE = true,
-    snake_SCOPE = false, // true si snake head est à l'intérieur
-    snake_OUTSIDE = true, // true si snake est entièrement à l'exterieur
     snake_SCORE = 10,
-    snake_TAIL
+    snake_FPS = 0,
+    snake_TIMEOUT
 
     // --ELEMENT-CANVAS
     let
@@ -67,6 +94,14 @@
     canvas_COLUMNS,
     canvas_ROWS,
     canvas_CLIENTRECT
+
+    // --ELEMENT-GAMEOVER
+    let gameover_ON = false
+
+// #REACTIVE
+
+    // --ELEMENT-SNAKE
+    $: snake_GAME ? snake_start() : void 0
 
 // #FUNCTIONS
 
@@ -77,33 +112,26 @@
         snake_setCommands()
         snake_setEvents()
 
-        canvas_setVars()
-
         snake_setSnake()
         snake_setApple()
     }
 
     function snake_setVars()
     {
-        const [WIDTH, HEIGHT] = [window.innerWidth, window.innerHeight]
+        const [WIDTH, HEIGHT] = [snake.offsetWidth, snake.offsetHeight]
+
+        snake_BLOCKSIZE = WIDTH < 768 || HEIGHT < 768 ? 30 : SNAKE_BLOCKSIZE
 
         snake_WIDTH = WIDTH - (WIDTH - 1) % snake_BLOCKSIZE
         snake_HEIGHT = HEIGHT - (HEIGHT - 1) % snake_BLOCKSIZE
 
         snake_OFFSET_TOP = (HEIGHT - snake_HEIGHT) / 2
         snake_OFFSET_LEFT = (WIDTH - snake_WIDTH) / 2
+
+        canvas_setVars()
     }
 
-    function snake_setCommands()
-    {
-        COMMAND.command_setBasicCommand(
-            'snake_size',
-            snake_c$Size,
-            { defaultValue: 40, min: 10, max: 70 },
-            { testBoolean: true, testNumber: true },
-            true
-        )
-    }
+    function snake_setCommands() { COMMAND.command_setBasicCommands(SNAKE_COMMANDS) }
 
     function snake_setEvents() { EVENT.event_add(SNAKE_EVENTS) }
 
@@ -139,6 +167,11 @@
         canvas_setClientRect()
     }
     function canvas_setClientRect() { canvas_CLIENTRECT = canvas.getBoundingClientRect() }
+
+    // --DESTROY
+    function snake_destroy() { snake_destroyEvents() }
+
+    function snake_destroyEvents() { EVENT.event_remove(SNAKE_EVENTS) }
 
     // --GET
     function snake_getRandomXY() { return [Math.floor(Math.random() * (canvas_COLUMNS - 2) + 1), Math.floor(Math.random() * (canvas_ROWS - 2) + 1)] }
@@ -178,16 +211,6 @@
         return [offset_X, offset_Y]
     }
 
-    // --RESET
-    function snake_reset()
-    {
-        snake_setVars()
-
-        canvas_setVars()
-    
-        snake_setApple()
-    }
-
     // --UPDATE
     function snake_update()
     {
@@ -195,10 +218,6 @@
 
         if (!snake_INVINCIBLE)
         {
-            const [TAIL_X, TAIL_Y] = SNAKE_SNAKE[snake_SCORE - 1]
-
-            snake_TAIL = [TAIL_X * snake_BLOCKSIZE, TAIL_Y * snake_BLOCKSIZE]
-
             SNAKE_SNAKE.push([])
             
             snake_setScore()
@@ -209,21 +228,36 @@
     {
         snake_X = Math.floor((event_CLIENT_X - snake_OFFSET_LEFT) / snake_BLOCKSIZE)
         snake_Y = Math.floor((event_CLIENT_Y - snake_OFFSET_TOP) / snake_BLOCKSIZE)
-
-        snake_SCOPE = snake_X >= 0 && snake_X < canvas_COLUMNS - 1 && snake_Y >= 0 && snake_Y < canvas_ROWS - 1
     }
 
-    // --DESTROY
-    function snake_destroy() { snake_destroyEvents() }
+    function gameover_update(on)
+    {
+        gameover_ON = on
 
-    function snake_destroyEvents() { EVENT.event_remove(SNAKE_EVENTS) }
+        if (on)
+        {
+            snake_INVINCIBLE = true
+
+            snake_a('clearRect')
+        }
+        else
+        {
+            snake_moveTo()
+
+            SNAKE_SNAKE.length = 10
+    
+            snake_setScore()
+            snake_a('fillRect')
+            snake_notInvincible()
+        }
+    }
 
     // --COMMAND
     function snake_c$Size(size)
     {
         snake_BLOCKSIZE = size
 
-        snake_reset()
+        snake_e$Resize()
     }
 
     // --EVENTS
@@ -236,44 +270,89 @@
         snake_move()
     }
 
-    async function snake_e$Resize() { snake_reset() }
+    async function snake_e$Resize()
+    {
+        snake_setVars()
+        snake_setApple()
+
+        snake_draw()
+    }
+
+    function snake_eFullscreenChange() { if (!document.fullscreenElement) snake_end() }
+
+    function canvas_eMouseLeave(e)
+    {
+        const TARGET = e.relatedTarget
+
+        if (!TARGET || TARGET.classList.contains('snake')) gameover_update(true)
+    }
+
+    function cell_eClick()
+    {
+        document.exitFullscreen()
+    
+        snake_end()
+    }
+
+    function gameover_eClick() { gameover_update(false) }
+
+    // --ANIMATION
+    function snake_a(tool, min = 0) // dessine ou supprime de façon animé (serpent et pomme)
+    {
+        let delay = 0
+    
+        canvas_CONTEXT.fillStyle = snake_COLOR_BODY
+
+        for (let i = SNAKE_SNAKE.length - 1; i >= min; i--)
+        {
+            const BODY = SNAKE_SNAKE[i]
+
+            setTimeout(() =>
+            {
+                if (i === 0) canvas_CONTEXT.fillStyle = COLORS.primary
+
+                canvas_CONTEXT[tool](BODY[0] * snake_BLOCKSIZE, BODY[1] * snake_BLOCKSIZE, snake_BLOCKSIZE, snake_BLOCKSIZE)
+            }, delay += 16.67)
+        }
+    }
+
+    // --LOOP
+    async function snake_loop()
+    {
+        snake_FPS = await fps_get()
+
+        if (snake_GAME) snake_loop()
+    }
+
+    // --CONTROLS
+    function snake_start()
+    {
+        try
+        {
+            snake.requestFullscreen().then(snake_notInvincible)
+
+            snake_loop()
+        }
+        catch (e) { snake_end() }
+    }
+
+    function snake_end()
+    {      
+        snake_GAME = false
+        snake_INVINCIBLE = true
+
+        gameover_ON = false
+
+        snake_moveTo()
+        snake_a('fillRect')
+    }
 
     // --TESTS
-    function snake_test()
-    {
-        if (SNAKE_SNAKE[0][0] !== snake_X || SNAKE_SNAKE[0][1] !== snake_Y)
-        {
-            if (snake_SCOPE) snake_OUTSIDE = false
-            else if (snake_OUTSIDE || snake_testOutside()) return false
-
-            return true
-        }
-        else return false
-    }
-
-    function snake_testOutside()
-    {
-        snake_OUTSIDE = !SNAKE_SNAKE.some(body =>
-        {
-            const [X, Y] = body
-
-            return X >= 0 && X < canvas_COLUMNS && Y >= 0 && Y < canvas_ROWS
-        })
-
-        return snake_OUTSIDE
-    }
+    function snake_testMove() { return SNAKE_SNAKE[0][0] !== snake_X || SNAKE_SNAKE[0][1] !== snake_Y }
 
     function snake_testEatenApple(x, y) { if (x === SNAKE_APPLE[0] && y === SNAKE_APPLE[1]) snake_update() }
 
-    function snake_testBody([x, y])
-    {
-        if (!snake_INVINCIBLE && snake_SCOPE && x === snake_X && y === snake_Y)
-        {   
-            SNAKE_SNAKE.pop()
-    
-            snake_setScore()
-        }
-    }
+    function snake_testOverlay([x, y]) { if (!snake_INVINCIBLE && x === snake_X && y === snake_Y) gameover_update(true) }
 
     // --DRAW
     function snake_draw()
@@ -300,13 +379,15 @@
 
     function snake_drawApple()
     {
+        const [X, Y, SIZE] = [SNAKE_APPLE[0] * snake_BLOCKSIZE + 1, SNAKE_APPLE[1] * snake_BLOCKSIZE + 1, snake_BLOCKSIZE - 2]
+    
         canvas_CONTEXT.fillStyle = COLORS.indicator
-        canvas_CONTEXT.fillRect(SNAKE_APPLE[0] * snake_BLOCKSIZE, SNAKE_APPLE[1] * snake_BLOCKSIZE, snake_BLOCKSIZE, snake_BLOCKSIZE)
+        canvas_CONTEXT.fillRect(X, Y, SIZE, SIZE)
     }
 
     function snake_drawSnake(x, y)
     {
-        canvas_CONTEXT.fillStyle = snake_COLOR
+        canvas_CONTEXT.fillStyle = snake_COLOR_BODY
 
         for (let i = snake_SCORE - 1; i > 0; i--)
         {
@@ -314,7 +395,7 @@
 
             SNAKE_SNAKE[i] = BODY
 
-            snake_testBody(BODY)
+            snake_testOverlay(BODY)
             snake_drawBody(BODY, i, x, y)
         }
 
@@ -347,9 +428,32 @@
     {
         snake_updateCoords()
 
-        if (snake_test()) snake_draw()
+        if (!gameover_ON && snake_testMove()) snake_draw()
     }
 
+    function snake_moveTo()
+    {
+        if (!SNAKE_SNAKE.length) return
+
+        const
+        [GAPX, GAPY] = [snake_X - SNAKE_SNAKE[0][0], snake_Y - SNAKE_SNAKE[0][1]],
+        MIN = Math.min(SNAKE_SNAKE.length, 10)
+
+        for (let i = 0; i < MIN; i++)
+        {
+            const BODY = SNAKE_SNAKE[i]
+
+            BODY[0] += GAPX
+            BODY[1] += GAPY
+        }
+    }
+
+    function snake_notInvincible()
+    {
+        clearTimeout(snake_TIMEOUT)
+
+        snake_TIMEOUT = setTimeout(() => snake_INVINCIBLE = false, 1000)
+    }
 // #CYCLES
 
 onMount(snake_set)
@@ -358,17 +462,72 @@ onDestroy(snake_destroy)
 
 <!-- #HTML -->
 
-<!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
 class="snake"
-style:width="{snake_WIDTH}px"
-style:height="{snake_HEIGHT}px"
-style:margin="{snake_OFFSET_TOP}px {snake_OFFSET_LEFT}px"
+class:on={snake_GAME}
+bind:this={snake}
+on:fullscreenchange={snake_eFullscreenChange}
 >
     <canvas
+    style:width="{snake_WIDTH}px"
+    style:height="{snake_HEIGHT}px"
     bind:this={canvas}
+    on:mouseleave={canvas_eMouseLeave}
     >
     </canvas>
+
+    {#if snake_GAME}
+        <div
+        class="grid"
+        style:--grid-size="{snake_BLOCKSIZE}px"
+        style:width="{snake_WIDTH}px"
+        style:height="{snake_HEIGHT}px"
+        >
+        </div>
+
+        <Particles
+        prop_TEMP={true}
+        />
+
+        {#if gameover_ON}
+            <button
+            class="gameover"
+            type="button"
+            on:click={gameover_eClick}
+            >
+                <pre>     -GAME</pre>
+                <pre>OVER---   </pre>
+
+                <span>CLICK pour REJOUER</span>
+            </button>
+        {/if}
+
+        <div
+        class="frame"
+        >
+            <ul>
+                <li>
+                    SCORE
+                    <span>{snake_SCORE}</span>
+                </li>
+                <li>
+                    FPS
+                    <span>{snake_FPS}</span>
+                </li>
+            </ul>
+            
+            <Cell
+            on:click={cell_eClick}
+            >
+                <Icon
+                prop_COLOR={COLORS.light}
+                prop_SPRING={false}
+                >
+                    <Cross />
+                </Icon>
+            </Cell>
+        </div>
+    {/if}
 </div>
 
 <!-- #STYLE -->
@@ -378,20 +537,100 @@ lang="scss"
 >
 /* #USES */
 
+@use 'sass:map';
+
+@use '../../assets/scss/app';
+
+@use '../../assets/scss/styles/elements';
 @use '../../assets/scss/styles/position';
+@use '../../assets/scss/styles/display';
 @use '../../assets/scss/styles/size';
+@use '../../assets/scss/styles/font';
 
 /* #SNAKE */
 
 .snake
 {
-    @include position.placement(absolute, 0, 0, auto, 0);
-
-    canvas
+    &, .gameover
     {
+        @include position.placement(absolute, 0, 0, 0, 0);
+    
         @extend %any;
+    }
 
-        pointer-events: none;
+    @extend %f-center;
+
+    pointer-events: none;
+
+    &.on
+    {
+        background-color: $dark;
+
+        canvas
+        {
+            pointer-events: auto;
+
+            border: solid $intermediate .8rem;
+        }
+    }
+
+    .grid
+    {
+        position: absolute;
+
+        background:
+        repeating-linear-gradient($intermediate 0 1px, transparent 1px 100%),
+        repeating-linear-gradient(90deg, $intermediate 0 1px, transparent 1px 100%);
+
+        background-size: var(--grid-size) var(--grid-size);
+    }
+
+    .gameover
+    {
+        @extend %button-reset;
+        @extend %f-center;
+
+        flex-direction: column;
+    
+        pointer-events: auto;
+
+        pre
+        {
+            @include font.h-(1);
+            
+            @extend %m-h-1;
+
+            font-style: italic;
+        }
+        span { @include font.interact($primary, map.get(font.$font-sizes, s3), 1.4); }
+    }
+
+    .frame
+    {
+        $font-size: map.get(font.$font-sizes, s2);
+
+        #{--icon-size}: $font-size;
+
+        @include position.placement(absolute, calc(app.$gap-block * 2), app.$gap-inline, auto, app.$gap-inline);
+    
+        display: flex;
+        justify-content: space-between;
+
+        height: fit-content;
+
+        ul
+        {
+            display: flex;
+
+            gap: app.$gap-inline;
+
+            li
+            {
+                @include font.interact($light, $font-size, 1, map.get(font.$content-font-weight, w1));
+
+                span { font-weight: map.get(font.$content-font-weight, w2); }
+            }
+        }
     }
 }
 </style>

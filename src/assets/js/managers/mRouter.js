@@ -7,11 +7,9 @@ class Router
     // --CONTEXT-ROUTER
     #router_TITLE = 'LE THUAUT MORGAN - Développeur Web'
     #router_$ID = {}
-    #router_$HIDE = writable(false)
     #router_EVENTS
     #router_PAGES = []
-    #router_HIDE_TIMEOUT
-    #router_EVENTS_TIMEOUT
+    #router_TIMEOUT
 
 // #CONSTRUCTOR
 
@@ -34,10 +32,7 @@ constructor ()
 // #FUNCTIONS
 
     // --SET
-    router_set(id)
-    {
-        this.router_update(id, 'instant')
-    }
+    router_set(id) { this.router_update(id, 'instant') }
 
     #router_setEvents() { EVENT.event_add(this.#router_EVENTS) }
 
@@ -58,8 +53,6 @@ constructor ()
 
         this.#router_updateEvents()
     
-        if (Math.abs(APP.app_scrollTop - PAGE.offsetTop) > window.innerHeight * 2) this.#router_updateHide()
-    
         EVENT.event_scrollTo(PAGE.offsetTop, behavior)
 
         this.#router_updatePath(id, PAGE)
@@ -67,20 +60,11 @@ constructor ()
 
     #router_updateEvents()
     {
-        clearTimeout(this.#router_EVENTS_TIMEOUT)
+        clearTimeout(this.#router_TIMEOUT)
 
         this.#router_destroyEvents()
 
-        this.#router_EVENTS_TIMEOUT = setTimeout(() => this.#router_setEvents(), 1000)
-    }
-
-    #router_updateHide()
-    {
-        clearTimeout(this.#router_HIDE_TIMEOUT)
-    
-        this.#router_$HIDE.set(true)
-
-        this.#router_HIDE_TIMEOUT = setTimeout(() => this.#router_$HIDE.set(false), 700)
+        this.#router_TIMEOUT = setTimeout(() => this.#router_setEvents(), 1000)
     }
 
     #router_updatePath(id, page)
@@ -89,7 +73,7 @@ constructor ()
 
         history.pushState({}, '', location.origin + '/' + PAGE.name + (PAGE.subPath ?? ''))
     
-        this.router_$ID = id
+        this.#router_$ID.set(id)
     }
 
     // --EVENT
@@ -106,11 +90,6 @@ constructor ()
 
     // --GETTER
     get router_$ID() { return this.#router_$ID }
-
-    get router_$HIDE() { return this.#router_$HIDE }
-
-    // --SETTER
-    set router_$ID(value) { this.#router_$ID.set(value) }
 }
 
 // #IMPORTS

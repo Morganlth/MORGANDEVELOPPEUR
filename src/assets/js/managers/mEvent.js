@@ -143,7 +143,12 @@ constructor ()
 
     event_run() { for (const FUNC of this) FUNC(...arguments) }
 
-    event_scrollTo(top, behavior = 'smooth') { (APP.app ?? document.getElementById('app')).scrollTo({ top: top, behavior: behavior }) }
+    event_scrollTo(top, behavior = 'smooth')
+    {
+        if (Math.abs(APP.app_scrollTop - top) > window.innerHeight * 2) APP.app_$HIDE = true
+    
+        ;(APP.app ?? document.getElementById('app')).scrollTo({ top: top, behavior: behavior })
+    }
 }
 
 // #IMPORTS

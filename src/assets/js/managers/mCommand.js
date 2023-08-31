@@ -21,24 +21,27 @@ constructor ()
 }
 
     // --SET
-    command_setBasicCommand(name, callback, params = Command.__command_PARAMS, tests = Command.__command_TESTS, storage)
+    command_setBasicCommands(commands)
     {
-        if (params.optimise) APP.app_OPTIMISE_CONFIG = name
-
-        this.command_add(name, (value) =>
+        for (let { name, callback, params = Command.__command_PARAMS, tests = Command.__command_TESTS, storage } of commands)
         {
-            value = this.#command_testValue(value, params, tests)
+            if (params.optimise) APP.app_OPTIMISE_CONFIG = name
 
-            callback(value)
-
-            if (value !== null)
+            this.command_add(name, (value) =>
             {
-                if (value === true && params.optimise) APP.app_OPTIMISE = false
-                if (storage) localStorage.setItem(name, value)
+                value = this.command_testValue(value, params, tests)
 
-                this.command_c$Success(name + ' ' + value)
-            }
-        }, storage)
+                callback(value)
+
+                if (value !== null)
+                {
+                    if (value === true && params.optimise) APP.app_OPTIMISE = false
+                    if (storage) localStorage.setItem(name, value)
+
+                    this.command_c$Success(name + ' ' + value)
+                }
+            }, storage)
+        }
     }
 
     // --UPDATE
@@ -89,7 +92,7 @@ constructor ()
         : this.command_c$Error('Une erreur s\'est produite, tenter de recharger la page')
     }
 
-    #command_testValue(value, params, tests)
+    command_testValue(value, params, tests)
     {
         return (
         this.command_testNull(value)

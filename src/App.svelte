@@ -130,7 +130,7 @@ context="module"
     function app_c$Event() { console.log(EVENT) }
 
     // --EVENT
-    async function app_eTouchStart() { APP.app_MOBILE = true }
+    async function app_eTouchStart() { /* APP.app_MOBILE = true */ }
 
 // #CYCLES
 

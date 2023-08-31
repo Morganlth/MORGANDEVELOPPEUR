@@ -1,7 +1,6 @@
 <!-- #MAP
 
 -APP
--ROUTER
 -COMMAND
 -EVENT
 -SPRING
@@ -26,7 +25,7 @@
     import COLORS from '$lib/colors'
 
     // --CONTEXTS
-    import { APP, ROUTER, COMMAND, EVENT, SPRING } from '../../App.svelte'
+    import { APP, COMMAND, EVENT, SPRING } from '../../App.svelte'
 
     // --SVELTE
     import { onMount, onDestroy, tick } from 'svelte'
@@ -46,9 +45,6 @@
     const MIRROR_FIELDS = []
 
 // #VARIABLES
-
-    // --ROUTER
-    let router_$ID = ROUTER.router_$ID
 
     // --ELEMENT-CONSOLE
     let
@@ -265,7 +261,6 @@ on:mouseleave={SPRING.spring_e$Show.bind(SPRING)}
 >
     <div
     class="input"
-    class:transparent={$router_$ID === 1}
     >
         <button
         class={CONSOLE_TARGET_CLASS}
@@ -398,11 +393,8 @@ $line-height: 8rem;
     {
         transform: translateX(0);
 
-        .input { border-color: rgba($light, .3); }
-
-        .output { opacity: 1; }
+        .input, .output { opacity: 1; }
     }
-
 
     &>*
     {
@@ -422,9 +414,11 @@ $line-height: 8rem;
 
     .input
     {
-        @include utils.solid-border($intermediate, .7rem, true, false);
+        @include utils.solid-border(rgba($light, .3), .7rem, true, false);
 
         @extend %f-a-center;
+
+        opacity: .5;
 
         width: 100%;
 
@@ -432,9 +426,7 @@ $line-height: 8rem;
 
         box-sizing: border-box;
 
-        transition: border-color .4s;
-
-        &.transparent { background-color: rgba($dark, .5); }
+        transition: opacity .4s;
 
         &>button
         {

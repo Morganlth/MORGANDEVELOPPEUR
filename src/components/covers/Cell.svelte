@@ -36,13 +36,19 @@ on:click={cell_eClick}
 
 <!-- #STYLE -->
 
-<style>
-    /* #CELL */
+<style
+lang="scss"
+>
+/* #USE */
 
-    .cell
-    {
-        background-color: transparent;
+@use '../../assets/scss/styles/elements';
 
-        pointer-events: auto;
-    }
+/* #CELL */
+
+.cell
+{
+    @extend %button-reset;
+
+    pointer-events: auto;
+}
 </style>

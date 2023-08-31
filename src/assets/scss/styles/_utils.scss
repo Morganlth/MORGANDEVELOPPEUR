@@ -4,6 +4,11 @@
 
 @use '../global/colors' as *;
 
+// #VARIABLE
+
+    // --SCROLL-BAR
+    $scroll-bar-width: 10px;
+
 // #UTILS
 
     // --BORDER
@@ -35,7 +40,7 @@
     {
         &::-webkit-scrollbar
         {
-            width: 10px;
+            width: $scroll-bar-width;
 
             background-color: $dark;
 

@@ -43,7 +43,7 @@
     }
 
     // --DESTROY
-    function icon_destroy() { if (icon) icon_destroyEvents() }
+    function icon_destroy() { if (icon instanceof HTMLElement) icon_destroyEvents() }
 
     function icon_destroyEvents()
     {

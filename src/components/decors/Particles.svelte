@@ -9,6 +9,11 @@
 <!-- #SCRIPT -->
 
 <script>
+// #EXPORT
+
+    // --PROP
+    export let prop_TEMP = false
+
 // #IMPORTS
 
     // --LIB
@@ -26,6 +31,23 @@
     const
     PARTICLES_GAP = 100,
     PARTICLES_PARTICLES = [],
+    PARTICLES_COMMANDS =
+    [
+        {
+            name: 'particles',
+            callback: particles_c$,
+            params: { defaultValue: true, optimise: true },
+            tests: { testBoolean: true },
+            storage: true
+        },
+        {
+            name: 'particles_delay',
+            callback: particles_c$Delay,
+            params: { defaultValue: 100, min: 10, max: 1000 },
+            tests: { testNumber: true },
+            storage: true
+        }
+    ],
     PARTICLES_EVENTS =
     {
         resize: particles_e$Resize,
@@ -55,6 +77,8 @@
         particles_setVars()
         particles_setCommands()
         particles_setEvents()
+
+        if (prop_TEMP) particles_restore()
     }
 
     function particles_setVars()
@@ -70,21 +94,9 @@
 
     function particles_setCommands()
     {
-        COMMAND.command_setBasicCommand(
-            'particles',
-            particles_c$,
-            { defaultValue: true, optimise: true },
-            { testBoolean: true },
-            true
-        )
-    
-        COMMAND.command_setBasicCommand(
-            'particles_delay',
-            particles_c$Delay,
-            { defaultValue: 100, min: 10, max: 1000 },
-            { testNumber: true },
-            true
-        )
+        if (prop_TEMP) return
+
+        COMMAND.command_setBasicCommands(PARTICLES_COMMANDS)
     }
 
     function particles_setEvents() { EVENT.event_add(PARTICLES_EVENTS) }
@@ -106,6 +118,17 @@
     function particles_destroy() { particles_destroyEvents }
 
     function particles_destroyEvents() { EVENT.event_remove(PARTICLES_EVENTS) }
+
+    // --RESTORE
+    function particles_restore()
+    {
+        for (let { name, callback, params, tests } of PARTICLES_COMMANDS)
+        {
+            const VALUE = COMMAND.command_testValue(localStorage.getItem(name), params, tests)
+
+            callback(VALUE)
+        }
+    }
 
     // --UPDATES
     function particles_update(on)
@@ -154,7 +177,7 @@
     function particles_c$Delay(delay) { COMMAND.command_test(delay, 'number', particles_updateDelay, 'particles_delay', particles_DELAY) }
 
     // --EVENTS
-    async function particles_e$Resize() { particles_setVars() }
+    async function particles_e$Resize() { if (particles instanceof HTMLElement) particles_setVars() }
 
     async function particles_e$Animation()
     {

@@ -7,9 +7,10 @@
 <!-- #HTML -->
 
 <svg
+class="cross"
 viewBox="0 0 81 81"
 fill="none"
-stroke="var(--icon-color)"
+stroke="var(--icon-color, #FFF)"
 stroke-width="15"
 stroke-linecap="round"
 xmlns="http://www.w3.org/2000/svg"
@@ -20,16 +21,26 @@ xmlns="http://www.w3.org/2000/svg"
 
 <!-- #STYLE -->
 
-<style>
+<style
+lang="scss"
+>
+/* #CROSS */
+
+.cross
+{
+    width: var(--icon-size, 100%);
+    height: var(--icon-size, 100%);
+
     path
     {
         stroke-dasharray: 120%;
         stroke-dashoffset: 120%;
 
         animation: draw .15s ease-in forwards;
+
+        @keyframes draw { to { stroke-dashoffset: 0%; } }
     }
     path:nth-child(1) { animation-delay: .25s; }
     path:nth-child(2) { animation-delay: .4s; }
-
-    @keyframes draw { to { stroke-dashoffset: 0%; } }
+}
 </style>

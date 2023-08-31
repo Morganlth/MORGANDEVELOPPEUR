@@ -43,17 +43,17 @@
 
     function header_setVars() { header_LOOP = true }
 
-    function header_setAnimations() { header_animationLoop() }
+    function header_setAnimations() { header_loop() }
 
     // --DESTROY
     function header_destroy() { header_LOOP = false }
 
-    // --ANIMATION
-    async function header_animationLoop()
+    // --LOOP
+    async function header_loop()
     {
        header_FPS = await fps_get()
 
-       if (header_LOOP) header_animationLoop()
+       if (header_LOOP) header_loop()
     }
 
 // #CYCLES

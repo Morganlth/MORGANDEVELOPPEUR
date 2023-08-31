@@ -48,9 +48,13 @@
     {
         AmbientLightProbe,
         BoxGeometry,
+        BufferGeometry,
+        CubicBezierCurve,
         DirectionalLight,
         Fog,
         Group,
+        Line,
+        LineBasicMaterial,
         Matrix4,
         Mesh,
         MeshStandardMaterial,
@@ -85,6 +89,16 @@
     SPACECUBE_FLOATING_UPDATE_CUBES = [],
     SPACECUBE_ROTATION_X = -MATH.rad.r45 / 2,
     SPACECUBE_ROTATION_Y = MATH.rad.r45,
+    SPACECUBE_COMMANDS =
+    [
+        {
+            name: 'spacecube',
+            callback: spacecube_c$,
+            params: { defaultValue: true, optimise: true },
+            tests: { testBoolean: true },
+            storage: true
+        }
+    ],
     SPACECUBE_EVENTS =
     {
         mouseMove: wait_throttle(spacecube_e$MouseMove, 16.67),
@@ -133,11 +147,7 @@
 // #REACTIVES
 
     // --ELEMENT-SPACECUBE
-    $: prop_RATIO
-    && spacecube_CHARGED
-    && !spacecube_SCROLL_ANIMATION
-    ? spacecube_update()
-    : void 0
+    $: prop_RATIO && spacecube_CHARGED && !APP.app_OPTIMISE ? spacecube_updateCubesPosition() : void 0
     $: prop_TICTACTOE && spacecube_CHARGED ? spacecube_setTicTacToe() : void 0
 
 // #FUNCTIONS
@@ -175,16 +185,7 @@
         spacecube.appendChild(spacecube_RENDERER.domElement)
     }
 
-    function spacecube_setCommands()
-    {
-        COMMAND.command_setBasicCommand(
-            'spacecube',
-            spacecube_c$,
-            { defaultValue: spacecube_ON, optimise: true },
-            { testBoolean: true },
-            true
-        )
-    }
+    function spacecube_setCommands() { COMMAND.command_setBasicCommands(SPACECUBE_COMMANDS) }
 
     function spacecube_setEvents() { EVENT.event_add(SPACECUBE_EVENTS) }
 
@@ -275,6 +276,7 @@
             MATERIAL.onBeforeCompile = shader_set.bind(CUBE)
     
             spacecube_setCubeLayout(CUBE, X, Y)
+            spacecube_setCubeLine(CUBE.checkPoints)
     
             SPACECUBE_CUBES.add(CUBE)
 
@@ -292,6 +294,20 @@
         cube.vel = Math.random() + 1
         cube.rotation.x = SPACECUBE_ROTATION_X
         cube.rotation.y = SPACECUBE_ROTATION_Y
+    }
+    function spacecube_setCubeLine([a, b, c, d, e])
+    {
+        spacecube_SCENE.add(
+        new Line(
+            new BufferGeometry().setFromPoints(
+                new CubicBezierCurve(
+                    new Vector2(a.x, a.y),
+                    new Vector2(b.x, b.y),
+                    new Vector2(d.x, d.y),
+                    new Vector2(e.x, e.y)
+                ).getPoints(30)),
+            new LineBasicMaterial({ color: COLORS.light, transparent: true, opacity: .2 })
+        ))
     }
     function spacecube_setFloatingCube(cube)
     {
@@ -357,7 +373,7 @@
                     { x: x, y: y },                                                 // P2
                     { x: x + FORCE, y: y - FORCE_RATIO },                           // P3
             GAP_X < 0
-            ?       { x: spacecube_WIDTH - GAP_X * 1.5, y: -spacecube_HEIGHT - 2 }  // P4
+            ?       { x: spacecube_WIDTH + GAP_X * 1.5, y: -spacecube_HEIGHT - 2 }  // P4
             :   GAP_X > 0
                 ?   { x: spacecube_WIDTH + 2, y: -spacecube_HEIGHT + GAP_Y * 1.5 }  // P4
                 :   { x: spacecube_WIDTH + 2, y: -spacecube_HEIGHT - 2 }            // P4
@@ -367,14 +383,7 @@
     function spacecube_getBarycentre(a, b, c, t) { return a + a*t*t + 2*b*t - 2*t*t*b + t*t*c - 2*a*t }
 
     // --UPDATES
-    async function spacecube_update()
-    {
-        spacecube_OPACITY = prop_RATIO > 1 ? 0 : 1
-    
-        if (!APP.app_OPTIMISE) spacecube_updateCubesPosition()
-    }
-
-    function spacecube_updateState(on)
+    function spacecube_update(on)
     {
         on ? spacecube_setEvents() : spacecube_destroyEvents()
     
@@ -388,7 +397,7 @@
         const CUBES = SPACECUBE_CUBES.children
 
         spacecube_SCROLL_ANIMATION = true
-    
+
         for (const CUBE of CUBES)
         {
             const [A, B, C, T] = [CUBE.checkPoints[2], CUBE.checkPoints[3], CUBE.checkPoints[4], prop_RATIO * CUBE.vel],
@@ -451,10 +460,10 @@
     }
 
     // --COMMAND
-    function spacecube_c$(on) { COMMAND.command_test(on, 'boolean', spacecube_updateState, 'spacecube', spacecube_ON) }
+    function spacecube_c$(on) { COMMAND.command_test(on, 'boolean', spacecube_update, 'spacecube', spacecube_ON) }
 
     // --EVENTS
-    function spacecube_e$MouseMove(clientX, clientY) // async throttle
+    function spacecube_e$MouseMove(clientX, clientY) // THROTTLE
     {
         const
         [RATIO_X, RATIO_Y] = [(clientX / window.innerWidth) * 2 - 1, -(clientY / window.innerHeight) * 2 + 1],
@@ -554,10 +563,9 @@
     {
         const
         ANGLE = Math.atan(dif_Y / dif_X),
-        FORCE = spacecube_FORCE_POSITION * (1 - prop_RATIO),
         [X0, Y0] = [(1 - dif_X_ABS / (Math.cos(ANGLE) * spacecube_RADIUS)) * dif_X, (1 - dif_Y_ABS / (Math.abs(Math.sin(ANGLE)) * spacecube_RADIUS)) * dif_Y],
         [P_X, P_Y, R_X, R_Y] = [cube.position.x, cube.position.y, cube.rotation.x, cube.rotation.y],
-        [STEP_P_X, STEP_P_Y] = [cube.iPosition.x + X0 * FORCE - P_X, cube.iPosition.y + Y0 * FORCE - P_Y],
+        [STEP_P_X, STEP_P_Y] = [cube.iPosition.x + X0 * spacecube_FORCE_POSITION - P_X, cube.iPosition.y + Y0 * spacecube_FORCE_POSITION - P_Y],
         [STEP_R_X, STEP_R_Y] = [SPACECUBE_ROTATION_X + X0 * spacecube_FORCE_ROTATION - R_X, SPACECUBE_ROTATION_Y + Y0 * spacecube_FORCE_ROTATION - R_Y]
 
         cancelAnimationFrame(cube.animation_FRAMEID)

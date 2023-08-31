@@ -16,7 +16,7 @@ xmlns="http://www.w3.org/2000/svg"
 >
     <path
     d="M25 30V5H45V45H5V25M5 25V5H20M5 25H20"
-    stroke="var(--icon-color)"
+    stroke="var(--icon-color, #FFF)"
     stroke-width="10"
     />
 </svg>
