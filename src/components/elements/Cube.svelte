@@ -1,5 +1,6 @@
 <!-- #MAP
 
+-EVENT
     CUBE
         SIDE * 6
             ICON
@@ -13,10 +14,10 @@
 
     // --PROPS
     export let
-    prop_$GRABBING,
-    prop_$ROTATION,
-    prop_ROTATE,
-    prop_ROTATE_Y
+    prop_$GRABBING = {},
+    prop_$ROTATION = {},
+    prop_ROTATE = 0,
+    prop_ROTATE_Y = 0
 
 // #IMPORTS
 
@@ -81,8 +82,8 @@
     // --UPDATES
     function cube_updatePosition({ rX, rY })
     {
-        cube_ROTATE += rX
-        cube_ROTATE_Y += rY
+        cube_ROTATE += rX ?? 0
+        cube_ROTATE_Y += rY ?? 0
     }
 
     function cube_updateCursor(grabbing) { prop_$GRABBING.set(grabbing) }

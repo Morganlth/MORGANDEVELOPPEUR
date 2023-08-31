@@ -69,7 +69,6 @@
 
     // --ELEMENT-CUBES
     const
-    CUBES_RESIZE = [],
     CUBES_ANIMATION_UPDATE = [],
     CUBES_EVENTS = { animation: wait_throttle(cubes_e$Animation, 100) }
 
@@ -120,12 +119,7 @@
     // --EVENTS
     async function home_e$Scroll(scrollTop) { home_SCROLL_RATIO = scrollTop / home_END }
 
-    async function home_e$Resize()
-    {
-        home_setVars()
-
-        for (const RESIZE of CUBES_RESIZE) RESIZE()
-    }
+    async function home_e$Resize() { home_setVars() }
 
     async function cubes_e$Animation() { for (const UPDATE of CUBES_ANIMATION_UPDATE) UPDATE() }
 
@@ -189,7 +183,6 @@ style:z-index={prop_FOCUS ? 1 : 0}
             {...cube}
             prop_GRABBING={!home_SCROLL_RATIO}
             prop_ANIMATION_UPDATE={CUBES_ANIMATION_UPDATE}
-            bind:gravityarea_e$Resize={CUBES_RESIZE[i]}
             >
                 <Cube
                 prop_$ROTATION={rotation}

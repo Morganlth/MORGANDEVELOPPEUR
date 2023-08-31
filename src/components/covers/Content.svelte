@@ -29,6 +29,11 @@
     prop_CHARGED = false,
     prop_FOCUS = false
 
+    // --BIND
+    export let
+    title_INVISIBLE = false,
+    title_HEIGHT = 0
+
 // #IMPORTS
 
     // --JS
@@ -142,6 +147,8 @@ style:opacity={content_OPACITY}
     <svelte:element
     this={prop_TITLE.htmlElement}
     class="title"
+    class:invisible={title_INVISIBLE}
+    bind:offsetHeight={title_HEIGHT}
     >
         {#if prop_TITLE.contents instanceof Array}
             {#each prop_TITLE.contents as content}
@@ -189,10 +196,10 @@ lang="scss"
 
 .content
 {
+    &, .title { transition: opacity .4s ease-in; }
+
     width: 100%;
     height: fit-content;
-
-    transition: opacity .4s ease-in;
 
     .info, .title
     {
@@ -213,10 +220,21 @@ lang="scss"
 
         perspective: 300px;
 
+        opacity: 1;
+
         width: fit-content;
         height: fit-content;
 
         margin-block: 3rem;
+
+        &.invisible
+        {
+            /* position: absolute;
+
+            z-index: -1; */
+
+            opacity: 0;
+        }
 
         .element
         {

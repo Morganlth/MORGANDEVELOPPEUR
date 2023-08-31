@@ -30,7 +30,7 @@
     import Content from '../covers/Content.svelte'
 
     // --COMPONENT-ELEMENT
-    import Moon from '../decors/Moon.svelte'
+    import System from '../elements/System.svelte'
 
 // #VARIABLE
 
@@ -59,9 +59,10 @@ style:z-index={prop_FOCUS ? 1 : 0}
     <div
     class="wrapper"
     >
-        <Moon
-        prop_SIZE={25}
+        <System
         {prop_FOCUS}
+        {prop_OFFSET_TOP}
+        {prop_BREAK}
         />
 
         <Content

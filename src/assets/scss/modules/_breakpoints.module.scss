@@ -1,0 +1,9 @@
+// #USE
+
+@use '../global/breakpoints';
+
+// #EXPORT
+
+    // --BREAKPOINTS
+
+    :export { @each $name, $point in breakpoints.$breakpoints { #{$name}: $point; } }

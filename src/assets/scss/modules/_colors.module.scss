@@ -1,3 +1,9 @@
+// #USE
+
 @use '../global/colors';
 
-:export { @each $name, $color in colors.$colors { #{$name}: $color; } }
+// #EXPORT
+
+    // --COLORS
+
+    :export { @each $name, $color in colors.$colors { #{$name}: $color; } }

@@ -209,7 +209,7 @@ lang="scss"
 
     @include media.min(false, $ms3)
     {
-        top: 63%;
+        top: 65%;
         right: auto;
         left: app.$gap-inline;
 

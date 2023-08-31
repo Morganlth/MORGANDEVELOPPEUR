@@ -1,5 +1,6 @@
 <!-- #MAP
 
+-EVENT
     GRAVITYAREA
         CONTENT
             ~SLOT
@@ -15,17 +16,22 @@
 
     // --PROPS
     export let
-    prop_GRABBING,
     prop_ANIMATION_UPDATE = [],
-    prop_X,
-    prop_Y,
-    prop_SIZE
-
-    // BIND gravityarea_e$Resize
+    prop_RATIO = null,
+    prop_ORBIT = false,
+    prop_GRABBING = false,
+    prop_ORBIT_RADIUS = 0,
+    prop_ROTATE = 0,
+    prop_OFFSET = 0,
+    prop_X = 0,
+    prop_Y = 0,
+    prop_RADIUS = 100,
+    prop_FORCE = .5
 
 // #IMPORTS
 
     // --JS
+    import MATH from '../../assets/js/utils/math'
     import { wait_throttle } from '../../assets/js/utils/wait'
     import { update_floating } from '../../assets/js/utils/update'
 
@@ -39,7 +45,11 @@
 // #CONSTANTES
 
     // --ELEMENT-GRAVITYAREA
-    const GRAVITYAREA_EVENTS = { mouseMove: wait_throttle(gravityarea_e$MouseMove, 50) }
+    const GRAVITYAREA_EVENTS =
+    {
+        mouseMove: wait_throttle(gravityarea_e$MouseMove, 50),
+        resize: gravityarea_e$Resize
+    }
 
     // --ELEMENT-SLOT
     const
@@ -54,8 +64,9 @@
     gravityarea_CHARGED = false,
     gravityarea_TRANSLATE_X,
     gravityarea_TRANSLATE_Y,
+    gravityarea_TRANSLATE_Z = 0,
     gravityarea_TRANSITION_DELAY = 0,
-    gravityarea_RADIUS,
+    gravityarea_RATIO = 1,
     gravityarea_LAST = +new Date(),
     gravityarea_TIMEOUT
 
@@ -68,9 +79,10 @@
     // --ELEMENT-SLOT
     let slot_GRABBING = false
 
-// #REACTIVE
+// #REACTIVES
 
     // --ELEMENT-GRAVITYAREA
+    $: prop_ORBIT ? gravityarea_update(prop_RATIO) : void 0
     $: gravityarea_CHARGED ? gravityarea_updateGrabbing($SLOT_$GRABBING && prop_GRABBING) : void 0
 
 // #FUNCTIONS
@@ -89,7 +101,8 @@
     {
         gravityarea_TRANSLATE_X = prop_X * window.innerWidth
         gravityarea_TRANSLATE_Y = prop_Y * window.innerHeight
-        gravityarea_RADIUS = gravityarea.offsetWidth / 2
+
+        gravityarea_RATIO = prop_RADIUS / Math.sqrt(prop_RADIUS * prop_RADIUS * 2)
 
         setTimeout(() => { gravityarea_TRANSITION_DELAY = 300 }, 50)
     }
@@ -107,16 +120,16 @@
     function gravityarea_destroyEvents() { EVENT.event_remove(GRAVITYAREA_EVENTS) }
 
     // --UPDATES
-    function gravityarea_updateContent(clientX, clientY)
+    function gravityarea_update(ratio)
     {
-        const
-        CLIENTRECT = gravityarea.getBoundingClientRect(),
-        SIZE = CLIENTRECT.width / 2,
-        [DIF_X, DIF_Y] = [clientX - (CLIENTRECT.left + SIZE), clientY - (CLIENTRECT.top + SIZE)],
-        ANGLE = Math.atan(DIF_Y / DIF_X)
+        const ANGLE = ratio * MATH.PI.x2 + prop_OFFSET
 
-        content_FORCE_X = DIF_X * (1 - Math.abs(DIF_X) / (Math.cos(ANGLE) * gravityarea_RADIUS)) * .5
-        content_FORCE_Y = DIF_Y * (1 - Math.abs(DIF_Y) / Math.abs(Math.sin(ANGLE) * gravityarea_RADIUS)) * .5
+        gravityarea_TRANSLATE_X = prop_ORBIT_RADIUS * Math.cos(ANGLE)
+        gravityarea_TRANSLATE_Z = prop_ORBIT_RADIUS * Math.sin(ANGLE)
+        
+        SLOT_$ROTATION.set({ rX: null, rY: .025 })
+
+        // orbit_testFocus(ANGLE % (Math.PI * 2))
     }
 
     function gravityarea_updateGrabbing(grabbing)
@@ -126,10 +139,22 @@
         grabbing ? gravityarea_setEvents() : gravityarea_destroyEvents()
     }
 
-    // --EVENTS
-    function gravityarea_e$MouseMove(clientX, clientY) // throttle
+    function content_update(clientX, clientY)
     {
-        const [X, Y] = [clientX - gravityarea_RADIUS, clientY - gravityarea_RADIUS]
+        const
+        CLIENTRECT = gravityarea.getBoundingClientRect(),
+        SIZE = CLIENTRECT.width / 2,
+        [DIF_X, DIF_Y] = [clientX - (CLIENTRECT.left + SIZE), clientY - (CLIENTRECT.top + SIZE)],
+        [ANGLE, RADIUS] = [Math.atan(DIF_Y / DIF_X), SIZE * gravityarea_RATIO]
+    
+        content_FORCE_X = DIF_X * (1 - Math.abs(DIF_X) / (Math.cos(ANGLE) * RADIUS)) * prop_FORCE
+        content_FORCE_Y = DIF_Y * (1 - Math.abs(DIF_Y) / Math.abs(Math.sin(ANGLE) * RADIUS)) * prop_FORCE
+    }
+
+    // --EVENTS
+    function gravityarea_e$MouseMove(clientX, clientY) // THROTTLE
+    {
+        const [X, Y] = [clientX - prop_RADIUS, clientY - prop_RADIUS]
 
         SLOT_$ROTATION.set({ rX: (X - gravityarea_TRANSLATE_X) * .005, rY: (Y - gravityarea_TRANSLATE_Y) * .005 })
 
@@ -145,11 +170,11 @@
 
         if (NOW > gravityarea_LAST + 50)
         {
-            gravityarea_updateContent(clientX, clientY)
+            content_update(clientX, clientY)
 
             gravityarea_LAST = NOW
         }
-        else gravityarea_TIMEOUT = setTimeout(() => gravityarea_updateContent(clientX, clientY), 200)
+        else gravityarea_TIMEOUT = setTimeout(() => content_update(clientX, clientY), 200)
     }
 
     async function gravityarea_eMouseEnter() { if (!slot_GRABBING) content_stop() }
@@ -168,7 +193,7 @@
         }, 200)
     }
 
-    export async function gravityarea_e$Resize() { gravityarea_setVars() }
+    async function gravityarea_e$Resize() { gravityarea_setVars() }
 
     async function content_e$Animation() { content_FORCE_Y = content_FLOATING_UPDATE.update() }
 
@@ -197,8 +222,8 @@ onDestroy(gravityarea_destroy)
 
 <button
 class="gravityarea"
-style:--default-size="{prop_SIZE}px"
-style:transform="translate({gravityarea_TRANSLATE_X ?? -prop_SIZE * 2}px, {gravityarea_TRANSLATE_Y ?? -prop_SIZE * 2}px)"
+style:--default-size="{prop_RADIUS}px"
+style:transform="translate3d({gravityarea_TRANSLATE_X ?? -prop_RADIUS * 2}px, {gravityarea_TRANSLATE_Y ?? -prop_RADIUS * 2}px, {gravityarea_TRANSLATE_Z ?? -prop_RADIUS * 2}px)"
 style:transition="transform {gravityarea_TRANSITION_DELAY}ms ease-out"
 type="button"
 bind:this={gravityarea}
@@ -208,7 +233,7 @@ on:mouseleave={gravityarea_eMouseLeave}
 >
     <div
     class="content"
-    style:transform="translate({content_FORCE_X}px, {content_FORCE_Y}px)"
+    style:transform="rotate({-prop_ROTATE}rad) translate({content_FORCE_X}px, {content_FORCE_Y}px)"
     >
         <slot
         rotation={SLOT_$ROTATION}
@@ -257,7 +282,7 @@ lang="scss"
 
     .content
     {
-        transition: transform .5s;
+        transition: transform .6s;
 
         width: var(--content-size);
         height: var(--content-size);

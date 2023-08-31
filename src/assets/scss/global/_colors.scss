@@ -1,18 +1,17 @@
-// #COLOR
-
 // #VARIABLES
 
-$dark: #151515;
-$light: #EDF7F6;
-$intermediate: rgba($light, .08);
-$primary: #3F8EFC;
-$indicator: #EF233C;
+    // --COLORS
+    $dark: #151515;
+    $light: #EDF7F6;
+    $intermediate: rgba($light, .08);
+    $primary: #3F8EFC;
+    $indicator: #EF233C;
 
-$colors:
-(
-    dark $dark,
-    light $light,
-    intermediate $intermediate,
-    primary $primary,
-    indicator $indicator
-)
+    $colors:
+    (
+        dark $dark,
+        light $light,
+        intermediate $intermediate,
+        primary $primary,
+        indicator $indicator
+    );

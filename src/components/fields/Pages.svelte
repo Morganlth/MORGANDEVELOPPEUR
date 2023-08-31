@@ -2,6 +2,7 @@
 
 -APP
 -ROUTER
+-EVENT
     PAGES
         HOME
         PRESENTATION
@@ -14,20 +15,21 @@
 // #IMPORTS
 
     // --CONTEXTS
-    import { APP, ROUTER } from '../../App.svelte'
+    import { APP, ROUTER, EVENT } from '../../App.svelte'
 
     // --SVELTE
-    import { onMount } from 'svelte'
+    import { onMount, onDestroy } from 'svelte'
 
     // --COMPONENT-PAGES
     import Home from '../pages/Home.svelte'
     import Presentation from '../pages/Presentation.svelte'
     import Skills from '../pages/Skills.svelte'
 
-// #CONSTANTE
+// #CONSTANTES
 
     // --ELEMENT-PAGES
-    const PAGES_PAGES =
+    const
+    PAGES_PAGES =
     [
         {
             id: 2,
@@ -36,7 +38,7 @@
             props:
             {
                 prop_OFFSET_TOP: 9,
-                prop_BREAK: 11
+                prop_BREAK: 4
             }
         },
         {
@@ -46,7 +48,7 @@
             props:
             {
                 prop_OFFSET_TOP: 1,
-                prop_BREAK: 8
+                prop_BREAK: 7
             }
         },
         {
@@ -55,7 +57,8 @@
             component: Home,
             props: { prop_BREAK: 1 }
         }
-    ]
+    ],
+    PAGES_EVENTS = { resize: pages_e$Resize }
 
 // #VARIABLES
 
@@ -68,13 +71,29 @@
 // #FUNCTIONS
 
     // --SET
-    function pages_set() { router_setPages() }
+    function pages_set()
+    {
+        pages_setEvents()
+    
+        router_setPages()
+    }
+
+    function pages_setEvents() { EVENT.event_add(PAGES_EVENTS) }
 
     function router_setPages() { for (const PAGES of PAGES_PAGES) ROUTER.router_add(PAGES.id, PAGES.name, window.innerHeight * (PAGES.props.prop_OFFSET_TOP ?? 0)) }
 
-// #CYCLE
+    // --DESTROY
+    function pages_destroy() { pages_destroyEvents() }
+
+    function pages_destroyEvents() { EVENT.event_remove(PAGES_EVENTS) }
+
+    // --EVENT
+    async function pages_e$Resize() { router_setPages() }
+
+// #CYCLES
 
 onMount(pages_set)
+onDestroy(pages_destroy)
 </script>
 
 <!-- #HTML -->
@@ -104,7 +123,7 @@ class:hide={$app_$HIDE}
     opacity: 1;
 
     width: 100%;
-    height: 1200vh;
+    height: 1400vh;
 
     transition: opacity .2s;
 

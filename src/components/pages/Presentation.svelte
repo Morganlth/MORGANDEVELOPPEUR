@@ -1,5 +1,7 @@
 <!-- #MAP
 
+~~WINDOW
+
 -EVENT
     PRESENTATION
         WRAPPER
@@ -31,6 +33,9 @@
     import { PRESENTATION_CONTENT_DATAS } from '../../assets/js/datas/dPresentation'
     import { wait_throttle } from '../../assets/js/utils/wait'
 
+    // --LIB
+    import BREAKPOINTS from '$lib/breakpoints'
+
     // --CONTEXT
     import { EVENT } from '../../App.svelte'
 
@@ -56,6 +61,9 @@
 
 // #VARIABLES
 
+    // ~~WINDOW
+    let window_SMALL_SCREEN = false
+
     // --ELEMENT-PRESENTATION
     let
     presentation_CHARGED = false,
@@ -65,6 +73,12 @@
 
     // --ELEMENT-SNAKE
     let snake_GAME = false
+
+    // --ELEMENT-TITLE
+    let
+    title_END = 0,
+    title_INVISIBLE = false,
+    title_HEIGHT = 0
 
     // --ELEMENT-MASK
     let mask_SCROLL_RATIO = 0
@@ -83,9 +97,13 @@
     function presentation_setVars()
     {
         const HEIGHT = window.innerHeight
+
+        window_SMALL_SCREEN = HEIGHT < parseInt(BREAKPOINTS.ms3.replace('px', ''), 10)
     
         presentation_START = HEIGHT * prop_OFFSET_TOP
-        presentation_END = HEIGHT * (prop_BREAK - 1)
+        presentation_END = HEIGHT * prop_BREAK
+
+        title_END = presentation_START + HEIGHT
     }
 
     function presentation_setEvents() { EVENT.event_add(PRESENTATION_EVENTS) }
@@ -100,6 +118,8 @@
     {
         presentation_SCROLL_RATIO = (scrollTop - presentation_START) / presentation_END
 
+        title_INVISIBLE = window_SMALL_SCREEN && scrollTop > title_END ? true : false
+
         mask_SCROLL_RATIO = scrollTop / presentation_START
     }
 
@@ -107,7 +127,7 @@
 
     async function snake_eClick() { snake_GAME = true }
 
-    async function contact_eClick() { EVENT.event_scrollTo((prop_OFFSET_TOP + prop_BREAK - 1) * window.innerHeight) }
+    async function contact_eClick() { EVENT.event_scrollTo((prop_OFFSET_TOP + prop_BREAK) * window.innerHeight) }
 
 // #CYCLES
 
@@ -132,13 +152,17 @@ style:z-index={prop_FOCUS ? 1 : 0}
         prop_CHARGED={presentation_CHARGED}
         {...PRESENTATION_CONTENT_DATAS}
         {prop_FOCUS}
+        bind:title_INVISIBLE
+        bind:title_HEIGHT
         >
             <Features
             prop_RATIO={presentation_SCROLL_RATIO}
             {prop_FOCUS}
             />
 
-            <nav>
+            <nav
+            style:transform="translateY({title_INVISIBLE ? -title_HEIGHT : 0}px)"
+            >
                 <ul>
                     <li>
                         <button
@@ -203,6 +227,8 @@ lang="scss"
         position: relative;
 
         z-index: 1;
+
+        transition: transform .4s ease-out;
 
         ul
         {

@@ -5,6 +5,17 @@
     SNAKE
         CANVAS
 
+        #if
+            GRID
+            PARTICLES
+            #if GAMEOVER
+            FRAME
+                SCRORE
+                FPS
+                CELL
+                    ICON
+                        CROSS
+
 -->
 
 <!-- #SCRIPT -->
@@ -454,6 +465,7 @@
 
         snake_TIMEOUT = setTimeout(() => snake_INVINCIBLE = false, 1000)
     }
+
 // #CYCLES
 
 onMount(snake_set)
@@ -506,11 +518,15 @@ on:fullscreenchange={snake_eFullscreenChange}
         class="frame"
         >
             <ul>
-                <li>
+                <li
+                class="score"
+                >
                     SCORE
                     <span>{snake_SCORE}</span>
                 </li>
-                <li>
+                <li
+                class="fps"
+                >
                     FPS
                     <span>{snake_FPS}</span>
                 </li>
@@ -624,7 +640,7 @@ lang="scss"
 
             gap: app.$gap-inline;
 
-            li
+            .score, .fps
             {
                 @include font.interact($light, $font-size, 1, map.get(font.$content-font-weight, w1));
 

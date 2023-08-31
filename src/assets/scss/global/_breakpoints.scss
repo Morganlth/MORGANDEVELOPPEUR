@@ -6,9 +6,20 @@
 
 // #VARIABLES
 
-$ms1: map.get(media.$screen, s1);
-$ms2: map.get(media.$screen, s2);
-$ms3: map.get(media.$screen, s3);
-$ms4: map.get(media.$screen, s4);
-$ms5: map.get(media.$screen, s5);
-$ms6: map.get(media.$screen, s6);
+    // --BREAKPOINTS
+    $ms1: map.get(media.$screen, s1);
+    $ms2: map.get(media.$screen, s2);
+    $ms3: map.get(media.$screen, s3);
+    $ms4: map.get(media.$screen, s4);
+    $ms5: map.get(media.$screen, s5);
+    $ms6: map.get(media.$screen, s6);
+
+    $breakpoints:
+    (
+        ms1 $ms1,
+        ms2 $ms2,
+        ms3 $ms3,
+        ms4 $ms4,
+        ms5 $ms5,
+        ms6 $ms6
+    );
