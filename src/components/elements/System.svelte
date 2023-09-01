@@ -3,9 +3,10 @@
 -EVENT
     SYSTEM
         MOON
-        ORBIT * 5
-            GRAVITYAREA
-                CUBES
+        GROUP
+            ORBIT * 5
+                GRAVITYAREA
+                    CUBES
 
 -->
 
@@ -33,6 +34,7 @@
     import { onMount, onDestroy } from 'svelte'
 
     // --COMPONENT-COVERS
+    import Group from '../covers/Group.svelte'
     import Orbit from '../covers/Orbit.svelte'
     import GravityArea from '../covers/GravityArea.svelte'
 
@@ -42,28 +44,36 @@
     // --COMPONENT-DECOR
     import Moon from '../decors/Moon.svelte'
 
-// #CONSTANTES
+// #CONSTANTE
 
     // --ELEMENT-SYSTEM
-    const SYSTEM_EVENTS =
-    {
-        scroll: system_e$Scroll,
-        animation: system_e$Animation
-    }
-
-    // --ELEMENT-CUBE
-    const CUBE_ANIMATION_UPDATE = []
+    const SYSTEM_EVENTS = { scroll: wait_throttle(system_e$Scroll, 50) }
 
 // #VARIABLES
 
     // --ELEMENT-SYSTEM
     let
+    system_CHARGED = false,
     system_START,
     system_END,
     system_SCROLL_RATIO = 0
 
+    // --ELEMENT-GROUP
+    let
+    group_start,
+    group_stop
+
     // --ELEMENT-ORBIT
     let orbit_RADIUS = 0
+
+// #REACTIVE
+
+    // --ELEMENT-GROUP
+    $: system_CHARGED
+        ? prop_FOCUS
+            ? group_start()
+            : group_stop()
+        : void 0
 
 // #FUNCTIONS
 
@@ -72,12 +82,14 @@
     {
         system_setVars()
         system_setEvents()
+
+        system_CHARGED = true
     }
 
     function system_setVars()
     {
         const HEIGHT = window.innerHeight
-    
+
         system_START = prop_OFFSET_TOP * HEIGHT
         system_END = prop_BREAK * HEIGHT
 
@@ -93,16 +105,8 @@
 
     function system_destroyEvents() { EVENT.event_remove(SYSTEM_EVENTS) }
 
-    // --EVENTS
-    async function system_e$Scroll(scrollTop)
-    {
-        system_SCROLL_RATIO = (scrollTop - system_START) / system_END
-    }
-
-    async function system_e$Animation()
-    {
-
-    }
+    // --EVENT
+    async function system_e$Scroll(scrollTop) { system_SCROLL_RATIO = (scrollTop - system_START) / system_END }
 
 // #CYCLES
 
@@ -116,10 +120,17 @@ onDestroy(system_destroy)
 class="system"
 class:focus={prop_FOCUS}
 >
-    <Moon
-    prop_SIZE={25}
-    />
- 
+<Moon
+prop_SIZE={25}
+/>
+
+<Group
+let:resize
+let:animation
+prop_STYLE="position: absolute; transform-style: preserve-3d"
+bind:group_start
+bind:group_stop
+>
     {#each SYSTEM_ORBITS_DATAS as orbit}
         <Orbit
         prop_ROTATE={orbit.prop_ROTATE}
@@ -127,14 +138,15 @@ class:focus={prop_FOCUS}
             <GravityArea
             let:rotation
             let:grabbing
-            prop_ANIMATION_UPDATE={CUBE_ANIMATION_UPDATE}
+            prop_e$RESIZE={resize}
+            prop_e$ANIMATION={animation}
             prop_RATIO={system_SCROLL_RATIO}
-            prop_ORBIT={true}
             prop_GRABBING={false}
             prop_ORBIT_RADIUS={orbit_RADIUS}
             prop_ROTATE={orbit.prop_ROTATE}
             prop_OFFSET={orbit.prop_OFFSET}
             prop_FORCE={.2}
+            {prop_FOCUS}
             >
                 <Cube
                 prop_$ROTATION={rotation}
@@ -144,6 +156,7 @@ class:focus={prop_FOCUS}
             </GravityArea>
         </Orbit>
     {/each}
+</Group>
 </div>
 
 <!-- #STYLE -->
@@ -160,18 +173,16 @@ lang="scss"
 
 .system
 {
-    @include position.placement(absolute, 0, 0, 0, 50%);
+    @include position.placement(absolute, 0, auto, 0, 50vw);
 
     @extend %f-center;
-
-    perspective: 1000px;
 
     transform-style: preserve-3d;
     transform: translate(30%, -30%) scale(.2);
 
-    width: 50%;
+    width: 50vw;
     height: 100%;
-    
+
     transition: transform .6s;
 
     &.focus { transform: scale(1); }

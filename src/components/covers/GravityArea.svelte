@@ -16,11 +16,12 @@
 
     // --PROPS
     export let
-    prop_ANIMATION_UPDATE = [],
+    prop_e$RESIZE = [],
+    prop_e$ANIMATION = [],
+    prop_FOCUS = false,
     prop_RATIO = null,
-    prop_ORBIT = false,
     prop_GRABBING = false,
-    prop_ORBIT_RADIUS = 0,
+    prop_ORBIT_RADIUS = null,
     prop_ROTATE = 0,
     prop_OFFSET = 0,
     prop_X = 0,
@@ -82,7 +83,7 @@
 // #REACTIVES
 
     // --ELEMENT-GRAVITYAREA
-    $: prop_ORBIT ? gravityarea_update(prop_RATIO) : void 0
+    $: prop_ORBIT_RADIUS ? gravityarea_update(prop_RATIO) : void 0
     $: gravityarea_CHARGED ? gravityarea_updateGrabbing($SLOT_$GRABBING && prop_GRABBING) : void 0
 
 // #FUNCTIONS
@@ -91,6 +92,7 @@
     function gravityarea_set()
     {
         gravityarea_setVars()
+        gravityarea_push(prop_e$RESIZE, gravityarea_e$Resize)
 
         content_start()
 
@@ -113,6 +115,7 @@
     function gravityarea_destroy()
     {
         gravityarea_destroyEvents()
+        gravityarea_splice(prop_e$RESIZE, gravityarea_e$Resize)
     
         content_stop()
     }
@@ -198,18 +201,23 @@
     async function content_e$Animation() { content_FORCE_Y = content_FLOATING_UPDATE.update() }
 
     // --CONTROLS
-    function content_start()
-    {
-        const INDEX = prop_ANIMATION_UPDATE.indexOf(content_e$Animation)
+    function content_start() { gravityarea_push(prop_e$ANIMATION, content_e$Animation) }
 
-        if (INDEX === -1) prop_ANIMATION_UPDATE.push(content_e$Animation)
+    function content_stop() { gravityarea_splice(prop_e$ANIMATION, content_e$Animation) }
+
+    // --UTILS
+    function gravityarea_push(array = [], value)
+    {
+        const INDEX = array.indexOf(value)
+
+        if (INDEX === -1) array.push(value)
     }
 
-    function content_stop()
+    function gravityarea_splice(array = [], value)
     {
-        const INDEX = prop_ANIMATION_UPDATE.indexOf(content_e$Animation)
+        const INDEX = array.indexOf(value)
 
-        if (~INDEX) prop_ANIMATION_UPDATE.splice(INDEX, 1)
+        if (~INDEX) array.splice(INDEX, 1)
     }
 
 // #CYCLES
@@ -222,8 +230,12 @@ onDestroy(gravityarea_destroy)
 
 <button
 class="gravityarea"
+class:optimised={prop_FOCUS}
 style:--default-size="{prop_RADIUS}px"
-style:transform="translate3d({gravityarea_TRANSLATE_X ?? -prop_RADIUS * 2}px, {gravityarea_TRANSLATE_Y ?? -prop_RADIUS * 2}px, {gravityarea_TRANSLATE_Z ?? -prop_RADIUS * 2}px)"
+style:transform="perspective({prop_ORBIT_RADIUS ? '1000px' : 'none'}) translate3d(
+    {gravityarea_TRANSLATE_X ?? -prop_RADIUS * 2}px,
+    {gravityarea_TRANSLATE_Y ?? -prop_RADIUS * 2}px,
+    {gravityarea_TRANSLATE_Z ?? -prop_RADIUS * 2}px)"
 style:transition="transform {gravityarea_TRANSITION_DELAY}ms ease-out"
 type="button"
 bind:this={gravityarea}
@@ -258,6 +270,7 @@ lang="scss"
 @use '../../assets/scss/styles/position';
 @use '../../assets/scss/styles/display';
 @use '../../assets/scss/styles/size';
+@use '../../assets/scss/styles/media';
 
 /* #GRAVITYAREA */
 
@@ -265,6 +278,7 @@ lang="scss"
 
 .gravityarea
 {
+    --content-ratio: .27;
     --content-size: calc(var(--default-size) * var(--content-ratio, 1));
 
     @extend %f-center;
@@ -280,6 +294,8 @@ lang="scss"
     border-radius: 50%;
     outline: none;
 
+    &.optimised { will-change: transform; }
+
     .content
     {
         transition: transform .6s;
@@ -287,6 +303,11 @@ lang="scss"
         width: var(--content-size);
         height: var(--content-size);
     }
+
+    @include media.min($ms3, $ms2) { --content-ratio: .35; }
+    @include media.min($ms4, $ms3) { --content-ratio: .5; }
+    @include media.min($ms5, $ms4) { --content-ratio: .75; }
+    @include media.min($ms6, $ms4) { --content-ratio: 1; }
 }
 
 .mask

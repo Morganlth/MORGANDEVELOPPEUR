@@ -9,7 +9,7 @@
             CONTENT
                 ~~ICON
 
-        CUBES
+        GROUP
             GRAVITYAREA * 3
                 CUBE
 
@@ -30,7 +30,6 @@
     // --JS
     import { HOME_CONTENT_DATAS, HOME_CUBES_DATAS } from '../../assets/js/datas/dHome'
     import MATH from '../../assets/js/utils/math'
-    import { wait_throttle } from '../../assets/js/utils/wait'
 
     // --LIB
     import COLORS from '$lib/colors'
@@ -45,6 +44,7 @@
     import Content from '../covers/Content.svelte'
     import GravityArea from '../covers/GravityArea.svelte'
     import Icon from '../covers/Icon.svelte'
+    import Group from '../covers/Group.svelte'
 
     // --COMPONENT-ELEMENTS
     import Cube from '../elements/Cube.svelte'
@@ -67,11 +67,6 @@
         resize: home_e$Resize
     }
 
-    // --ELEMENT-CUBES
-    const
-    CUBES_ANIMATION_UPDATE = [],
-    CUBES_EVENTS = { animation: wait_throttle(cubes_e$Animation, 100) }
-
 // #VARIABLES
 
     // --ELEMENT-HOME
@@ -84,6 +79,11 @@
     spacecube_CHARGED = false,
     spacecube_TICTACTOE = false
 
+    // --ELEMENT-GROUP
+    let
+    group_start,
+    group_stop
+
 // #FUNCTIONS
 
     // --SET
@@ -91,37 +91,23 @@
     {
         home_setVars()
         home_setEvents()
+
+        group_start()
     }
 
     function home_setVars() { home_END = window.innerHeight * prop_BREAK }
 
-    function home_setEvents()
-    {
-        EVENT.event_add(HOME_EVENTS)
-
-        cubes_setEvents()
-    }
-
-    function cubes_setEvents() { EVENT.event_add(CUBES_EVENTS) }
+    function home_setEvents() { EVENT.event_add(HOME_EVENTS) }
 
     // --DESTROY
     function home_destroy() { home_destroyEvents() }
 
-    function home_destroyEvents()
-    {
-        EVENT.event_remove(HOME_EVENTS)
-
-        cubes_destroyEvents()
-    }
-
-    function cubes_destroyEvents() { EVENT.event_remove(CUBES_EVENTS) }
+    function home_destroyEvents() { EVENT.event_remove(HOME_EVENTS) }
 
     // --EVENTS
     async function home_e$Scroll(scrollTop) { home_SCROLL_RATIO = scrollTop / home_END }
 
     async function home_e$Resize() { home_setVars() }
-
-    async function cubes_e$Animation() { for (const UPDATE of CUBES_ANIMATION_UPDATE) UPDATE() }
 
     async function cube_eClick(id)
     {
@@ -173,16 +159,21 @@ style:z-index={prop_FOCUS ? 1 : 0}
         </Content>
     </div>
 
-    <div
-    class="cubes"
+    <Group
+    let:resize
+    let:animation
+    prop_STYLE="position: absolute; top: 0; left: 0"
+    bind:group_start
+    bind:group_stop
     >
         {#each HOME_CUBES_DATAS as cube, i}
             <GravityArea
             let:rotation
             let:grabbing
             {...cube}
+            prop_e$RESIZE={resize}
+            prop_e$ANIMATION={animation}
             prop_GRABBING={!home_SCROLL_RATIO}
-            prop_ANIMATION_UPDATE={CUBES_ANIMATION_UPDATE}
             >
                 <Cube
                 prop_$ROTATION={rotation}
@@ -193,7 +184,7 @@ style:z-index={prop_FOCUS ? 1 : 0}
                 />
             </GravityArea>
         {/each}
-    </div>
+    </Group>
 </div>
 
 <!-- #STYLE -->
@@ -207,7 +198,6 @@ lang="scss"
 @use '../../assets/scss/styles/position';
 @use '../../assets/scss/styles/size';
 @use '../../assets/scss/styles/font';
-@use '../../assets/scss/styles/media';
 
 /* #HOME */
 
@@ -224,22 +214,6 @@ lang="scss"
         @extend %wrapper;
 
         :global{ .icon { #{--icon-size}: calc(var(--title-size) * font.$line-height-title-min) } }
-    }
-
-    .cubes
-    {
-        --content-ratio: .27;
-
-        @include position.placement(absolute, 0, 0, 0, 0);
-    
-        @extend %any;
-
-        pointer-events: none;
-
-        @include media.min($ms3, $ms2) { --content-ratio: .35; }
-        @include media.min($ms4, $ms3) { --content-ratio: .5; }
-        @include media.min($ms5, $ms4) { --content-ratio: .75; }
-        @include media.min($ms6, $ms4) { --content-ratio: 1; }
     }
 }
 </style>

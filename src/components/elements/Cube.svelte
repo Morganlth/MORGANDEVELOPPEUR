@@ -165,7 +165,7 @@ lang="scss"
     .side
     {
         @extend %f-center;
-
+    
         background-color: $dark;
 
         border: solid $primary calc(var(--content-size) * .05);
@@ -182,17 +182,17 @@ lang="scss"
         {
             from
             {
-                transform: translate3d(0, 0, 0) rotate3d(0, 0, 0, 0);
+                transform: translate3d(0, 0, 0) rotateX(0) rotateY(0);
                 
                 border-color: $dark;
             }
         }
     }
-    .side:nth-child(1) { transform: translateZ(calc(var(--content-size) / 2)); }
-    .side:nth-child(2) { transform: translateY(-150%) rotateX(-90deg); }
-    .side:nth-child(3) { transform: translate(-50%, -200%) rotateY(90deg); }
-    .side:nth-child(4) { transform: translateY(-250%) rotateX(90deg); }
-    .side:nth-child(5) { transform: translate(50%, -400%) rotateY(-90deg); }
-    .side:nth-child(6) { transform: translateY(-500%) translateZ(calc(var(--content-size) / -2)); }
+    .side:nth-child(1) { transform: translate3d(0, 0, calc(var(--content-size) / 2))        rotateX(0)      rotateY(0); }
+    .side:nth-child(2) { transform: translate3d(0, -150%, 0)                                rotateX(-90deg) rotateY(0); }
+    .side:nth-child(3) { transform: translate3d(-50%, -200%, 0)                             rotateX(0)      rotateY(90deg); }
+    .side:nth-child(4) { transform: translate3d(0, -250%, 0)                                rotateX(90deg)  rotateY(0); }
+    .side:nth-child(5) { transform: translate3d(50%, -400%, 0)                              rotateX(0)      rotateY(-90deg); }
+    .side:nth-child(6) { transform: translate3d(0, -500%, calc(var(--content-size) / -2))   rotateX(0)      rotateY(0); }
 }
 </style>

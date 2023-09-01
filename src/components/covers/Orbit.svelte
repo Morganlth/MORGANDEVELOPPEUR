@@ -25,11 +25,19 @@ style:transform="rotate({prop_ROTATE}rad)"
 
 <!-- #STYLE -->
 
-<style>
+<style
+lang="scss"
+>
+/* #USE */
+
+@use '../../assets/scss/styles/display';
+
 /* #ORBIT */
 
 .orbit
 {
+    @extend %f-center;
+
     position: absolute;
 
     transform-style: preserve-3d;
