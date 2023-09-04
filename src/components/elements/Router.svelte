@@ -3,6 +3,7 @@
 -ROUTER
 -EVENT
     ROUTER
+        FRAGMENTS
 
 -->
 
@@ -22,13 +23,13 @@
     import { onMount, onDestroy } from 'svelte'
 
     // --COMPONENT-ELEMENT
-    import Char from './Char.svelte'
+    import Fragments from './Fragments.svelte'
 
 // #CONSTANTES
 
     // --ELEMENT-ROUTER
     const
-    ROUTER_CHILDREN = [],
+    ROUTER_TAGS = [],
     ROUTER_EVENTS = []
 
 // #VARIABLE
@@ -53,7 +54,7 @@
     {
         router_setVars()
 
-        router_TIMEOUT = setTimeout(router_intro, 500)
+        router_TIMEOUT = setTimeout(router_intro, 300)
     }
 
     function router_setVars() { router_OPACITY = 1 }
@@ -75,7 +76,7 @@
     {
         await new Promise(resolve =>
         {
-            ROUTER_EVENTS.animation = animation_writing(ROUTER_CHILDREN, resolve)
+            ROUTER_EVENTS.animation = animation_writing(ROUTER_TAGS, resolve)
             
             router_setEvents()
         })
@@ -122,12 +123,9 @@ style:opacity={router_OPACITY}
                 {...link.attributes}
                 on:click|preventDefault={router_eClick.bind(null, id)}
                 >
-                    {#each link.content as char}
-                        <Char
-                        prop_CHILDREN={ROUTER_CHILDREN}
-                        prop_CHAR={char}
-                        />
-                    {/each}
+                    <Fragments
+                    prop_TAGS={{ children: ROUTER_TAGS, value: link.content }}
+                    />
                 </a>
             </li>
         {/each}

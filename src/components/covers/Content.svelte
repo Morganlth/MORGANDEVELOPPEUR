@@ -22,7 +22,7 @@
     prop_TITLE =
     {
         htmlElement: 'h2',
-        contents: {},
+        contents: [{ value: '' }],
         element: false
     },
     prop_INFO = '',
@@ -52,7 +52,9 @@
 // #CONSTANTES
 
     // --ELEMENT-TITLE
-    const TITLE_CHILDREN = { frags: [], tags: [] }
+    const
+    TITLE_FRAGS = [],
+    TITLE_TAGS = []
 
     // --ELEMENT-FRAGMENTS
     const FRAGMENTS_EVENTS = {}
@@ -95,15 +97,15 @@
         fragments_introTags()
     }
 
-    function title_intro() { for (const FRAG of TITLE_CHILDREN.frags) FRAG.style.transform = `translate3d(0, 0, 0)` }
+    function title_intro() { for (const FRAG of TITLE_FRAGS) FRAG.style.transform = `translate3d(0, 0, 0)` }
 
     function fragments_introTags()
     {
-        if (TITLE_CHILDREN.tags.length)
+        if (TITLE_TAGS.length)
         {
             fragments_destroy()
 
-            FRAGMENTS_EVENTS.animation = animation_writing(TITLE_CHILDREN.tags, fragments_destroyEvents)
+            FRAGMENTS_EVENTS.animation = animation_writing(TITLE_TAGS, fragments_destroyEvents)
 
             fragments_TIMEOUT = setTimeout(fragments_setEvents, 1100)
         }
@@ -117,7 +119,7 @@
         title_outro()
     }
 
-    function title_outro() { for (const FRAG of TITLE_CHILDREN.frags) FRAG.style.transform = transform_getTranslate3d() }
+    function title_outro() { for (const FRAG of TITLE_FRAGS) FRAG.style.transform = transform_getTranslate3d() }
 
     // --UPDATE
     function content_update(focus)
@@ -150,25 +152,19 @@ style:opacity={content_OPACITY}
     class:invisible={title_INVISIBLE}
     bind:offsetHeight={title_HEIGHT}
     >
-        {#if prop_TITLE.contents instanceof Array}
-            {#each prop_TITLE.contents as content}
-                <Fragments
-                prop_CHILDREN={TITLE_CHILDREN}
-                prop_CONTENT={content}
-                />
-            {/each}
-        {:else}
+        {#each prop_TITLE.contents as content}
             <Fragments
-            prop_CHILDREN={TITLE_CHILDREN}
-            prop_CONTENT={prop_TITLE.contents}
+            prop_FRAGS={{ children: TITLE_FRAGS, value: content.frags ?? '-' }}
+            prop_TAGS={{ children: TITLE_TAGS, value: content.tags }}
+            prop_TRANSFORM={transform_getTranslate3d}
             />
-        {/if}
+        {/each}
 
         {#if prop_TITLE.element}
             <div
             class="element"
             style:transform={transform_getTranslate3d()}
-            bind:this={TITLE_CHILDREN.frags[TITLE_CHILDREN.frags.length]}
+            bind:this={TITLE_FRAGS[TITLE_FRAGS.length]}
             >
                 <slot name="title-element" />
             </div>
@@ -189,6 +185,7 @@ lang="scss"
 
 @use '../../assets/scss/app';
 
+@use '../../assets/scss/styles/position';
 @use '../../assets/scss/styles/font';
 @use '../../assets/scss/styles/media';
 
@@ -243,7 +240,30 @@ lang="scss"
             transition: transform 1.2s ease-out;
         }
 
-        :global { @include media.min($ms1) { .fragments:nth-child(1) { margin-left: app.$gap-inline; } } }
+        :global
+        {
+            @include media.min($ms1) { .fragments:nth-child(1) { margin-left: app.$gap-inline; } }
+
+            @include media.min($ms2, $ms3)
+            {
+                .fragments
+                {
+                    &::before
+                    {
+                        @include position.placement(absolute, -.7rem, auto, auto, 0, true);
+
+                        width: 2.4rem;
+                        height: 2.4rem;
+
+                        background-color: $primary;
+                    }
+
+                    position: relative;
+
+                    padding-left: app.$gap-inline;
+                }
+            }
+        }
     }
 }
 </style>

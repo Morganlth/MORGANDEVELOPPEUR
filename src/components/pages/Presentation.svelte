@@ -189,7 +189,8 @@ style:z-index={prop_FOCUS ? 1 : 0}
 
         <Mask
         prop_SHADOW={true}
-        prop_GRADIENT={[30, 93]}
+        prop_COORDS={[65, 50]}
+        prop_GRADIENT={[50, 90]}
         prop_RATIO={mask_SCROLL_RATIO}
         />
     </div>

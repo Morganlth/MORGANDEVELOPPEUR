@@ -29,6 +29,9 @@
     prop_RADIUS = 100,
     prop_FORCE = .5
 
+    // --BIND
+    export let gravityarea_TRANSLATE_Z = 0
+
 // #IMPORTS
 
     // --JS
@@ -65,7 +68,6 @@
     gravityarea_CHARGED = false,
     gravityarea_TRANSLATE_X,
     gravityarea_TRANSLATE_Y,
-    gravityarea_TRANSLATE_Z = 0,
     gravityarea_TRANSITION_DELAY = 0,
     gravityarea_RATIO = 1,
     gravityarea_LAST = +new Date(),
@@ -132,7 +134,6 @@
         
         SLOT_$ROTATION.set({ rX: null, rY: .025 })
 
-        // orbit_testFocus(ANGLE % (Math.PI * 2))
     }
 
     function gravityarea_updateGrabbing(grabbing)
@@ -230,7 +231,7 @@ onDestroy(gravityarea_destroy)
 
 <button
 class="gravityarea"
-class:optimised={prop_FOCUS}
+class:focus={prop_FOCUS}
 style:--default-size="{prop_RADIUS}px"
 style:transform="perspective({prop_ORBIT_RADIUS ? '1000px' : 'none'}) translate3d(
     {gravityarea_TRANSLATE_X ?? -prop_RADIUS * 2}px,
@@ -245,7 +246,7 @@ on:mouseleave={gravityarea_eMouseLeave}
 >
     <div
     class="content"
-    style:transform="rotate({-prop_ROTATE}rad) translate({content_FORCE_X}px, {content_FORCE_Y}px)"
+    style:transform="rotate({-prop_ROTATE}rad) translate3d({content_FORCE_X}px, {content_FORCE_Y}px, 0)"
     >
         <slot
         rotation={SLOT_$ROTATION}
@@ -294,7 +295,7 @@ lang="scss"
     border-radius: 50%;
     outline: none;
 
-    &.optimised { will-change: transform; }
+    &.focus { will-change: transform; }
 
     .content
     {

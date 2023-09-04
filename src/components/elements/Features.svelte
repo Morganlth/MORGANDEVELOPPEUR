@@ -157,7 +157,6 @@ lang="scss"
 @use '../../assets/scss/styles/utils';
 @use '../../assets/scss/styles/position';
 @use '../../assets/scss/styles/display';
-@use '../../assets/scss/styles/size';
 @use '../../assets/scss/styles/font';
 
 /* #FEATURES */
@@ -166,9 +165,12 @@ lang="scss"
 {
     @include position.placement(absolute, 0, 0, 0, 0);
 
-    @extend %any;
+    width: 100vw;
+    height: 100%;
 
     perspective: 200px;
+
+    margin-left: 5%;
 
     &.focus .track { will-change: transform; }
 
@@ -192,6 +194,7 @@ lang="scss"
             transform-origin: top right;
 
             color: $primary;
+            line-height: 2.5;
         }
         &:nth-child(2)
         {
@@ -200,6 +203,7 @@ lang="scss"
             transform-origin: bottom left;
 
             color: $intermediate;
+            line-height: 2.7;
         }
         &:nth-child(3)
         {
@@ -212,7 +216,7 @@ lang="scss"
 
         .topic
         {
-            @include font.h-custom(inherit, var(--title-size), 2.5);
+            @include font.h-custom(inherit, var(--title-size, map.get(font.$font-sizes, s7)), inherit);
     
             @extend %m-h-2;
 
@@ -229,7 +233,7 @@ lang="scss"
 
             li
             {
-                @include font.interact($light, map.get(font.$font-sizes, s3), 2, map.get(font.$content-font-weight, w1));
+                @include font.interact($light, map.get(font.$font-sizes, s3), 2.5, map.get(font.$content-font-weight, w1));
     
                 padding-left: app.$gap-inline;
             }

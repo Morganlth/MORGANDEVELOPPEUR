@@ -16,6 +16,7 @@
     export let
     prop_$GRABBING = {},
     prop_$ROTATION = {},
+    prop_FOCUS = false,
     prop_ROTATE = 0,
     prop_ROTATE_Y = 0
 
@@ -118,12 +119,13 @@ onDestroy(cube_destroy)
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
 class="cube"
-style:transform="rotate({cube_ROTATE}rad) rotateY({cube_ROTATE_Y}rad)"
+style:transform="rotate({cube_ROTATE}rad) rotate3d(0, 1, 0, {cube_ROTATE_Y}rad)"
 on:mousedown={cube_eMouseDown}
 >
     {#each [0, 1, 2, 3, 4, 5] as id}
         <div
         class="side"
+        class:focus={prop_FOCUS}
         class:grabbing={$prop_$GRABBING}
         data-side-id={id}
         >
@@ -168,7 +170,7 @@ lang="scss"
     
         background-color: $dark;
 
-        border: solid $primary calc(var(--content-size) * .05);
+        border: solid $intermediate calc(var(--content-size) * .05);
 
         box-sizing: border-box;
 
@@ -176,23 +178,24 @@ lang="scss"
 
         animation: aBuild 1.2s ease-in;
 
-        &.grabbing { border-color: $indicator; }
+        &.focus { border-color: $primary; }
+        &.grabbing { border-color: $indicator !important; }
 
         @keyframes aBuild
         {
             from
             {
-                transform: translate3d(0, 0, 0) rotateX(0) rotateY(0);
+                transform: translate3d(0, 0, 0) rotate3d(0, 0, 0, 0);
                 
                 border-color: $dark;
             }
         }
     }
-    .side:nth-child(1) { transform: translate3d(0, 0, calc(var(--content-size) / 2))        rotateX(0)      rotateY(0); }
-    .side:nth-child(2) { transform: translate3d(0, -150%, 0)                                rotateX(-90deg) rotateY(0); }
-    .side:nth-child(3) { transform: translate3d(-50%, -200%, 0)                             rotateX(0)      rotateY(90deg); }
-    .side:nth-child(4) { transform: translate3d(0, -250%, 0)                                rotateX(90deg)  rotateY(0); }
-    .side:nth-child(5) { transform: translate3d(50%, -400%, 0)                              rotateX(0)      rotateY(-90deg); }
-    .side:nth-child(6) { transform: translate3d(0, -500%, calc(var(--content-size) / -2))   rotateX(0)      rotateY(0); }
+    .side:nth-child(1) { transform: translate3d(0, 0, calc(var(--content-size) / 2))        rotate3d(0, 0, 0, 0); }
+    .side:nth-child(2) { transform: translate3d(0, -150%, 0)                                rotate3d(-1, 0, 0, 90deg); }
+    .side:nth-child(3) { transform: translate3d(-50%, -200%, 0)                             rotate3d(0, 1, 0, 90deg); }
+    .side:nth-child(4) { transform: translate3d(0, -250%, 0)                                rotate3d(1, 0, 0, 90deg); }
+    .side:nth-child(5) { transform: translate3d(50%, -400%, 0)                              rotate3d(0, -1, 0, 90deg); }
+    .side:nth-child(6) { transform: translate3d(0, -500%, calc(var(--content-size) / -2))   rotate3d(0, 0, 0, 0); }
 }
 </style>

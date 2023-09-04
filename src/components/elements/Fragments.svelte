@@ -1,10 +1,7 @@
 <!-- #MAP
 
     FRAGMENTS
-        FRAG * n
 
-        #if TAGS
-            TAG * n
 -->
 
 <!-- #SCRIPT -->
@@ -14,20 +11,11 @@
 
     // --PROPS
     export let
-    prop_CHILDREN = { frags: [], tags: [] },
-    prop_CONTENT =
-    {
-        value: '',
-        tags: void 0
-    }
-
-// #IMPORTS
-
-    // --JS
-    import { transform_getTranslate3d } from '../../assets/js/utils/transform'
-
-    // --COMPONENT-ELEMENT
-    import Char from './Char.svelte'
+    prop_FRAGS = { children: [], value: '' },
+    prop_TAGS = { children: [], value: '' },
+    prop_DURATION = 1.2,
+    prop_STYLE = () => {},
+    prop_TRANSFORM = () => {}
 </script>
 
 <!-- #HTML -->
@@ -35,33 +23,37 @@
 <div
 class="fragments"
 >
-    {#each prop_CONTENT.value as e}
-        <span
-        class="frag"
-        style:transform={transform_getTranslate3d()}
-        bind:this={prop_CHILDREN.frags[prop_CHILDREN.frags.length]}
-        >{e}</span>
+    {#each prop_FRAGS.value as char, i}
+        <pre
+        style={prop_STYLE()}
+        style:transform={prop_TRANSFORM(i)}
+        style:transition="transform {prop_DURATION}s ease-out"
+        bind:this={prop_FRAGS.children[prop_FRAGS.children.length]}
+        >{char}</pre>
     {/each}
 
-    {#if prop_CONTENT.tags instanceof Array}
-        <ul
-        class="tags"
-        >
-            {#each prop_CONTENT.tags as tag}
+    {#if prop_TAGS.value instanceof Array}
+        <ul>
+            {#each prop_TAGS.value as tag}
                 <li>
-                    <strong
-                    class="tag"
-                    >
+                    <strong>
                         {#each tag + '.' as char}
-                            <Char
-                            prop_CHILDREN={prop_CHILDREN.tags}
-                            prop_CHAR={char}
-                            />
+                            <pre
+                            data-char={char}
+                            bind:this={prop_TAGS.children[prop_TAGS.children.length]}
+                            >&nbsp;</pre>
                         {/each}
                     </strong>
                 </li>
             {/each}
         </ul>
+    {:else if prop_TAGS.value != void '' }
+        {#each prop_TAGS.value as char}
+            <pre
+            data-char={char}
+            bind:this={prop_TAGS.children[prop_TAGS.children.length]}
+            >&nbsp;</pre>
+        {/each}
     {/if}
 </div>
 
@@ -70,13 +62,9 @@ class="fragments"
 <style
 lang="scss"
 >
-/* #USES */
+/* #USE */
 
-@use '../../assets/scss/app';
-
-@use '../../assets/scss/styles/position';
 @use '../../assets/scss/styles/font';
-@use '../../assets/scss/styles/media';
 
 /* #FRAGMENTS */
 
@@ -87,11 +75,11 @@ lang="scss"
 
     transform-style: preserve-3d;
 
-    .frag
+    pre
     {
         display: inline-block;
 
-        transition: transform 1.2s ease-out;
+        font: inherit;
     }
 
     ul
@@ -102,24 +90,7 @@ lang="scss"
 
         margin-left: 2rem;
 
-        .tag { @include font.interact($primary); }
-    }
-
-    @include media.min($ms2, $ms3)
-    {
-        &::before
-        {
-            @include position.placement(absolute, -.7rem, auto, auto, 0, true);
-
-            width: 2.4rem;
-            height: 2.4rem;
-
-            background-color: $primary;
-        }
-
-        position: relative;
-
-        padding-left: app.$gap-inline;
+        li { @include font.interact($primary); }
     }
 }
 </style>

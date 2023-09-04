@@ -8,9 +8,9 @@
             htmlElement: 'h1',
             contents:
             [
-                { value: 'DEVELOPPEUR' },
+                { frags: 'DEVELOPPEUR' },
                 {
-                    value: 'WEB',
+                    frags: 'WEB',
                     tags: ['FRONT', 'BACK', '& DESIGNER']
                 }
             ],

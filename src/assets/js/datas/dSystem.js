@@ -72,24 +72,44 @@
     export const SYSTEM_ORBITS_DATAS =
     [
         {
-            prop_ROTATE: MATH.toRad(30),
-            prop_OFFSET: 0
+            tag: 'HTML - CSS',
+            props:
+            {
+                prop_ROTATE: MATH.toRad(30),
+                prop_OFFSET: 0
+            }
         },
         {
-            prop_ROTATE: MATH.toRad(60),
-            prop_OFFSET: 4.2
+            tag: 'JAVASCRIPT',
+            props:
+            {
+                prop_ROTATE: MATH.toRad(60),
+                prop_OFFSET: 4.2
+            }
         },
         {
-            prop_ROTATE: MATH.toRad(90),
-            prop_OFFSET: 3.15
+            tag: 'NODE JS',
+            props:
+            {
+                prop_ROTATE: MATH.toRad(90),
+                prop_OFFSET: 3.15
+            }
         },
         {
-            prop_ROTATE: MATH.toRad(120),
-            prop_OFFSET: 2.1
+            tag: 'GESTION - OUTILS',
+            props:
+            {
+                prop_ROTATE: MATH.toRad(120),
+                prop_OFFSET: 2.1
+            }
         },
         {
-            prop_ROTATE: MATH.toRad(150),
-            prop_OFFSET: 1.05
+            tag: 'ADAPTABILITE',
+            props:
+            {
+                prop_ROTATE: MATH.toRad(150),
+                prop_OFFSET: 1.05
+            }
         }
     ]
 

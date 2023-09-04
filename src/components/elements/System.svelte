@@ -8,6 +8,8 @@
                 GRAVITYAREA
                     CUBES
 
+        TAG
+
 -->
 
 <!-- #SCRIPT -->
@@ -38,16 +40,20 @@
     import Orbit from '../covers/Orbit.svelte'
     import GravityArea from '../covers/GravityArea.svelte'
 
-    // --COMPONENT-ELEMENT
+    // --COMPONENT-ELEMENTS
+    import Tag from './Tag.svelte'
     import Cube from './Cube.svelte'
 
     // --COMPONENT-DECOR
     import Moon from '../decors/Moon.svelte'
 
-// #CONSTANTE
+// #CONSTANTES
 
     // --ELEMENT-SYSTEM
     const SYSTEM_EVENTS = { scroll: wait_throttle(system_e$Scroll, 50) }
+
+    // --ELEMENT-GROUP
+    const GROUP_Z_POSITIONS = new Float64Array(SYSTEM_ORBITS_DATAS.length)
 
 // #VARIABLES
 
@@ -105,8 +111,28 @@
 
     function system_destroyEvents() { EVENT.event_remove(SYSTEM_EVENTS) }
 
+    // --UPDATE
+    function group_update()
+    {
+        let index = GROUP_Z_POSITIONS.indexOf(Math.max(...GROUP_Z_POSITIONS))
+
+        if (!~index) index = 0
+    
+        for (let i = 0; i < GROUP_Z_POSITIONS.length; i++)
+        {
+            const FOCUS = i === index
+
+            SYSTEM_ORBITS_DATAS[i] = { ...SYSTEM_ORBITS_DATAS[i], focus: FOCUS }
+        }
+    }
+
     // --EVENT
-    async function system_e$Scroll(scrollTop) { system_SCROLL_RATIO = (scrollTop - system_START) / system_END }
+    async function system_e$Scroll(scrollTop)
+    {
+        system_SCROLL_RATIO = (scrollTop - system_START) / system_END
+
+        if (prop_FOCUS) group_update()
+    }
 
 // #CYCLES
 
@@ -120,43 +146,50 @@ onDestroy(system_destroy)
 class="system"
 class:focus={prop_FOCUS}
 >
-<Moon
-prop_SIZE={25}
-/>
+    <Moon
+    prop_SIZE={25}
+    />
 
-<Group
-let:resize
-let:animation
-prop_STYLE="position: absolute; transform-style: preserve-3d"
-bind:group_start
-bind:group_stop
->
-    {#each SYSTEM_ORBITS_DATAS as orbit}
-        <Orbit
-        prop_ROTATE={orbit.prop_ROTATE}
-        >
-            <GravityArea
-            let:rotation
-            let:grabbing
-            prop_e$RESIZE={resize}
-            prop_e$ANIMATION={animation}
-            prop_RATIO={system_SCROLL_RATIO}
-            prop_GRABBING={false}
-            prop_ORBIT_RADIUS={orbit_RADIUS}
-            prop_ROTATE={orbit.prop_ROTATE}
-            prop_OFFSET={orbit.prop_OFFSET}
-            prop_FORCE={.2}
-            {prop_FOCUS}
+    <Group
+    let:resize
+    let:animation
+    prop_STYLE="position: absolute; transform-style: preserve-3d"
+    bind:group_start
+    bind:group_stop
+    >
+        {#each SYSTEM_ORBITS_DATAS as orbit, i}
+            <Orbit
+            prop_ROTATE={orbit.props.prop_ROTATE}
             >
-                <Cube
-                prop_$ROTATION={rotation}
-                prop_$GRABBING={grabbing}
-                prop_ROTATE={orbit.prop_ROTATE}
-                />
-            </GravityArea>
-        </Orbit>
-    {/each}
-</Group>
+                <GravityArea
+                let:rotation
+                let:grabbing
+                {...orbit.props}
+                prop_e$RESIZE={resize}
+                prop_e$ANIMATION={animation}
+                prop_RATIO={system_SCROLL_RATIO}
+                prop_GRABBING={false}
+                prop_ORBIT_RADIUS={orbit_RADIUS}
+                prop_FORCE={.2}
+                {prop_FOCUS}
+                bind:gravityarea_TRANSLATE_Z={GROUP_Z_POSITIONS[i]}
+                >
+                    <Cube
+                    prop_$ROTATION={rotation}
+                    prop_$GRABBING={grabbing}
+                    prop_FOCUS={orbit.focus ?? false}
+                    prop_ROTATE={orbit.props.prop_ROTATE}
+                    />
+                </GravityArea>
+            </Orbit>
+
+            <Tag
+            prop_ON={orbit.focus ?? false}
+            prop_CONTENT={orbit.tag}
+            {prop_FOCUS}
+            />
+        {/each}
+    </Group>
 </div>
 
 <!-- #STYLE -->

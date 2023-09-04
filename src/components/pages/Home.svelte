@@ -178,6 +178,7 @@ style:z-index={prop_FOCUS ? 1 : 0}
                 <Cube
                 prop_$ROTATION={rotation}
                 prop_$GRABBING={grabbing}
+                prop_FOCUS={true}
                 prop_ROTATE={Math.random() * MATH.PI.x2}
                 prop_ROTATE_Y={Math.random() * MATH.PI.x2}
                 on:click={cube_eClick.bind(null, i)}
