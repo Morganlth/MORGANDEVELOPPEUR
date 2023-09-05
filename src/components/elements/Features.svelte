@@ -18,6 +18,9 @@
     prop_FOCUS = false,
     prop_RATIO = 0
 
+    // --BIND
+    export let features_LENGTH = FEATURES_DATAS.length + 1
+
 // #IMPORTS
 
     // --JS
@@ -29,10 +32,12 @@
     // --SVELTE
     import { onMount, onDestroy } from 'svelte'
 
-// #CONSTANTE
+// #CONSTANTES
 
     // --ELEMENT-FEATURES
-    const FEATURES_EVENTS = { resize: features_e$Resize }
+    const
+    FEATURES_PHASE = Math.PI * features_LENGTH,
+    FEATURES_EVENTS = { resize: features_e$Resize }
 
 // #VARIABLES
 
@@ -45,7 +50,7 @@
 // #REACTIVE
 
     // --ELEMENT-TRACK
-    $: track_TRANSLATE_Z = Math.abs(Math.sin(prop_RATIO * Math.PI * FEATURES_DATAS.length)) * 100
+    $: track_TRANSLATE_Z = Math.abs(Math.sin(prop_RATIO * FEATURES_PHASE)) * 100
 
 // #FUNCTIONS
 
@@ -96,6 +101,7 @@ class:focus={prop_FOCUS}
     <div
     class="track"
     style:transform="rotate({-track_ROTATE}rad) translate3d(calc(100% * {1 - prop_RATIO}), -50%, {track_TRANSLATE_Z}px)"
+    style:padding-right="{topic_WIDTH}px"
     >
         {#each FEATURES_DATAS as data}
             <p
@@ -111,6 +117,7 @@ class:focus={prop_FOCUS}
     <div
     class="track"
     style:transform="rotate({-track_ROTATE + Math.PI}rad) translate3d(calc(-100% * {prop_RATIO}), 50%, {track_TRANSLATE_Z}px)"
+    style:padding-right="{topic_WIDTH}px"
     >
         {#each FEATURES_DATAS as data}
             <p
@@ -210,6 +217,7 @@ lang="scss"
             @include position.placement(absolute, 50%, auto, auto, 0);
 
             margin-left: 100vw;
+            padding-right: 100vw;
         }
 
         &>* { flex-shrink: 0; }

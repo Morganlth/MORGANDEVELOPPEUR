@@ -13,7 +13,7 @@
     export let
     prop_FRAGS = { children: [], value: '' },
     prop_TAGS = { children: [], value: '' },
-    prop_DURATION = 1.2,
+    prop_DURATION = '1.2s',
     prop_STYLE = () => {},
     prop_TRANSFORM = () => {}
 </script>
@@ -27,7 +27,7 @@ class="fragments"
         <pre
         style={prop_STYLE()}
         style:transform={prop_TRANSFORM(i)}
-        style:transition="transform {prop_DURATION}s ease-out"
+        style:transition="transform {prop_DURATION} ease-out"
         bind:this={prop_FRAGS.children[prop_FRAGS.children.length]}
         >{char}</pre>
     {/each}
@@ -90,7 +90,12 @@ lang="scss"
 
         margin-left: 2rem;
 
-        li { @include font.interact($primary); }
+        li
+        {
+            @include font.interact($primary);
+
+            white-space: nowrap;
+        }
     }
 }
 </style>

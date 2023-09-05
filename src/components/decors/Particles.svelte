@@ -115,7 +115,7 @@
     }
 
     // --DESTROY
-    function particles_destroy() { particles_destroyEvents }
+    function particles_destroy() { particles_destroyEvents() }
 
     function particles_destroyEvents() { EVENT.event_remove(PARTICLES_EVENTS) }
 

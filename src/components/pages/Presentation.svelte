@@ -80,6 +80,11 @@
     title_INVISIBLE = false,
     title_HEIGHT = 0
 
+    // --ELEMENT-FEATURES
+    let
+    features_LENGTH, // LENGTH of FEATURES_DATAS + 1 (padding-right in track)
+    features_CONTACT_OFFSET_TOP = 0
+
     // --ELEMENT-MASK
     let mask_SCROLL_RATIO = 0
 
@@ -103,10 +108,15 @@
         presentation_START = HEIGHT * prop_OFFSET_TOP
         presentation_END = HEIGHT * prop_BREAK
 
-        title_END = presentation_START + HEIGHT
+        title_setVars()
+        features_setVars()
     }
 
     function presentation_setEvents() { EVENT.event_add(PRESENTATION_EVENTS) }
+
+    function title_setVars() { title_END = presentation_START + window.innerHeight }
+
+    function features_setVars() { features_CONTACT_OFFSET_TOP = (prop_OFFSET_TOP + prop_BREAK - prop_BREAK / features_LENGTH) * window.innerHeight }
 
     // --DESTROY
     function presentation_destroy() { presentation_destroyEvents() }
@@ -127,7 +137,7 @@
 
     async function snake_eClick() { snake_GAME = true }
 
-    async function contact_eClick() { EVENT.event_scrollTo((prop_OFFSET_TOP + prop_BREAK) * window.innerHeight) }
+    async function contact_eClick() { EVENT.event_scrollTo(features_CONTACT_OFFSET_TOP) }
 
 // #CYCLES
 
@@ -145,6 +155,7 @@ style:z-index={prop_FOCUS ? 1 : 0}
     class="wrapper"
     >
         <Snake
+        snake_ON={presentation_SCROLL_RATIO < 1}
         bind:snake_GAME
         />
 
@@ -158,6 +169,7 @@ style:z-index={prop_FOCUS ? 1 : 0}
             <Features
             prop_RATIO={presentation_SCROLL_RATIO}
             {prop_FOCUS}
+            bind:features_LENGTH
             />
 
             <nav

@@ -273,7 +273,6 @@ on:mouseleave={SPRING.spring_e$Show.bind(SPRING)}
             prop_SPRING={false}
             >
                 <svg
-                class:reverse={console_ON}
                 viewBox="0 0 43 66"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
@@ -393,7 +392,9 @@ $line-height: 8rem;
     {
         transform: translateX(0);
 
-        .input, .output { opacity: 1; }
+        .output { opacity: 1; }
+
+        .input button svg { transform: scaleX(-1); }
     }
 
     &>*
@@ -418,8 +419,6 @@ $line-height: 8rem;
 
         @extend %f-a-center;
 
-        opacity: .5;
-
         width: 100%;
 
         background-color: $dark;
@@ -441,8 +440,6 @@ $line-height: 8rem;
             padding-right: 1rem;
 
             box-sizing: border-box;
-        
-            svg.reverse { transform: scaleX(-1); }
         }
 
         .line

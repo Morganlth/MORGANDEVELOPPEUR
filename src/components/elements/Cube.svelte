@@ -132,7 +132,7 @@ on:mousedown={cube_eMouseDown}
             <Icon
             prop_OPACITY={icon_OPACITY}
             prop_SIZE="30%"
-            prop_COLOR={COLORS.light}
+            prop_COLOR={COLORS[prop_FOCUS ? 'light' : 'intermediate']}
             prop_SPRING={false}
             >
                 <Logo />

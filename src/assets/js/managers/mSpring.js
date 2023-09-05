@@ -77,7 +77,7 @@ constructor ()
     spring_c$(on) { COMMAND.command_test(on, 'boolean', this.spring_update, Spring.__spring_NAME, this.#spring_$ON.on) }
 
     // --EVENT
-    spring_e$MouseMove(x, y) { if (!this.#spring_HOVER) this.spring_$COORDS = { x: x, y: y } }
+    async spring_e$MouseMove(x, y) { if (!this.#spring_HOVER) this.spring_$COORDS = { x: x, y: y } }
 
     spring_e$Show() { this.spring_$SIZE = Spring.__spring_D_SIZE }
 

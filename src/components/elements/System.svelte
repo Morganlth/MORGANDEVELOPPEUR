@@ -50,10 +50,16 @@
 // #CONSTANTES
 
     // --ELEMENT-SYSTEM
-    const SYSTEM_EVENTS = { scroll: wait_throttle(system_e$Scroll, 50) }
+    const SYSTEM_EVENTS =
+    {
+        scroll: wait_throttle(system_e$Scroll, 50),
+        resize: system_e$Resize
+    }
 
     // --ELEMENT-GROUP
-    const GROUP_Z_POSITIONS = new Float64Array(SYSTEM_ORBITS_DATAS.length)
+    const
+    GROUP_Z_POSITIONS = new Float64Array(SYSTEM_ORBITS_DATAS.length),
+    GROUP_EVENTS = { mouseMove: wait_throttle(group_e$MouseMove, 50) }
 
 // #VARIABLES
 
@@ -62,10 +68,13 @@
     system_CHARGED = false,
     system_START,
     system_END,
-    system_SCROLL_RATIO = 0
+    system_SCROLL_RATIO = 0,
+    group_ROTATE_X = 0,
+    group_ROTATE_Y = 0
 
     // --ELEMENT-GROUP
     let
+    group_TIMEOUT,
     group_start,
     group_stop
 
@@ -77,8 +86,8 @@
     // --ELEMENT-GROUP
     $: system_CHARGED
         ? prop_FOCUS
-            ? group_start()
-            : group_stop()
+            ? system_start()
+            : system_stop()
         : void 0
 
 // #FUNCTIONS
@@ -104,34 +113,82 @@
 
     function system_setEvents() { EVENT.event_add(SYSTEM_EVENTS) }
 
+    function group_setEvents() { EVENT.event_add(GROUP_EVENTS) }
+
     function orbit_setVars() { orbit_RADIUS = Math.min(window.innerWidth * .3, window.innerHeight * .6) }
 
     // --DESTROY
     function system_destroy() { system_destroyEvents() }
 
-    function system_destroyEvents() { EVENT.event_remove(SYSTEM_EVENTS) }
+    function system_destroyEvents()
+    {
+        EVENT.event_remove(SYSTEM_EVENTS)
 
-    // --UPDATE
-    function group_update()
+        group_destroyEvents()
+    }
+
+    function group_destroyEvents() { EVENT.event_remove(GROUP_EVENTS) }
+
+    // --GET
+    function group_getIndexFocus()
     {
         let index = GROUP_Z_POSITIONS.indexOf(Math.max(...GROUP_Z_POSITIONS))
 
         if (!~index) index = 0
-    
-        for (let i = 0; i < GROUP_Z_POSITIONS.length; i++)
-        {
-            const FOCUS = i === index
 
-            SYSTEM_ORBITS_DATAS[i] = { ...SYSTEM_ORBITS_DATAS[i], focus: FOCUS }
-        }
+        return index
     }
 
-    // --EVENT
+    // --UPDATES
+    function group_update()
+    {
+        clearTimeout(group_TIMEOUT)
+
+        group_updateFocus()
+
+        group_TIMEOUT = setTimeout(group_updateFocus, 100)
+    }
+
+    function group_updateFocus()
+    {
+        const INDEX = prop_FOCUS ? group_getIndexFocus() : void 0
+
+        for (let i = 0; i < GROUP_Z_POSITIONS.length; i++) SYSTEM_ORBITS_DATAS[i] = { ...SYSTEM_ORBITS_DATAS[i], focus: i === INDEX }
+    }
+
+    // --EVENTS
     async function system_e$Scroll(scrollTop)
     {
         system_SCROLL_RATIO = (scrollTop - system_START) / system_END
 
         if (prop_FOCUS) group_update()
+    }
+
+    async function system_e$Resize() { system_setVars() }
+
+    async function group_e$MouseMove(clientX, clientY)
+    {
+        const
+        VW50 = window.innerWidth * .5,
+        VH50 = window.innerHeight * .5
+        
+        group_ROTATE_X = (clientY - VH50) / VH50
+        group_ROTATE_Y = (clientX - VW50) / VW50
+    }
+
+    // --CONTROLS
+    function system_start()
+    {
+        group_setEvents()
+
+        group_start()
+    }
+
+    function system_stop()
+    {
+        group_destroyEvents()
+        
+        group_stop()
     }
 
 // #CYCLES
@@ -146,17 +203,21 @@ onDestroy(system_destroy)
 class="system"
 class:focus={prop_FOCUS}
 >
-    <Moon
-    prop_SIZE={25}
-    />
-
     <Group
     let:resize
     let:animation
-    prop_STYLE="position: absolute; transform-style: preserve-3d"
+    prop_STYLE="
+        position: absolute;
+        display: flex; justify-content: center; align-items: center;
+        transform-style: preserve-3d;
+        transform: rotate3d({group_ROTATE_X}, {group_ROTATE_Y}, 0, .03rad);
+        transition: transform .3s
+        "
     bind:group_start
     bind:group_stop
     >
+        <Moon />
+
         {#each SYSTEM_ORBITS_DATAS as orbit, i}
             <Orbit
             prop_ROTATE={orbit.props.prop_ROTATE}
@@ -182,14 +243,17 @@ class:focus={prop_FOCUS}
                     />
                 </GravityArea>
             </Orbit>
-
-            <Tag
-            prop_ON={orbit.focus ?? false}
-            prop_CONTENT={orbit.tag}
-            {prop_FOCUS}
-            />
         {/each}
     </Group>
+
+    {#each SYSTEM_ORBITS_DATAS as orbit}
+        <Tag
+        prop_FOCUS={prop_FOCUS && (orbit.focus ?? false)}
+        prop_CONTENT={orbit.tag}
+        prop_X={group_ROTATE_Y * 6}
+        prop_Y={group_ROTATE_X * 6}
+        />
+    {/each}
 </div>
 
 <!-- #STYLE -->
@@ -197,10 +261,9 @@ class:focus={prop_FOCUS}
 <style
 lang="scss"
 >
-/* #USES */
+/* #USE */
 
 @use '../../assets/scss/styles/position';
-@use '../../assets/scss/styles/display';
 
 /* #SYSTEM */
 
@@ -208,9 +271,6 @@ lang="scss"
 {
     @include position.placement(absolute, 0, auto, 0, 50vw);
 
-    @extend %f-center;
-
-    transform-style: preserve-3d;
     transform: translate(30%, -30%) scale(.2);
 
     width: 50vw;

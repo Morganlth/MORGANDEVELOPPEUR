@@ -48,7 +48,7 @@
             props:
             {
                 prop_OFFSET_TOP: 1,
-                prop_BREAK: 7
+                prop_BREAK: 8
             }
         },
         {

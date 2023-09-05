@@ -21,7 +21,10 @@
 <!-- #SCRIPT -->
 
 <script>
-// #EXPORT
+// #EXPORTS
+
+    // --PROP
+    export let snake_ON = true
 
     // --BIND
     export let snake_GAME = false
@@ -96,7 +99,8 @@
     snake_INVINCIBLE = true,
     snake_SCORE = 10,
     snake_FPS = 0,
-    snake_TIMEOUT
+    snake_TIMEOUT,
+    snake_FRAME_ID
 
     // --ELEMENT-CANVAS
     let
@@ -109,10 +113,11 @@
     // --ELEMENT-GAMEOVER
     let gameover_ON = false
 
-// #REACTIVE
+// #REACTIVES
 
     // --ELEMENT-SNAKE
-    $: snake_GAME ? snake_start() : void 0
+    $: snake_ON ? snake_start() : snake_stop()
+    $: snake_GAME ? snake_startGame() : void 0
 
 // #FUNCTIONS
 
@@ -121,7 +126,6 @@
     {
         snake_setVars()
         snake_setCommands()
-        snake_setEvents()
 
         snake_setSnake()
         snake_setApple()
@@ -249,17 +253,14 @@
         {
             snake_INVINCIBLE = true
 
-            snake_a('clearRect')
+            snake_stop()
         }
         else
         {
-            snake_moveTo()
-
             SNAKE_SNAKE.length = 10
     
             snake_setScore()
-            snake_a('fillRect')
-            snake_notInvincible()
+            snake_start()
         }
     }
 
@@ -289,7 +290,7 @@
         snake_draw()
     }
 
-    function snake_eFullscreenChange() { if (!document.fullscreenElement) snake_end() }
+    function snake_eFullscreenChange() { if (!document.fullscreenElement) snake_stopGame() }
 
     function canvas_eMouseLeave(e)
     {
@@ -302,29 +303,45 @@
     {
         document.exitFullscreen()
     
-        snake_end()
+        snake_stopGame()
     }
 
-    function gameover_eClick() { gameover_update(false) }
+    function gameover_eClick()
+    {
+        gameover_update(false)
+
+        snake_notInvincible()
+    }
 
     // --ANIMATION
-    function snake_a(tool, min = 0) // dessine ou supprime de façon animé (serpent et pomme)
+    function snake_a(tool, min = 0)
     {
-        let delay = 0
+        cancelAnimationFrame(snake_FRAME_ID)
+
+        let
+        last = +new Date(),
+        i = SNAKE_SNAKE.length - 1
     
         canvas_CONTEXT.fillStyle = snake_COLOR_BODY
 
-        for (let i = SNAKE_SNAKE.length - 1; i >= min; i--)
+        ;(function frame()
         {
-            const BODY = SNAKE_SNAKE[i]
-
-            setTimeout(() =>
+            const NOW = +new Date()
+        
+            if (NOW > last + 16.67)
             {
-                if (i === 0) canvas_CONTEXT.fillStyle = COLORS.primary
-
+                const BODY = SNAKE_SNAKE[i]
+    
+                last = NOW
+        
                 canvas_CONTEXT[tool](BODY[0] * snake_BLOCKSIZE, BODY[1] * snake_BLOCKSIZE, snake_BLOCKSIZE, snake_BLOCKSIZE)
-            }, delay += 16.67)
-        }
+            
+                if (--i < min) return
+                else if (i === 0) canvas_CONTEXT.fillStyle = COLORS.primary
+            }
+
+            snake_FRAME_ID = requestAnimationFrame(frame)
+        })()
     }
 
     // --LOOP
@@ -338,24 +355,41 @@
     // --CONTROLS
     function snake_start()
     {
+        snake_setEvents()
+
+        if (SNAKE_SNAKE.length)
+        {
+            [event_CLIENT_X, event_CLIENT_Y] = EVENT.event_CLIENT_XY
+    
+            snake_updateCoords()
+            snake_moveTo()
+        }
+    }
+
+    function snake_stop()
+    {
+        snake_destroyEvents()
+
+        snake_a('clearRect')
+    }
+
+    function snake_startGame()
+    {
         try
         {
             snake.requestFullscreen().then(snake_notInvincible)
 
             snake_loop()
         }
-        catch (e) { snake_end() }
+        catch (e) { snake_stopGame() }
     }
 
-    function snake_end()
+    function snake_stopGame()
     {      
         snake_GAME = false
         snake_INVINCIBLE = true
 
-        gameover_ON = false
-
-        snake_moveTo()
-        snake_a('fillRect')
+        gameover_ON ? gameover_update(false) : snake_moveTo()
     }
 
     // --TESTS
@@ -439,7 +473,7 @@
     {
         snake_updateCoords()
 
-        if (!gameover_ON && snake_testMove()) snake_draw()
+        if (snake_testMove()) snake_draw()
     }
 
     function snake_moveTo()
@@ -457,6 +491,8 @@
             BODY[0] += GAPX
             BODY[1] += GAPY
         }
+
+        snake_a('fillRect')
     }
 
     function snake_notInvincible()
@@ -476,7 +512,7 @@ onDestroy(snake_destroy)
 
 <div
 class="snake"
-class:on={snake_GAME}
+class:game={snake_GAME}
 bind:this={snake}
 on:fullscreenchange={snake_eFullscreenChange}
 >
@@ -578,7 +614,7 @@ lang="scss"
 
     pointer-events: none;
 
-    &.on
+    &.game
     {
         background-color: $dark;
 

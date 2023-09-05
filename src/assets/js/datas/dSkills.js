@@ -9,7 +9,7 @@
             contents:
             [
                 { frags: 'COMPETENCES' },
-                { tags: ['HTML & CSS', 'JS', 'NODE JS', 'GESTION & OUTILS', 'ADAPTABILITÉ'] }
+                { tags: ['HTML', 'CSS', 'JS', 'NODE JS', 'GESTION', 'ADAPTABILITÉ'] }
             ]
         },
         prop_INFO: '...'

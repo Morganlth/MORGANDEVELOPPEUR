@@ -5,6 +5,8 @@ class Event
 // #VARIABLES
 
     // --EVENT-CONTEXT
+    event_GRABBING = writable(false)
+    event_CLIENT_XY = [0, 0]
     event_MANAGER =
     {
         scroll: [],
@@ -20,16 +22,10 @@ class Event
     event_SCROLLFRAME
     event_MOUSEFRAME
     event_TOUCHFRAME
-    event_GRABBING
 
 // #CONSTRUCTOR
 
-constructor ()
-{
-    this.event_GRABBING = writable(false)
-
-    this.event_resize = wait_debounce.call(this, this.event_resize, 100)
-}
+constructor () { this.event_resize = wait_debounce.call(this, this.event_resize, 100) }
 
 // #FUNCTIONS
 
@@ -79,6 +75,8 @@ constructor ()
 
         this.event_MOUSEFRAME = requestAnimationFrame(() =>
         {
+            this.event_CLIENT_XY = [clientX, clientY]
+    
             this.event_run.call(this.event_MANAGER.mouseMove, clientX, clientY)
 
             this.event_MOUSEFRAME = false

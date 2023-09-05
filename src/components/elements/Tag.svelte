@@ -13,13 +13,22 @@
     // --PROPS
     export let
     prop_FOCUS = false,
-    prop_ON = false,
-    prop_CONTENT = ''
+    prop_CONTENT = '',
+    prop_X = 0,
+    prop_Y = 0
 
-// #IMPORT
+// #IMPORTS
+
+    // --JS
+    import MATH from '../../assets/js/utils/math'
 
     // --COMPONENT-ELEMENT
     import Fragments from './Fragments.svelte'
+
+// #CONSTANTE
+
+    // --ELEMENT-TAG
+    const TAG_DURATION = 300
 
 // #VARIABLE
 
@@ -28,40 +37,61 @@
 
 // #FUNCTIONS
 
+    // --GET
+    function fragments_getY() { return 1000 * Math.random() + '%' }
+
+    // --UPDATE
+    function tag_update(y, scale)
+    {
+        for (let i = 0; i < tag_FRAGS.length; i++)
+        {
+            const FRAG = tag_FRAGS[i]
+
+            FRAG.style.setProperty('--frag-y', y)
+            FRAG.style.setProperty('--frag-scale', scale)
+        }
+    }
+
     // --INTRO
     function tag_intro()
     {
-        // for (let i = 0; i < tag_FRAGS.length; i++) tag_FRAGS[i].style.transform = `translateY(${Math.round(Math.random()) ? -1 : 1}%) scaleX(1)`
+        const Y = MATH.headsOrTails() * 2 + '%'
+    
+        tag_update(Y, 1)
     }
 
-    // --OUTROS
+    // --OUTRO
     function tag_outroStart()
     {
-        // for (let i = 0; i < tag_FRAGS.length; i++) tag_FRAGS[i].style.transform = tag_style()
+        tag_update(fragments_getY(), 0)
 
         tag_FRAGS = []
     }
 
     // --TRANSITION
-    function tag_tFade() { return { duration: 300, css: (t) => `opacity: ${t}` }}
+    function tag_tFade() { return { duration: TAG_DURATION, css: (t) => `opacity: ${t}` } }
 
-    // --UTIL
-    function tag_style() { return `--frag-y: ${1000 * Math.random()}%; --frag-sign: ${Math.round(Math.random()) ? 1 : -1}` } 
+    // --UTILS
+    function fragments_style() { return `--frag-y: ${fragments_getY()}; --frag-scale: 0; --frag-sign: ${Math.round(Math.random()) ? 1 : -1}; --frag-duration: ${TAG_DURATION}ms` }
+
+    function fragments_transform() { return `translateY(calc(var(--frag-y, 0) * var(--frag-sign, 1))) scaleX(var(--frag-scale, 1))` }
 </script>
 
 <!-- #HTML -->
 
-{#if prop_FOCUS && prop_ON}
+{#if prop_FOCUS}
     <h3
     class="tag"
+    style:transform="translate({prop_X}px, {prop_Y}px)"
     transition:tag_tFade
     on:introend={tag_intro}
     on:outrostart={tag_outroStart}
     >
         <Fragments
         prop_FRAGS={{ children: tag_FRAGS, value: prop_CONTENT }}
-        prop_STYLE={tag_style}
-        prop_DURATION={.3}
+        prop_STYLE={fragments_style}
+        prop_TRANSFORM={fragments_transform}
+        prop_DURATION="var(--frag-duration, .3s)"
         />
     </h3>
 {/if}
@@ -82,50 +112,48 @@ lang="scss"
 
 .tag
 {
-    @include position.placement(absolute, 50%, auto, auto, 0);
+    &::before
+    {
+        @include position.placement(absolute, auto, auto, -50%, -30%, true);
+
+        transform: translateX(0) scale(1);
+    
+        width: 200%;
+        height: 0;
+
+        border-top: solid $intermediate 2px;
+
+        animation: a .6s ease-out;
+
+        @keyframes a { from { transform: translateX(100%) scaleX(0) } }
+    }
+
+    @include position.placement(absolute, 50%, 50%);
     @include font.h-custom($light, var(--title-size, map.get(font.$font-sizes, s5)));
 
     @extend %m-h-3;
 
-    transform: translateX(-50%);
-
     width: fit-content;
     height: fit-content;
 
+    transition: transform .3s;
+
     :global
     {
-        .fragments>pre
+        .fragments>pre::before
         {
-            &::before
-            {
-                @include position.placement(absolute, 50%, auto, auto, 50%, true);
+            @include position.placement(absolute, 50%, auto, auto, 50%, true);
 
-                transform-origin: left;
-                transform: translateY(-50%) rotate(calc(-90deg * var(--frag-sign))) scaleX(1);
-    
-                width: var(--frag-y);
-                height: 1rem;
+            transform-origin: left;
+            
+            width: 100%;
+            height: 1px;
 
-                background-color: $light;
+            background-color: $light;
 
-                border-radius: 40%;
+            transform: rotate(calc(-90deg * var(--frag-sign, 1))) scaleX(var(--frag-y, 0));
 
-                animation: aBefore .6s forwards ease-out;
-
-                @keyframes aBefore
-                {
-                    100% { transform: translateY(-50%) rotate(calc(-90deg * var(--frag-sign))) scaleX(0); }
-                }
-            }
-
-            transform: translateY(calc(var(--frag-y) * var(--frag-sign))) scaleX(0);
-
-            animation: a .6s forwards ease-out;
-
-            @keyframes a
-            {
-                100% { transform: translateY(0) scaleX(1); }
-            }
+            transition: transform var(--frag-duration, .3s) ease-out;
         }
     }
 }

@@ -233,7 +233,7 @@ onDestroy(gravityarea_destroy)
 class="gravityarea"
 class:focus={prop_FOCUS}
 style:--default-size="{prop_RADIUS}px"
-style:transform="perspective({prop_ORBIT_RADIUS ? '1000px' : 'none'}) translate3d(
+style:transform="perspective({prop_ORBIT_RADIUS ? '1200px' : 'none'}) translate3d(
     {gravityarea_TRANSLATE_X ?? -prop_RADIUS * 2}px,
     {gravityarea_TRANSLATE_Y ?? -prop_RADIUS * 2}px,
     {gravityarea_TRANSLATE_Z ?? -prop_RADIUS * 2}px)"
@@ -279,7 +279,7 @@ lang="scss"
 
 .gravityarea
 {
-    --content-ratio: .27;
+    --content-ratio: .3;
     --content-size: calc(var(--default-size) * var(--content-ratio, 1));
 
     @extend %f-center;
