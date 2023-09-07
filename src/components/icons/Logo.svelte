@@ -32,5 +32,10 @@ lang="scss"
 
 /* #LOGO */
 
-svg { @extend %any; }
+svg
+{
+    @extend %any;
+
+    path { transition: stroke .7s; }
+}
 </style>

@@ -124,7 +124,7 @@
     function presentation_destroyEvents() { EVENT.event_remove(PRESENTATION_EVENTS) }
 
     // --EVENTS
-    function presentation_e$Scroll(scrollTop) // THROTTLE
+    async function presentation_e$Scroll(scrollTop)
     {
         presentation_SCROLL_RATIO = (scrollTop - presentation_START) / presentation_END
 

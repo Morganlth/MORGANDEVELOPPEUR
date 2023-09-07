@@ -66,8 +66,8 @@
     let
     gravityarea,
     gravityarea_CHARGED = false,
-    gravityarea_TRANSLATE_X,
-    gravityarea_TRANSLATE_Y,
+    gravityarea_TRANSLATE_X = 0,
+    gravityarea_TRANSLATE_Y = 0,
     gravityarea_TRANSITION_DELAY = 0,
     gravityarea_RATIO = 1,
     gravityarea_LAST = +new Date(),
@@ -233,10 +233,12 @@ onDestroy(gravityarea_destroy)
 class="gravityarea"
 class:focus={prop_FOCUS}
 style:--default-size="{prop_RADIUS}px"
-style:transform="perspective({prop_ORBIT_RADIUS ? '1200px' : 'none'}) translate3d(
-    {gravityarea_TRANSLATE_X ?? -prop_RADIUS * 2}px,
-    {gravityarea_TRANSLATE_Y ?? -prop_RADIUS * 2}px,
-    {gravityarea_TRANSLATE_Z ?? -prop_RADIUS * 2}px)"
+style:transform="
+perspective({prop_ORBIT_RADIUS ? '1200px' : 'none'})
+translate3d(
+{gravityarea_TRANSLATE_X}px,
+{gravityarea_TRANSLATE_Y}px,
+{gravityarea_TRANSLATE_Z}px)"
 style:transition="transform {gravityarea_TRANSITION_DELAY}ms ease-out"
 type="button"
 bind:this={gravityarea}
@@ -286,6 +288,8 @@ lang="scss"
 
     position: absolute;
 
+    transform-style: preserve-3d;
+
     width: calc(var(--content-size) * 2);
     height: calc(var(--content-size) * 2);
 
@@ -299,10 +303,12 @@ lang="scss"
 
     .content
     {
-        transition: transform .6s;
+        transform-style: preserve-3d;
 
         width: var(--content-size);
         height: var(--content-size);
+
+        transition: transform .6s;
     }
 
     @include media.min($ms3, $ms2) { --content-ratio: .35; }

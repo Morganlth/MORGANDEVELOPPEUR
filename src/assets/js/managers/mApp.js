@@ -123,7 +123,7 @@ constructor ()
         }
     }
 
-    set app_OPTIMISE_CONFIG(name) { this.#app_OPTIMISE_CONFIG[name] = false }
+    set app_OPTIMISE_CONFIG({name, value}) { this.#app_OPTIMISE_CONFIG[name] = value ?? false }
 }
 
 // #IMPORTS

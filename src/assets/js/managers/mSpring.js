@@ -35,7 +35,7 @@ constructor ()
         {
             name: Spring.__spring_NAME,
             callback: this.spring_c$,
-            params: { defaultValue: this.#spring_$ON.on, optimise: true },
+            params: { defaultValue: this.#spring_$ON.on, optimise: { value: false } },
             tests: { testBoolean: true },
             storage: true
         }

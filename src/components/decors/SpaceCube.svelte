@@ -94,7 +94,7 @@
         {
             name: 'spacecube',
             callback: spacecube_c$,
-            params: { defaultValue: true, optimise: true },
+            params: { defaultValue: true, optimise: { value: false } },
             tests: { testBoolean: true },
             storage: true
         }

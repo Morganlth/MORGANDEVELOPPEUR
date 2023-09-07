@@ -25,7 +25,7 @@ constructor ()
     {
         for (let { name, callback, params = Command.__command_PARAMS, tests = Command.__command_TESTS, storage } of commands)
         {
-            if (params.optimise) APP.app_OPTIMISE_CONFIG = name
+            if (params.optimise) APP.app_OPTIMISE_CONFIG = { name: name, value: params.optimise.value }
 
             this.command_add(name, (value) =>
             {

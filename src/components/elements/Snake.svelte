@@ -67,7 +67,7 @@
             name: 'snake_size',
             callback: snake_c$Size,
             params: { defaultValue: SNAKE_BLOCKSIZE, min: 10, max: 70 },
-            tests: { testBoolean: true, testNumber: true },
+            tests: { testNumber: true },
             storage: true
         }
     ],
@@ -131,11 +131,11 @@
         snake_setApple()
     }
 
-    function snake_setVars()
+    function snake_setVars(size)
     {
         const [WIDTH, HEIGHT] = [snake.offsetWidth, snake.offsetHeight]
 
-        snake_BLOCKSIZE = WIDTH < 768 || HEIGHT < 768 ? 30 : SNAKE_BLOCKSIZE
+        snake_BLOCKSIZE = size ?? (WIDTH < 768 || HEIGHT < 768 ? 30 : SNAKE_BLOCKSIZE)
 
         snake_WIDTH = WIDTH - (WIDTH - 1) % snake_BLOCKSIZE
         snake_HEIGHT = HEIGHT - (HEIGHT - 1) % snake_BLOCKSIZE
@@ -245,6 +245,20 @@
         snake_Y = Math.floor((event_CLIENT_Y - snake_OFFSET_TOP) / snake_BLOCKSIZE)
     }
 
+    function snake_updateSize(size)
+    {
+        snake_BLOCKSIZE = size
+
+        snake_e$Resize(size)
+    }
+
+    function snake_updateApple(tool)
+    {
+        tool === 'fillRect'
+        ? snake_setApple()
+        : canvas_CONTEXT.clearRect(SNAKE_APPLE[0] * SNAKE_BLOCKSIZE, SNAKE_APPLE[1] * snake_BLOCKSIZE, snake_BLOCKSIZE, snake_BLOCKSIZE)
+    }
+
     function gameover_update(on)
     {
         gameover_ON = on
@@ -265,12 +279,7 @@
     }
 
     // --COMMAND
-    function snake_c$Size(size)
-    {
-        snake_BLOCKSIZE = size
-
-        snake_e$Resize()
-    }
+    function snake_c$Size(size) { COMMAND.command_test(size, 'number', snake_updateSize, SNAKE_COMMANDS[0].name, snake_BLOCKSIZE) }
 
     // --EVENTS
     async function snake_e$Scroll() { snake_move() }
@@ -282,9 +291,9 @@
         snake_move()
     }
 
-    async function snake_e$Resize()
+    async function snake_e$Resize(size)
     {
-        snake_setVars()
+        snake_setVars(size)
         snake_setApple()
 
         snake_draw()
@@ -314,7 +323,7 @@
     }
 
     // --ANIMATION
-    function snake_a(tool, min = 0)
+    function snake_a(tool)
     {
         cancelAnimationFrame(snake_FRAME_ID)
 
@@ -336,7 +345,7 @@
         
                 canvas_CONTEXT[tool](BODY[0] * snake_BLOCKSIZE, BODY[1] * snake_BLOCKSIZE, snake_BLOCKSIZE, snake_BLOCKSIZE)
             
-                if (--i < min) return
+                if (--i < 0) return snake_updateApple(tool)
                 else if (i === 0) canvas_CONTEXT.fillStyle = COLORS.primary
             }
 

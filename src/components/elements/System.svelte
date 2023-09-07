@@ -1,5 +1,6 @@
 <!-- #MAP
 
+-COMMAND
 -EVENT
     SYSTEM
         MOON
@@ -29,8 +30,8 @@
     import { SYSTEM_ORBITS_DATAS } from '../../assets/js/datas/dSystem'
     import { wait_throttle } from '../../assets/js/utils/wait'
 
-    // --CONTEXT
-    import { EVENT } from '../../App.svelte'
+    // --CONTEXTS
+    import { COMMAND, EVENT } from '../../App.svelte'
 
     // --SVELTE
     import { onMount, onDestroy } from 'svelte'
@@ -50,9 +51,20 @@
 // #CONSTANTES
 
     // --ELEMENT-SYSTEM
-    const SYSTEM_EVENTS =
+    const
+    SYSTEM_COMMANDS =
+    [
+        {
+            name: 'system_optimise',
+            callback: system_c$Optimise,
+            params: { defaultValue: false, optimise: { value: true } },
+            tests: { testBoolean: true },
+            storage: true
+        }
+    ],
+    SYSTEM_EVENTS =
     {
-        scroll: wait_throttle(system_e$Scroll, 50),
+        scroll: wait_throttle(system_e$Scroll, 60),
         resize: system_e$Resize
     }
 
@@ -66,6 +78,7 @@
     // --ELEMENT-SYSTEM
     let
     system_CHARGED = false,
+    system_OPTIMISED = false,
     system_START,
     system_END,
     system_SCROLL_RATIO = 0,
@@ -96,6 +109,7 @@
     function system_set()
     {
         system_setVars()
+        system_setCommands()
         system_setEvents()
 
         system_CHARGED = true
@@ -110,6 +124,8 @@
 
         orbit_setVars()
     }
+
+    function system_setCommands() { COMMAND.command_setBasicCommands(SYSTEM_COMMANDS) }
 
     function system_setEvents() { EVENT.event_add(SYSTEM_EVENTS) }
 
@@ -140,6 +156,15 @@
     }
 
     // --UPDATES
+    function system_update(optimised)
+    {
+        system_OPTIMISED = optimised
+
+        optimised ? system_stop() : system_start()
+
+        group_updateFocus()
+    }
+
     function group_update()
     {
         clearTimeout(group_TIMEOUT)
@@ -151,14 +176,19 @@
 
     function group_updateFocus()
     {
-        const INDEX = prop_FOCUS ? group_getIndexFocus() : void 0
+        const INDEX = prop_FOCUS && !system_OPTIMISED ? group_getIndexFocus() : void 0
 
         for (let i = 0; i < GROUP_Z_POSITIONS.length; i++) SYSTEM_ORBITS_DATAS[i] = { ...SYSTEM_ORBITS_DATAS[i], focus: i === INDEX }
     }
 
+    // --COMMAND
+    function system_c$Optimise(optimised) { COMMAND.command_test(optimised, 'boolean', system_update, SYSTEM_COMMANDS[0].name, system_OPTIMISED) }
+
     // --EVENTS
     async function system_e$Scroll(scrollTop)
     {
+        if (system_OPTIMISED) return
+
         system_SCROLL_RATIO = (scrollTop - system_START) / system_END
 
         if (prop_FOCUS) group_update()
@@ -179,6 +209,8 @@
     // --CONTROLS
     function system_start()
     {
+        if (system_OPTIMISED) return
+
         group_setEvents()
 
         group_start()
@@ -207,12 +239,11 @@ class:focus={prop_FOCUS}
     let:resize
     let:animation
     prop_STYLE="
-        position: absolute;
-        display: flex; justify-content: center; align-items: center;
-        transform-style: preserve-3d;
-        transform: rotate3d({group_ROTATE_X}, {group_ROTATE_Y}, 0, .03rad);
-        transition: transform .3s
-        "
+    position: absolute;
+    display: flex; justify-content: center; align-items: center;
+    transform-style: preserve-3d;
+    transform: rotate3d({group_ROTATE_X}, {group_ROTATE_Y}, 0, .03rad);
+    transition: transform .3s;"
     bind:group_start
     bind:group_stop
     >
@@ -225,14 +256,15 @@ class:focus={prop_FOCUS}
                 <GravityArea
                 let:rotation
                 let:grabbing
-                {...orbit.props}
                 prop_e$RESIZE={resize}
                 prop_e$ANIMATION={animation}
+                prop_FOCUS={orbit.focus ?? false}
                 prop_RATIO={system_SCROLL_RATIO}
                 prop_GRABBING={false}
                 prop_ORBIT_RADIUS={orbit_RADIUS}
+                prop_ROTATE={orbit.props.prop_ROTATE}
+                prop_OFFSET={orbit.props.prop_OFFSET}
                 prop_FORCE={.2}
-                {prop_FOCUS}
                 bind:gravityarea_TRANSLATE_Z={GROUP_Z_POSITIONS[i]}
                 >
                     <Cube
@@ -240,20 +272,34 @@ class:focus={prop_FOCUS}
                     prop_$GRABBING={grabbing}
                     prop_FOCUS={orbit.focus ?? false}
                     prop_ROTATE={orbit.props.prop_ROTATE}
+                    prop_SRC={orbit.props.prop_SRC}
+                    prop_ALT={orbit.props.prop_ALT}
+                    prop_COLOR={orbit.props.prop_COLOR}
                     />
                 </GravityArea>
             </Orbit>
         {/each}
     </Group>
 
-    {#each SYSTEM_ORBITS_DATAS as orbit}
-        <Tag
-        prop_FOCUS={prop_FOCUS && (orbit.focus ?? false)}
-        prop_CONTENT={orbit.tag}
-        prop_X={group_ROTATE_Y * 6}
-        prop_Y={group_ROTATE_X * 6}
-        />
-    {/each}
+    <Group
+    prop_STYLE="
+    position: absolute;
+    top: 51%;
+    left: 0;
+    transform: translateY(-50%);
+    width: fit-content;
+    height: fit-content;"
+    >
+        {#each SYSTEM_ORBITS_DATAS as orbit}
+            <Tag
+            prop_FOCUS={(orbit.focus ?? false) || system_OPTIMISED && prop_FOCUS}
+            prop_OPTIMISED={system_OPTIMISED}
+            prop_CONTENT={orbit.tag}
+            prop_X={group_ROTATE_Y * 6}
+            prop_Y={group_ROTATE_X * 6}
+            />
+        {/each}
+    </Group>
 </div>
 
 <!-- #STYLE -->

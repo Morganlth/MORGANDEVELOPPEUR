@@ -13,6 +13,7 @@
     // --PROPS
     export let
     prop_FOCUS = false,
+    prop_OPTIMISED = false,
     prop_CONTENT = '',
     prop_X = 0,
     prop_Y = 0
@@ -82,6 +83,7 @@
 {#if prop_FOCUS}
     <h3
     class="tag"
+    style:position={prop_OPTIMISED ? 'relative' : 'absolute' }
     style:transform="translate({prop_X}px, {prop_Y}px)"
     transition:tag_tFade
     on:introend={tag_intro}
@@ -128,13 +130,15 @@ lang="scss"
         @keyframes a { from { transform: translateX(100%) scaleX(0) } }
     }
 
-    @include position.placement(absolute, 50%, 50%);
+    /* @include position.placement(absolute, 50%, 50%); */
     @include font.h-custom($light, var(--title-size, map.get(font.$font-sizes, s5)));
 
     @extend %m-h-3;
 
     width: fit-content;
     height: fit-content;
+
+    margin-bottom: 4rem;
 
     transition: transform .3s;
 

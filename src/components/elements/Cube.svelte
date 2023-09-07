@@ -18,7 +18,10 @@
     prop_$ROTATION = {},
     prop_FOCUS = false,
     prop_ROTATE = 0,
-    prop_ROTATE_Y = 0
+    prop_ROTATE_Y = 0,
+    prop_SRC = void '',
+    prop_ALT = '',
+    prop_COLOR = void 0
 
 // #IMPORTS
 
@@ -34,8 +37,9 @@
     // --COMPONENT-COVER
     import Icon from '../covers/Icon.svelte'
 
-    // --COMPONENT-ICON
+    // --COMPONENT-ICONS
     import Logo from '../icons/Logo.svelte'
+    import Image from '../icons/Image.svelte'
 
 // #CONSTANTE
 
@@ -119,6 +123,7 @@ onDestroy(cube_destroy)
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
 class="cube"
+style:--cube-color={prop_COLOR ?? COLORS.primary}
 style:transform="rotate({cube_ROTATE}rad) rotate3d(0, 1, 0, {cube_ROTATE_Y}rad)"
 on:mousedown={cube_eMouseDown}
 >
@@ -135,7 +140,15 @@ on:mousedown={cube_eMouseDown}
             prop_COLOR={COLORS[prop_FOCUS ? 'light' : 'intermediate']}
             prop_SPRING={false}
             >
-                <Logo />
+                {#if prop_SRC}
+                    <Image
+                    {prop_FOCUS}
+                    {prop_SRC}
+                    {prop_ALT}
+                    />
+                {:else}
+                    <Logo />
+                {/if}
             </Icon>
         </div>
     {/each}
@@ -168,6 +181,8 @@ lang="scss"
     {
         @extend %f-center;
     
+        backface-visibility: hidden;
+
         background-color: $dark;
 
         border: solid $intermediate calc(var(--content-size) * .05);
@@ -178,7 +193,7 @@ lang="scss"
 
         animation: aBuild 1.2s ease-in;
 
-        &.focus { border-color: $primary; }
+        &.focus { border-color: var(--cube-color, $primary); }
         &.grabbing { border-color: $indicator !important; }
 
         @keyframes aBuild
@@ -192,10 +207,10 @@ lang="scss"
         }
     }
     .side:nth-child(1) { transform: translate3d(0, 0, calc(var(--content-size) / 2))        rotate3d(0, 0, 0, 0); }
-    .side:nth-child(2) { transform: translate3d(0, -150%, 0)                                rotate3d(-1, 0, 0, 90deg); }
-    .side:nth-child(3) { transform: translate3d(-50%, -200%, 0)                             rotate3d(0, 1, 0, 90deg); }
-    .side:nth-child(4) { transform: translate3d(0, -250%, 0)                                rotate3d(1, 0, 0, 90deg); }
-    .side:nth-child(5) { transform: translate3d(50%, -400%, 0)                              rotate3d(0, -1, 0, 90deg); }
-    .side:nth-child(6) { transform: translate3d(0, -500%, calc(var(--content-size) / -2))   rotate3d(0, 0, 0, 0); }
+    .side:nth-child(2) { transform: translate3d(0, -150%, 0)                                rotate3d(1, 0, 0, 90deg); }
+    .side:nth-child(3) { transform: translate3d(-50%, -200%, 0)                             rotate3d(0, -1, 0, 90deg); }
+    .side:nth-child(4) { transform: translate3d(0, -250%, 0)                                rotate3d(-1, 0, 0, 90deg); }
+    .side:nth-child(5) { transform: translate3d(50%, -400%, 0)                              rotate3d(0, 1, 0, 90deg); }
+    .side:nth-child(6) { transform: translate3d(0, -500%, calc(var(--content-size) / -2))   rotate3d(0, 1, 0, 180deg); }
 }
 </style>
