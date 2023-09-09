@@ -82,7 +82,7 @@ constructor ()
         const PAGES = this.#router_PAGES
 
         for (let i = PAGES.length - 1; i >= 0; i--)
-            if (PAGES[i].offsetTop <= APP.app_scrollTop) return this.#router_updatePath(i, PAGES[i])
+            if (PAGES[i].offsetTop <= APP.app_SCROLLTOP) return this.#router_updatePath(i, PAGES[i])
     }
 
     // --UTIL

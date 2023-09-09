@@ -5,5 +5,4 @@
 // #EXPORT
 
     // --BREAKPOINTS
-
-    :export { @each $name, $point in breakpoints.$breakpoints { #{$name}: $point; } }
+    :export { @each $name, $point in breakpoints.$breakpoints { #{$name}: str-slice(#{$point}, 1, -3); } }

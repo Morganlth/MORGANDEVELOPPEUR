@@ -1,5 +1,7 @@
 <!-- #MAP
 
+-APP
+-EVENT
     SKILLS
         WRAPPER
             MOON
@@ -15,16 +17,20 @@
     // --PROPS
     export let
     prop_FOCUS = false,
-    prop_OFFSET_TOP = 0,
-    prop_BREAK = 0
+    prop_RATIO = 0,
+    prop_START = void 0
 
 // #IMPORTS
 
     // --JS
     import { SKILLS_CONTENT_DATAS } from '../../assets/js/datas/dSkills'
+    import { wait_throttle } from '../../assets/js/utils/wait'
+
+    // --CONTEXTS
+    import { APP, EVENT } from '../../App.svelte'
 
     // --SVELTE
-    import { onMount } from 'svelte'
+    import { onMount, onDestroy } from 'svelte'
 
     // --COMPONENT-COVER
     import Content from '../covers/Content.svelte'
@@ -32,22 +38,52 @@
     // --COMPONENT-ELEMENT
     import System from '../elements/System.svelte'
 
-// #VARIABLE
+// #CONSTANTE
+
+    // --ELEMENT-SKILLS
+    const SKILLS_EVENTS = { scroll: wait_throttle(skills_e$Scroll, 60), }
+
+// #VARIABLES
 
     // --ELEMENT-SKILLS
     let skills_CHARGED = false
 
-// #FUNCTION
+    // --ELEMENT-TITLE
+    let
+    title_END = 0,
+    title_INVISIBLE = false
+
+// #REACTIVE
+
+    // --ELEMENT-TITLE
+    $: prop_START != void 0 ? title_setVars() : void 0
+
+// #FUNCTIONS
 
     // --SET
     function skills_set()
     {
+        skills_setEvents()
+        
         skills_CHARGED = true
     }
 
-// #CYCLE
+    function skills_setEvents() { EVENT.event_add(SKILLS_EVENTS) }
+
+    function title_setVars() { title_END = prop_START + window.innerHeight }
+
+    // --DESTROY
+    function skills_destroy() { skills_destroyEvents() }
+
+    function skills_destroyEvents() { EVENT.event_remove(SKILLS_EVENTS) }
+
+    // --EVENT
+    async function skills_e$Scroll() { title_INVISIBLE = APP.app_SMALL_SCREEN && APP.app_SCROLLTOP > title_END ? true : false }
+
+// #CYCLES
 
 onMount(skills_set)
+onDestroy(skills_destroy)
 </script>
 
 <!-- #HTML -->
@@ -61,12 +97,12 @@ style:z-index={prop_FOCUS ? 1 : 0}
     >
         <System
         {prop_FOCUS}
-        {prop_OFFSET_TOP}
-        {prop_BREAK}
+        {prop_RATIO}
         />
 
         <Content
         prop_CHARGED={skills_CHARGED}
+        prop_INVISIBLE={title_INVISIBLE}
         {...SKILLS_CONTENT_DATAS}
         {prop_FOCUS}
         >

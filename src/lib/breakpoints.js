@@ -6,4 +6,9 @@
 // #EXPORT
  
     // --BREAKPOINTS
-    export default BREAKPOINTS
+    export default (() =>
+    {
+        for (const POINT in BREAKPOINTS) BREAKPOINTS[POINT] = parseInt(BREAKPOINTS[POINT], 10)
+
+        return BREAKPOINTS
+    })()

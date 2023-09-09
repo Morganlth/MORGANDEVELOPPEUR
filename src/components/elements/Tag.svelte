@@ -81,10 +81,11 @@
 <!-- #HTML -->
 
 {#if prop_FOCUS}
-    <h3
+    <button
     class="tag"
     style:position={prop_OPTIMISED ? 'relative' : 'absolute' }
     style:transform="translate({prop_X}px, {prop_Y}px)"
+    type="button"
     transition:tag_tFade
     on:introend={tag_intro}
     on:outrostart={tag_outroStart}
@@ -95,7 +96,7 @@
         prop_TRANSFORM={fragments_transform}
         prop_DURATION="var(--frag-duration, .3s)"
         />
-    </h3>
+    </button>
 {/if}
 
 <!-- #STYLE -->
@@ -107,6 +108,7 @@ lang="scss"
 
 @use 'sass:map';
 
+@use '../../assets/scss/styles/elements';
 @use '../../assets/scss/styles/position';
 @use '../../assets/scss/styles/font';
 
@@ -116,31 +118,47 @@ lang="scss"
 {
     &::before
     {
-        @include position.placement(absolute, auto, auto, -50%, -30%, true);
+        @include position.placement(absolute, auto, auto, 0, -8rem, true);
 
         transform: translateX(0) scale(1);
     
         width: 200%;
         height: 0;
 
-        border-top: solid $intermediate 2px;
+        pointer-events: none;
+
+        border-bottom: solid $intermediate 2px;
 
         animation: a .6s ease-out;
 
-        @keyframes a { from { transform: translateX(100%) scaleX(0) } }
+        transition: transform 1s ease-out, border .6s ease-out;
+
+        @keyframes a { from { transform: translateX(100%) scaleX(0); } }
     }
 
-    /* @include position.placement(absolute, 50%, 50%); */
     @include font.h-custom($light, var(--title-size, map.get(font.$font-sizes, s5)));
 
+    @extend %button-reset;
     @extend %m-h-3;
+
+    display: block;
 
     width: fit-content;
     height: fit-content;
 
     margin-bottom: 4rem;
+    padding: 2rem;
+
+    pointer-events: auto;
 
     transition: transform .3s;
+
+    &:hover::before
+    {
+        transform: translateX(8%);
+    
+        border-bottom-color: $light;
+    }
 
     :global
     {

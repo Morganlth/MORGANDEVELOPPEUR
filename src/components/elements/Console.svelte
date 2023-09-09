@@ -33,6 +33,9 @@
     // --COMPONENT-COVER
     import Icon from '../covers/Icon.svelte'
 
+    // --COMPONENT-ICON
+    import Arrow from '../icons/Arrow.svelte'
+
 // #CONSTANTES
 
     // --ELEMENT-CONSOLE
@@ -269,22 +272,12 @@ on:mouseleave={SPRING.spring_e$Show.bind(SPRING)}
         >
             <Icon
             prop_SIZE="1.2rem"
-            prop_COLOR={COLORS.primary}
+            prop_COLOR={COLORS[console_ON ? 'light' : 'primary']}
             prop_SPRING={false}
             >
-                <svg
-                viewBox="0 0 43 66"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                >
-                    <path
-                    d="M38 5L5 33L38 61"
-                    stroke="var(--icon-color)"
-                    stroke-width="9"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    />
-                </svg>
+                <Arrow
+                prop_FOCUS={console_ON}
+                />
             </Icon>
         </button>
 
@@ -375,7 +368,7 @@ $line-height: 8rem;
     display: flex;
     flex-direction: column-reverse;
 
-    transform: translateX(calc(100% - $btn-width));
+    transform: translateX(calc(100% - $btn-width - utils.$scroll-bar-width));
 
     overflow: hidden;
 
@@ -394,7 +387,7 @@ $line-height: 8rem;
 
         .output { opacity: 1; }
 
-        .input button svg { transform: scaleX(-1); }
+        .input { border-bottom-color: rgba($light, .3); }
     }
 
     &>*
@@ -415,17 +408,17 @@ $line-height: 8rem;
 
     .input
     {
-        @include utils.solid-border(rgba($light, .3), .7rem, true, false);
-
         @extend %f-a-center;
+
+        gap: utils.$scroll-bar-width;
 
         width: 100%;
 
-        background-color: $dark;
+        border-bottom: solid $intermediate 1px;
 
         box-sizing: border-box;
 
-        transition: opacity .4s;
+        transition: border .4s;
 
         &>button
         {
@@ -436,10 +429,6 @@ $line-height: 8rem;
 
             width: $btn-width;
             height: $line-height;
-
-            padding-right: 1rem;
-
-            box-sizing: border-box;
         }
 
         .line
@@ -447,6 +436,8 @@ $line-height: 8rem;
             position: relative;
 
             width: calc(100% - $btn-width);
+
+            backdrop-filter: hue-rotate(180deg);
 
             input, .mirror { @extend %any; }
             input

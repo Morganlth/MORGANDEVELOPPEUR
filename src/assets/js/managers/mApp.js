@@ -8,13 +8,14 @@ class App
     #app
     #app_$FREEZE = writable(false)
     #app_$HIDE = writable(false)
+    #app_SMALL_SCREEN = false
     #app_OPTIMISE = false
     #app_OPTIMISE_CONFIG = {}
     #app_STORAGE = {}
     #app_COMMANDS = []
     #app_TIMEOUT
 
-    app_scrollTop = 0
+    app_SCROLLTOP = 0
 
 // #CONSTRUCTOR
 
@@ -22,12 +23,10 @@ constructor ()
 {
     this.app_updateMode = this.app_updateMode.bind(this)
 
-    this.app_c$Optimise = this.app_c$Optimise.bind(this)
-
     this.#app_COMMANDS.push(
         {
             name: 'optimise',
-            callback: this.app_c$Optimise,
+            callback: this.app_c$Optimise.bind(this),
             params: { defaultValue: this.#app_OPTIMISE },
             tests: { testBoolean: true },
             storage: true
@@ -46,11 +45,14 @@ constructor ()
         this.#app_restore()
     }
 
-    #app_setVars() { this.#app = document.getElementById('app') }
+    #app_setVars()
+    {
+        this.#app = document.getElementById('app')
+
+        this.app_updateSmallScreen()
+    }
 
     #app_setCommands() { COMMAND.command_setBasicCommands(this.#app_COMMANDS) }
-
-    // #app_setFormat() { this.app_MOBILE = navigator.maxTouchPoints > 0 && navigator.userAgent.match(/(iPhone|iPad|Android)/i) ? true : false }
 
     // --RESTORE
     #app_restore()
@@ -74,7 +76,9 @@ constructor ()
         try { if (COMMAND.command_testCommand('clear')) COMMANDS.clear() } catch {}
     }
 
-    // --UPDATE
+    // --UPDATES
+    app_updateSmallScreen() { this.#app_SMALL_SCREEN = window.innerHeight < BREAKPOINTS.ms3 }
+
     app_updateMode(optimise)
     {
         if (optimise) this.app_saveStorage(this.#app_OPTIMISE_CONFIG)
@@ -85,7 +89,7 @@ constructor ()
     }
     
     // --COMMAND
-    app_c$Optimise(on) { COMMAND.command_test(on, 'boolean', this.app_updateMode, 'optimise', this.#app_OPTIMISE) }
+    app_c$Optimise(on) { COMMAND.command_test(on, 'boolean', this.app_updateMode, this.#app_COMMANDS[0].name, this.#app_OPTIMISE) }
 
     // --UTIL
     app_saveStorage(config = {}) { for (const NAME in config) this.#app_STORAGE[NAME] = localStorage.getItem(NAME) }
@@ -96,6 +100,8 @@ constructor ()
     get app_$FREEZE() { return this.#app_$FREEZE }
 
     get app_$HIDE() { return this.#app_$HIDE }
+
+    get app_SMALL_SCREEN() { return this.#app_SMALL_SCREEN }
 
     get app_OPTIMISE() { return this.#app_OPTIMISE }
 
@@ -127,6 +133,9 @@ constructor ()
 }
 
 // #IMPORTS
+
+    // --LIB
+    import BREAKPOINTS from '$lib/breakpoints'
 
     // --CONTEXT
     import COMMAND from './mCommand'

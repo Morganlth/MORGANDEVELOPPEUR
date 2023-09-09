@@ -59,7 +59,7 @@ constructor () { this.event_resize = wait_debounce.call(this, this.event_resize,
         {
             const SCROLLTOP = target.scrollTop
 
-            APP.app_scrollTop = SCROLLTOP
+            APP.app_SCROLLTOP = SCROLLTOP
 
             this.event_run.call(this.event_MANAGER.scroll, SCROLLTOP)
 
@@ -87,7 +87,12 @@ constructor () { this.event_resize = wait_debounce.call(this, this.event_resize,
 
     event_mouseUp() { this.event_run.call(this.event_MANAGER.mouseUp) }
 
-    event_resize() { this.event_run.call(this.event_MANAGER.resize) }
+    event_resize()
+    {
+        APP.app_updateSmallScreen()
+
+        this.event_run.call(this.event_MANAGER.resize)
+    }
 
     event_touchMove(e)
     {
@@ -143,7 +148,7 @@ constructor () { this.event_resize = wait_debounce.call(this, this.event_resize,
 
     event_scrollTo(top, behavior = 'smooth')
     {
-        if (Math.abs(APP.app_scrollTop - top) > window.innerHeight * 2) APP.app_$HIDE = true
+        if (Math.abs(APP.app_SCROLLTOP - top) > window.innerHeight * 2) APP.app_$HIDE = true
     
         ;(APP.app ?? document.getElementById('app')).scrollTo({ top: top, behavior: behavior })
     }

@@ -14,6 +14,9 @@
 <script>
 // #IMPORTS
 
+    // --JS
+    import { wait_throttle } from '../../assets/js/utils/wait'
+
     // --CONTEXTS
     import { APP, ROUTER, EVENT } from '../../App.svelte'
 
@@ -35,30 +38,31 @@
             id: 2,
             name: 'skills',
             component: Skills,
-            props:
-            {
-                prop_OFFSET_TOP: 9,
-                prop_BREAK: 4
-            }
+            start: 8,
+            end: 4,
+            props: {}
         },
         {
             id: 1,
             name: 'presentation',
             component: Presentation,
-            props:
-            {
-                prop_OFFSET_TOP: 1,
-                prop_BREAK: 8
-            }
+            start: 1,
+            end: 7,
+            props: {}
         },
         {
             id: 0,
             name: 'home',
             component: Home,
-            props: { prop_BREAK: 1 }
+            end: 1,
+            props: {}
         }
     ],
-    PAGES_EVENTS = { resize: pages_e$Resize }
+    PAGES_EVENTS =
+    {
+        scroll: wait_throttle(pages_e$Scroll, 20),
+        resize: pages_e$Resize
+    }
 
 // #VARIABLES
 
@@ -73,22 +77,57 @@
     // --SET
     function pages_set()
     {
+        pages_setVars()
         pages_setEvents()
     
         router_setPages()
     }
 
+    function pages_setVars()
+    {
+        const HEIGHT = window.innerHeight
+
+        for (const PAGE of PAGES_PAGES)
+        {
+            PAGE.props.prop_START = (PAGE.start ?? 0) * HEIGHT
+            PAGE.props.prop_END = PAGE.end * HEIGHT
+        }
+    }
+
     function pages_setEvents() { EVENT.event_add(PAGES_EVENTS) }
 
-    function router_setPages() { for (const PAGES of PAGES_PAGES) ROUTER.router_add(PAGES.id, PAGES.name, window.innerHeight * (PAGES.props.prop_OFFSET_TOP ?? 0)) }
+    function router_setPages() { for (const PAGES of PAGES_PAGES) ROUTER.router_add(PAGES.id, PAGES.name, PAGES.props.prop_START) }
 
     // --DESTROY
     function pages_destroy() { pages_destroyEvents() }
 
     function pages_destroyEvents() { EVENT.event_remove(PAGES_EVENTS) }
 
-    // --EVENT
-    async function pages_e$Resize() { router_setPages() }
+    // --GET
+    function pages_getHeight()
+    {
+        const { start, end } = PAGES_PAGES[0]
+    
+        return (start + end + 1) * 100
+    }
+
+    // --EVENTS
+    async function pages_e$Scroll(scrollTop)
+    {
+        for (const PAGE of PAGES_PAGES)
+        {
+            PAGE.props.prop_RATIO = (scrollTop - PAGE.props.prop_START) / PAGE.props.prop_END
+
+            PAGES_PAGES[PAGE] = PAGE
+        }
+    }
+
+    async function pages_e$Resize()
+    {
+        pages_setVars()
+
+        router_setPages()
+    }
 
 // #CYCLES
 
@@ -101,6 +140,7 @@ onDestroy(pages_destroy)
 <main
 class="pages"
 class:hide={$app_$HIDE}
+style:height="{pages_getHeight()}vh"
 >
     {#each PAGES_PAGES as page}
         <svelte:component
@@ -123,7 +163,6 @@ class:hide={$app_$HIDE}
     opacity: 1;
 
     width: 100%;
-    height: 1400vh;
 
     transition: opacity .2s;
 

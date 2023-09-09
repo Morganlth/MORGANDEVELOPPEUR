@@ -75,6 +75,8 @@ footer
 
     padding: 0 app.$gap-inline app.$gap-block;
 
+    pointer-events: none;
+
     box-sizing: border-box;
 
     nav { width: 50%; }
@@ -96,6 +98,8 @@ footer
 
             padding: .5rem 1rem 0;
 
+            pointer-events: auto;
+    
             text-decoration: none;
         }
 

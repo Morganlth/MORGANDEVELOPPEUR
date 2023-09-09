@@ -1,6 +1,5 @@
 <!-- #MAP
 
--EVENT
     HOME
         WRAPPER
             PARTICLES
@@ -23,7 +22,7 @@
     // --PROPS
     export let
     prop_FOCUS = false,
-    prop_BREAK = 0
+    prop_RATIO = 0
 
 // #IMPORTS
 
@@ -34,11 +33,8 @@
     // --LIB
     import COLORS from '$lib/colors'
 
-    // --CONTEXT
-    import { EVENT } from '../../App.svelte'
-
     // --SVELTE
-    import { onMount, onDestroy } from 'svelte'
+    import { onMount } from 'svelte'
 
     // --COMPONENT-COVERS
     import Content from '../covers/Content.svelte'
@@ -49,7 +45,6 @@
     // --COMPONENT-ELEMENTS
     import Cube from '../elements/Cube.svelte'
     import Mask from '../elements/Mask.svelte'
-    import TicTacToe from '../elements/TicTacToe.svelte'
 
     // --COMPONENT-ICON
     import Logo from '../icons/Logo.svelte'
@@ -58,21 +53,7 @@
     import Particles from '../decors/Particles.svelte'
     import SpaceCube from '../decors/SpaceCube.svelte'
 
-// #CONSTANTES
-
-    // --ELEMENT-HOME
-    const HOME_EVENTS =
-    {
-        scroll: home_e$Scroll,
-        resize: home_e$Resize
-    }
-
 // #VARIABLES
-
-    // --ELEMENT-HOME
-    let
-    home_END,
-    home_SCROLL_RATIO = 0
 
     // --ELEMENT-SPACECUBE
     let
@@ -87,37 +68,17 @@
 // #FUNCTIONS
 
     // --SET
-    function home_set()
-    {
-        home_setVars()
-        home_setEvents()
-
-        group_start()
-    }
-
-    function home_setVars() { home_END = window.innerHeight * prop_BREAK }
-
-    function home_setEvents() { EVENT.event_add(HOME_EVENTS) }
-
-    // --DESTROY
-    function home_destroy() { home_destroyEvents() }
-
-    function home_destroyEvents() { EVENT.event_remove(HOME_EVENTS) }
+    function home_set() { group_start() }
 
     // --EVENTS
-    async function home_e$Scroll(scrollTop) { home_SCROLL_RATIO = scrollTop / home_END }
-
-    async function home_e$Resize() { home_setVars() }
-
     async function cube_eClick(id)
     {
         if (id === 0) spacecube_TICTACTOE = true
     }
 
-// #CYCLES
+// #CYCLE
 
 onMount(home_set)
-onDestroy(home_destroy)
 </script>
 
 <!-- #HTML -->
@@ -132,8 +93,8 @@ style:z-index={prop_FOCUS ? 1 : 0}
         <Particles />
 
         <SpaceCube
-        prop_RATIO={home_SCROLL_RATIO}
         prop_TICTACTOE={spacecube_TICTACTOE}
+        {prop_RATIO}
         bind:spacecube_CHARGED
         />
         
@@ -141,7 +102,7 @@ style:z-index={prop_FOCUS ? 1 : 0}
         prop_BLUR={true}
         prop_COORDS={[68, 50]}
         prop_GRADIENT={[0, 80]}
-        prop_RATIO={1 - home_SCROLL_RATIO}
+        prop_RATIO={1 - prop_RATIO}
         />
 
         <Content
@@ -173,7 +134,7 @@ style:z-index={prop_FOCUS ? 1 : 0}
             {...cube}
             prop_e$RESIZE={resize}
             prop_e$ANIMATION={animation}
-            prop_GRABBING={!home_SCROLL_RATIO}
+            prop_GRABBING={!prop_RATIO}
             >
                 <Cube
                 prop_$ROTATION={rotation}

@@ -27,12 +27,11 @@
     },
     prop_INFO = '',
     prop_CHARGED = false,
-    prop_FOCUS = false
+    prop_FOCUS = false,
+    prop_INVISIBLE = false
 
     // --BIND
-    export let
-    title_INVISIBLE = false,
-    title_HEIGHT = 0
+    export let title_HEIGHT = 0
 
 // #IMPORTS
 
@@ -149,7 +148,7 @@ style:opacity={content_OPACITY}
     <svelte:element
     this={prop_TITLE.htmlElement}
     class="title"
-    class:invisible={title_INVISIBLE}
+    class:invisible={prop_INVISIBLE}
     bind:offsetHeight={title_HEIGHT}
     >
         {#each prop_TITLE.contents as content}

@@ -135,6 +135,7 @@ context="module"
 // #CYCLES
 
 onMount(app_set)
+
 afterUpdate(() => app_update())
 </script>
 

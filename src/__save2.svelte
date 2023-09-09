@@ -1,594 +1,322 @@
 <!-- #MAP
 
--ROUTER
+-COMMAND
 -EVENT
-    HOME
-        WRAPPER
-            PARTICLES
-            SPACECUBE
+    SYSTEM
+        MOON
+        GROUP
+            ORBIT * 5
+                GRAVITYAREA
+                    CUBES
 
-            CONTENT
-                LANG
-                TITLE
-                    TEXT * 2
-                    LOGO
-
-                UNDERTITLE
-                    PAGELINK
-                    TICTACTOE
-
-        CUBES
-            GRAVITYAREA * 3
-                CUBE
+        TAG
 
 -->
 
 <!-- #SCRIPT -->
 
-<script
-context="module"
->
-// #EXPORTS
-
-    // --CONTEXTS
-    export const HOME_$Z = writable(1)
-</script>
-
 <script>
-// #IMPORTS
-
-    // --JS
-    import HOME_PAGE_LINKS from '../../assets/js/datas/home_page_links'
-    import HOME_CUBES from '../../assets/js/datas/home_cubes'
-    import MATH from '../../assets/js/utils/math'
-    import { wait_throttle } from '../../assets/js/utils/wait'
-
-    // --LIB
-    import COLORS from '$lib/colors'
-
-    // --CONTEXT
-    import { ROUTER, EVENT } from '../../App.svelte'
-
-    // --SVELTE
-    import { onMount, onDestroy } from 'svelte'
-    import { writable } from 'svelte/store'
-
-    // --COMPONENT-ELEMENT
-    import Cube from '../elements/Cube.svelte'
-    import TicTacToe from '../elements/TicTacToe.svelte'
-
-    // --COMPONENT-COVERS
-    import GravityArea from '../covers/GravityArea.svelte'
-    import Icon from '../covers/Icon.svelte'
-
-    // --COMPONENT-ICON
-    import Logo from '../icons/Logo.svelte'
-
-    // --COMPONENT-DECORS
-    import Particles from '../decors/Particles.svelte'
-    import SpaceCube from '../decors/SpaceCube.svelte'
-
-// #CONSTANTES
-
-    // --ELEMENT-HOME
-    const HOME_EVENTS = { resize: home_e$Resize }
-
-    // --ELEMENT-WRAPPER
-    const WRAPPER_EVENTS = { scroll: wrapper_e$Scroll }
-
-    // --ELEMENT-TITLE
-    const
-    TITLE_CHILDREN = [],
-    TITLE_EVENTS = {}
-
-    // --ELEMENT-PAGELINKS
-    const PAGELINKS_CHILDREN = []
-
-    // --ELEMENT-CUBES
-    const
-    CUBES_RESIZE = [],
-    CUBES_ANIMATION_UPDATE = [],
-    CUBES_EVENTS = { animation: wait_throttle(cubes_e$Animation, 100) }
-
-// #VARIABLES
-
-    // --ELEMENT-WRAPPER
-    let
-    wrapper,
-    wrapper_HEIGHT,
-    wrapper_AVAILABLE_HEIGHT,
-    wrapper_SCROLL_RATIO = 0
-
-    // --ELEMENT-SPACECUBE
-    let
-    spacecube_CHARGED = false,
-    spacecube_TICTACTOE = false
-
-    // --ELEMENT-TITLE
-    let
-    title_OPACITY = 0,
-    title_TRANSITION_DELAY = 0,
-    title_LAST = +new Date(),
-    title_I = 0,
-    title_J = 0
-
-    // --ELEMENT-PAGELINKS
-    let pagelinks_CHARGED = false
-
-// #REACTIVE
-
-    // --ELEMENT-SPACECUBE
-    $: spacecube_CHARGED ? home_intro() : void 0
-
-// #FUNCTIONS
-
-    // --SET
-    function home_set()
-    {
-        home_setPage()
-        home_setEvents()
-
-        wrapper_setVars()
-        wrapper_setEvents()
+    // #EXPORTS
     
-        cubes_setEvents()
-    }
-
-    function home_setPage() { ROUTER.router_add(0, 'home', 0) }
-
-    function home_setEvents() { EVENT.event_add(HOME_EVENTS) }
-
-    function wrapper_setVars()
-    {
-        wrapper_HEIGHT = wrapper.offsetHeight,
-        wrapper_AVAILABLE_HEIGHT = wrapper.parentNode.offsetHeight - wrapper_HEIGHT
-    }
-    function wrapper_setEvents() { EVENT.event_add(WRAPPER_EVENTS) }
-
-    function cubes_setEvents() { EVENT.event_add(CUBES_EVENTS) }
-
-    // --DESTROY
-    function home_destroy()
-    {
-        home_destroyEvents()
-
-        wrapper_destroyEvents()
-
-        cubes_destroyEvents()
-    }
-
-    function home_destroyEvents() { EVENT.event_remove(HOME_EVENTS) }
-
-    function wrapper_destroyEvents() { EVENT.event_remove(WRAPPER_EVENTS) }
-
-    function cubes_destroyEvents() { EVENT.event_remove(CUBES_EVENTS) }
-
-    // --GET
-    function title_getTranslate3d()
-    {
+        // --PROPS
+        export let
+        prop_FOCUS = false,
+        prop_RATIO = 0
+    
+        // --BIND
+        export let system_OPTIMISED = false
+    
+    // #IMPORTS
+    
+        // --JS
+        import { SYSTEM_ORBITS_DATAS } from '../../assets/js/datas/dSystem'
+        import { wait_throttle } from '../../assets/js/utils/wait'
+    
+        // --CONTEXTS
+        import { COMMAND, EVENT } from '../../App.svelte'
+    
+        // --SVELTE
+        import { onMount, onDestroy } from 'svelte'
+    
+        // --COMPONENT-COVERS
+        import Group from '../covers/Group.svelte'
+        import Orbit from '../covers/Orbit.svelte'
+        import GravityArea from '../covers/GravityArea.svelte'
+    
+        // --COMPONENT-ELEMENTS
+        import Tag from './Tag.svelte'
+        import Cube from './Cube.svelte'
+    
+        // --COMPONENT-DECOR
+        import Moon from '../decors/Moon.svelte'
+    
+    // #CONSTANTES
+    
+        // --ELEMENT-SYSTEM
         const
-        GET = () => Math.random() * 4000 - 2000,
-        [X, Y, Z] = [GET(), GET(), GET()]
-
-        return `translate3d(${X}px, ${Y}px, ${Z}px)`
-    }
-
-    // --UPDATES
-    function home_update(off)
-    {
-        HOME_$Z.set(off ? 0 : 1)
-    
-        if (spacecube_CHARGED) title_update(off)
-    }
-
-    function title_update(off)
-    {
-        off
-        ?   title_OPACITY
-            ? title_outro()
-            : void 0
-        :   !title_OPACITY
-            ? title_intro()
-            : void 0
-    }
-
-    function pagelinks_update()
-    {
-        HOME_PAGE_LINKS[0].on = true
-
-        pagelinks_CHARGED = true
-    }
-
-    // --EVENTS
-    async function home_e$Resize()
-    {
-        wrapper_setVars()
-
-        for (const RESIZE of CUBES_RESIZE) RESIZE()
-    }
-
-    async function wrapper_e$Scroll()
-    {
-        wrapper_SCROLL_RATIO = wrapper.offsetTop / wrapper_AVAILABLE_HEIGHT
-
-        home_update(wrapper_SCROLL_RATIO > .66)
-    }
-
-    async function pagelinks_eClick(id)
-    {
-        if (pagelinks_CHARGED)
-        {
-            const LINK = HOME_PAGE_LINKS[id]
-
-            if (LINK.on) return
-
-            try { HOME_PAGE_LINKS.find(link => link.on).on = false } catch { /* recuperer le chemin dans l'url pour définir le lien sélectionné */ }
-
-            HOME_PAGE_LINKS[id] = { ...LINK, on: true }
-        }
-    }
-
-    async function cubes_e$Animation() { for (const UPDATE of CUBES_ANIMATION_UPDATE) UPDATE() }
-
-    async function cube_eClick(id)
-    {
-        if (id === 0) spacecube_TICTACTOE = true
-    }
-
-    // --INTROS
-    async function home_intro()
-    {
-        title_TRANSITION_DELAY = '1.2s'
-
-        if (wrapper_SCROLL_RATIO < .66) title_intro()
-
-        // setTimeout(pagelinks_intro, 1200)
-    }
-
-    async function title_intro()
-    {
-        title_OPACITY = 1
-
-        for (const CHILD of TITLE_CHILDREN) CHILD.style.transform = 'translate3d(0, 0, 0)'
-    }
-
-    async function pagelinks_intro()
-    {
-        await new Promise(resolve =>
-        {
-            TITLE_EVENTS.animation = pagelinks_a$Writing.bind(null, resolve)
-            
-            EVENT.event_add(TITLE_EVENTS)
-        })
-
-        EVENT.event_remove(TITLE_EVENTS)
-
-        pagelinks_update()
-    }
-
-    // --OUTRO
-    async function title_outro()
-    {
-        title_OPACITY = 0
-
-        for (const CHILD of TITLE_CHILDREN) CHILD.style.transform = title_getTranslate3d()
-    }
-
-    // --ANIMATION
-    async function pagelinks_a$Writing(resolve)
-    {
-        const
-        NOW = +new Date(),
-        GAP = NOW - title_LAST
-
-        for (let k = title_I; k < title_J; k++) PAGELINKS_CHILDREN[k].innerText = [' ', '>'][Math.round(Math.random())]
-
-        if (GAP > 33.34)
-        {
-            const MAX = PAGELINKS_CHILDREN.length - 1
-
-            if (title_J < MAX && title_J < title_I + 5) title_J++
-    
-            if (GAP > 50)
+        SYSTEM_COMMANDS =
+        [
             {
-                const CHILD = PAGELINKS_CHILDREN[title_I]
-
-                CHILD.innerText = CHILD.dataset.char
-
-                if (title_I++ >= MAX) resolve()
-
-                title_LAST = NOW
+                name: 'system_optimise',
+                callback: system_c$Optimise,
+                params: { defaultValue: false, optimise: { value: true } },
+                tests: { testBoolean: true },
+                storage: true
             }
+        ],
+        SYSTEM_EVENTS =
+        {
+            scroll: wait_throttle(system_e$Scroll, 60),
+            resize: system_e$Resize
         }
-    }
-// #CYCLES
-
-onMount(home_set)
-onDestroy(home_destroy)
-</script>
-
-<!-- #HTML -->
-
-<div
-id="home"
-style:z-index={$HOME_$Z}
->
+    
+        // --ELEMENT-GROUP
+        const
+        GROUP_Z_POSITIONS = new Float64Array(SYSTEM_ORBITS_DATAS.length),
+        GROUP_EVENTS = { mouseMove: wait_throttle(group_e$MouseMove, 50) }
+    
+    // #VARIABLES
+    
+        // --ELEMENT-SYSTEM
+        let
+        system_CHARGED = false,
+        system_START,
+        system_END,
+        system_SCROLL_RATIO = 0,
+        group_ROTATE_X = 0,
+        group_ROTATE_Y = 0
+    
+        // --ELEMENT-GROUP
+        let
+        group_TIMEOUT,
+        group_start,
+        group_stop
+    
+        // --ELEMENT-ORBIT
+        let orbit_RADIUS = 0
+    
+    // #REACTIVE
+    
+        // --ELEMENT-GROUP
+        $: system_CHARGED
+            ? prop_FOCUS
+                ? system_start()
+                : system_stop()
+            : void 0
+    
+    // #FUNCTIONS
+    
+        // --SET
+        function system_set()
+        {
+            system_setVars()
+            system_setCommands()
+            system_setEvents()
+    
+            system_CHARGED = true
+        }
+    
+        function system_setVars() { orbit_setVars() }
+    
+        function system_setCommands() { COMMAND.command_setBasicCommands(SYSTEM_COMMANDS) }
+    
+        function system_setEvents() { EVENT.event_add(SYSTEM_EVENTS) }
+    
+        function group_setEvents() { EVENT.event_add(GROUP_EVENTS) }
+    
+        function orbit_setVars() { orbit_RADIUS = Math.min(window.innerWidth * .3, window.innerHeight * .6) }
+    
+        // --DESTROY
+        function system_destroy() { system_destroyEvents() }
+    
+        function system_destroyEvents()
+        {
+            EVENT.event_remove(SYSTEM_EVENTS)
+    
+            group_destroyEvents()
+        }
+    
+        function group_destroyEvents() { EVENT.event_remove(GROUP_EVENTS) }
+    
+        // --GET
+        function group_getIndexFocus()
+        {
+            let index = GROUP_Z_POSITIONS.indexOf(Math.max(...GROUP_Z_POSITIONS))
+    
+            if (!~index) index = 0
+    
+            return index
+        }
+    
+        // --UPDATES
+        function system_update(optimised)
+        {
+            system_OPTIMISED = optimised
+    
+            optimised ? system_stop() : system_start()
+    
+            group_updateFocus()
+        }
+    
+        function group_update()
+        {
+            clearTimeout(group_TIMEOUT)
+    
+            group_updateFocus()
+    
+            group_TIMEOUT = setTimeout(group_updateFocus, 100)
+        }
+    
+        function group_updateFocus()
+        {
+            const INDEX = prop_FOCUS && !system_OPTIMISED ? group_getIndexFocus() : void 0
+    
+            for (let i = 0; i < GROUP_Z_POSITIONS.length; i++) SYSTEM_ORBITS_DATAS[i] = { ...SYSTEM_ORBITS_DATAS[i], focus: i === INDEX }
+        }
+    
+        // --COMMAND
+        function system_c$Optimise(optimised) { COMMAND.command_test(optimised, 'boolean', system_update, SYSTEM_COMMANDS[0].name, system_OPTIMISED) }
+    
+        // --EVENTS
+        async function system_e$Scroll()
+        {
+            if (system_OPTIMISED) return
+    
+            // system_SCROLL_RATIO = (scrollTop - system_START) / system_END
+    
+            if (prop_FOCUS) group_update()
+        }
+    
+        async function system_e$Resize() { system_setVars() }
+    
+        async function group_e$MouseMove(clientX, clientY)
+        {
+            const
+            VW50 = window.innerWidth * .5,
+            VH50 = window.innerHeight * .5
+            
+            group_ROTATE_X = (clientY - VH50) / VH50
+            group_ROTATE_Y = (clientX - VW50) / VW50
+        }
+    
+        // --CONTROLS
+        function system_start()
+        {
+            if (system_OPTIMISED) return
+    
+            group_setEvents()
+    
+            group_start()
+        }
+    
+        function system_stop()
+        {
+            group_destroyEvents()
+            
+            group_stop()
+        }
+    
+    // #CYCLES
+    
+    onMount(system_set)
+    onDestroy(system_destroy)
+    </script>
+    
+    <!-- #HTML -->
+    
     <div
-    class="wrapper"
-    bind:this={wrapper}
+    class="system"
+    class:focus={prop_FOCUS}
     >
-        <Particles />
-
-        <SpaceCube
-        prop_RATIO={wrapper_SCROLL_RATIO}
-        prop_TICTACTOE={spacecube_TICTACTOE}
-        bind:spacecube_CHARGED
-        />
-
-        <div
-        class="content"
+        <Group
+        let:resize
+        let:animation
+        prop_STYLE="
+        position: absolute;
+        display: flex; justify-content: center; align-items: center;
+        transform-style: preserve-3d;
+        transform: rotate3d({group_ROTATE_X}, {group_ROTATE_Y}, 0, .03rad);
+        transition: transform .3s;"
+        bind:group_start
+        bind:group_stop
         >
-            <section
-            style:opacity={title_OPACITY}
-            style:transition="opacity {title_TRANSITION_DELAY} ease-in"
-            >
-                <div
-                class="lang"
-                >
-                    FR
-                </div>
-        
-                <h1
-                class="title"
-                >
-                    {#each ['DEVELOPPEUR', 'WEB'] as string}
-                        <div
-                        class="text"
-                        >
-                            {#each string as char}
-                                <span
-                                style:transform={title_getTranslate3d()}
-                                style:transition="transform {title_TRANSITION_DELAY} ease-out"
-                                bind:this={TITLE_CHILDREN[TITLE_CHILDREN.length]}
-                                >{char}</span>
-                            {/each}
-                        </div>
-                    {/each}
-
-                    <div
-                    class="logo"
-                    style:transform={title_getTranslate3d()}
-                    style:transition="transform {title_TRANSITION_DELAY} ease-out"
-                    bind:this={TITLE_CHILDREN[TITLE_CHILDREN.length]}
-                    >
-                        <Icon
-                        prop_COLOR={COLORS.light}
-                        prop_SPRING={false}
-                        >
-                            <Logo />
-                        </Icon>
-                    </div>
-                </h1>
-            </section>
-        
-            <nav
-            class="pagelinks"
-            >
-                <ul>
-                    <!-- svelte-ignore a11y-no-static-element-interactions a11y-missing-attribute -->
-                    {#each HOME_PAGE_LINKS as link, id}
-                        <li>
-                            <a
-                            class:selected={link.on}
-                            aria-label={link.label}
-                            {...link.attributes}
-                            on:click|preventDefault={pagelinks_eClick.bind(null, id)}
-                            >
-                                {#each link.content as char}
-                                    <span
-                                    data-char={char}
-                                    bind:this={PAGELINKS_CHILDREN[PAGELINKS_CHILDREN.length]}
-                                    >&nbsp;</span>
-                                {/each}
-                            </a>
-                        </li>
-                    {/each}
-                </ul>
-            </nav>
-        </div>
-    </div>
-
-    <div
-    class="cubes"
-    >
-        {#each HOME_CUBES as cube, i}
-            <GravityArea
-            let:rotation
-            let:grabbing
-            {...cube}
-            prop_GRABBING={!wrapper_SCROLL_RATIO}
-            prop_ANIMATION_UPDATE={CUBES_ANIMATION_UPDATE}
-            bind:gravityarea_e$Resize={CUBES_RESIZE[i]}
-            >
-                <Cube
-                prop_$ROTATION={rotation}
-                prop_$GRABBING={grabbing}
-                prop_ROTATE={Math.random() * MATH.PI.x2}
-                prop_ROTATE_Y={Math.random() * MATH.PI.x2}
-                on:click={cube_eClick.bind(null, i)}
-                />
-            </GravityArea>
-        {/each}
-    </div>
-</div>
-
-<!-- #STYLE -->
-
-<style
-lang="scss"
->
-/* #USES */
-
-@use 'sass:map';
-
-@use '../../assets/scss/app';
-
-@use '../../assets/scss/styles/position';
-@use '../../assets/scss/styles/display';
-@use '../../assets/scss/styles/size';
-@use '../../assets/scss/styles/font';
-@use '../../assets/scss/styles/animation';
-@use '../../assets/scss/styles/media';
-
-/* #HOME */
-
-#home
-{
-    &, .wrapper { width: 100%; }
-
-    position: relative;
-
-    height: 300vh;
-
-    .wrapper
-    {
-        @include position.placement(sticky, 0, auto, auto, 0);
-
-        overflow: hidden;
-
-        height: 100vh;
-
-        padding: 10rem app.$gap-inline 0;
-
-        pointer-events: none;
-
-        box-sizing: border-box;
-
-        @include media.min(false, $ms2) { padding-top: max(11rem, 70px); }
-    }
-
-    .content
-    {
-        @extend %f-column;
-        @extend %any;
-
-        position: relative;
-
-        z-index: 1;
-
-        justify-content: space-between;
+            <Moon />
     
-        max-height: 65%;
-
-        pointer-events: none;
-
-        .lang, .title, .pagelinks { user-select: none; }
-
-        .lang { @include font.interact($light, map.get(font.$font-sizes, s2), 1, map.get(font.$content-font-weight, w1)); }
-
-        .title
-        {
-            #{--title-size}: map.get(font.$font-sizes, s6); 
-            --icon-size: calc(var(--title-size) * .71);
-
-            @include font.h-(1);
-
-            perspective: 400px;
-
-            width: fit-content;
-            height: fit-content;
-
-            margin-block: 1rem 3rem;
-
-            &>div { transform-style: preserve-3d; }
-            .text span { display: inline-block; }
-            .logo { margin-top: .9rem; }
-
-            @include media.min($ms2) { #{--title-size}: map.get(font.$font-sizes, s7); }
-            @include media.min($ms3, $ms3)
-            {
-                #{--title-size}: map.get(font.$font-sizes, s8);
-
-                margin-top: 3rem;
-
-                .text
-                {
-                    &::before
-                    {
-                        @include position.placement(absolute, -.7rem, auto, auto, 0, true);
-
-                        width: 2.4rem;
-                        height: 2.4rem;
-
-                        background-color: $primary;
-                    }
-
-                    position: relative;
-        
-                    padding-left: app.$gap-inline;
-                }
-                .text:nth-child(1) { margin-left: app.$gap-inline; }
-            }
-        }
-
-        .pagelinks
-        {
-            width: fit-content;
-            height: fit-content;
-
-            ul
-            {
-                display: flex;
-
-                gap: 1rem;
-
-                @include media.min(false, $ms3)
-                {
-                    display: block;
-            
-                    gap: 0;
-                }
-            }
-
-            a
-            {
-                @include font.interact($light, 2.4rem, 1.5);
-
-                @extend %any;
-                @extend %selected;
-
-                position: relative;
-
-                display: inline-block;
-        
-                transform: rotate(-.7deg);
-        
-                margin-bottom: .5rem;
-                padding-inline: 1rem;
-
-                pointer-events: auto;
-        
-                box-sizing: border-box;
-
-                text-decoration: none;
-            }
-        }
-    }
-
-    .cubes
+            {#each SYSTEM_ORBITS_DATAS as orbit, i}
+                <Orbit
+                prop_ROTATE={orbit.props.prop_ROTATE}
+                >
+                    <GravityArea
+                    let:rotation
+                    let:grabbing
+                    prop_e$RESIZE={resize}
+                    prop_e$ANIMATION={animation}
+                    prop_FOCUS={orbit.focus ?? false}
+                    prop_RATIO={system_SCROLL_RATIO}
+                    prop_GRABBING={false}
+                    prop_ORBIT_RADIUS={orbit_RADIUS}
+                    prop_ROTATE={orbit.props.prop_ROTATE}
+                    prop_OFFSET={orbit.props.prop_OFFSET}
+                    prop_FORCE={.2}
+                    bind:gravityarea_TRANSLATE_Z={GROUP_Z_POSITIONS[i]}
+                    >
+                        <Cube
+                        prop_$ROTATION={rotation}
+                        prop_$GRABBING={grabbing}
+                        prop_FOCUS={orbit.focus ?? false}
+                        prop_ROTATE={orbit.props.prop_ROTATE}
+                        prop_SRC={orbit.props.prop_SRC}
+                        prop_ALT={orbit.props.prop_ALT}
+                        prop_COLOR={orbit.props.prop_COLOR}
+                        />
+                    </GravityArea>
+                </Orbit>
+            {/each}
+        </Group>
+    
+        <Group
+        prop_STYLE="
+        position: absolute;
+        top: 51%;
+        left: 0;
+        transform: translateY(-50%);
+        width: fit-content;
+        height: fit-content;"
+        >
+            {#each SYSTEM_ORBITS_DATAS as orbit}
+                <Tag
+                prop_FOCUS={(orbit.focus ?? false) || system_OPTIMISED && prop_FOCUS}
+                prop_OPTIMISED={system_OPTIMISED}
+                prop_CONTENT={orbit.tag}
+                prop_X={group_ROTATE_Y * 6}
+                prop_Y={group_ROTATE_X * 6}
+                />
+            {/each}
+        </Group>
+    </div>
+    
+    <!-- #STYLE -->
+    
+    <style
+    lang="scss"
+    >
+    /* #USE */
+    
+    @use '../../assets/scss/styles/position';
+    
+    /* #SYSTEM */
+    
+    .system
     {
-        --content-ratio: .27;
-
-        @include position.placement(absolute, 0, 0, 0, 0);
-
-        @extend %any;
-
-        pointer-events: none;
-
-        @include media.min($ms3, $ms2) { --content-ratio: .35; }
-        @include media.min($ms4, $ms3) { --content-ratio: .5; }
-        @include media.min($ms5, $ms4) { --content-ratio: .75; }
-        @include media.min($ms6, $ms4) { --content-ratio: 1; }
+        @include position.placement(absolute, 0, auto, 0, 50vw);
+    
+        transform: translate(30%, -30%) scale(.2);
+    
+        width: 50vw;
+        height: 100%;
+    
+        transition: transform .6s;
+    
+        &.focus { transform: scale(1); }
     }
-}
-</style>
+    </style>

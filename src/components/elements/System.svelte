@@ -21,8 +21,7 @@
     // --PROPS
     export let
     prop_FOCUS = false,
-    prop_OFFSET_TOP,
-    prop_BREAK
+    prop_RATIO = 0
 
 // #IMPORTS
 
@@ -51,8 +50,7 @@
 // #CONSTANTES
 
     // --ELEMENT-SYSTEM
-    const
-    SYSTEM_COMMANDS =
+    const SYSTEM_COMMANDS =
     [
         {
             name: 'system_optimise',
@@ -61,32 +59,31 @@
             tests: { testBoolean: true },
             storage: true
         }
-    ],
-    SYSTEM_EVENTS =
-    {
-        scroll: wait_throttle(system_e$Scroll, 60),
-        resize: system_e$Resize
-    }
+    ]
 
     // --ELEMENT-GROUP
     const
     GROUP_Z_POSITIONS = new Float64Array(SYSTEM_ORBITS_DATAS.length),
-    GROUP_EVENTS = { mouseMove: wait_throttle(group_e$MouseMove, 50) }
+    GROUP_EVENTS =
+    {
+        scroll: wait_throttle(group_e$Scroll, 200),
+        mouseMove: wait_throttle(group_e$MouseMove, 50)
+    }
+
+    // --ELEMENT-ORBIT
+    const ORBIT_EVENTS = { resize: orbit_e$Resize }
 
 // #VARIABLES
 
     // --ELEMENT-SYSTEM
     let
     system_CHARGED = false,
-    system_OPTIMISED = false,
-    system_START,
-    system_END,
-    system_SCROLL_RATIO = 0,
-    group_ROTATE_X = 0,
-    group_ROTATE_Y = 0
+    system_OPTIMISED = false
 
     // --ELEMENT-GROUP
     let
+    group_ROTATE_X = 0,
+    group_ROTATE_Y = 0,
     group_TIMEOUT,
     group_start,
     group_stop
@@ -108,42 +105,32 @@
     // --SET
     function system_set()
     {
-        system_setVars()
         system_setCommands()
-        system_setEvents()
+
+        orbit_setVars()
+        orbit_setEvents()
 
         system_CHARGED = true
     }
 
-    function system_setVars()
-    {
-        const HEIGHT = window.innerHeight
-
-        system_START = prop_OFFSET_TOP * HEIGHT
-        system_END = prop_BREAK * HEIGHT
-
-        orbit_setVars()
-    }
-
     function system_setCommands() { COMMAND.command_setBasicCommands(SYSTEM_COMMANDS) }
-
-    function system_setEvents() { EVENT.event_add(SYSTEM_EVENTS) }
 
     function group_setEvents() { EVENT.event_add(GROUP_EVENTS) }
 
     function orbit_setVars() { orbit_RADIUS = Math.min(window.innerWidth * .3, window.innerHeight * .6) }
 
+    function orbit_setEvents() { EVENT.event_add(ORBIT_EVENTS) }
+
     // --DESTROY
-    function system_destroy() { system_destroyEvents() }
-
-    function system_destroyEvents()
+    function system_destroy()
     {
-        EVENT.event_remove(SYSTEM_EVENTS)
-
         group_destroyEvents()
+        orbit_destroyEvents()
     }
 
     function group_destroyEvents() { EVENT.event_remove(GROUP_EVENTS) }
+
+    function orbit_destroyEvents() { EVENT.event_remove(ORBIT_EVENTS) }
 
     // --GET
     function group_getIndexFocus()
@@ -161,17 +148,6 @@
         system_OPTIMISED = optimised
 
         optimised ? system_stop() : system_start()
-
-        group_updateFocus()
-    }
-
-    function group_update()
-    {
-        clearTimeout(group_TIMEOUT)
-
-        group_updateFocus()
-
-        group_TIMEOUT = setTimeout(group_updateFocus, 100)
     }
 
     function group_updateFocus()
@@ -185,26 +161,24 @@
     function system_c$Optimise(optimised) { COMMAND.command_test(optimised, 'boolean', system_update, SYSTEM_COMMANDS[0].name, system_OPTIMISED) }
 
     // --EVENTS
-    async function system_e$Scroll(scrollTop)
+    async function group_e$Scroll()
     {
-        if (system_OPTIMISED) return
+        clearTimeout(group_TIMEOUT)
 
-        system_SCROLL_RATIO = (scrollTop - system_START) / system_END
+        group_updateFocus()
 
-        if (prop_FOCUS) group_update()
+        group_TIMEOUT = setTimeout(group_updateFocus, 300)
     }
-
-    async function system_e$Resize() { system_setVars() }
 
     async function group_e$MouseMove(clientX, clientY)
     {
-        const
-        VW50 = window.innerWidth * .5,
-        VH50 = window.innerHeight * .5
+        const [VW50, VH50] = [window.innerWidth * .5, window.innerHeight * .5]
         
         group_ROTATE_X = (clientY - VH50) / VH50
         group_ROTATE_Y = (clientX - VW50) / VW50
     }
+
+    async function orbit_e$Resize() { orbit_setVars() }
 
     // --CONTROLS
     function system_start()
@@ -219,6 +193,7 @@
     function system_stop()
     {
         group_destroyEvents()
+        group_updateFocus()
         
         group_stop()
     }
@@ -259,12 +234,12 @@ class:focus={prop_FOCUS}
                 prop_e$RESIZE={resize}
                 prop_e$ANIMATION={animation}
                 prop_FOCUS={orbit.focus ?? false}
-                prop_RATIO={system_SCROLL_RATIO}
                 prop_GRABBING={false}
                 prop_ORBIT_RADIUS={orbit_RADIUS}
                 prop_ROTATE={orbit.props.prop_ROTATE}
                 prop_OFFSET={orbit.props.prop_OFFSET}
                 prop_FORCE={.2}
+                {prop_RATIO}
                 bind:gravityarea_TRANSLATE_Z={GROUP_Z_POSITIONS[i]}
                 >
                     <Cube
