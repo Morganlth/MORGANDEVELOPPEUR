@@ -217,7 +217,7 @@ class:focus={prop_FOCUS}
     position: absolute;
     display: flex; justify-content: center; align-items: center;
     transform-style: preserve-3d;
-    transform: rotate3d({group_ROTATE_X}, {group_ROTATE_Y}, 0, .03rad);
+    transform: rotate3d({group_ROTATE_X}, {group_ROTATE_Y}, 0, .02rad);
     transition: transform .3s;"
     bind:group_start
     bind:group_stop
