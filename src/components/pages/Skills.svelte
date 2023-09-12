@@ -23,7 +23,7 @@
 // #IMPORTS
 
     // --JS
-    import { SKILLS_CONTENT_DATAS, SKILLS_SKILLS_DATAS } from '../../assets/js/datas/dSkills'
+    import { SKILLS_CONTENT_DATAS } from '../../assets/js/datas/dSkills'
     import { wait_throttle } from '../../assets/js/utils/wait'
 
     // --CONTEXTS
@@ -35,9 +35,8 @@
     // --COMPONENT-COVER
     import Content from '../covers/Content.svelte'
 
-    // --COMPONENT-ELEMENTS
+    // --COMPONENT-ELEMENT
     import System from '../elements/System.svelte'
-    import Table from '../elements/Table.svelte'
 
 // #CONSTANTE
 
@@ -107,10 +106,6 @@ style:z-index={prop_FOCUS ? 1 : 0}
         {...SKILLS_CONTENT_DATAS}
         {prop_FOCUS}
         >
-            <Table
-            prop_HEAD={SKILLS_SKILLS_DATAS[1].tag}
-            prop_BODY={SKILLS_SKILLS_DATAS[1].skills}
-            />
         </Content>
     </div>
 </div>

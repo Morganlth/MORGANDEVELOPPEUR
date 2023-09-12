@@ -123,7 +123,6 @@ style:z-index={prop_FOCUS ? 1 : 0}
     <Group
     let:resize
     let:animation
-    prop_STYLE="position: absolute; top: 0; left: 0"
     bind:group_start
     bind:group_stop
     >
@@ -171,11 +170,13 @@ lang="scss"
 
     @extend %any;
 
-    .wrapper
-    {
-        @extend %wrapper;
+    .wrapper { @extend %wrapper; }
 
-        :global{ .icon { #{--icon-size}: calc(var(--title-size) * font.$line-height-title-min) } }
+    :global
+    {
+        .icon { #{--icon-size}: calc(var(--title-size) * font.$line-height-title-min) }
+
+        .group { @include position.placement(absolute, 0, auto, auto, 0); }
     }
 }
 </style>

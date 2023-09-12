@@ -1,15 +1,20 @@
 <!-- #MAP
 
+-APP
 -COMMAND
 -EVENT
     SYSTEM
-        MOON
         GROUP
-            ORBIT * 5
+            MOON
+            ORBIT * n
                 GRAVITYAREA
                     CUBES
 
-        TAG
+        GROUP
+            TAG * n
+
+        GROUP
+            #if TABLE * n
 
 -->
 
@@ -26,11 +31,11 @@
 // #IMPORTS
 
     // --JS
-    import { SYSTEM_ORBITS_DATAS } from '../../assets/js/datas/dSystem'
+    import { SYSTEM_DATAS } from '../../assets/js/datas/dSystem'
     import { wait_throttle } from '../../assets/js/utils/wait'
 
     // --CONTEXTS
-    import { COMMAND, EVENT } from '../../App.svelte'
+    import { APP, COMMAND, EVENT } from '../../App.svelte'
 
     // --SVELTE
     import { onMount, onDestroy } from 'svelte'
@@ -43,6 +48,7 @@
     // --COMPONENT-ELEMENTS
     import Tag from './Tag.svelte'
     import Cube from './Cube.svelte'
+    import Table from './Table.svelte'
 
     // --COMPONENT-DECOR
     import Moon from '../decors/Moon.svelte'
@@ -63,7 +69,7 @@
 
     // --ELEMENT-GROUP
     const
-    GROUP_Z_POSITIONS = new Float64Array(SYSTEM_ORBITS_DATAS.length),
+    GROUP_Z_POSITIONS = new Float64Array(SYSTEM_DATAS.length),
     GROUP_EVENTS =
     {
         scroll: wait_throttle(group_e$Scroll, 200),
@@ -74,6 +80,9 @@
     const ORBIT_EVENTS = { resize: orbit_e$Resize }
 
 // #VARIABLES
+
+    // --APP
+    let app_$FREEZE = APP.app_$FREEZE
 
     // --ELEMENT-SYSTEM
     let
@@ -89,9 +98,11 @@
     group_stop
 
     // --ELEMENT-ORBIT
-    let orbit_RADIUS = 0
+    let
+    orbit_RADIUS = 0,
+    orbit_TARGET = null
 
-// #REACTIVE
+// #REACTIVES
 
     // --ELEMENT-GROUP
     $: system_CHARGED
@@ -99,6 +110,9 @@
             ? system_start()
             : system_stop()
         : void 0
+
+    // --ELEMENT-ORBIT
+    $: !$app_$FREEZE ? orbit_update() : void 0
 
 // #FUNCTIONS
 
@@ -154,7 +168,20 @@
     {
         const INDEX = prop_FOCUS && !system_OPTIMISED ? group_getIndexFocus() : void 0
 
-        for (let i = 0; i < GROUP_Z_POSITIONS.length; i++) SYSTEM_ORBITS_DATAS[i] = { ...SYSTEM_ORBITS_DATAS[i], focus: i === INDEX }
+        for (let i = 0; i < GROUP_Z_POSITIONS.length; i++) SYSTEM_DATAS[i] = { ...SYSTEM_DATAS[i], focus: i === INDEX }
+    }
+
+    function orbit_update(clicked = false)
+    {
+        const TARGET = this ?? orbit_TARGET
+
+        if (TARGET == null) return
+
+        SYSTEM_DATAS[TARGET.id] = { ...TARGET, clicked: clicked }
+
+        APP.app_$FREEZE = { on: clicked, target: 'system' }
+
+        orbit_TARGET = clicked ? (this ?? null) : null
     }
 
     // --COMMAND
@@ -179,6 +206,17 @@
     }
 
     async function orbit_e$Resize() { orbit_setVars() }
+
+    function cube_eClick() { if (this.focus) orbit_update.call(this, true) }
+
+    function tag_eClick() { cube_eClick.call(this) }
+
+    function table_eClick()
+    {
+        const TARGET = SYSTEM_DATAS.find(data => data.clicked)
+
+        if (TARGET) orbit_update.call(TARGET, false)
+    }
 
     // --CONTROLS
     function system_start()
@@ -213,66 +251,68 @@ class:focus={prop_FOCUS}
     <Group
     let:resize
     let:animation
-    prop_STYLE="
-    position: absolute;
-    display: flex; justify-content: center; align-items: center;
-    transform-style: preserve-3d;
-    transform: rotate3d({group_ROTATE_X}, {group_ROTATE_Y}, 0, .02rad);
-    transition: transform .3s;"
+    prop_STYLE="transform: rotate3d({group_ROTATE_X}, {group_ROTATE_Y}, 0, .02rad);"
     bind:group_start
     bind:group_stop
     >
         <Moon />
 
-        {#each SYSTEM_ORBITS_DATAS as orbit, i}
+        {#each SYSTEM_DATAS as data}
             <Orbit
-            prop_ROTATE={orbit.props.prop_ROTATE}
+            prop_ROTATE={data.props.prop_ROTATE}
             >
                 <GravityArea
                 let:rotation
                 let:grabbing
                 prop_e$RESIZE={resize}
                 prop_e$ANIMATION={animation}
-                prop_FOCUS={orbit.focus ?? false}
+                prop_FOCUS={data.focus ?? false}
                 prop_GRABBING={false}
                 prop_ORBIT_RADIUS={orbit_RADIUS}
-                prop_ROTATE={orbit.props.prop_ROTATE}
-                prop_OFFSET={orbit.props.prop_OFFSET}
+                prop_ROTATE={data.props.prop_ROTATE}
+                prop_OFFSET={data.props.prop_OFFSET}
                 prop_FORCE={.2}
                 {prop_RATIO}
-                bind:gravityarea_TRANSLATE_Z={GROUP_Z_POSITIONS[i]}
+                bind:gravityarea_TRANSLATE_Z={GROUP_Z_POSITIONS[data.id]}
                 >
                     <Cube
                     prop_$ROTATION={rotation}
                     prop_$GRABBING={grabbing}
-                    prop_FOCUS={orbit.focus ?? false}
-                    prop_ROTATE={orbit.props.prop_ROTATE}
-                    prop_SRC={orbit.props.prop_SRC}
-                    prop_ALT={orbit.props.prop_ALT}
-                    prop_COLOR={orbit.props.prop_COLOR}
+                    prop_DESTROY={orbit_TARGET ? true : false}
+                    prop_FOCUS={data.focus ?? false}
+                    prop_ROTATE={data.props.prop_ROTATE}
+                    prop_SRC={data.props.prop_SRC}
+                    prop_ALT={data.props.prop_ALT}
+                    prop_COLOR={data.props.prop_COLOR}
+                    on:click={cube_eClick.bind(data)}
                     />
                 </GravityArea>
             </Orbit>
         {/each}
     </Group>
 
-    <Group
-    prop_STYLE="
-    position: absolute;
-    top: 51%;
-    left: 0;
-    transform: translateY(-50%);
-    width: fit-content;
-    height: fit-content;"
-    >
-        {#each SYSTEM_ORBITS_DATAS as orbit}
+    <Group>
+        {#each SYSTEM_DATAS as data}
             <Tag
-            prop_FOCUS={(orbit.focus ?? false) || system_OPTIMISED && prop_FOCUS}
+            prop_FOCUS={!data.clicked && (data.focus || system_OPTIMISED && prop_FOCUS)}
             prop_OPTIMISED={system_OPTIMISED}
-            prop_CONTENT={orbit.tag}
+            prop_CONTENT={data.tag}
             prop_X={group_ROTATE_Y * 6}
             prop_Y={group_ROTATE_X * 6}
+            on:click={tag_eClick.bind(data)}
             />
+        {/each}
+    </Group>
+
+    <Group>
+        {#each SYSTEM_DATAS as data}
+            {#if data.focus && data.clicked}
+                <Table
+                prop_TITLE={data.tag}
+                prop_LINES={data.skills}
+                on:click={table_eClick}
+                />
+            {/if}
         {/each}
     </Group>
 </div>
@@ -282,23 +322,59 @@ class:focus={prop_FOCUS}
 <style
 lang="scss"
 >
-/* #USE */
+/* #USES */
 
+@use '../../assets/scss/styles/utils';
 @use '../../assets/scss/styles/position';
+@use '../../assets/scss/styles/display';
+@use '../../assets/scss/styles/size';
 
 /* #SYSTEM */
 
 .system
 {
-    @include position.placement(absolute, 0, auto, 0, 50vw);
+    @include position.placement(absolute, 0, 0, 0, 0);
+
+    @extend %any;
 
     transform: translate(30%, -30%) scale(.2);
-
-    width: 50vw;
-    height: 100%;
 
     transition: transform .6s;
 
     &.focus { transform: scale(1); }
+
+    :global
+    {
+        .group:nth-child(1)
+        {
+            @include position.placement(absolute, 0, auto, 0, 50vw);
+    
+            @extend %f-center;
+    
+            transform-style: preserve-3d;
+
+            width: 50vw;
+
+            transition: transform .3s;
+        }
+
+        .group:nth-child(2)
+        {
+            @include position.placement(absolute, 51%, auto, auto, 50vw);
+            
+            transform: translateY(-50%);
+
+            width: fit-content;
+            height: fit-content;
+        }
+
+        .group:nth-child(3)
+        {
+            @include position.placement(absolute, 0, auto, 0, 0);
+    
+            width: calc(100vw - utils.$scroll-bar-width);
+            height: 100%;
+        }
+    }
 }
 </style>

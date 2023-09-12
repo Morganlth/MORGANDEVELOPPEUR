@@ -1,5 +1,6 @@
 <!-- #MAP
 
+-SPRING
     ICON
         ~SLOT
 
@@ -26,7 +27,10 @@
     // --SVELTE
     import { onMount, onDestroy } from 'svelte'
 
-// #VARIABLE
+// #VARIABLES
+
+    // --SPRING
+    let spring_HOVER = false
 
     // --ELEMENT-ICON
     let icon
@@ -43,7 +47,11 @@
     }
 
     // --DESTROY
-    function icon_destroy() { if (icon instanceof HTMLElement) icon_destroyEvents() }
+    function icon_destroy()
+    {
+        if (spring_HOVER) icon_eMouseLeave()
+        if (icon instanceof HTMLElement) icon_destroyEvents()
+    }
 
     function icon_destroyEvents()
     {
@@ -54,7 +62,7 @@
     // --UPDATE
     function icon_updateSpring(hover, size)
     {
-        SPRING.spring_HOVER = hover
+        SPRING.spring_HOVER = (spring_HOVER = hover)
         SPRING.spring_$SIZE = size
     }
 
@@ -70,7 +78,7 @@
         requestAnimationFrame(() => SPRING.spring_$COORDS = { x: X, y: Y })
     }
 
-    function icon_eMouseLeave() { icon_updateSpring(false, 7) } // no async
+    function icon_eMouseLeave() { icon_updateSpring(false, SPRING.spring_D_SIZE) } // no async
 
 // #CYCLES
 

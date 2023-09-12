@@ -229,7 +229,8 @@ onDestroy(gravityarea_destroy)
 
 <!-- #HTML -->
 
-<button
+<!-- svelte-ignore a11y-no-static-element-interactions -->
+<div
 class="gravityarea"
 class:focus={prop_FOCUS}
 style:--default-size="{prop_RADIUS}px"
@@ -255,7 +256,7 @@ on:mouseleave={gravityarea_eMouseLeave}
         grabbing={SLOT_$GRABBING}
         />
     </div>
-</button>
+</div>
 
 <div
 class="mask"
@@ -293,11 +294,7 @@ lang="scss"
     width: calc(var(--content-size) * 2);
     height: calc(var(--content-size) * 2);
 
-    background-color: transparent;
-
-    border: none;
     border-radius: 50%;
-    outline: none;
 
     &.focus { will-change: transform; }
 

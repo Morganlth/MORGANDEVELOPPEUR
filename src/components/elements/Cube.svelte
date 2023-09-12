@@ -16,6 +16,7 @@
     export let
     prop_$GRABBING = {},
     prop_$ROTATION = {},
+    prop_DESTROY = false,
     prop_FOCUS = false,
     prop_ROTATE = 0,
     prop_ROTATE_Y = 0,
@@ -79,7 +80,6 @@
     function cube_setEvents() { EVENT.event_add(CUBE_EVENTS) }
 
     // --DESTROY
-
     function cube_destroy() { cube_destroyEvents() }
 
     function cube_destroyEvents() { EVENT.event_remove(CUBE_EVENTS) }
@@ -122,7 +122,7 @@ onDestroy(cube_destroy)
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
-class="cube"
+class="cube {prop_DESTROY ? 'destroy' : 'build'}"
 style:--cube-color={prop_COLOR ?? COLORS.primary}
 style:transform="rotate({cube_ROTATE}rad) rotate3d(0, 1, 0, {cube_ROTATE_Y}rad)"
 on:mousedown={cube_eMouseDown}
@@ -135,7 +135,7 @@ on:mousedown={cube_eMouseDown}
         data-side-id={id}
         >
             <Icon
-            prop_OPACITY={icon_OPACITY}
+            prop_OPACITY={prop_DESTROY ? 0 : icon_OPACITY}
             prop_SIZE="30%"
             prop_COLOR={COLORS[prop_FOCUS ? 'light' : 'intermediate']}
             prop_SPRING={false}
@@ -177,6 +177,25 @@ lang="scss"
 
     transition: transform .35s ease-out;
 
+    &.build
+    {
+        .side
+        {
+            opacity: 1;
+
+            animation: aBuild 1.2s ease-in;
+        }
+    }
+    &.destroy
+    {
+        .side
+        {
+            opacity: 0;
+
+            animation: aDestroy 1.2s ease-in forwards;
+        }
+    }
+
     .side
     {
         @extend %f-center;
@@ -189,22 +208,10 @@ lang="scss"
 
         box-sizing: border-box;
 
-        transition: border .7s ease-in;
-
-        animation: aBuild 1.2s ease-in;
+        transition: border .7s ease-in, opacity .7s ease-in;
 
         &.focus { border-color: var(--cube-color, $primary); }
         &.grabbing { border-color: $indicator !important; }
-
-        @keyframes aBuild
-        {
-            from
-            {
-                transform: translate3d(0, 0, 0) rotate3d(0, 0, 0, 0);
-                
-                border-color: $dark;
-            }
-        }
     }
     .side:nth-child(1) { transform: translate3d(0, 0, calc(var(--content-size) / 2))        rotate3d(0, 0, 0, 0); }
     .side:nth-child(2) { transform: translate3d(0, -150%, 0)                                rotate3d(1, 0, 0, 90deg); }
@@ -212,5 +219,24 @@ lang="scss"
     .side:nth-child(4) { transform: translate3d(0, -250%, 0)                                rotate3d(-1, 0, 0, 90deg); }
     .side:nth-child(5) { transform: translate3d(50%, -400%, 0)                              rotate3d(0, 1, 0, 90deg); }
     .side:nth-child(6) { transform: translate3d(0, -500%, calc(var(--content-size) / -2))   rotate3d(0, 1, 0, 180deg); }
+
+    @keyframes aBuild
+    {
+        from
+        {
+            transform: translate3d(0, 0, 0) rotate3d(0, 0, 0, 0);
+            
+            border-color: $dark;
+        }
+    }
+    @keyframes aDestroy
+    {
+        to
+        {
+            transform: translate3d(0, 0, 0) rotate3d(0, 0, 0, 0);
+            
+            border-color: $dark;
+        }
+    }
 }
 </style>

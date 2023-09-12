@@ -23,10 +23,16 @@
     // --JS
     import MATH from '../../assets/js/utils/math'
 
+    // --SVELTE
+    import { createEventDispatcher } from 'svelte'
+
     // --COMPONENT-ELEMENT
     import Fragments from './Fragments.svelte'
 
-// #CONSTANTE
+// #CONSTANTES
+
+    // --SVELTE
+    const SVELTE_DISPATCH = createEventDispatcher()
 
     // --ELEMENT-TAG
     const TAG_DURATION = 300
@@ -52,6 +58,9 @@
             FRAG.style.setProperty('--frag-scale', scale)
         }
     }
+
+    // --EVENT
+    function tag_eClick() { SVELTE_DISPATCH('click') }
 
     // --INTRO
     function tag_intro()
@@ -86,6 +95,7 @@
     style:position={prop_OPTIMISED ? 'relative' : 'absolute' }
     style:transform="translate({prop_X}px, {prop_Y}px)"
     type="button"
+    on:click={tag_eClick}
     transition:tag_tFade
     on:introend={tag_intro}
     on:outrostart={tag_outroStart}

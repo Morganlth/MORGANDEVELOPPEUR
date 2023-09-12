@@ -165,7 +165,7 @@
         }
         else console_destroyEvents()
 
-        APP.app_$FREEZE = console_ON
+        APP.app_$FREEZE = { on: console_ON, target: 'console' }
     }
 
     async function console_eKeyup(e)

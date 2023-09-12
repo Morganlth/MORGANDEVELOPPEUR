@@ -7,6 +7,7 @@ class Spring
     // --SPRING-CONTEXT
     static __spring_NAME = 'spring'
     static __spring_D_SIZE = 7
+    static test = 'hello'
 
     #spring_$ON = true
     #spring_HOVER = false // icon hover
@@ -84,6 +85,8 @@ constructor ()
     spring_e$Hide() { this.spring_$SIZE = 0 }
 
     // --GETTER
+    get spring_D_SIZE() { return Spring.__spring_D_SIZE }
+
     get spring_$ON() { return this.#spring_$ON }
 
     get spring_HOVER() { return this.#spring_HOVER }

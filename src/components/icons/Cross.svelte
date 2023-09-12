@@ -4,10 +4,19 @@
 
 -->
 
+<!-- #SCRIPT -->
+
+<script>
+// #EXPORT
+
+    // --PROP
+    export let prop_DESTROY = false
+</script>
+
 <!-- #HTML -->
 
 <svg
-class="cross"
+class="cross {prop_DESTROY ? 'destroy' : 'build'}"
 viewBox="0 0 81 81"
 fill="none"
 stroke="var(--icon-color, #FFF)"
@@ -31,15 +40,24 @@ lang="scss"
     width: var(--icon-size, 100%);
     height: var(--icon-size, 100%);
 
-    path
+    &.build path
     {
-        stroke-dasharray: 120%;
         stroke-dashoffset: 120%;
 
-        animation: draw .15s ease-in forwards;
+        animation: aBuild .15s ease-in forwards;
 
-        @keyframes draw { to { stroke-dashoffset: 0%; } }
+        @keyframes aBuild { to { stroke-dashoffset: 0%; } }
     }
+    &.destroy path
+    {
+        stroke-dashoffset: 0%;
+
+        animation: aDestroy .15s ease-in forwards;
+
+        @keyframes aDestroy { to { stroke-dashoffset: 120%; } }
+    }
+
+    path { stroke-dasharray: 120%; }
     path:nth-child(1) { animation-delay: .25s; }
     path:nth-child(2) { animation-delay: .4s; }
 }

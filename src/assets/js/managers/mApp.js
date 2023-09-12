@@ -6,7 +6,7 @@ class App
 
     // --APP-CONTEXT
     #app
-    #app_$FREEZE = writable(false)
+    #app_$FREEZE = {}
     #app_$HIDE = writable(false)
     #app_SMALL_SCREEN = false
     #app_OPTIMISE = false
@@ -21,6 +21,23 @@ class App
 
 constructor ()
 {
+    let { set, subscribe } = writable(false)
+
+    this.#app_$FREEZE =
+    {
+        on: false,
+        target: null,
+        set: function (on, target)
+        {
+            this.on = on
+            this.target = target
+
+            set(on)
+        },
+        subscribe
+    }
+
+
     this.app_updateMode = this.app_updateMode.bind(this)
 
     this.#app_COMMANDS.push(
@@ -108,7 +125,12 @@ constructor ()
     get app_OPTIMISE_CONFIG() { return this.#app_OPTIMISE_CONFIG }
 
     // --SETTER
-    set app_$FREEZE(on) { this.#app_$FREEZE.set(on) }
+    set app_$FREEZE({ on, target })
+    {
+        const CURRENT_TARGET = this.#app_$FREEZE.target
+    
+        if (!CURRENT_TARGET || CURRENT_TARGET === target) this.#app_$FREEZE.set(on, on ? target : null)
+    }
 
     set app_$HIDE(on)
     {
