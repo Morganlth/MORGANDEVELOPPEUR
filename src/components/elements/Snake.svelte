@@ -1,5 +1,6 @@
 <!-- #MAP
 
+-APP
 -COMMAND
 -EVENT
     SNAKE
@@ -37,9 +38,10 @@
 
     // --LIB
     import COLORS from '$lib/colors'
+    import BREAKPOINTS from '$lib/breakpoints'
 
     // --CONTEXTS
-    import { COMMAND, EVENT } from '../../App.svelte'
+    import { APP, COMMAND, EVENT } from '../../App.svelte'
 
     // --SVELTE
     import { onMount, onDestroy } from 'svelte'
@@ -66,16 +68,16 @@
         {
             name: 'snake_size',
             callback: snake_c$Size,
-            params: { defaultValue: SNAKE_BLOCKSIZE, min: 10, max: 70 },
+            params: { defaultValue: SNAKE_BLOCKSIZE, min: 20, max: 70 },
             tests: { testNumber: true },
             storage: true
         }
     ],
-    SNAKE_EVENTS =
+    SNAKE_EVENTS = { resize: snake_e$Resize },
+    SNAKE_EVENTS_2 =
     {
         scroll: snake_e$Scroll,
-        mouseMove: snake_e$MouseMove,
-        resize: snake_e$Resize
+        mouseMove: snake_e$MouseMove
     }
 
 // #VARIABLES
@@ -96,6 +98,7 @@
     snake_X = -1,
     snake_Y = -1,
     snake_BLOCKSIZE,
+    snake_CUSTOM_BLOCKSIZE,
     snake_INVINCIBLE = true,
     snake_SCORE = 10,
     snake_FPS = 0,
@@ -126,19 +129,23 @@
     {
         snake_setVars()
         snake_setCommands()
+        snake_setEvents()
 
         snake_setSnake()
         snake_setApple()
     }
 
-    function snake_setVars(size)
+    function snake_setVars()
     {
-        const [WIDTH, HEIGHT] = [snake.offsetWidth, snake.offsetHeight]
+        const
+        [WIDTH, HEIGHT] = [snake.offsetWidth, snake.offsetHeight],
+        SIZE = snake_CUSTOM_BLOCKSIZE ?? (APP.app_testScreen(BREAKPOINTS.ms4, BREAKPOINTS.ms4) ? SNAKE_BLOCKSIZE - 10 : SNAKE_BLOCKSIZE),
+        OVERFLOW =  snake_GAME ? 0 : SIZE
 
-        snake_BLOCKSIZE = size ?? (WIDTH < 768 || HEIGHT < 768 ? 30 : SNAKE_BLOCKSIZE)
+        snake_BLOCKSIZE = SIZE
 
-        snake_WIDTH = WIDTH - (WIDTH - 1) % snake_BLOCKSIZE
-        snake_HEIGHT = HEIGHT - (HEIGHT - 1) % snake_BLOCKSIZE
+        snake_WIDTH = WIDTH - WIDTH % SIZE + OVERFLOW
+        snake_HEIGHT = HEIGHT - HEIGHT % SIZE + OVERFLOW
 
         snake_OFFSET_TOP = (HEIGHT - snake_HEIGHT) / 2
         snake_OFFSET_LEFT = (WIDTH - snake_WIDTH) / 2
@@ -149,6 +156,8 @@
     function snake_setCommands() { COMMAND.command_setBasicCommands(SNAKE_COMMANDS) }
 
     function snake_setEvents() { EVENT.event_add(SNAKE_EVENTS) }
+
+    function snake_setEvents2() { EVENT.event_add(SNAKE_EVENTS_2) }
 
     function snake_setSnake()
     {
@@ -186,7 +195,14 @@
     // --DESTROY
     function snake_destroy() { snake_destroyEvents() }
 
-    function snake_destroyEvents() { EVENT.event_remove(SNAKE_EVENTS) }
+    function snake_destroyEvents()
+    {
+        EVENT.event_remove(SNAKE_EVENTS)
+
+        snake_destroyEvents2()
+    }
+
+    function snake_destroyEvents2() { EVENT.event_remove(SNAKE_EVENTS_2) }
 
     // --GET
     function snake_getRandomXY() { return [Math.floor(Math.random() * (canvas_COLUMNS - 2) + 1), Math.floor(Math.random() * (canvas_ROWS - 2) + 1)] }
@@ -198,7 +214,11 @@
         return [pre ? snake_getPosition(pre, X, Y) : null, snake_getPosition(next, X, Y)]
     }
 
-    function snake_getPosition(body, x, y) { return [['a', 'b', 'c'], ['d', 'e', 'f'], ['g', 'h', 'i']][1 + (Math.abs(body[1]) - y)][1 + (Math.abs(body[0]) - x)] }
+    function snake_getPosition(body, x, y)
+    {
+        try { return [['a', 'b', 'c'], ['d', 'e', 'f'], ['g', 'h', 'i']][1 + (Math.abs(body[1]) - y)][1 + (Math.abs(body[0]) - x)] }
+        catch { return 'a' } // if gap > 3 err
+    }
 
     function snake_getDimensions(model)
     {
@@ -247,16 +267,19 @@
 
     function snake_updateSize(size)
     {
-        snake_BLOCKSIZE = size
+        snake_CUSTOM_BLOCKSIZE = size
 
-        snake_e$Resize(size)
+        snake_e$Resize()
     }
 
     function snake_updateApple(tool)
     {
-        tool === 'fillRect'
-        ? snake_setApple()
-        : canvas_CONTEXT.clearRect(SNAKE_APPLE[0] * SNAKE_BLOCKSIZE, SNAKE_APPLE[1] * snake_BLOCKSIZE, snake_BLOCKSIZE, snake_BLOCKSIZE)
+        if (tool === 'fillRect')
+        {
+            snake_setApple()
+            snake_drawApple()
+        }
+        else canvas_CONTEXT.clearRect(SNAKE_APPLE[0] * snake_BLOCKSIZE, SNAKE_APPLE[1] * snake_BLOCKSIZE, snake_BLOCKSIZE, snake_BLOCKSIZE)
     }
 
     function gameover_update(on)
@@ -271,11 +294,17 @@
         }
         else
         {
-            SNAKE_SNAKE.length = 10
-    
-            snake_setScore()
+            snake_resetScore()
             snake_start()
         }
+    }
+
+    // --RESET
+    function snake_resetScore()
+    {
+        SNAKE_SNAKE.length = 10
+    
+        snake_setScore()
     }
 
     // --COMMAND
@@ -291,12 +320,12 @@
         snake_move()
     }
 
-    async function snake_e$Resize(size)
+    async function snake_e$Resize()
     {
-        snake_setVars(size)
+        snake_setVars()
         snake_setApple()
 
-        snake_draw()
+        if (snake_ON) snake_draw()
     }
 
     function snake_eFullscreenChange() { if (!document.fullscreenElement) snake_stopGame() }
@@ -364,7 +393,7 @@
     // --CONTROLS
     function snake_start()
     {
-        snake_setEvents()
+        snake_setEvents2()
 
         if (SNAKE_SNAKE.length)
         {
@@ -377,7 +406,7 @@
 
     function snake_stop()
     {
-        snake_destroyEvents()
+        snake_destroyEvents2()
 
         snake_a('clearRect')
     }
@@ -614,9 +643,10 @@ lang="scss"
 {
     &, .gameover
     {
-        @include position.placement(absolute, 0, 0, 0, 0);
+        @include position.placement(absolute, 0, auto, auto, 0);
     
-        @extend %any;
+        width: 100vw;
+        height: 100vh;
     }
 
     @extend %f-center;
@@ -627,12 +657,7 @@ lang="scss"
     {
         background-color: $dark;
 
-        canvas
-        {
-            pointer-events: auto;
-
-            border: solid $intermediate .8rem;
-        }
+        canvas { pointer-events: auto; }
     }
 
     .grid

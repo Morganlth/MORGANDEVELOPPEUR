@@ -9,7 +9,7 @@ class Command
     static __command_TESTS = { testBoolean: false, testNumber: false }
 
     #command_COMMANDS = {}
-    #command_KEYWORDS = ['reload', 'reset', 'success', 'error', 'commands', 'fps']
+    #command_KEYWORDS = ['reset', 'success', 'error', 'commands', 'fps']
     #command_KEYSTORAGE = []
 
 // #CONSTRUCTOR
@@ -35,8 +35,8 @@ constructor ()
 
                 if (value !== null)
                 {
-                    if (value === true && params.optimise) APP.app_OPTIMISE = false
-                    if (storage) localStorage.setItem(name, value)
+                    if (params.optimise && value !== params.optimise?.value) APP.app_OPTIMISE = false
+                    if (storage) localStorage[value === params.defaultValue ? 'removeItem' : 'setItem'](name, value)
 
                     this.command_c$Success(name + ' ' + value)
                 }
@@ -52,12 +52,8 @@ constructor ()
     }
 
     // --COMMANDS
-    command_c$Reload() { APP.app_updateFormat(this.app_MOBILE) }
-
     command_c$Reset(view = false)
     {
-        APP.app_saveStorage()
-
         for (const NAME of this.#command_KEYSTORAGE) this.#command_COMMANDS[NAME]('d')
 
         if (!view && this.command_testCommand('clear')) this.#command_COMMANDS.clear()

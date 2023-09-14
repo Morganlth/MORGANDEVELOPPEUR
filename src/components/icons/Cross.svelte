@@ -46,6 +46,9 @@ lang="scss"
 
         animation: aBuild .15s ease-in forwards;
 
+        &:nth-child(1) { animation-delay: .25s; }
+        &:nth-child(2) { animation-delay: .4s; }
+
         @keyframes aBuild { to { stroke-dashoffset: 0%; } }
     }
     &.destroy path
@@ -54,11 +57,12 @@ lang="scss"
 
         animation: aDestroy .15s ease-in forwards;
 
+        &:nth-child(1) { animation-delay: .0s; }
+        &:nth-child(2) { animation-delay: .15s; }
+
         @keyframes aDestroy { to { stroke-dashoffset: 120%; } }
     }
 
     path { stroke-dasharray: 120%; }
-    path:nth-child(1) { animation-delay: .25s; }
-    path:nth-child(2) { animation-delay: .4s; }
 }
 </style>

@@ -259,78 +259,81 @@ onDestroy(console_destroy)
 <div
 class="console"
 class:on={console_ON}
-on:mouseenter={SPRING.spring_e$Hide.bind(SPRING)}
-on:mouseleave={SPRING.spring_e$Show.bind(SPRING)}
 >
     <div
-    class="input"
+    class="area"
     >
-        <button
-        class={CONSOLE_TARGET_CLASS}
-        type="button"
-        on:click={console_eClick}
-        >
-            <Icon
-            prop_SIZE="1.2rem"
-            prop_COLOR={COLORS[console_ON ? 'light' : 'primary']}
-            prop_SPRING={false}
-            >
-                <Arrow
-                prop_FOCUS={console_ON}
-                />
-            </Icon>
-        </button>
-
         <div
-        class="line"
+        class="input"
+        on:mouseenter={SPRING.spring_e$Hide.bind(SPRING)}
+        on:mouseleave={SPRING.spring_e$Show.bind(SPRING)}
         >
-            <input
-            class={CONSOLE_TARGET_CLASS}
-            type="text"
-            maxlength="55"
-            spellcheck="false"
-            bind:this={input_FIELD}
-            bind:value={input_CURRENT_VALUE}
-            on:input={input_eInput}
-            on:keyup|preventDefault={console_eKeyup}
-            />
-
-            <div
-            class="mirror"
-            class:app-available={mirror_APP_AVAILABLE}
-            class:command-available={mirror_COMMAND_AVAILABLE}
-            >
-                {#each [0, 1, 2] as i}
-                    <pre
-                    bind:this={MIRROR_FIELDS[i]}
-                    >
-                    </pre>
-                {/each}
-            </div>
-        </div>
-    </div>
-
-    <div
-    class="output {CONSOLE_TARGET_CLASS}"
-    bind:this={output}
-    >
-        {#each output_LINES as line}
             <div
             class="line"
             >
-                {#if line.name}
-                    <span
-                    class:console-error={line.error}
-                    class:console-success={line.success}
-                    >
-                        {line.name}:
-                    </span> &nbsp;
-                {/if}
+                <input
+                class={CONSOLE_TARGET_CLASS}
+                type="text"
+                maxlength="55"
+                spellcheck="false"
+                bind:this={input_FIELD}
+                bind:value={input_CURRENT_VALUE}
+                on:input={input_eInput}
+                on:keyup|preventDefault={console_eKeyup}
+                />
 
-                <pre>{line.message}</pre>
+                <div
+                class="mirror"
+                class:app-available={mirror_APP_AVAILABLE}
+                class:command-available={mirror_COMMAND_AVAILABLE}
+                >
+                    {#each [0, 1, 2] as i}
+                        <pre
+                        bind:this={MIRROR_FIELDS[i]}
+                        ></pre>
+                    {/each}
+                </div>
             </div>
-        {/each}
+        </div>
+
+        <div
+        class="output"
+        bind:this={output}
+        >
+            {#each output_LINES as line}
+                <div
+                class="line"
+                >
+                    {#if line.name}
+                        <span
+                        class:console-error={line.error}
+                        class:console-success={line.success}
+                        >
+                            {line.name}:
+                        </span> &nbsp;
+                    {/if}
+
+                    <pre>{line.message}</pre>
+                </div>
+            {/each}
+        </div>
     </div>
+
+    <button
+    class={CONSOLE_TARGET_CLASS}
+    type="button"
+    on:click={console_eClick}
+    >
+        <Icon
+        prop_CLASS={CONSOLE_TARGET_CLASS}
+        prop_SIZE="1.5rem"
+        prop_COLOR={COLORS.light}
+        >
+            <Arrow
+            prop_FOCUS={console_ON}
+            />
+        </Icon>
+    </button>
 </div>
 
 <!-- #STYLE -->
@@ -352,145 +355,125 @@ lang="scss"
 
 /* #VARIABLES */
 
-$gap-block: max(12rem, 50px);
-$btn-width: 10rem;
 $line-width: 35vw;
-$line-height: 8rem;
+$line-height: 5rem;
+
+$btn-width: 5rem;
+
+$total-width: calc(app.$gap-inline + $line-width + $btn-width);
+
+$area-width: calc(app.$gap-inline + $line-width);
 
 /* #CONSOLE */
 
 .console
 {
-    @include position.placement(fixed, auto, 0, $gap-block);
+    $gap-block: 7rem;
+
+    @include position.placement(absolute, $gap-block, app.$gap-inline, $gap-block);
 
     z-index: 1;
 
     display: flex;
-    flex-direction: column-reverse;
 
-    transform: translateX(calc(100% - $btn-width - utils.$scroll-bar-width));
-
-    overflow: hidden;
-
-    width: 100%;
-    height: fit-content;
+    width: calc(100% - app.$gap-inline * 2);
+    height: calc(100% - $gap-block * 2);
 
     pointer-events: none;
 
-    transition: transform .3s ease;
-
-    animation: aTranslateX .4s ease-in-out;
-
-    &.on
+    &.on .area
     {
-        transform: translateX(0);
+        transform: translateX(0) scaleX(1);
 
-        .output { opacity: 1; }
-
-        .input { border-bottom-color: rgba($light, .3); }
+        opacity: 1;
     }
 
-    &>*
+    .area
     {
-        height: fit-content;
+        transform: translateX(50%) scaleX(0);
 
-        .line
-        {
-            height: $line-height;
-            min-height: $line-height;
-            max-height: $line-height;
+        opacity: 0;
+        
+        width: $area-width;
+        height: 100%;
 
-            &>* { @include font.interact(var(--line-color)); }
-        }
+        transition: transform .4s ease, opacity .4s;
     }
 
-    & .console-target { pointer-events: auto; }
+    &>button
+    {
+        @extend %button-reset;
+        @extend %f-a-center;
+    
+        justify-content: flex-end;
+        flex-shrink: 0;
+
+        width: $btn-width;
+        height: $line-height;
+    }
 
     .input
     {
-        @extend %f-a-center;
-
-        gap: utils.$scroll-bar-width;
-
         width: 100%;
+        height: fit-content;
 
-        border-bottom: solid $intermediate 1px;
+        padding-left: app.$gap-inline;
+
+        background-color: $dark;
+
+        border: solid $primary 3px;
+
+        text-align: right;
 
         box-sizing: border-box;
 
-        transition: border .4s;
+        .line { position: relative; }
 
-        &>button
+        input, .mirror { @extend %any; }
+        input
         {
-            @extend %button-reset;
-            @extend %f-center;
+            @include position.placement(absolute, 0, 0, 0);
 
-            flex-shrink: 0;
+            @extend %input-reset;
 
-            width: $btn-width;
-            height: $line-height;
+            color: transparent;
+    
+            caret-color: $primary;
+
+            &::selection
+            {
+                background-color: rgba($primary, .5);
+
+                color: transparent;
+            }
         }
-
-        .line
+        .mirror 
         {
-            position: relative;
+            @extend %f-a-center;
 
-            width: calc(100% - $btn-width);
-
-            backdrop-filter: hue-rotate(180deg);
-
-            input, .mirror { @extend %any; }
-            input
-            {
-                --line-color: transparent;
-        
-                @include position.placement(absolute, auto, 0, 0, 0);
-
-                @extend %input-reset;
-        
-                caret-color: $primary;
-
-                &::selection
-                {
-                    background-color: rgba($primary, .5);
-
-                    color: transparent;
-                }
-            }
-            .mirror 
-            {
-                #{--line-color}: $light;
-
-                @extend %f-a-center;
-        
-                &.app-available>pre:nth-child(1) { color: $primary; }
-                &.command-available>pre:nth-child(2) { color: $indicator; }
-            }
+            color: $light;
+    
+            &.app-available>pre:nth-child(1) { color: $primary; }
+            &.command-available>pre:nth-child(2) { color: $indicator; }
         }
     }
 
     .output
     {
-        @extend %f-column;
+        $margin-top: 1rem;
+    
         @extend %scroll-bar;
+        @extend %f-column;
 
-        align-items: flex-end;
-        align-self: flex-end;
+        overflow: auto scroll;
 
-        overflow: auto;
+        width: 100%;
+        height: fit-content;
+        max-height: calc(100% - $line-height - $margin-top);
 
-        opacity: 0;
+        margin-top: $margin-top;
 
-        width: fit-content;
-        max-width: 100%;
-        min-height: 0;
-        max-height: calc(100vh - ($gap-block * 2 + $line-height));
-
-        padding-right: app.$gap-inline;
-
-        box-sizing: border-box;
-
-        transition: opacity .4s;
+        backdrop-filter: hue-rotate(30deg);
 
         .line
         {
@@ -498,23 +481,27 @@ $line-height: 8rem;
 
             justify-content: flex-end;
 
-            pointer-events: none;
+            .console-error { color: $indicator; }
+            .console-success { color: $primary; }
 
-            .console-error { #{--line-color}: $indicator; }
-            .console-success { #{--line-color}: $primary; }
-
-            pre { #{--line-color}: $light; }
+            pre { color: $light; }
         }
     }
 
-    @keyframes aTranslateX { from { transform: translateX(100%); } }
-
-    @include media.min($ms3)
+    .line
     {
-        width: fit-content;
+        @include font.interact;
+    
+        width: $line-width;
+        height: $line-height;
+        min-height: $line-height;
+        max-height: $line-height;
 
-        .input { width: $line-width; }
-        .output { max-width: $line-width; }
+        * { font: inherit;  }
     }
+
+    .console-target { pointer-events: auto; }
+
+    @include media.min($ms3) { width: $total-width; }
 }
 </style>

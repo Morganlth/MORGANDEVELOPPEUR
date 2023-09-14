@@ -209,7 +209,7 @@ lang="scss"
 
             transform-origin: bottom left;
 
-            color: $intermediate;
+            color: rgba($light, .2);
             line-height: 2.7;
         }
         &:nth-child(3)
@@ -239,18 +239,20 @@ lang="scss"
             min-width: max(100vw, 100vh);
             height: fit-content;
 
+            pointer-events: auto;
+
             li
             {
                 @include font.interact($light, map.get(font.$font-sizes, s3), 2.5, map.get(font.$content-font-weight, w1));
     
                 padding-left: app.$gap-inline;
+
+                user-select: auto;
             }
 
             a
             {
                 @include font.simple-hover($primary);
-
-                pointer-events: auto;
 
                 font-weight: map.get(font.$content-font-weight, w2);
         

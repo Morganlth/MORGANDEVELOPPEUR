@@ -76,6 +76,7 @@
 
     // --ELEMENT-SPACECUBE
     const
+    SPACECUBE_NAME = 'spacecube',
     SPACECUBE_ANTIALIAS = true,
     SPACECUBE_PIXELRATIO = 2,
     SPACECUBE_CAMERA_FOV = 75,
@@ -92,7 +93,7 @@
     SPACECUBE_COMMANDS =
     [
         {
-            name: 'spacecube',
+            name: SPACECUBE_NAME,
             callback: spacecube_c$,
             params: { defaultValue: true, optimise: { value: false } },
             tests: { testBoolean: true },
@@ -460,7 +461,7 @@
     }
 
     // --COMMAND
-    function spacecube_c$(on) { COMMAND.command_test(on, 'boolean', spacecube_update, 'spacecube', spacecube_ON) }
+    function spacecube_c$(on) { COMMAND.command_test(on, 'boolean', spacecube_update, SPACECUBE_NAME, spacecube_ON) }
 
     // --EVENTS
     function spacecube_e$MouseMove(clientX, clientY) // THROTTLE

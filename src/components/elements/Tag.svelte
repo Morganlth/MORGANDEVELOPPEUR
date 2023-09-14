@@ -128,7 +128,7 @@ lang="scss"
 {
     &::before
     {
-        @include position.placement(absolute, auto, auto, 0, -8rem, true);
+        @include position.placement(absolute, auto, -8rem, 0, auto, true);
 
         transform: translateX(0) scale(1);
     
@@ -156,7 +156,6 @@ lang="scss"
     width: fit-content;
     height: fit-content;
 
-    margin-bottom: 4rem;
     padding: 2rem;
 
     pointer-events: auto;

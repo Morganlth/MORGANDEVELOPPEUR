@@ -8,7 +8,7 @@
 
             CONTENT
                 FEATURE
-                GAME
+    
                 CONTACT
 
             MASK
@@ -58,7 +58,9 @@
     let presentation_CHARGED = false
 
     // --ELEMENT-SNAKE
-    let snake_GAME = false
+    let
+    snake_ON = true,
+    snake_GAME = false
 
     // --ELEMENT-TITLE
     let
@@ -72,12 +74,12 @@
     features_CONTACT_OFFSET_TOP = 0
 
     // --ELEMENT-MASK
-    let mask_SCROLL_RATIO = 0
+    let mask_RATIO = 0
 
 // #REACTIVE
 
     // --ELEMENT-PRESENTATION
-    $: prop_START != void 0 && prop_END != void 0 ? presentation_setVars() : void 0
+    $: prop_START != null && prop_END != null ? presentation_setVars() : void 0
 
 // #FUNCTIONS
 
@@ -111,10 +113,22 @@
     {
         title_INVISIBLE = APP.app_SMALL_SCREEN && APP.app_SCROLLTOP > title_END ? true : false
 
-        mask_SCROLL_RATIO = scrollTop / prop_START
+        mask_RATIO = scrollTop / prop_START
     }
 
-    async function snake_eClick() { snake_GAME = true }
+    async function snake_eClick(i)
+    {
+        switch (i)
+        {
+            case 0:
+                snake_GAME = true
+                break
+            case 1:
+                snake_ON = !snake_ON
+                break
+            default: break
+        }
+    }
 
     async function contact_eClick() { EVENT.event_scrollTo(features_CONTACT_OFFSET_TOP) }
 
@@ -134,7 +148,7 @@ style:z-index={prop_FOCUS ? 1 : 0}
     class="wrapper"
     >
         <Snake
-        snake_ON={prop_RATIO < 1}
+        snake_ON={snake_ON && prop_RATIO < 1}
         bind:snake_GAME
         />
 
@@ -157,11 +171,19 @@ style:z-index={prop_FOCUS ? 1 : 0}
                 <ul>
                     <li>
                         <button
-                        class="game"
                         type="button"
-                        on:click={snake_eClick}
+                        on:click={snake_eClick.bind(null, 0)}
                         >
                             ~~JOUER
+                        </button>
+                    </li>
+
+                    <li>
+                        <button
+                        type="button"
+                        on:click={snake_eClick.bind(null, 1)}
+                        >
+                            ~~{snake_ON ? 'MASQUER' : 'AFFICHER'}
                         </button>
                     </li>
     
@@ -182,7 +204,7 @@ style:z-index={prop_FOCUS ? 1 : 0}
         prop_SHADOW={true}
         prop_COORDS={[65, 50]}
         prop_GRADIENT={[50, 90]}
-        prop_RATIO={mask_SCROLL_RATIO}
+        prop_RATIO={mask_RATIO}
         />
     </div>
 </div>
@@ -229,7 +251,7 @@ lang="scss"
             gap: 1rem;
         }
 
-        .game, .contact
+        li button
         {
             @include font.interact($light, map.get(font.$font-sizes, s3), 1, map.get(font.$content-font-weight, w1));
             @include font.simple-hover;
@@ -241,9 +263,8 @@ lang="scss"
             pointer-events: auto;
         }
 
-        .game { padding-right: 1rem; }
-
-        .contact { padding-inline: 1rem; }
+        li:first-child button { padding-right: 1rem; }
+        li button:not(li:first-child button) { padding-inline: 1rem; }
     }
 }
 </style>

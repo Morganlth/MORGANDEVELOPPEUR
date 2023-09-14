@@ -13,6 +13,7 @@
 
     // --PROPS
     export let
+    prop_CLASS = '',
     prop_OPACITY = 1,
     prop_SIZE = 'var(--icon-size, auto)',
     prop_COLOR = null,
@@ -90,7 +91,7 @@ onDestroy(icon_destroy)
 
 <svelte:element
 this={prop_LINK ? 'a' : 'div'}
-class="icon"
+class="icon {prop_CLASS}"
 style:--icon-color={prop_COLOR}
 style:opacity={prop_OPACITY}
 style:width={prop_SIZE}

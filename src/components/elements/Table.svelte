@@ -44,7 +44,7 @@
 // #VARIABLES
 
     // --ELEMENT-LINES
-    let lines
+    let lines_DESTROY = false
 
     // --ELEMENT-CROSS
     let cross_DESTROY = false
@@ -55,15 +55,12 @@
     function cell_eClick() { SVELTE_DISPATCH('click') }
 
     // --TRANSITION
-    function table_t() { return { duration: 600, css: (t, n) => `--line-translate: ${n * 200}%`}}
-
-    // --INTRO
-    function table_intro() { lines.style.overflow = 'hidden auto' }
+    function table_tFade() { return { duration: 600, css: (t) => `opacity: ${t}` }}
 
     // --OUTRO
     function table_outro()
     {
-        lines.style.overflow = 'hidden'
+        lines_DESTROY = true
 
         cross_DESTROY = true
     }
@@ -73,8 +70,7 @@
 
 <section
 class="table"
-transition:table_t
-on:introstart={table_intro}
+transition:table_tFade
 on:outrostart={table_outro}
 >
     <div
@@ -84,7 +80,7 @@ on:outrostart={table_outro}
         on:click={cell_eClick}
         >
             <Icon
-            prop_COLOR={COLORS.primary}
+            prop_COLOR={COLORS.indicator}
             prop_SPRING={true}
             >
                 <Cross
@@ -92,18 +88,14 @@ on:outrostart={table_outro}
                 />
             </Icon>
         </Cell>
+
+        <h3>{prop_TITLE}</h3>
     </div>
 
     <div
     class="lines"
-    bind:this={lines}
+    class:destroy={lines_DESTROY}
     >
-        <div
-        class="line"
-        >
-            <h3>{prop_TITLE}</h3>
-        </div>
-
         {#each prop_LINES as line}
             <div
             class="line"
@@ -139,64 +131,74 @@ lang="scss"
 
 .table
 {
+    &, .head, .lines { @extend %f-column; }
+    &, .head { gap: 3rem; }
+
     @include position.placement(absolute, 0, 0, 0, 0);
 
     @extend %any;
 
-    padding-block: calc(app.$gap-block * 4);
+    padding-block: 14rem;
     padding-left: app.$gap-inline;
 
     box-sizing: border-box;
 
     .head, .lines
     {
-        padding-right: calc(app.$gap-inline * 1.5);
+        padding-right: app.$gap-inline;
 
         box-sizing: border-box;
     }
-    .head, .line
-    {
-        @extend %f-a-center;
-
-        justify-content: flex-end;
-        
-        width: 100%;
-    }
+    .head, .line { width: 100%; }
     .head
     {
         $size: map.get(font.$font-sizes, s3);
     
         #{--icon-size}: calc($size * font.$line-height-title-min);
 
-        height: 8%;
-        min-height: $size;
+        align-items: flex-end;
+
+        height: fit-content;
+
+        h3 { @include font.h-custom($light, map.get(font.$font-sizes, s4)); }
     }
     .lines
     {
         @extend %scroll-bar;
-        @extend %f-column;
+        @extend %any;
 
-        height: 92%;
+        overflow: hidden scroll;
 
         pointer-events: auto;
 
-        box-sizing: border-box;
+        &.destroy .line
+        {
+            &::before { animation-name: a0; }
+
+            &>* { animation-name: a1; }
+        }
 
         .line
         {
+            &::before, &>* { animation: .6s ease-out forwards; }
+
             &::before
             {
                 @include position.placement(absolute, auto, auto, 0, -100%, true);
-
-                transform: translateX(calc(100% - var(--line-translate, 0%)));
         
                 width: 100%;
                 height: 0;
 
                 border-bottom: solid $intermediate 1px;
+
+                animation-name: a1;
             }
 
             position: relative;
+
+            @extend %f-a-center;
+
+            justify-content: flex-end;
     
             flex: 1;
 
@@ -204,18 +206,20 @@ lang="scss"
 
             transition: color .2s;
 
-            &:hover p { color: $light; }
+            &>* { animation-name: a0; }
 
-            &>* { transform: translateX(var(--line-translate, 0)); }
-            h3 { @include font.h-custom($light, map.get(font.$font-sizes, s4)); }
             h4
             {
                 color: $primary;
                 font-family: font.$family-subtitle;
                 font-size: map.get(font.$font-sizes, s2);
             }
-            p { @include font.interact(rgba($light, .3)); }
+    
+            p { @include font.interact($light); }
         }
+
+        @keyframes a0 { from { transform: translateX(100%); } to { transform: translateX(0%); } }
+        @keyframes a1 { from { transform: translateX(0%); } to { transform: translateX(100%); } }
     }
 }
 </style>

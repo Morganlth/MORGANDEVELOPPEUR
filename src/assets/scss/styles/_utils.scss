@@ -42,13 +42,13 @@
         {
             width: $scroll-bar-width;
 
-            background-color: $dark;
+            // background-color: $dark;
 
             pointer-events: auto;
         }
         &::-webkit-scrollbar-thumb
         {
-            background-color: $primary;
+            background-color: $light;
 
             pointer-events: auto;
         }

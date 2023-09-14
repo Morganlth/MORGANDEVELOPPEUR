@@ -29,19 +29,21 @@
 
     // --ELEMENT-PARTICLES
     const
+    PARTICLES_NAME = 'particles',
+    PARTICLES_DELAY_NAME = 'particles_delay',
     PARTICLES_GAP = 100,
     PARTICLES_PARTICLES = [],
     PARTICLES_COMMANDS =
     [
         {
-            name: 'particles',
+            name: PARTICLES_NAME,
             callback: particles_c$,
             params: { defaultValue: true, optimise: { value: false } },
             tests: { testBoolean: true },
             storage: true
         },
         {
-            name: 'particles_delay',
+            name: PARTICLES_DELAY_NAME,
             callback: particles_c$Delay,
             params: { defaultValue: 100, min: 10, max: 1000 },
             tests: { testNumber: true },
@@ -172,9 +174,9 @@
     function particles_testMax() { if (PARTICLES_PARTICLES.length > particles_MAX) PARTICLES_PARTICLES.shift() }
 
     // --COMMANDS
-    function particles_c$(on) { COMMAND.command_test(on, 'boolean', particles_update, PARTICLES_COMMANDS[0].name, particles_ON) }
+    function particles_c$(on) { COMMAND.command_test(on, 'boolean', particles_update, PARTICLES_NAME, particles_ON) }
 
-    function particles_c$Delay(delay) { COMMAND.command_test(delay, 'number', particles_updateDelay, PARTICLES_COMMANDS[1].name, particles_DELAY) }
+    function particles_c$Delay(delay) { COMMAND.command_test(delay, 'number', particles_updateDelay, PARTICLES_DELAY_NAME, particles_DELAY) }
 
     // --EVENTS
     async function particles_e$Resize() { if (particles instanceof HTMLElement) particles_setVars() }

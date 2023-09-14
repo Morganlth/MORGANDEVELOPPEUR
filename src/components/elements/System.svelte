@@ -56,10 +56,12 @@
 // #CONSTANTES
 
     // --ELEMENT-SYSTEM
-    const SYSTEM_COMMANDS =
+    const
+    SYSTEM_OPTIMISE_NAME = 'system_optimise',
+    SYSTEM_COMMANDS =
     [
         {
-            name: 'system_optimise',
+            name: SYSTEM_OPTIMISE_NAME,
             callback: system_c$Optimise,
             params: { defaultValue: false, optimise: { value: true } },
             tests: { testBoolean: true },
@@ -185,7 +187,7 @@
     }
 
     // --COMMAND
-    function system_c$Optimise(optimised) { COMMAND.command_test(optimised, 'boolean', system_update, SYSTEM_COMMANDS[0].name, system_OPTIMISED) }
+    function system_c$Optimise(optimised) { COMMAND.command_test(optimised, 'boolean', system_update, SYSTEM_OPTIMISE_NAME, system_OPTIMISED) }
 
     // --EVENTS
     async function group_e$Scroll()
@@ -207,7 +209,7 @@
 
     async function orbit_e$Resize() { orbit_setVars() }
 
-    function cube_eClick() { if (this.focus) orbit_update.call(this, true) }
+    function cube_eClick() { if (this.focus || system_OPTIMISED) orbit_update.call(this, true) }
 
     function tag_eClick() { cube_eClick.call(this) }
 
@@ -257,44 +259,51 @@ class:focus={prop_FOCUS}
     >
         <Moon />
 
-        {#each SYSTEM_DATAS as data}
-            <Orbit
-            prop_ROTATE={data.props.prop_ROTATE}
-            >
-                <GravityArea
-                let:rotation
-                let:grabbing
-                prop_e$RESIZE={resize}
-                prop_e$ANIMATION={animation}
-                prop_FOCUS={data.focus ?? false}
-                prop_GRABBING={false}
-                prop_ORBIT_RADIUS={orbit_RADIUS}
+        {#if !system_OPTIMISED}
+            {#each SYSTEM_DATAS as data}
+                <Orbit
                 prop_ROTATE={data.props.prop_ROTATE}
-                prop_OFFSET={data.props.prop_OFFSET}
-                prop_FORCE={.2}
-                {prop_RATIO}
-                bind:gravityarea_TRANSLATE_Z={GROUP_Z_POSITIONS[data.id]}
                 >
-                    <Cube
-                    prop_$ROTATION={rotation}
-                    prop_$GRABBING={grabbing}
-                    prop_DESTROY={orbit_TARGET ? true : false}
+                    <GravityArea
+                    let:rotation
+                    let:grabbing
+                    prop_e$RESIZE={resize}
+                    prop_e$ANIMATION={animation}
                     prop_FOCUS={data.focus ?? false}
+                    prop_GRABBING={false}
+                    prop_ORBIT_RADIUS={orbit_RADIUS}
                     prop_ROTATE={data.props.prop_ROTATE}
-                    prop_SRC={data.props.prop_SRC}
-                    prop_ALT={data.props.prop_ALT}
-                    prop_COLOR={data.props.prop_COLOR}
-                    on:click={cube_eClick.bind(data)}
-                    />
-                </GravityArea>
-            </Orbit>
-        {/each}
+                    prop_OFFSET={data.props.prop_OFFSET}
+                    prop_FORCE={.2}
+                    {prop_RATIO}
+                    bind:gravityarea_TRANSLATE_Z={GROUP_Z_POSITIONS[data.id]}
+                    >
+                        <Cube
+                        prop_$ROTATION={rotation}
+                        prop_$GRABBING={grabbing}
+                        prop_DESTROY={orbit_TARGET ? true : false}
+                        prop_FOCUS={data.focus ?? false}
+                        prop_ROTATE={data.props.prop_ROTATE}
+                        prop_SRC={data.props.prop_SRC}
+                        prop_ALT={data.props.prop_ALT}
+                        prop_COLOR={data.props.prop_COLOR}
+                        on:click={cube_eClick.bind(data)}
+                        />
+                    </GravityArea>
+                </Orbit>
+            {/each}
+        {/if}
     </Group>
 
     <Group>
         {#each SYSTEM_DATAS as data}
             <Tag
-            prop_FOCUS={!data.clicked && (data.focus || system_OPTIMISED && prop_FOCUS)}
+            prop_FOCUS={
+                prop_FOCUS && (
+                (!data.clicked && data.focus) ||
+                (system_OPTIMISED && !orbit_TARGET)
+                )
+            }
             prop_OPTIMISED={system_OPTIMISED}
             prop_CONTENT={data.tag}
             prop_X={group_ROTATE_Y * 6}
@@ -304,17 +313,15 @@ class:focus={prop_FOCUS}
         {/each}
     </Group>
 
-    <Group>
-        {#each SYSTEM_DATAS as data}
-            {#if data.focus && data.clicked}
-                <Table
-                prop_TITLE={data.tag}
-                prop_LINES={data.skills}
-                on:click={table_eClick}
-                />
-            {/if}
-        {/each}
-    </Group>
+    {#each SYSTEM_DATAS as data}
+        {#if (data.focus || system_OPTIMISED) && data.clicked}
+            <Table
+            prop_TITLE={data.tag}
+            prop_LINES={data.skills}
+            on:click={table_eClick}
+            />
+        {/if}
+    {/each}
 </div>
 
 <!-- #STYLE -->
@@ -327,17 +334,17 @@ lang="scss"
 @use '../../assets/scss/styles/utils';
 @use '../../assets/scss/styles/position';
 @use '../../assets/scss/styles/display';
-@use '../../assets/scss/styles/size';
 
 /* #SYSTEM */
 
 .system
 {
-    @include position.placement(absolute, 0, 0, 0, 0);
-
-    @extend %any;
+    @include position.placement(absolute, 0, auto, auto, 0);
 
     transform: translate(30%, -30%) scale(.2);
+
+    width: 100vw;
+    height: 100vh;
 
     transition: transform .6s;
 
@@ -360,20 +367,16 @@ lang="scss"
 
         .group:nth-child(2)
         {
-            @include position.placement(absolute, 51%, auto, auto, 50vw);
+            @include position.placement(absolute, 51%, 10vw);
             
+            @extend %f-column;
+    
+            align-items: flex-end;
+    
             transform: translateY(-50%);
 
             width: fit-content;
             height: fit-content;
-        }
-
-        .group:nth-child(3)
-        {
-            @include position.placement(absolute, 0, auto, 0, 0);
-    
-            width: calc(100vw - utils.$scroll-bar-width);
-            height: 100%;
         }
     }
 }

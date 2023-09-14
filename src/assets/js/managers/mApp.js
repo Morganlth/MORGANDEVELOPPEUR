@@ -5,10 +5,13 @@ class App
 // #VARIABLES
 
     // --APP-CONTEXT
+    static __app_SAVE_NAME = 'save'
+    static __app_OPTIMISE_NAME = 'optimise'
+
     #app
     #app_$FREEZE = {}
     #app_$HIDE = writable(false)
-    #app_SMALL_SCREEN = false
+    #app_SMALL_SCREEN = false // use by presentation and skills for mask title with small height -> to modified
     #app_OPTIMISE = false
     #app_OPTIMISE_CONFIG = {}
     #app_STORAGE = {}
@@ -42,7 +45,7 @@ constructor ()
 
     this.#app_COMMANDS.push(
         {
-            name: 'optimise',
+            name: App.__app_OPTIMISE_NAME,
             callback: this.app_c$Optimise.bind(this),
             params: { defaultValue: this.#app_OPTIMISE },
             tests: { testBoolean: true },
@@ -71,6 +74,20 @@ constructor ()
 
     #app_setCommands() { COMMAND.command_setBasicCommands(this.#app_COMMANDS) }
 
+    #app_setStorage()
+    {
+        const
+        STORAGE = localStorage.getItem(App.__app_SAVE_NAME),
+        CONFIG = JSON.parse(STORAGE ?? '{}')
+    
+        for (const NAME in this.#app_OPTIMISE_CONFIG) this.#app_STORAGE[NAME] = CONFIG[NAME] ?? (localStorage.getItem(NAME) ?? 'd')
+
+        if (!STORAGE) localStorage.setItem(App.__app_SAVE_NAME, JSON.stringify(this.#app_STORAGE))
+    }
+
+    // --DESTROY
+    #app_destroyStorage() { localStorage.removeItem(App.__app_SAVE_NAME) }
+
     // --RESTORE
     #app_restore()
     {
@@ -82,11 +99,10 @@ constructor ()
         for (const NAME of COMMAND.command_KEYSTORAGE)
             try
             {
-                COMMANDS[NAME](
-                    OPTIMISE && NAME in OPTIMISE_CONFIG
-                    ? OPTIMISE_CONFIG[NAME]
-                    : localStorage.getItem(NAME) ?? 'd'
-                )
+                const [COMMAND, STORAGE] = [COMMANDS[NAME], localStorage.getItem(NAME)]
+
+                if (OPTIMISE && NAME in OPTIMISE_CONFIG) COMMAND(OPTIMISE_CONFIG[NAME])
+                if (STORAGE != null) COMMAND(STORAGE)
             }
             catch { localStorage.removeItem(NAME) }
 
@@ -94,22 +110,25 @@ constructor ()
     }
 
     // --UPDATES
-    app_updateSmallScreen() { this.#app_SMALL_SCREEN = window.innerHeight < BREAKPOINTS.ms3 }
+    app_updateSmallScreen() { this.#app_SMALL_SCREEN = this.app_testScreen(null, BREAKPOINTS.ms3) }
 
     app_updateMode(optimise)
     {
-        if (optimise) this.app_saveStorage(this.#app_OPTIMISE_CONFIG)
+        optimise ? this.#app_setStorage() : this.#app_destroyStorage()
 
-        COMMAND.command_update(optimise ? this.#app_OPTIMISE_CONFIG : this.#app_STORAGE)
+        COMMAND.command_update(optimise
+            ? this.#app_OPTIMISE_CONFIG
+            : (this.#app_STORAGE ?? (JSON.parse(localStorage.getItem(App.__app_SAVE_NAME) ?? {})))
+        )
 
-        this.app_OPTIMISE = optimise
+        this.#app_OPTIMISE = optimise
     }
     
     // --COMMAND
-    app_c$Optimise(on) { COMMAND.command_test(on, 'boolean', this.app_updateMode, this.#app_COMMANDS[0].name, this.#app_OPTIMISE) }
+    app_c$Optimise(on) { COMMAND.command_test(on, 'boolean', this.app_updateMode, App.__app_OPTIMISE_NAME, this.#app_OPTIMISE) }
 
-    // --UTIL
-    app_saveStorage(config = {}) { for (const NAME in config) this.#app_STORAGE[NAME] = localStorage.getItem(NAME) }
+    // --TEST
+    app_testScreen(width, height) { return window.innerWidth < (width ?? -Infinity) || window.innerHeight < (height ?? -Infinity) }
 
     // --GETTER
     get app() { return this.#app }

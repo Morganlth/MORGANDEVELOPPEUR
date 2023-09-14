@@ -18,7 +18,7 @@
 <svg
 class="arrow"
 class:focus={prop_FOCUS}
-viewBox="0 0 43 66"
+viewBox="0 0 54 66"
 fill="none"
 xmlns="http://www.w3.org/2000/svg"
 >
@@ -33,8 +33,17 @@ xmlns="http://www.w3.org/2000/svg"
 
 <!-- #STYLE -->
 
-<style>
+<style
+lang="scss"
+>
 /* #ARROW */
 
-.arrow.focus { transform: scaleX(-1); }
+.arrow
+{
+    pointer-events: none;
+
+    transition: transform .4s;
+
+    &.focus { transform: scaleX(-1); }
+}
 </style>

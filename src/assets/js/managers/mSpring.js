@@ -7,7 +7,6 @@ class Spring
     // --SPRING-CONTEXT
     static __spring_NAME = 'spring'
     static __spring_D_SIZE = 7
-    static test = 'hello'
 
     #spring_$ON = true
     #spring_HOVER = false // icon hover
