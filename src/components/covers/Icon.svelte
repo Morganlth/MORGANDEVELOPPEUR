@@ -13,7 +13,6 @@
 
     // --PROPS
     export let
-    prop_CLASS = '',
     prop_OPACITY = 1,
     prop_SIZE = 'var(--icon-size, auto)',
     prop_COLOR = null,
@@ -61,7 +60,7 @@
     }
 
     // --UPDATE
-    function icon_updateSpring(hover, size)
+    function spring_update(hover, size)
     {
         SPRING.spring_HOVER = (spring_HOVER = hover)
         SPRING.spring_$SIZE = size
@@ -74,12 +73,12 @@
         CLIENTRECT = icon.getBoundingClientRect(),
         [X, Y] = [CLIENTRECT.left + CLIENTRECT.width / 2, CLIENTRECT.top + CLIENTRECT.height / 2]
 
-        icon_updateSpring(true, CLIENTRECT.width)
+        spring_update(true, CLIENTRECT.width)
 
         requestAnimationFrame(() => SPRING.spring_$COORDS = { x: X, y: Y })
     }
 
-    function icon_eMouseLeave() { icon_updateSpring(false, SPRING.spring_D_SIZE) } // no async
+    function icon_eMouseLeave() { spring_update(false, SPRING.spring_HIDE ? 0 : SPRING.spring_D_SIZE) } // no async
 
 // #CYCLES
 
@@ -91,7 +90,7 @@ onDestroy(icon_destroy)
 
 <svelte:element
 this={prop_LINK ? 'a' : 'div'}
-class="icon {prop_CLASS}"
+class="icon"
 style:--icon-color={prop_COLOR}
 style:opacity={prop_OPACITY}
 style:width={prop_SIZE}

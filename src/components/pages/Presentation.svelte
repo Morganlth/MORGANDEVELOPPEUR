@@ -1,6 +1,7 @@
 <!-- #MAP
 
 -APP
+-COMMAND
 -EVENT
     PRESENTATION
         WRAPPER
@@ -34,7 +35,7 @@
     import { wait_throttle } from '../../assets/js/utils/wait'
 
     // --CONTEXTS
-    import { APP, EVENT } from '../../App.svelte'
+    import { APP, COMMAND, EVENT } from '../../App.svelte'
 
     // --SVELTE
     import { onMount, onDestroy } from 'svelte'
@@ -47,10 +48,24 @@
     import Mask from '../elements/Mask.svelte'
     import Features from '../elements/Features.svelte'
 
-// #CONSTANTE
+// #CONSTANTES
 
     // --ELEMENT-PRESENTATION
     const PRESENTATION_EVENTS = { scroll: wait_throttle(presentation_e$Scroll, 20) }
+
+    // --ELEMENT-SNAKE
+    const
+    SNAKE_NAME = 'snake',
+    SNAKE_COMMANDS =
+    [
+        {
+            name: SNAKE_NAME,
+            callback: snake_c$,
+            params: { defaultValue: true },
+            tests: { testBoolean: true },
+            storage: true
+        }
+    ]
 
 // #VARIABLES
 
@@ -88,16 +103,20 @@
     {
         presentation_setEvents()
 
+        snake_setCommands()
+
         presentation_CHARGED = true
     }
 
-    function presentation_setVars()
+    function presentation_setVars() // resize by pages
     {
         title_setVars()
         features_setVars()
     }
 
     function presentation_setEvents() { EVENT.event_add(PRESENTATION_EVENTS) }
+
+    function snake_setCommands() { COMMAND.command_setBasicCommands(SNAKE_COMMANDS) }
 
     function title_setVars() { title_END = prop_START + window.innerHeight }
 
@@ -107,6 +126,12 @@
     function presentation_destroy() { presentation_destroyEvents() }
 
     function presentation_destroyEvents() { EVENT.event_remove(PRESENTATION_EVENTS) }
+
+    // --UPDATE
+    function snake_update(on) { snake_ON = on }
+
+    // --COMMAND
+    function snake_c$(on) { COMMAND.command_test(on, 'boolean', snake_update, SNAKE_NAME, snake_ON) }
 
     // --EVENTS
     async function presentation_e$Scroll(scrollTop)
@@ -124,7 +149,7 @@
                 snake_GAME = true
                 break
             case 1:
-                snake_ON = !snake_ON
+                COMMAND.command_COMMANDS[SNAKE_NAME](!snake_ON)
                 break
             default: break
         }
@@ -148,7 +173,7 @@ style:z-index={prop_FOCUS ? 1 : 0}
     class="wrapper"
     >
         <Snake
-        snake_ON={snake_ON && prop_RATIO < 1}
+        prop_ON={snake_ON && prop_RATIO < 1}
         bind:snake_GAME
         />
 

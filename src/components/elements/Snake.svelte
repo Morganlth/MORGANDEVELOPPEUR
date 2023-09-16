@@ -25,7 +25,7 @@
 // #EXPORTS
 
     // --PROP
-    export let snake_ON = true
+    export let prop_ON = true
 
     // --BIND
     export let snake_GAME = false
@@ -60,13 +60,14 @@
 
     // --ELEMENT-SNAKE
     const
+    SNAKE_SIZE_NAME = 'snake_size',
     SNAKE_BLOCKSIZE = 40,
     SNAKE_SNAKE = [],
     SNAKE_APPLE = [],
     SNAKE_COMMANDS =
     [
         {
-            name: 'snake_size',
+            name: SNAKE_SIZE_NAME,
             callback: snake_c$Size,
             params: { defaultValue: SNAKE_BLOCKSIZE, min: 20, max: 70 },
             tests: { testNumber: true },
@@ -119,7 +120,7 @@
 // #REACTIVES
 
     // --ELEMENT-SNAKE
-    $: snake_ON ? snake_start() : snake_stop()
+    $: prop_ON ? snake_start() : snake_stop()
     $: snake_GAME ? snake_startGame() : void 0
 
 // #FUNCTIONS
@@ -140,7 +141,7 @@
         const
         [WIDTH, HEIGHT] = [snake.offsetWidth, snake.offsetHeight],
         SIZE = snake_CUSTOM_BLOCKSIZE ?? (APP.app_testScreen(BREAKPOINTS.ms4, BREAKPOINTS.ms4) ? SNAKE_BLOCKSIZE - 10 : SNAKE_BLOCKSIZE),
-        OVERFLOW =  snake_GAME ? 0 : SIZE
+        OVERFLOW =  snake_GAME ? -SIZE : SIZE
 
         snake_BLOCKSIZE = SIZE
 
@@ -274,12 +275,13 @@
 
     function snake_updateApple(tool)
     {
+        canvas_CONTEXT.clearRect(SNAKE_APPLE[0] * snake_BLOCKSIZE, SNAKE_APPLE[1] * snake_BLOCKSIZE, snake_BLOCKSIZE, snake_BLOCKSIZE)
+
         if (tool === 'fillRect')
         {
             snake_setApple()
             snake_drawApple()
         }
-        else canvas_CONTEXT.clearRect(SNAKE_APPLE[0] * snake_BLOCKSIZE, SNAKE_APPLE[1] * snake_BLOCKSIZE, snake_BLOCKSIZE, snake_BLOCKSIZE)
     }
 
     function gameover_update(on)
@@ -308,7 +310,7 @@
     }
 
     // --COMMAND
-    function snake_c$Size(size) { COMMAND.command_test(size, 'number', snake_updateSize, SNAKE_COMMANDS[0].name, snake_BLOCKSIZE) }
+    function snake_c$Size(size) { COMMAND.command_test(size, 'number', snake_updateSize, SNAKE_SIZE_NAME, snake_BLOCKSIZE) }
 
     // --EVENTS
     async function snake_e$Scroll() { snake_move() }
@@ -325,7 +327,7 @@
         snake_setVars()
         snake_setApple()
 
-        if (snake_ON) snake_draw()
+        if (prop_ON || snake_GAME) snake_draw()
     }
 
     function snake_eFullscreenChange() { if (!document.fullscreenElement) snake_stopGame() }
@@ -383,11 +385,11 @@
     }
 
     // --LOOP
-    async function snake_loop()
+    async function snake_lFps()
     {
         snake_FPS = await fps_get()
 
-        if (snake_GAME) snake_loop()
+        if (snake_GAME) snake_lFps()
     }
 
     // --CONTROLS
@@ -417,17 +419,25 @@
         {
             snake.requestFullscreen().then(snake_notInvincible)
 
-            snake_loop()
+            if (!prop_ON) snake_start()
+
+            snake_lFps()
         }
         catch (e) { snake_stopGame() }
     }
 
     function snake_stopGame()
-    {      
+    {
+        if (!prop_ON) snake_stop()
+
         snake_GAME = false
         snake_INVINCIBLE = true
 
-        gameover_ON ? gameover_update(false) : snake_moveTo()
+        gameover_ON
+        ? gameover_update(false)
+        : prop_ON
+            ? snake_moveTo()
+            : void 0
     }
 
     // --TESTS
@@ -518,11 +528,9 @@
     {
         if (!SNAKE_SNAKE.length) return
 
-        const
-        [GAPX, GAPY] = [snake_X - SNAKE_SNAKE[0][0], snake_Y - SNAKE_SNAKE[0][1]],
-        MIN = Math.min(SNAKE_SNAKE.length, 10)
+        const [GAPX, GAPY] = [snake_X - SNAKE_SNAKE[0][0], snake_Y - SNAKE_SNAKE[0][1]]
 
-        for (let i = 0; i < MIN; i++)
+        for (let i = 0; i < SNAKE_SNAKE.length; i++)
         {
             const BODY = SNAKE_SNAKE[i]
 
@@ -632,6 +640,7 @@ lang="scss"
 @use '../../assets/scss/app';
 
 @use '../../assets/scss/styles/elements';
+@use '../../assets/scss/styles/utils';
 @use '../../assets/scss/styles/position';
 @use '../../assets/scss/styles/display';
 @use '../../assets/scss/styles/size';
@@ -667,8 +676,9 @@ lang="scss"
         background:
         repeating-linear-gradient($intermediate 0 1px, transparent 1px 100%),
         repeating-linear-gradient(90deg, $intermediate 0 1px, transparent 1px 100%);
+        background-size: var(--grid-size, 40) var(--grid-size, 40);
 
-        background-size: var(--grid-size) var(--grid-size);
+        border: solid $intermediate var(--grid-size, 40);
     }
 
     .gameover

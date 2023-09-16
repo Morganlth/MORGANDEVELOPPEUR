@@ -91,6 +91,8 @@
         {
             PAGE.props.prop_START = (PAGE.start ?? 0) * HEIGHT
             PAGE.props.prop_END = PAGE.end * HEIGHT
+
+            PAGES_PAGES[PAGE] = PAGE
         }
     }
 

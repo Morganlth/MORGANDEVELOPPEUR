@@ -10,6 +10,7 @@ class Spring
 
     #spring_$ON = true
     #spring_HOVER = false // icon hover
+    #spring_HIDE = false
     #spring_$COORDS = spring({ x: -Spring.__spring_D_SIZE, y: -Spring.__spring_D_SIZE }, { stiffness: 0.1, damping: 0.4 })
     #spring_$SIZE = spring(Spring.__spring_D_SIZE)
     #spring_COMMANDS = []
@@ -73,15 +74,22 @@ constructor ()
         this.#spring_$ON.set(on)
     }
 
+    #spring_updateState(size)
+    {
+        this.#spring_HIDE = !size
+
+        this.spring_$SIZE = size
+    }
+
     // --COMMAND
     spring_c$(on) { COMMAND.command_test(on, 'boolean', this.spring_update, Spring.__spring_NAME, this.#spring_$ON.on) }
 
-    // --EVENT
+    // --EVENTS
     async spring_e$MouseMove(x, y) { if (!this.#spring_HOVER) this.spring_$COORDS = { x: x, y: y } }
 
-    spring_e$Show() { this.spring_$SIZE = Spring.__spring_D_SIZE }
+    spring_e$Show() { this.#spring_updateState(Spring.__spring_D_SIZE) }
 
-    spring_e$Hide() { this.spring_$SIZE = 0 }
+    spring_e$Hide() { this.#spring_updateState(0) }
 
     // --GETTER
     get spring_D_SIZE() { return Spring.__spring_D_SIZE }
@@ -89,6 +97,8 @@ constructor ()
     get spring_$ON() { return this.#spring_$ON }
 
     get spring_HOVER() { return this.#spring_HOVER }
+
+    get spring_HIDE() { return this.#spring_HIDE }
 
     get spring_$COORDS() { return this.#spring_$COORDS }
 

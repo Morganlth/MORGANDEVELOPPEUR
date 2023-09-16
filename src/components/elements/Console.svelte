@@ -6,10 +6,11 @@
 -SPRING
     CONSOLE
         INPUT
-            \ LINE
+            LINE
                 MIRROR
+            BTN
         OUTPUT
-            \ LINE
+            LINE * n
 
 -->
 
@@ -40,9 +41,11 @@
 
     // --ELEMENT-CONSOLE
     const
-    CONSOLE_TARGET_CLASS = 'console-target',
     CONSOLE_HISTORY = ['app '],
     CONSOLE_EVENTS = { mouseDown: console_e$MouseDown }
+
+    // --ELEMENT-INPUT
+    const INPUT_EVENTS = { resize: input_e$Resize }
 
     // --ELEMENT-MIRROR
     const MIRROR_FIELDS = []
@@ -52,12 +55,14 @@
     // --ELEMENT-CONSOLE
     let
     console_ON = false,
+    console_FOCUS = false,
     console_INDEX = 0
 
     // --ELEMENT-INPUT
     let
     input_FIELD,
-    input_CURRENT_VALUE = ''
+    input_CURRENT_VALUE = '',
+    input_CHAR_WIDTH = 0
 
     // --ELEMENT-MIRROR
     let
@@ -72,7 +77,13 @@
 // #FUNCTIONS
 
     // --SET
-    function console_set() { console_setCommands() }
+    function console_set()
+    {
+        console_setCommands()
+
+        input_setVars()
+        input_setEvents()
+    }
 
     function console_setCommands()
     {
@@ -82,10 +93,26 @@
 
     function console_setEvents() { EVENT.event_add(CONSOLE_EVENTS) }
 
+    function input_setEvents() { EVENT.event_add(INPUT_EVENTS) }
+
+    function input_setVars()
+    {
+        input_CHAR_WIDTH = parseFloat(window.getComputedStyle(input_FIELD).getPropertyValue('font-size')) * .55
+
+        console.log(Math.floor(input_FIELD.offsetWidth / input_CHAR_WIDTH)) // prend en compte le padding left !! => calculer nombre de caractère possible
+    }
+
     // --DESTROY
-    function console_destroy() { console_destroyEvents() }
+    function console_destroy()
+    {
+        console_destroyEvents()
+
+        input_destroyEvents()
+    }
 
     function console_destroyEvents() { EVENT.event_remove(CONSOLE_EVENTS) }
+
+    function input_destroyEvents() { EVENT.event_remove(INPUT_EVENTS) }
 
     // --RESET
     function input_reset()
@@ -151,24 +178,25 @@
     function console_c$Clear() { output_LINES = [] }
 
     // --EVENTS
-    async function console_e$MouseDown(e) { if (!e.target.classList.contains(CONSOLE_TARGET_CLASS)) console_eClick() }
+    async function console_e$MouseDown() { if (!console_FOCUS) btn_eClick() }
 
-    async function console_eClick()
+    function console_eMouseEnter()
     {
-        console_ON = !console_ON
+        SPRING.spring_e$Hide()
 
-        if (console_ON)
-        {
-            console_setEvents()
-
-            input_fieldFocus()
-        }
-        else console_destroyEvents()
-
-        APP.app_$FREEZE = { on: console_ON, target: 'console' }
+        console_FOCUS = true
     }
 
-    async function console_eKeyup(e)
+    function console_eMouseLeave()
+    {
+        SPRING.spring_e$Show()
+
+        console_FOCUS = false
+    }
+
+    async function input_e$Resize() { input_setVars() }
+
+    async function input_eKeyup(e)
     {
         switch (e.key)
         {
@@ -192,6 +220,21 @@
         (input_CURRENT_VALUE.length === 3 || input_CURRENT_VALUE[3] === ' ') && input_CURRENT_VALUE.substring(0, 3).toLowerCase() === 'app'
         ? input_analyse()
         : mirror_update()
+    }
+
+    async function btn_eClick()
+    {
+        console_ON = !console_ON
+
+        if (console_ON)
+        {
+            console_setEvents()
+
+            input_fieldFocus()
+        }
+        else console_destroyEvents()
+
+        APP.app_$FREEZE = { on: console_ON, target: 'console' }
     }
 
     // --TEST
@@ -259,81 +302,74 @@ onDestroy(console_destroy)
 <div
 class="console"
 class:on={console_ON}
+on:mouseenter={console_eMouseEnter}
+on:mouseleave={console_eMouseLeave}
 >
     <div
-    class="area"
+    class="input"
     >
         <div
-        class="input"
-        on:mouseenter={SPRING.spring_e$Hide.bind(SPRING)}
-        on:mouseleave={SPRING.spring_e$Show.bind(SPRING)}
+        class="line"
         >
-            <div
-            class="line"
-            >
-                <input
-                class={CONSOLE_TARGET_CLASS}
-                type="text"
-                maxlength="55"
-                spellcheck="false"
-                bind:this={input_FIELD}
-                bind:value={input_CURRENT_VALUE}
-                on:input={input_eInput}
-                on:keyup|preventDefault={console_eKeyup}
-                />
+            <input
+            type="text"
+            maxlength="55"
+            spellcheck="false"
+            bind:this={input_FIELD}
+            bind:value={input_CURRENT_VALUE}
+            on:input={input_eInput}
+            on:keyup|preventDefault={input_eKeyup}
+            />
 
-                <div
-                class="mirror"
-                class:app-available={mirror_APP_AVAILABLE}
-                class:command-available={mirror_COMMAND_AVAILABLE}
-                >
-                    {#each [0, 1, 2] as i}
-                        <pre
-                        bind:this={MIRROR_FIELDS[i]}
-                        ></pre>
-                    {/each}
-                </div>
+            <div
+            class="mirror"
+            class:app-available={mirror_APP_AVAILABLE}
+            class:command-available={mirror_COMMAND_AVAILABLE}
+            >
+                {#each [0, 1, 2] as i}
+                    <pre
+                    bind:this={MIRROR_FIELDS[i]}
+                    ></pre>
+                {/each}
             </div>
         </div>
 
-        <div
-        class="output"
-        bind:this={output}
+        <button
+        class="btn"
+        type="button"
+        on:click={btn_eClick}
         >
-            {#each output_LINES as line}
-                <div
-                class="line"
-                >
-                    {#if line.name}
-                        <span
-                        class:console-error={line.error}
-                        class:console-success={line.success}
-                        >
-                            {line.name}:
-                        </span> &nbsp;
-                    {/if}
-
-                    <pre>{line.message}</pre>
-                </div>
-            {/each}
-        </div>
+            <Icon
+            prop_COLOR={COLORS.light}
+            >
+                <Arrow
+                prop_FOCUS={console_ON}
+                />
+            </Icon>
+        </button>
     </div>
 
-    <button
-    class={CONSOLE_TARGET_CLASS}
-    type="button"
-    on:click={console_eClick}
+    <div
+    class="output"
+    bind:this={output}
     >
-        <Icon
-        prop_CLASS={CONSOLE_TARGET_CLASS}
-        prop_SIZE="1.5rem"
-        prop_COLOR={COLORS.light}
-        >
-            <Arrow
-            prop_FOCUS={console_ON}
-            />
-        </Icon>
-    </button>
+        {#each output_LINES as line}
+            <div
+            class="line"
+            >
+                {#if line.name}
+                    <span
+                    class:console-error={line.error}
+                    class:console-success={line.success}
+                    >
+                        {line.name}:
+                    </span> &nbsp;
+                {/if}
+
+                <pre>{line.message}</pre>
+            </div>
+        {/each}
+    </div>
 </div>
 
 <!-- #STYLE -->
@@ -355,80 +391,79 @@ lang="scss"
 
 /* #VARIABLES */
 
-$line-width: 35vw;
+$gap: 2rem; /* gap flex console */
+$gap-block: 7rem;
+
 $line-height: 5rem;
 
-$btn-width: 5rem;
+$btn-width: 1.5rem;
 
-$total-width: calc(app.$gap-inline + $line-width + $btn-width);
+$total-width: calc(app.$gap-inline + 35vw + ($btn-width + $gap));
+$total-height: calc(100vh - $gap-block * 2);
 
-$area-width: calc(app.$gap-inline + $line-width);
+$input-border: .3rem;
+$input-height: $line-height + $input-border * 2;
+
+$output-margin-top: 1rem;
+$output-max-height: calc($total-height - ($input-height + $output-margin-top));
 
 /* #CONSOLE */
 
 .console
 {
-    $gap-block: 7rem;
-
     @include position.placement(absolute, $gap-block, app.$gap-inline, $gap-block);
 
     z-index: 1;
 
-    display: flex;
-
     width: calc(100% - app.$gap-inline * 2);
-    height: calc(100% - $gap-block * 2);
+    height: fit-content;
+    max-height: $total-height;
 
     pointer-events: none;
 
-    &.on .area
+    &.on
     {
-        transform: translateX(0) scaleX(1);
+        pointer-events: auto;
 
-        opacity: 1;
+        .input .line, .output { opacity: 1; }
+
+        .input .line { transform: translateX(0) scaleX(1); }
+
+        .output { transform: translateY(0) scaleY(1); }
     }
 
-    .area
+    .input .line, .output
     {
-        transform: translateX(50%) scaleX(0);
-
         opacity: 0;
-        
-        width: $area-width;
-        height: 100%;
 
         transition: transform .4s ease, opacity .4s;
     }
 
-    &>button
-    {
-        @extend %button-reset;
-        @extend %f-a-center;
-    
-        justify-content: flex-end;
-        flex-shrink: 0;
-
-        width: $btn-width;
-        height: $line-height;
-    }
-
     .input
     {
+        @extend %f-a-center;
+
+        gap: $gap;
+
         width: 100%;
-        height: fit-content;
+        height: $input-height;
 
-        padding-left: app.$gap-inline;
+        .line
+        {
+            &, input { padding-left: app.$gap-inline; }
+        
+            position: relative;
 
-        background-color: $dark;
+            flex: 1;
 
-        border: solid $primary 3px;
+            transform: translateX(50%) scaleX(0);
 
-        text-align: right;
+            background-color: $dark;
 
-        box-sizing: border-box;
+            border: solid $intermediate $input-border;
+        }
 
-        .line { position: relative; }
-
+        input, .mirror, .btn { @extend %f-a-center; }
         input, .mirror { @extend %any; }
         input
         {
@@ -440,6 +475,8 @@ $area-width: calc(app.$gap-inline + $line-width);
     
             caret-color: $primary;
 
+            box-sizing: border-box;
+
             &::selection
             {
                 background-color: rgba($primary, .5);
@@ -449,31 +486,51 @@ $area-width: calc(app.$gap-inline + $line-width);
         }
         .mirror 
         {
-            @extend %f-a-center;
+            pointer-events: none;
 
             color: $light;
     
             &.app-available>pre:nth-child(1) { color: $primary; }
             &.command-available>pre:nth-child(2) { color: $indicator; }
         }
+
+        .btn
+        {
+            #{--icon-size}: $btn-width;
+    
+            @extend %button-reset;
+        
+            justify-content: flex-end;
+            flex-shrink: 0;
+
+            width: $btn-width;
+            height: $line-height;
+
+            pointer-events: auto;
+        }
     }
 
     .output
     {
-        $margin-top: 1rem;
-    
         @extend %scroll-bar;
         @extend %f-column;
+
+        align-items: flex-end;
+
+        transform: translateY(-50%) scaleY(0);
 
         overflow: auto scroll;
 
         width: 100%;
         height: fit-content;
-        max-height: calc(100% - $line-height - $margin-top);
+        max-height: $output-max-height;
 
-        margin-top: $margin-top;
+        margin-top: $output-margin-top;
+        padding-right: app.$gap-inline;
 
         backdrop-filter: hue-rotate(30deg);
+
+        box-sizing: border-box;
 
         .line
         {
@@ -481,6 +538,8 @@ $area-width: calc(app.$gap-inline + $line-width);
 
             justify-content: flex-end;
 
+            user-select: auto;
+    
             .console-error { color: $indicator; }
             .console-success { color: $primary; }
 
@@ -492,15 +551,13 @@ $area-width: calc(app.$gap-inline + $line-width);
     {
         @include font.interact;
     
-        width: $line-width;
+        width: fit-content;
         height: $line-height;
         min-height: $line-height;
         max-height: $line-height;
 
         * { font: inherit;  }
     }
-
-    .console-target { pointer-events: auto; }
 
     @include media.min($ms3) { width: $total-width; }
 }
