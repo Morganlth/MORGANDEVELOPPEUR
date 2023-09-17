@@ -192,7 +192,7 @@ lang="scss"
 
 .content
 {
-    &, .title { transition: opacity .4s ease-in; }
+    &, .title { transition: opacity .6s ease-in; }
 
     width: 100%;
     height: fit-content;

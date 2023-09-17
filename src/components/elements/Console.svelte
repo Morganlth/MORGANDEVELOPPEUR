@@ -5,9 +5,10 @@
 -EVENT
 -SPRING
     CONSOLE
-        INPUT
-            LINE
-                MIRROR
+        CONTAINER
+            INPUT
+                LINE
+                    MIRROR
             BTN
         OUTPUT
             LINE * n
@@ -61,8 +62,8 @@
     // --ELEMENT-INPUT
     let
     input_FIELD,
-    input_CURRENT_VALUE = '',
-    input_CHAR_WIDTH = 0
+    input_LENGTH = 0,
+    input_CURRENT_VALUE = ''
 
     // --ELEMENT-MIRROR
     let
@@ -97,9 +98,16 @@
 
     function input_setVars()
     {
-        input_CHAR_WIDTH = parseFloat(window.getComputedStyle(input_FIELD).getPropertyValue('font-size')) * .55
+        const VALUE = input_FIELD.value // save value
 
-        console.log(Math.floor(input_FIELD.offsetWidth / input_CHAR_WIDTH)) // prend en compte le padding left !! => calculer nombre de caractère possible
+        input_reset() // reset input & mirror (not affect the size calc)
+
+        const CHAR_WIDTH = parseFloat(window.getComputedStyle(input_FIELD).getPropertyValue('font-size')) * .55 // calc width of 1 char (.55 = width / height of Anonymous Pro)
+
+        input_LENGTH = Math.floor(input_FIELD.offsetWidth / CHAR_WIDTH) - 1 // char max in input
+        input_CURRENT_VALUE = VALUE.slice(0, input_LENGTH) // replace value
+
+        input_eInput() // set mirror
     }
 
     // --DESTROY
@@ -306,31 +314,35 @@ on:mouseenter={console_eMouseEnter}
 on:mouseleave={console_eMouseLeave}
 >
     <div
-    class="input"
+    class="container"
     >
         <div
-        class="line"
+        class="input"
         >
-            <input
-            type="text"
-            maxlength="55"
-            spellcheck="false"
-            bind:this={input_FIELD}
-            bind:value={input_CURRENT_VALUE}
-            on:input={input_eInput}
-            on:keyup|preventDefault={input_eKeyup}
-            />
-
             <div
-            class="mirror"
-            class:app-available={mirror_APP_AVAILABLE}
-            class:command-available={mirror_COMMAND_AVAILABLE}
+            class="line"
             >
-                {#each [0, 1, 2] as i}
-                    <pre
-                    bind:this={MIRROR_FIELDS[i]}
-                    ></pre>
-                {/each}
+                <input
+                type="text"
+                maxlength={input_LENGTH}
+                spellcheck="false"
+                bind:this={input_FIELD}
+                bind:value={input_CURRENT_VALUE}
+                on:input={input_eInput}
+                on:keyup|preventDefault={input_eKeyup}
+                />
+
+                <div
+                class="mirror"
+                class:app-available={mirror_APP_AVAILABLE}
+                class:command-available={mirror_COMMAND_AVAILABLE}
+                >
+                    {#each [0, 1, 2] as i}
+                        <pre
+                        bind:this={MIRROR_FIELDS[i]}
+                        ></pre>
+                    {/each}
+                </div>
             </div>
         </div>
 
@@ -425,21 +437,12 @@ $output-max-height: calc($total-height - ($input-height + $output-margin-top));
     {
         pointer-events: auto;
 
-        .input .line, .output { opacity: 1; }
-
-        .input .line { transform: translateX(0) scaleX(1); }
-
-        .output { transform: translateY(0) scaleY(1); }
+        .input, .output { opacity: 1; }
+        .input { transform: translateX(0) scaleX(1) !important; }
+        .output { transform: translateY(0) scaleY(1) !important; }
     }
 
-    .input .line, .output
-    {
-        opacity: 0;
-
-        transition: transform .4s ease, opacity .4s;
-    }
-
-    .input
+    .container
     {
         @extend %f-a-center;
 
@@ -448,19 +451,26 @@ $output-max-height: calc($total-height - ($input-height + $output-margin-top));
         width: 100%;
         height: $input-height;
 
-        .line
+        .input
         {
-            &, input { padding-left: app.$gap-inline; }
-        
-            position: relative;
-
             flex: 1;
 
             transform: translateX(50%) scaleX(0);
 
+            height: $line-height;
+
+            padding-left: app.$gap-inline;
+
             background-color: $dark;
 
             border: solid $intermediate $input-border;
+        }
+
+        .line
+        {
+            position: relative;
+
+            width: 100%;
         }
 
         input, .mirror, .btn { @extend %f-a-center; }
@@ -510,6 +520,13 @@ $output-max-height: calc($total-height - ($input-height + $output-margin-top));
         }
     }
 
+    .input, .output
+    {
+        opacity: 0;
+
+        transition: transform .4s ease, opacity .4s;
+    }
+
     .output
     {
         @extend %scroll-bar;
@@ -538,6 +555,8 @@ $output-max-height: calc($total-height - ($input-height + $output-margin-top));
 
             justify-content: flex-end;
 
+            width: fit-content;
+
             user-select: auto;
     
             .console-error { color: $indicator; }
@@ -550,8 +569,7 @@ $output-max-height: calc($total-height - ($input-height + $output-margin-top));
     .line
     {
         @include font.interact;
-    
-        width: fit-content;
+
         height: $line-height;
         min-height: $line-height;
         max-height: $line-height;

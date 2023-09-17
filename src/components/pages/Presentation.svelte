@@ -47,6 +47,7 @@
     import Snake from '../elements/Snake.svelte'
     import Mask from '../elements/Mask.svelte'
     import Features from '../elements/Features.svelte'
+    import Scrolling from '../elements/Scrolling.svelte'
 
 // #CONSTANTES
 
@@ -68,6 +69,9 @@
     ]
 
 // #VARIABLES
+
+    // --APP
+    let app_$OPTIMISE = APP.app_$OPTIMISE 
 
     // --ELEMENT-PRESENTATION
     let presentation_CHARGED = false
@@ -197,6 +201,7 @@ style:z-index={prop_FOCUS ? 1 : 0}
                     <li>
                         <button
                         type="button"
+                        title="Jouer au jeu du serpent revisité"
                         on:click={snake_eClick.bind(null, 0)}
                         >
                             ~~JOUER
@@ -206,6 +211,7 @@ style:z-index={prop_FOCUS ? 1 : 0}
                     <li>
                         <button
                         type="button"
+                        title="{snake_ON ? 'Masque' : 'Affiche'} le serpent"
                         on:click={snake_eClick.bind(null, 1)}
                         >
                             ~~{snake_ON ? 'MASQUER' : 'AFFICHER'}
@@ -216,6 +222,7 @@ style:z-index={prop_FOCUS ? 1 : 0}
                         <button
                         class="contact"
                         type="button"
+                        title="Page de contact"
                         on:click={contact_eClick}
                         >
                             ~~CONTACT
@@ -223,6 +230,12 @@ style:z-index={prop_FOCUS ? 1 : 0}
                     </li>
                 </ul>
             </nav>
+
+            {#if !$app_$OPTIMISE}
+                <Scrolling
+                prop_CONTENT={['Avez-vous fait le lien entre la présentation et le serpent ?']}
+                />
+            {/if}
         </Content>
 
         <Mask

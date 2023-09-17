@@ -39,6 +39,9 @@
     FEATURES_PHASE = Math.PI * features_LENGTH,
     FEATURES_EVENTS = { resize: features_e$Resize }
 
+    // --ELEMENT-TOPIC
+    const TOPIC_FRAGS = []
+
 // #VARIABLES
 
     // --ELEMENT-TRACK
@@ -98,37 +101,31 @@ onDestroy(features_destroy)
 class="features"
 class:focus={prop_FOCUS}
 >
-    <div
-    class="track"
-    style:transform="rotate({-track_ROTATE}rad) translate3d(calc(100% * {1 - prop_RATIO}), -50%, {track_TRANSLATE_Z}px)"
-    style:padding-right="{topic_WIDTH}px"
-    >
-        {#each FEATURES_DATAS as data}
-            <p
-            class="topic"
-            style:transform="rotate({track_ROTATE}rad)"
-            style:width="{topic_WIDTH}px"
-            >
-                {data.topic[0]}
-            </p>
-        {/each}
-    </div>
-
-    <div
-    class="track"
-    style:transform="rotate({-track_ROTATE + Math.PI}rad) translate3d(calc(-100% * {prop_RATIO}), 50%, {track_TRANSLATE_Z}px)"
-    style:padding-right="{topic_WIDTH}px"
-    >
-        {#each FEATURES_DATAS as data}
-            <p
-            class="topic"
-            style:transform="rotate({track_ROTATE + Math.PI}rad)"
-            style:width="{topic_WIDTH}px"
-            >
-                {data.topic[data.topic.length - 1]}
-            </p>
-        {/each}
-    </div>
+    {#each [0, 1] as i}
+        <div
+        class="track"
+        style:transform={
+            i
+            ? `rotate(${-track_ROTATE}rad) translate3d(calc(100% * ${1 - prop_RATIO}), -50%, ${track_TRANSLATE_Z}px)`
+            : `rotate(${-track_ROTATE + Math.PI}rad) translate3d(calc(-100% * ${prop_RATIO}), 50%, ${track_TRANSLATE_Z}px)`
+        }
+        style:padding-right="{topic_WIDTH}px"
+        >
+            {#each FEATURES_DATAS as data}
+                <div
+                class="topic"
+                style:width="{topic_WIDTH}px"
+                >
+                    <p
+                    style:transform="rotate({track_ROTATE + (i ? 0 : Math.PI)}rad)"
+                    data-topic={data.topic[i ? 0 : data.topic.length - 1]}
+                    >
+                        {data.topic[i ? 0 : data.topic.length - 1]}
+                    </p>
+                </div>
+            {/each}
+        </div>
+    {/each}
 
     <div
     class="track"
@@ -196,21 +193,21 @@ lang="scss"
 
         &:nth-child(1)
         {
-            @include position.placement(absolute, 0, 0, auto, auto);
-
-            transform-origin: top right;
-
-            color: $primary;
-            line-height: 2.5;
-        }
-        &:nth-child(2)
-        {
             @include position.placement(absolute, auto, auto, 0, 0);
 
             transform-origin: bottom left;
 
             color: rgba($light, .2);
             line-height: 2.7;
+        }
+        &:nth-child(2)
+        {
+            @include position.placement(absolute, 0, 0, auto, auto);
+
+            transform-origin: top right;
+
+            color: $primary;
+            line-height: 2.5;
         }
         &:nth-child(3)
         {
@@ -224,12 +221,49 @@ lang="scss"
 
         .topic
         {
-            @include font.h-custom(inherit, var(--title-size, map.get(font.$font-sizes, s7)), inherit);
+            @extend %f-center;
     
-            @extend %m-h-2;
+            p
+            {
+                &::before, &::after
+                {
+                    @include position.placement(absolute, 0, auto, auto, 0, attr(data-topic));
 
-            font-style: italic;
-            text-align: center;
+                    opacity: 0;
+
+                    transition: transform .4s, opacity .4s;
+                }
+                &::before
+                {
+                    z-index: -1;
+
+                    color: $indicator;
+                }
+        
+                @include font.h-custom(inherit, var(--title-size, map.get(font.$font-sizes, s7)), inherit);
+    
+                @extend %m-h-2;
+
+                position: relative;
+
+                pointer-events: auto;
+
+                font-style: italic;
+                text-align: center;
+
+                &::after
+                {
+                    color: transparent;
+                    -webkit-text-stroke: 1px $light;
+                }
+
+                &:hover
+                {
+                    &::before, &::after { opacity: 1; }
+                    &::before { transform: translate(.6rem, .3rem); }
+                    &::after { transform: translate(-.6rem, -.3rem); }
+                }
+            }
         }
         
         ul

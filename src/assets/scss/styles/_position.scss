@@ -3,7 +3,11 @@
     // --POSITION-FIXED
     @mixin placement($position: relative, $top: auto, $right: auto, $bottom: auto, $left: auto, $pseudo-element: false)
     {
-        @if $pseudo-element { content: ''; }
+        @if $pseudo-element
+        {
+            @if type-of($pseudo-element) == 'string' { content: $pseudo-element; }
+            @else { content: ''; }
+        }
 
         position: $position;
         top: $top;

@@ -76,7 +76,7 @@ onDestroy(header_destroy)
             <Logo />
         </Icon>
             
-        <span>EE</span>
+        <span>DEV.</span>
 
         <p>LE THUAUT MORGAN</p>
     </strong>

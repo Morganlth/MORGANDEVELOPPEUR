@@ -35,7 +35,7 @@ constructor ()
 
                 if (value !== null)
                 {
-                    if (params.optimise && value !== params.optimise?.value) APP.app_OPTIMISE = false
+                    if (params.optimise && value !== params.optimise?.value) APP.app_$OPTIMISE = false
                     if (storage) localStorage[value === params.defaultValue ? 'removeItem' : 'setItem'](name, value)
 
                     this.command_c$Success(name + ' ' + value)

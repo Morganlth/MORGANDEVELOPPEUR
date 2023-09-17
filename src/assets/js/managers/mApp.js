@@ -10,9 +10,9 @@ class App
 
     #app
     #app_$FREEZE = {}
+    #app_$OPTIMISE = {}
     #app_$HIDE = writable(false)
     #app_SMALL_SCREEN = false // use by presentation and skills for mask title with small height -> to modified
-    #app_OPTIMISE = false
     #app_OPTIMISE_CONFIG = {}
     #app_STORAGE = {}
     #app_COMMANDS = []
@@ -24,22 +24,8 @@ class App
 
 constructor ()
 {
-    let { set, subscribe } = writable(false)
-
-    this.#app_$FREEZE =
-    {
-        on: false,
-        target: null,
-        set: function (on, target)
-        {
-            this.on = on
-            this.target = target
-
-            set(on)
-        },
-        subscribe
-    }
-
+    this.#app_setFreeze()
+    this.#app_setOptitmise()
 
     this.app_updateMode = this.app_updateMode.bind(this)
 
@@ -47,7 +33,7 @@ constructor ()
         {
             name: App.__app_OPTIMISE_NAME,
             callback: this.app_c$Optimise.bind(this),
-            params: { defaultValue: this.#app_OPTIMISE },
+            params: { defaultValue: this.#app_$OPTIMISE.on },
             tests: { testBoolean: true },
             storage: true
         }
@@ -74,6 +60,42 @@ constructor ()
 
     #app_setCommands() { COMMAND.command_setBasicCommands(this.#app_COMMANDS) }
 
+    #app_setFreeze()
+    {
+        let { set, subscribe } = writable(false)
+
+        this.#app_$FREEZE =
+        {
+            on: false,
+            target: null,
+            set: function (on, target)
+            {
+                this.on = on
+                this.target = target
+
+                set(on)
+            },
+            subscribe
+        }
+    }
+
+    #app_setOptitmise()
+    {
+        let { set, subscribe } = writable(false)
+
+        this.#app_$OPTIMISE =
+        {
+            on: false,
+            set: function (on)
+            {
+                this.on = on
+
+                set(on)
+            },
+            subscribe
+        }
+    }
+
     #app_setStorage()
     {
         const
@@ -92,7 +114,7 @@ constructor ()
     #app_restore()
     {
         const
-        OPTIMISE = this.#app_OPTIMISE,
+        OPTIMISE = this.#app_$OPTIMISE.on,
         OPTIMISE_CONFIG = this.#app_OPTIMISE_CONFIG,
         COMMANDS = COMMAND.command_COMMANDS
 
@@ -121,11 +143,11 @@ constructor ()
             : (this.#app_STORAGE ?? (JSON.parse(localStorage.getItem(App.__app_SAVE_NAME) ?? {})))
         )
 
-        this.#app_OPTIMISE = optimise
+        this.app_$OPTIMISE = optimise
     }
     
     // --COMMAND
-    app_c$Optimise(on) { COMMAND.command_test(on, 'boolean', this.app_updateMode, App.__app_OPTIMISE_NAME, this.#app_OPTIMISE) }
+    app_c$Optimise(on) { COMMAND.command_test(on, 'boolean', this.app_updateMode, App.__app_OPTIMISE_NAME, this.#app_$OPTIMISE.on) }
 
     // --TEST
     app_testScreen(width, height) { return window.innerWidth < (width ?? -Infinity) || window.innerHeight < (height ?? -Infinity) }
@@ -139,7 +161,7 @@ constructor ()
 
     get app_SMALL_SCREEN() { return this.#app_SMALL_SCREEN }
 
-    get app_OPTIMISE() { return this.#app_OPTIMISE }
+    get app_$OPTIMISE() { return this.#app_$OPTIMISE }
 
     get app_OPTIMISE_CONFIG() { return this.#app_OPTIMISE_CONFIG }
 
@@ -160,11 +182,11 @@ constructor ()
         this.#app_TIMEOUT = setTimeout(() => this.#app_$HIDE.set(false), 700)
     }
 
-    set app_OPTIMISE(on)
+    set app_$OPTIMISE(on)
     {
-        if (this.#app_OPTIMISE !== on)
+        if (this.#app_$OPTIMISE.on !== on)
         {
-            this.#app_OPTIMISE = on
+            this.#app_$OPTIMISE.set(on)
 
             localStorage.setItem('optimise', on) 
         }

@@ -12,5 +12,5 @@
                 { tags: ['HTML', 'CSS', 'JS', 'NODE JS', 'GESTION', 'ADAPTABILITÉ'] }
             ]
         },
-        prop_INFO: 'DEV F.B.& D.'
+        prop_INFO: 'SYSTEM'
     }
