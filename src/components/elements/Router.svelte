@@ -173,7 +173,8 @@ lang="scss"
         gap: 1.2rem;
 
         width: fit-content;
-        height: 2.5rem;
+        height: fit-content;
+        min-height: 2.4rem;
 
         li
         {
@@ -207,6 +208,13 @@ lang="scss"
 
     @include media.min(false, $ms3)
     {
+        &::before
+        {
+            @include position.placement(absolute, -70%, -50%, -70%, -50%, true);
+
+            background: radial-gradient(ellipse at 40%, $dark 30%, transparent 70%);
+        }
+
         top: 65%;
         right: auto;
         left: app.$gap-inline;

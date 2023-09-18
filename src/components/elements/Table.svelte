@@ -19,7 +19,9 @@
     // --PROPS
     export let
     prop_TITLE = '',
-    prop_LINES = []
+    prop_LINES = [],
+    prop_TRANSLATE_Y = 0,
+    prop_REDUCE = 0
 
 // #IMPORTS
 
@@ -41,13 +43,10 @@
     // --SVELTE
     const SVELTE_DISPATCH = createEventDispatcher()
 
-// #VARIABLES
+// #VARIABLE
 
-    // --ELEMENT-LINES
-    let lines_DESTROY = false
-
-    // --ELEMENT-CROSS
-    let cross_DESTROY = false
+    // --ELEMENT-TABLE
+    let table_DESTROY = false
 
 // #FUNCTIONS
 
@@ -58,43 +57,40 @@
     function table_tFade() { return { duration: 600, css: (t) => `opacity: ${t}` }}
 
     // --OUTRO
-    function table_outro()
-    {
-        lines_DESTROY = true
-
-        cross_DESTROY = true
-    }
+    function table_outro() { table_DESTROY = true }
 </script>
 
 <!-- #HTML -->
 
 <section
 class="table"
-transition:table_tFade
+style:transform="translateY({-prop_TRANSLATE_Y}px)"
+style:height="calc(100% - {prop_REDUCE}px)"
+in:table_tFade
 on:outrostart={table_outro}
 >
     <div
     class="head"
     >
+        <h3>{prop_TITLE}</h3>
+    
         <Cell
         on:click={cell_eClick}
         >
             <Icon
-            prop_COLOR={COLORS.indicator}
+            prop_COLOR={COLORS.light}
             prop_SPRING={true}
             >
                 <Cross
-                prop_DESTROY={cross_DESTROY}
+                prop_DESTROY={table_DESTROY}
                 />
             </Icon>
         </Cell>
-
-        <h3>{prop_TITLE}</h3>
     </div>
 
     <div
     class="lines"
-    class:destroy={lines_DESTROY}
+    class:destroy={table_DESTROY}
     >
         {#each prop_LINES as line}
             <div
@@ -124,24 +120,17 @@ lang="scss"
 @use '../../assets/scss/styles/utils';
 @use '../../assets/scss/styles/position';
 @use '../../assets/scss/styles/display';
-@use '../../assets/scss/styles/size';
 @use '../../assets/scss/styles/font';
 
 /* #TABLE */
 
 .table
 {
-    &, .head, .lines { @extend %f-column; }
-    &, .head { gap: 3rem; }
+    &, .lines { @extend %f-column; }
 
-    @include position.placement(absolute, 0, 0, 0, 0);
+    width: 100%;
 
-    @extend %any;
-
-    padding-block: 14rem;
-    padding-left: app.$gap-inline;
-
-    box-sizing: border-box;
+    gap: 1rem;
 
     .head, .lines
     {
@@ -156,7 +145,9 @@ lang="scss"
     
         #{--icon-size}: calc($size * font.$line-height-title-min);
 
-        align-items: flex-end;
+        @extend %f-a-center;
+
+        justify-content: space-between;
 
         height: fit-content;
 
@@ -202,7 +193,9 @@ lang="scss"
     
             flex: 1;
 
-            min-height: 120px;
+            min-height: 24%;
+
+            text-align: right;
 
             transition: color .2s;
 

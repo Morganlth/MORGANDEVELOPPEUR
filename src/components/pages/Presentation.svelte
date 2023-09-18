@@ -47,7 +47,6 @@
     import Snake from '../elements/Snake.svelte'
     import Mask from '../elements/Mask.svelte'
     import Features from '../elements/Features.svelte'
-    import Scrolling from '../elements/Scrolling.svelte'
 
 // #CONSTANTES
 
@@ -69,9 +68,6 @@
     ]
 
 // #VARIABLES
-
-    // --APP
-    let app_$OPTIMISE = APP.app_$OPTIMISE 
 
     // --ELEMENT-PRESENTATION
     let presentation_CHARGED = false
@@ -230,12 +226,6 @@ style:z-index={prop_FOCUS ? 1 : 0}
                     </li>
                 </ul>
             </nav>
-
-            {#if !$app_$OPTIMISE}
-                <Scrolling
-                prop_CONTENT={['Avez-vous fait le lien entre la présentation et le serpent ?']}
-                />
-            {/if}
         </Content>
 
         <Mask

@@ -50,11 +50,11 @@ lang="scss"
     width: fit-content;
     height: 5%;
 
-    animation: aScrolling var(--scrolling-duration, 10s) infinite cubic-bezier(.2, .4, .8, .4);
+    /* animation: aScrolling var(--scrolling-duration, 10s) infinite cubic-bezier(.2, .4, .8, .4); */
 
     p
     {
-        @include font.interact($intermediate);
+        @include font.interact($light);
 
         min-width: 100vw;
 

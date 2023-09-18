@@ -4,8 +4,10 @@
 -EVENT
     SKILLS
         WRAPPER
-            MOON
+            SYSTEM
+
             CONTENT
+                #if TABLE
 
 -->
 
@@ -35,8 +37,9 @@
     // --COMPONENT-COVER
     import Content from '../covers/Content.svelte'
 
-    // --COMPONENT-ELEMENT
+    // --COMPONENT-ELEMENTS
     import System from '../elements/System.svelte'
+    import Table from '../elements/Table.svelte'
 
 // #CONSTANTE
 
@@ -48,9 +51,16 @@
     // --ELEMENT-SKILLS
     let skills_CHARGED = false
 
+    // --ELEMENT-SYSTEM
+    let system_TARGET = null
+
+    // --ELEMENT-INFO
+    let info_HEIGHT = 0
+
     // --ELEMENT-TITLE
     let
     title_END = 0,
+    title_HEIGHT = 0,
     title_INVISIBLE = false
 
 // #REACTIVE
@@ -77,8 +87,15 @@
 
     function skills_destroyEvents() { EVENT.event_remove(SKILLS_EVENTS) }
 
-    // --EVENT
+    // --EVENTS
     async function skills_e$Scroll() { title_INVISIBLE = APP.app_SMALL_SCREEN && APP.app_SCROLLTOP > title_END ? true : false }
+
+    function table_eClick()
+    {
+        system_TARGET = null
+
+        APP.app_$FREEZE = { on: false, target: APP.app_$FREEZE.target }
+    }
 
 // #CYCLES
 
@@ -98,14 +115,26 @@ style:z-index={prop_FOCUS ? 1 : 0}
         <System
         {prop_FOCUS}
         {prop_RATIO}
+        bind:system_TARGET
         />
 
         <Content
         prop_CHARGED={skills_CHARGED}
-        prop_INVISIBLE={title_INVISIBLE}
+        prop_INVISIBLE={title_INVISIBLE || system_TARGET}
         {...SKILLS_CONTENT_DATAS}
         {prop_FOCUS}
+        bind:info_HEIGHT
+        bind:title_HEIGHT
         >
+            {#if system_TARGET}
+                <Table
+                prop_TITLE={system_TARGET.tag}
+                prop_LINES={system_TARGET.skills}
+                prop_TRANSLATE_Y={title_HEIGHT}
+                prop_REDUCE={info_HEIGHT}
+                on:click={table_eClick}
+                />
+            {/if}
         </Content>
     </div>
 </div>

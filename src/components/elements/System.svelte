@@ -28,6 +28,9 @@
     prop_FOCUS = false,
     prop_RATIO = 0
 
+    // --BIND
+    export let system_TARGET = null
+
 // #IMPORTS
 
     // --JS
@@ -100,9 +103,7 @@
     group_stop
 
     // --ELEMENT-ORBIT
-    let
-    orbit_RADIUS = 0,
-    orbit_TARGET = null
+    let orbit_RADIUS = 0
 
 // #REACTIVES
 
@@ -114,7 +115,7 @@
         : void 0
 
     // --ELEMENT-ORBIT
-    $: !$app_$FREEZE ? orbit_update() : void 0
+    $: !$app_$FREEZE ? system_TARGET = null : void 0
 
 // #FUNCTIONS
 
@@ -133,7 +134,7 @@
 
     function group_setEvents() { EVENT.event_add(GROUP_EVENTS) }
 
-    function orbit_setVars() { orbit_RADIUS = Math.min(window.innerWidth * .3, window.innerHeight * .6) }
+    function orbit_setVars() { orbit_RADIUS = Math.min(window.innerWidth * .5, window.innerHeight * .6) }
 
     function orbit_setEvents() { EVENT.event_add(ORBIT_EVENTS) }
 
@@ -166,24 +167,18 @@
         optimised ? system_stop() : system_start()
     }
 
+    function system_updateTarget(target)
+    {
+        system_TARGET = target
+
+        APP.app_$FREEZE = { on: true, target: 'system' }
+    }
+
     function group_updateFocus()
     {
         const INDEX = prop_FOCUS && !system_OPTIMISED ? group_getIndexFocus() : void 0
 
         for (let i = 0; i < GROUP_Z_POSITIONS.length; i++) SYSTEM_DATAS[i] = { ...SYSTEM_DATAS[i], focus: i === INDEX }
-    }
-
-    function orbit_update(clicked = false)
-    {
-        const TARGET = this ?? orbit_TARGET
-
-        if (TARGET == null) return
-
-        SYSTEM_DATAS[TARGET.id] = { ...TARGET, clicked: clicked }
-
-        APP.app_$FREEZE = { on: clicked, target: 'system' }
-
-        orbit_TARGET = clicked ? (this ?? null) : null
     }
 
     // --COMMAND
@@ -209,16 +204,9 @@
 
     async function orbit_e$Resize() { orbit_setVars() }
 
-    function cube_eClick() { if (this.focus || system_OPTIMISED) orbit_update.call(this, true) }
+    function cube_eClick() { if (this.focus || system_OPTIMISED) system_updateTarget(this) }
 
-    function tag_eClick() { cube_eClick.call(this) }
-
-    function table_eClick()
-    {
-        const TARGET = SYSTEM_DATAS.find(data => data.clicked)
-
-        if (TARGET) orbit_update.call(TARGET, false)
-    }
+    function tag_eClick() { system_updateTarget(this) }
 
     // --CONTROLS
     function system_start()
@@ -281,7 +269,7 @@ class:focus={prop_FOCUS}
                         <Cube
                         prop_$ROTATION={rotation}
                         prop_$GRABBING={grabbing}
-                        prop_DESTROY={orbit_TARGET ? true : false}
+                        prop_DESTROY={system_TARGET ? true : false}
                         prop_FOCUS={data.focus ?? false}
                         prop_ROTATE={data.props.prop_ROTATE}
                         prop_SRC={data.props.prop_SRC}
@@ -298,12 +286,7 @@ class:focus={prop_FOCUS}
     <Group>
         {#each SYSTEM_DATAS as data}
             <Tag
-            prop_FOCUS={
-                prop_FOCUS && (
-                (!data.clicked && data.focus) ||
-                (system_OPTIMISED && !orbit_TARGET)
-                )
-            }
+            prop_FOCUS={prop_FOCUS && !system_TARGET && (data.focus || system_OPTIMISED)}
             prop_OPTIMISED={system_OPTIMISED}
             prop_CONTENT={data.tag}
             prop_X={group_ROTATE_Y * 6}
@@ -313,15 +296,13 @@ class:focus={prop_FOCUS}
         {/each}
     </Group>
 
-    {#each SYSTEM_DATAS as data}
-        {#if (data.focus || system_OPTIMISED) && data.clicked}
-            <Table
-            prop_TITLE={data.tag}
-            prop_LINES={data.skills}
-            on:click={table_eClick}
-            />
-        {/if}
-    {/each}
+    <!-- {#if system_TARGET}
+        <Table
+        prop_TITLE={system_TARGET.tag}
+        prop_LINES={system_TARGET.skills}
+        on:click={table_eClick}
+        />
+    {/if} -->
 </div>
 
 <!-- #STYLE -->

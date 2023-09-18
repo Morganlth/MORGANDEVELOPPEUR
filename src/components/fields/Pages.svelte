@@ -164,7 +164,7 @@ style:height="{pages_getHeight()}vh"
 
     opacity: 1;
 
-    width: 100%;
+    width: 100vw;
 
     transition: opacity .2s;
 

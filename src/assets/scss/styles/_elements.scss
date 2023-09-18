@@ -35,11 +35,11 @@
 
         height: 100vh;
 
-        padding: 10rem app.$gap-inline 0;
+        padding: 10rem app.$gap-inline;
 
         pointer-events: none;
 
         box-sizing: border-box;
 
-        @include media.min(false, $ms2) { padding-top: max(11rem, 80px); }
+        @include media.min(false, $ms2) { padding-block: max(11rem, 80px); }
     }

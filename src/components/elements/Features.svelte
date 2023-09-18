@@ -197,8 +197,9 @@ lang="scss"
 
             transform-origin: bottom left;
 
+            height: 20%;
+
             color: rgba($light, .2);
-            line-height: 2.7;
         }
         &:nth-child(2)
         {
@@ -206,8 +207,9 @@ lang="scss"
 
             transform-origin: top right;
 
+            height: 18%;
+
             color: $primary;
-            line-height: 2.5;
         }
         &:nth-child(3)
         {
@@ -240,7 +242,7 @@ lang="scss"
                     color: $indicator;
                 }
         
-                @include font.h-custom(inherit, var(--title-size, map.get(font.$font-sizes, s7)), inherit);
+                @include font.h-custom(inherit, var(--title-size, map.get(font.$font-sizes, s7)), 1);
     
                 @extend %m-h-2;
 

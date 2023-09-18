@@ -30,8 +30,10 @@
     prop_FOCUS = false,
     prop_INVISIBLE = false
 
-    // --BIND
-    export let title_HEIGHT = 0
+    // --BINDS
+    export let
+    info_HEIGHT = 0,
+    title_HEIGHT = 0
 
 // #IMPORTS
 
@@ -141,6 +143,7 @@ style:opacity={content_OPACITY}
 >
     <div
     class="info"
+    bind:offsetHeight={info_HEIGHT}
     >
         {`{${prop_INFO}}`}
     </div>
@@ -185,6 +188,7 @@ lang="scss"
 @use '../../assets/scss/app';
 
 @use '../../assets/scss/styles/position';
+@use '../../assets/scss/styles/size';
 @use '../../assets/scss/styles/font';
 @use '../../assets/scss/styles/media';
 
@@ -192,16 +196,17 @@ lang="scss"
 
 .content
 {
-    &, .title { transition: opacity .6s ease-in; }
+    @extend %any;
 
-    width: 100%;
-    height: fit-content;
+    transition: opacity .4s ease-in;
 
     .info, .title
     {
         position: relative;
 
         z-index: 1;
+
+        padding-bottom: 3rem;
     
         user-select: none;
     }
@@ -221,15 +226,13 @@ lang="scss"
         width: fit-content;
         height: fit-content;
 
-        margin-block: 3rem;
+        transition: opacity .6s ease-in;
 
         &.invisible
         {
-            /* position: absolute;
-
-            z-index: -1; */
-
             opacity: 0;
+
+            transition: opacity .2s;
         }
 
         .element
