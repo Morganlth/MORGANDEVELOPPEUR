@@ -71,7 +71,19 @@
 
     function router_destroyEvents() { EVENT.event_remove(ROUTER_EVENTS) }
 
-     // --INTRO
+    // --UPDATE
+    function router_update(id)
+    {
+        const LINK = ROUTER_LINKS_DATAS[id]
+
+        if (LINK.on) return
+
+        try { ROUTER_LINKS_DATAS.find(link => link.on).on = false } catch { /* recuperer le chemin dans l'url pour définir le lien sélectionné */ }
+
+        ROUTER_LINKS_DATAS[id] = { ...LINK, on: true }
+    }
+
+    // --INTRO
     async function router_intro()
     {
         await new Promise(resolve =>
@@ -84,18 +96,6 @@
         router_destroyEvents()
         
         router_CHARGED = true
-    }
-
-    // --UPDATE
-    function router_update(id)
-    {
-        const LINK = ROUTER_LINKS_DATAS[id]
-
-        if (LINK.on) return
-
-        try { ROUTER_LINKS_DATAS.find(link => link.on).on = false } catch { /* recuperer le chemin dans l'url pour définir le lien sélectionné */ }
-
-        ROUTER_LINKS_DATAS[id] = { ...LINK, on: true }
     }
 
     // --EVENT
@@ -211,6 +211,10 @@ lang="scss"
         &::before
         {
             @include position.placement(absolute, -70%, -50%, -70%, -50%, true);
+
+            z-index: -1;
+
+            pointer-events: none;
 
             background: radial-gradient(ellipse at 40%, $dark 30%, transparent 70%);
         }

@@ -8,8 +8,11 @@
             htmlElement: 'h2',
             contents:
             [
-                { frags: 'COMPETENCES' },
-                { tags: ['HTML', 'CSS', 'JS', 'NODE JS', 'GESTION', 'ADAPTABILITÉ'] }
+                {
+                    frags: 'MES',
+                    tags: ['HTML', 'CSS', 'JS', 'NODE JS', 'GESTION', 'ADAPTABILITÉ']
+                },
+                { frags: 'COMPETENCES' }
             ]
         },
         prop_INFO: 'SYSTEM'

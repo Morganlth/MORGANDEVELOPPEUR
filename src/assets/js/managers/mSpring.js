@@ -42,7 +42,7 @@ constructor ()
         }
     )
 
-    this.#spring_EVENTS.mouseMove = wait_throttle(this.spring_e$MouseMove, 50).bind(this)
+    this.#spring_EVENTS.mouseMove = wait_throttle.call(this, this.spring_e$MouseMove, 50)
 }
 
     // --SET

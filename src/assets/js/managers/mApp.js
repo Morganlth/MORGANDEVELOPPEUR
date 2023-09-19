@@ -179,7 +179,7 @@ constructor ()
 
         this.#app_$HIDE.set(on)
 
-        this.#app_TIMEOUT = setTimeout(() => this.#app_$HIDE.set(false), 700)
+        this.#app_TIMEOUT = setTimeout(() => this.#app_$HIDE.set(false), 600)
     }
 
     set app_$OPTIMISE(on)

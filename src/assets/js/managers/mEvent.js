@@ -146,15 +146,20 @@ constructor () { this.event_resize = wait_debounce.call(this, this.event_resize,
 
     event_run() { for (const FUNC of this) FUNC(...arguments) }
 
-    event_scrollTo(top, behavior = 'smooth')
+    event_scrollTo(top, behavior)
     {
         const APP_$FREEZE = APP.app_$FREEZE
     
         if (APP_$FREEZE.on) APP.app_$FREEZE = { on: false, target: APP_$FREEZE.target }
 
-        if (Math.abs(APP.app_SCROLLTOP - top) > window.innerHeight * 2) APP.app_$HIDE = true
-    
-        ;(APP.app ?? document.getElementById('app')).scrollTo({ top: top, behavior: behavior })
+        if (Math.abs(APP.app_SCROLLTOP - top) > window.innerHeight * 2)
+        {
+            APP.app_$HIDE = true
+
+            behavior ??= 'instant'
+        }
+
+        ;(APP.app ?? document.getElementById('app')).scrollTo({ top: top, behavior: behavior ?? 'smooth' })
     }
 }
 

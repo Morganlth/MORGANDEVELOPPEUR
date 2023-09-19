@@ -22,6 +22,7 @@
     // --PROPS
     export let
     prop_FOCUS = false,
+    prop_INTRO = false,
     prop_RATIO = 0
 
 // #IMPORTS
@@ -109,6 +110,7 @@ style:z-index={prop_FOCUS ? 1 : 0}
         prop_CHARGED={spacecube_CHARGED}
         {...HOME_CONTENT_DATAS}
         {prop_FOCUS}
+        {prop_INTRO}
         >
             <Icon
             prop_COLOR={COLORS.light}

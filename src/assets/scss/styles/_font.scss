@@ -38,7 +38,7 @@
     // --FONT-TITLE
     @mixin h-($number: 1) { @each $key, $value in map.get($titles, 'h-#{$number}') { #{$key}: $value; } } // set title properties
 
-    @mixin h-custom($color: inherit, $font-size: map.get($font-sizes, s3), $line-height: $line-height-title-min)
+    @mixin h-custom($color: inherit, $font-size: var(--title-size, map.get($font-sizes, s3)), $line-height: $line-height-title-min)
     {
         color: $color;
         font: $font-size $family-title;

@@ -20,10 +20,12 @@
     export let
     prop_TITLE = '',
     prop_LINES = [],
-    prop_TRANSLATE_Y = 0,
-    prop_REDUCE = 0
+    prop_TRANSLATE_Y = 0
 
 // #IMPORTS
+
+    // --JS
+    import { transition_fade } from '../../assets/js/utils/transition'
 
     // --LIB
     import COLORS from '$lib/colors'
@@ -53,9 +55,6 @@
     // --EVENT
     function cell_eClick() { SVELTE_DISPATCH('click') }
 
-    // --TRANSITION
-    function table_tFade() { return { duration: 600, css: (t) => `opacity: ${t}` }}
-
     // --OUTRO
     function table_outro() { table_DESTROY = true }
 </script>
@@ -64,13 +63,13 @@
 
 <section
 class="table"
-style:transform="translateY({-prop_TRANSLATE_Y}px)"
-style:height="calc(100% - {prop_REDUCE}px)"
-in:table_tFade
+class:destroy={table_DESTROY}
+transition:transition_fade={{ duration: 600 }}
 on:outrostart={table_outro}
 >
     <div
     class="head"
+    style:transform="translateY(-{prop_TRANSLATE_Y}px)"
     >
         <h3>{prop_TITLE}</h3>
     
@@ -90,7 +89,6 @@ on:outrostart={table_outro}
 
     <div
     class="lines"
-    class:destroy={table_DESTROY}
     >
         {#each prop_LINES as line}
             <div
@@ -120,6 +118,7 @@ lang="scss"
 @use '../../assets/scss/styles/utils';
 @use '../../assets/scss/styles/position';
 @use '../../assets/scss/styles/display';
+@use '../../assets/scss/styles/size';
 @use '../../assets/scss/styles/font';
 
 /* #TABLE */
@@ -128,16 +127,20 @@ lang="scss"
 {
     &, .lines { @extend %f-column; }
 
-    width: 100%;
-
     gap: 1rem;
 
-    .head, .lines
+    &.destroy
     {
-        padding-right: app.$gap-inline;
+        h3 { animation-name: aOutro !important; }
 
-        box-sizing: border-box;
+        .line
+        {
+            &::before { animation-name: a0 !important; }
+
+            &>* { animation-name: a1 !important; }
+        }
     }
+
     .head, .line { width: 100%; }
     .head
     {
@@ -145,29 +148,48 @@ lang="scss"
     
         #{--icon-size}: calc($size * font.$line-height-title-min);
 
-        @extend %f-a-center;
+        position: relative;
 
+        z-index: 1;
+
+        display: flex;
         justify-content: space-between;
 
         height: fit-content;
 
-        h3 { @include font.h-custom($light, map.get(font.$font-sizes, s4)); }
+        h3
+        {
+            $a: polygon(0 0, 0 0, 0 100%, 0 100%);
+            $b: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+        
+            @include font.h-custom($light);
+
+            @extend %m-h-3;
+
+            animation: aIntro .6s ease-out forwards;
+
+            @keyframes aIntro { from { clip-path: $a; } to { clip-path: $b; } }
+            @keyframes aOutro { from { clip-path: $b; } to { clip-path: $a; } }
+        }
     }
     .lines
     {
+        &, .line { box-sizing: border-box; }
+    
         @extend %scroll-bar;
+        @extend %any;
+
+        @include position.placement(absolute, 0, 0, 0, 0);
+
         @extend %any;
 
         overflow: hidden scroll;
 
         pointer-events: auto;
 
-        &.destroy .line
-        {
-            &::before { animation-name: a0; }
+        padding-inline: app.$gap-inline;
 
-            &>* { animation-name: a1; }
-        }
+        background-color: $dark;
 
         .line
         {
@@ -194,6 +216,8 @@ lang="scss"
             flex: 1;
 
             min-height: 24%;
+
+            padding-inline: 11%;
 
             text-align: right;
 

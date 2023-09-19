@@ -13,9 +13,6 @@
         GROUP
             TAG * n
 
-        GROUP
-            #if TABLE * n
-
 -->
 
 <!-- #SCRIPT -->
@@ -26,6 +23,7 @@
     // --PROPS
     export let
     prop_FOCUS = false,
+    prop_SCALED = false,
     prop_RATIO = 0
 
     // --BIND
@@ -51,7 +49,6 @@
     // --COMPONENT-ELEMENTS
     import Tag from './Tag.svelte'
     import Cube from './Cube.svelte'
-    import Table from './Table.svelte'
 
     // --COMPONENT-DECOR
     import Moon from '../decors/Moon.svelte'
@@ -109,7 +106,7 @@
 
     // --ELEMENT-GROUP
     $: system_CHARGED
-        ? prop_FOCUS
+        ? prop_SCALED
             ? system_start()
             : system_stop()
         : void 0
@@ -134,7 +131,7 @@
 
     function group_setEvents() { EVENT.event_add(GROUP_EVENTS) }
 
-    function orbit_setVars() { orbit_RADIUS = Math.min(window.innerWidth * .5, window.innerHeight * .6) }
+    function orbit_setVars() { orbit_RADIUS = Math.min(window.innerWidth * .6, window.innerHeight * .6) }
 
     function orbit_setEvents() { EVENT.event_add(ORBIT_EVENTS) }
 
@@ -236,7 +233,7 @@ onDestroy(system_destroy)
 
 <div
 class="system"
-class:focus={prop_FOCUS}
+class:focus={prop_SCALED}
 >
     <Group
     let:resize
@@ -295,14 +292,6 @@ class:focus={prop_FOCUS}
             />
         {/each}
     </Group>
-
-    <!-- {#if system_TARGET}
-        <Table
-        prop_TITLE={system_TARGET.tag}
-        prop_LINES={system_TARGET.skills}
-        on:click={table_eClick}
-        />
-    {/if} -->
 </div>
 
 <!-- #STYLE -->
@@ -315,40 +304,40 @@ lang="scss"
 @use '../../assets/scss/styles/utils';
 @use '../../assets/scss/styles/position';
 @use '../../assets/scss/styles/display';
+@use '../../assets/scss/styles/size';
 
 /* #SYSTEM */
 
 .system
 {
-    @include position.placement(absolute, 0, auto, auto, 0);
+    @include position.placement(absolute, 0, auto, auto, 50%);
 
     transform: translate(30%, -30%) scale(.2);
 
-    width: 100vw;
-    height: 100vh;
+    width: 50vw;
+    height: 100%;
 
-    transition: transform .6s;
+    transition: transform 1s ease-in-out;
 
-    &.focus { transform: scale(1); }
+    &.focus { transform: translate(-50%, 0) scale(1); }
 
     :global
     {
         .group:nth-child(1)
         {
-            @include position.placement(absolute, 0, auto, 0, 50vw);
+            @include position.placement(absolute, 0, 0, 0, 0);
     
             @extend %f-center;
+            @extend %any;
     
             transform-style: preserve-3d;
-
-            width: 50vw;
 
             transition: transform .3s;
         }
 
         .group:nth-child(2)
         {
-            @include position.placement(absolute, 51%, 10vw);
+            @include position.placement(absolute, 51%, 10%);
             
             @extend %f-column;
     

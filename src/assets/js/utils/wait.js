@@ -27,18 +27,20 @@
         last = +new Date(),
         timeout
 
-        const THROTTLE = async function ()
+        const
+        CONTEXT = this,
+        THROTTLE = async function ()
         {
             const NOW = +new Date()
 
             clearTimeout(timeout)
 
             NOW > last + delay
-            ?   (callback.apply(this, arguments),
+            ?   (callback.apply(CONTEXT, arguments),
                 last = NOW)
             :   timeout = setTimeout(() =>
                 {
-                    callback.apply(this, arguments)
+                    callback.apply(CONTEXT, arguments)
 
                     last = +new Date()
                 }, timeoutDelay ?? delay)

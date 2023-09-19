@@ -10,7 +10,8 @@
             CONTENT
                 FEATURE
     
-                CONTACT
+                #if NAV
+                    CONTACT
 
             MASK
 
@@ -24,15 +25,18 @@
     // --PROPS
     export let
     prop_FOCUS = false,
+    prop_INTRO = false,
     prop_RATIO = 0,
-    prop_START = void 0,
-    prop_END = void 0
+    prop_TOP = void 0,
+    prop_END = void 0,
+    prop_DIF = void 0
 
 // #IMPORTS
 
     // --JS
     import { PRESENTATION_CONTENT_DATAS } from '../../assets/js/datas/dPresentation'
     import { wait_throttle } from '../../assets/js/utils/wait'
+    import { transition_wait, transition_fade } from '../../assets/js/utils/transition'
 
     // --CONTEXTS
     import { APP, COMMAND, EVENT } from '../../App.svelte'
@@ -67,6 +71,9 @@
         }
     ]
 
+    // --ELEMENT-NAV
+    const NAV_INTRO_DURATION = 1400
+
 // #VARIABLES
 
     // --ELEMENT-PRESENTATION
@@ -80,7 +87,7 @@
     // --ELEMENT-TITLE
     let
     title_END = 0,
-    title_INVISIBLE = false,
+    title_DESTROY = false,
     title_HEIGHT = 0
 
     // --ELEMENT-FEATURES
@@ -94,7 +101,7 @@
 // #REACTIVE
 
     // --ELEMENT-PRESENTATION
-    $: prop_START != null && prop_END != null ? presentation_setVars() : void 0
+    $: prop_TOP != null ? presentation_setVars() : void 0
 
 // #FUNCTIONS
 
@@ -118,9 +125,9 @@
 
     function snake_setCommands() { COMMAND.command_setBasicCommands(SNAKE_COMMANDS) }
 
-    function title_setVars() { title_END = prop_START + window.innerHeight }
+    function title_setVars() { title_END = prop_TOP + window.innerHeight }
 
-    function features_setVars() { features_CONTACT_OFFSET_TOP = prop_START + prop_END - prop_END / features_LENGTH }
+    function features_setVars() { features_CONTACT_OFFSET_TOP = prop_END - prop_DIF / features_LENGTH }
 
     // --DESTROY
     function presentation_destroy() { presentation_destroyEvents() }
@@ -136,9 +143,9 @@
     // --EVENTS
     async function presentation_e$Scroll(scrollTop)
     {
-        title_INVISIBLE = APP.app_SMALL_SCREEN && APP.app_SCROLLTOP > title_END ? true : false
+        title_DESTROY = APP.app_SCROLLTOP > title_END
 
-        mask_RATIO = scrollTop / prop_START
+        mask_RATIO = scrollTop / prop_TOP
     }
 
     async function snake_eClick(i)
@@ -155,7 +162,7 @@
         }
     }
 
-    async function contact_eClick() { EVENT.event_scrollTo(features_CONTACT_OFFSET_TOP) }
+    async function contact_eClick() { EVENT.event_scrollTo(features_CONTACT_OFFSET_TOP, 'instant') }
 
 // #CYCLES
 
@@ -179,7 +186,7 @@ style:z-index={prop_FOCUS ? 1 : 0}
 
         <Content
         prop_CHARGED={presentation_CHARGED}
-        prop_INVISIBLE={title_INVISIBLE}
+        prop_INTRO={prop_INTRO && !title_DESTROY}
         {...PRESENTATION_CONTENT_DATAS}
         {prop_FOCUS}
         bind:title_HEIGHT
@@ -190,42 +197,49 @@ style:z-index={prop_FOCUS ? 1 : 0}
             bind:features_LENGTH
             />
 
-            <nav
-            style:transform="translateY({title_INVISIBLE ? -title_HEIGHT : 0}px)"
-            >
-                <ul>
-                    <li>
-                        <button
-                        type="button"
-                        title="Jouer au jeu du serpent revisité"
-                        on:click={snake_eClick.bind(null, 0)}
-                        >
-                            ~~JOUER
-                        </button>
-                    </li>
+            {#if prop_FOCUS}
+                <nav
+                class="nav"
+                class:top={!prop_INTRO}
+                style:--nav-duration="{NAV_INTRO_DURATION}ms"
+                style:transform="translateY({title_DESTROY ? -title_HEIGHT : 0}px)"
+                in:transition_wait={{ duration: NAV_INTRO_DURATION }}
+                out:transition_fade={{ duration: 600 }}
+                >
+                    <ul>
+                        <li>
+                            <button
+                            type="button"
+                            title="Jouer au jeu du serpent revisité"
+                            on:click={snake_eClick.bind(null, 0)}
+                            >
+                                JOUER
+                            </button>
+                        </li>
 
-                    <li>
-                        <button
-                        type="button"
-                        title="{snake_ON ? 'Masque' : 'Affiche'} le serpent"
-                        on:click={snake_eClick.bind(null, 1)}
-                        >
-                            ~~{snake_ON ? 'MASQUER' : 'AFFICHER'}
-                        </button>
-                    </li>
-    
-                    <li>
-                        <button
-                        class="contact"
-                        type="button"
-                        title="Page de contact"
-                        on:click={contact_eClick}
-                        >
-                            ~~CONTACT
-                        </button>
-                    </li>
-                </ul>
-            </nav>
+                        <li>
+                            <button
+                            type="button"
+                            title="{snake_ON ? 'Masque' : 'Affiche'} le serpent"
+                            on:click={snake_eClick.bind(null, 1)}
+                            >
+                                {snake_ON ? 'MASQUER' : 'AFFICHER'}
+                            </button>
+                        </li>
+        
+                        <li>
+                            <button
+                            class="contact"
+                            type="button"
+                            title="Page de contact"
+                            on:click={contact_eClick}
+                            >
+                                CONTACT
+                            </button>
+                        </li>
+                    </ul>
+                </nav>
+            {/if}
         </Content>
 
         <Mask
@@ -264,7 +278,7 @@ lang="scss"
 
     .wrapper { @extend %wrapper; }
 
-    nav
+    .nav
     {
         position: relative;
 
@@ -272,11 +286,39 @@ lang="scss"
 
         transition: transform .4s ease-out;
 
+        &.top ul { border-top-color: transparent !important; }
+
         ul
         {
             @extend %f-a-center;
+
+            position: relative;
         
             gap: 1rem;
+
+            transform: translateX(0) rotate(90deg);
+
+            width: max(100vw, 100vh);
+
+            padding-block: 1rem;
+
+            border-top: solid $light 1px;
+
+            transition: border .8s;
+
+            animation: aIntro var(--nav-duration) ease-in-out forwards;
+
+            @keyframes aIntro
+            {
+                60% { border-top-color: $light; }
+                70% { transform: translateX(-90%) rotate(0); }  
+                100%
+                {
+                    transform: translateX(0) rotate(0);
+
+                    border-top-color: $intermediate;
+                }    
+            }
         }
 
         li button

@@ -24,7 +24,7 @@ constructor ()
         set: function (value) { set(this.value = value) }
     }
 
-    this.router_e$Scroll = wait_debounce.call(this, this.router_e$Scroll, 50)
+    this.router_e$Scroll = wait_throttle.call(this, this.router_e$Scroll, 50)
 
     this.#router_EVENTS = { scroll: this.router_e$Scroll }
 }
@@ -47,7 +47,7 @@ constructor ()
     #router_destroyEvents() { EVENT.event_remove(this.#router_EVENTS) }
 
     // --UPDATE
-    router_update(id, behavior = 'smooth')
+    router_update(id, behavior)
     {
         const PAGE = this.#router_PAGES[id]
 
@@ -95,7 +95,7 @@ constructor ()
 // #IMPORTS
 
     // --JS
-    import { wait_debounce } from '../utils/wait'
+    import { wait_throttle } from '../utils/wait'
 
     // --CONTEXTS
     import APP from './mApp'

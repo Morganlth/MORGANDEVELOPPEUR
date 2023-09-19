@@ -22,7 +22,7 @@
         })
     }
 
-    export function animation_writing(children = [], resolve = () => {})
+    export function animation_writing(children = [], callback = () => {})
     {
         let [last, i, j, resolved] = [+new Date(), 0, 0, false]
 
@@ -48,7 +48,7 @@
 
                     CHILD.innerText = CHILD.dataset.char
 
-                    if (i++ >= MAX) resolve(), resolved = true
+                    if (i++ >= MAX) callback(), resolved = true
 
                     last = NOW
                 }

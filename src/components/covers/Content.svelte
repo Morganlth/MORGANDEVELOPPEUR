@@ -28,12 +28,10 @@
     prop_INFO = '',
     prop_CHARGED = false,
     prop_FOCUS = false,
-    prop_INVISIBLE = false
+    prop_INTRO = false
 
-    // --BINDS
-    export let
-    info_HEIGHT = 0,
-    title_HEIGHT = 0
+    // --BIND
+    export let title_HEIGHT = 0
 
 // #IMPORTS
 
@@ -60,10 +58,7 @@
     // --ELEMENT-FRAGMENTS
     const FRAGMENTS_EVENTS = {}
 
-// #VARIABLES
-
-    // --ELEMENT-CONTENT
-    let content_OPACITY = 0
+// #VARIABLE
 
     // --ELEMENT-FRAGMENTS
     let fragments_TIMEOUT
@@ -71,7 +66,7 @@
 // #REACTIVE
 
     // --ELEMENT-CONTENT
-    $: prop_CHARGED ? content_update(prop_FOCUS) : void 0
+    $: prop_CHARGED ? title_update(prop_INTRO) : void 0
 
 // #FUNCTIONS
 
@@ -88,17 +83,21 @@
 
     function fragments_destroyEvents() { EVENT.event_remove(FRAGMENTS_EVENTS) }
 
-    // --INTRO
-    async function content_intro()
+    // --UPDATE
+    async function title_update(intro)
     {
-        content_OPACITY = 1
+        intro
+        ?   title_intro()
+        :   title_outro()
+    }
 
-        title_intro()
+    // --INTRO
+    function title_intro()
+    {
+        for (const FRAG of TITLE_FRAGS) FRAG.style.transform = `translate3d(0, 0, 0)`
 
         fragments_introTags()
     }
-
-    function title_intro() { for (const FRAG of TITLE_FRAGS) FRAG.style.transform = `translate3d(0, 0, 0)` }
 
     function fragments_introTags()
     {
@@ -113,22 +112,7 @@
     }
 
     // --OUTRO
-    async function content_outro()
-    {
-        content_OPACITY = 0
-
-        title_outro()
-    }
-
     function title_outro() { for (const FRAG of TITLE_FRAGS) FRAG.style.transform = transform_getTranslate3d() }
-
-    // --UPDATE
-    function content_update(focus)
-    {
-        focus
-        ?   content_intro()
-        :   content_outro()
-    }
 
 // #CYCLE
 
@@ -139,11 +123,10 @@ onDestroy(fragments_destroy)
 
 <section
 class="content"
-style:opacity={content_OPACITY}
+style:opacity={prop_CHARGED && prop_FOCUS ? 1 : 0}
 >
     <div
     class="info"
-    bind:offsetHeight={info_HEIGHT}
     >
         {`{${prop_INFO}}`}
     </div>
@@ -151,7 +134,7 @@ style:opacity={content_OPACITY}
     <svelte:element
     this={prop_TITLE.htmlElement}
     class="title"
-    class:invisible={prop_INVISIBLE}
+    style:opacity={prop_INTRO ? 1 : 0}
     bind:offsetHeight={title_HEIGHT}
     >
         {#each prop_TITLE.contents as content}
@@ -221,19 +204,10 @@ lang="scss"
 
         perspective: 300px;
 
-        opacity: 1;
-
         width: fit-content;
         height: fit-content;
 
         transition: opacity .6s ease-in;
-
-        &.invisible
-        {
-            opacity: 0;
-
-            transition: opacity .2s;
-        }
 
         .element
         {

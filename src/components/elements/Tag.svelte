@@ -132,7 +132,7 @@ lang="scss"
 
         transform: translateX(0) scale(1);
     
-        width: 200%;
+        width: 150%;
         height: 0;
 
         pointer-events: none;

@@ -8,9 +8,12 @@
             htmlElement: 'h2',
             contents:
             [
-                { frags: 'PRESENTATION' },
-                { tags: ['IDENTITÉ', 'LOCALITÉ', 'ÉTUDES', 'PRO', 'CONTACT'] }
+                {
+                    frags: 'MA',
+                    tags: ['IDENTITÉ', 'LOCALITÉ', 'ÉTUDES', 'PRO', 'CONTACT']
+                },
+                { frags: 'PRESENTATION' }
             ]
         },
-        prop_INFO: 'SNAKE GAME'
+        prop_INFO: 'SNAKE'
     }

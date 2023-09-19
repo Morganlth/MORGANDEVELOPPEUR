@@ -143,12 +143,13 @@
     spacecube_FORCE_ROTATION = SPACECUBE_FORCE_ROTATION,
     spacecube_MOUSE_X = 0,
     spacecube_MOUSE_Y = 0,
-    spacecube_TIMEOUT
+    spacecube_TIMEOUT,
+    spacecube_TIMEOUT2
 
 // #REACTIVES
 
     // --ELEMENT-SPACECUBE
-    $: prop_RATIO && spacecube_CHARGED && !APP.app_OPTIMISE ? spacecube_updateCubesPosition() : void 0
+    $: spacecube_CHARGED && !APP.app_OPTIMISE ? spacecube_updateCubesPosition(prop_RATIO) : void 0
     $: prop_TICTACTOE && spacecube_CHARGED ? spacecube_setTicTacToe() : void 0
 
 // #FUNCTIONS
@@ -397,6 +398,7 @@
     {
         const CUBES = SPACECUBE_CUBES.children
 
+        clearTimeout(spacecube_TIMEOUT2)
         spacecube_SCROLL_ANIMATION = true
 
         for (const CUBE of CUBES)
@@ -409,7 +411,7 @@
             CUBE.iPosition = { x: X, y: Y }
         }
 
-        spacecube_SCROLL_ANIMATION = false
+        spacecube_TIMEOUT2 = setTimeout(() => spacecube_SCROLL_ANIMATION = false, 300)
     }
 
     function spacecube_updateSceneVars(radius, forcePosition, forceRotation, mouseIntensity)

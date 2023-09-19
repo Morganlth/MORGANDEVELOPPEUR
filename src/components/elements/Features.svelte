@@ -39,9 +39,6 @@
     FEATURES_PHASE = Math.PI * features_LENGTH,
     FEATURES_EVENTS = { resize: features_e$Resize }
 
-    // --ELEMENT-TOPIC
-    const TOPIC_FRAGS = []
-
 // #VARIABLES
 
     // --ELEMENT-TRACK
@@ -52,8 +49,8 @@
 
 // #REACTIVE
 
-    // --ELEMENT-TRACK
-    $: track_TRANSLATE_Z = Math.abs(Math.sin(prop_RATIO * FEATURES_PHASE)) * 100
+    // --ELEMENT-FEATURES
+    $: features_SIN = Math.abs(Math.sin(prop_RATIO * FEATURES_PHASE)) // 0 - 100
 
 // #FUNCTIONS
 
@@ -100,14 +97,18 @@ onDestroy(features_destroy)
 <div
 class="features"
 class:focus={prop_FOCUS}
+style:--features-sin={features_SIN}
 >
     {#each [0, 1] as i}
         <div
         class="track"
+        style:--track-sign={i ? 1 : -1}
         style:transform={
-            i
-            ? `rotate(${-track_ROTATE}rad) translate3d(calc(100% * ${1 - prop_RATIO}), -50%, ${track_TRANSLATE_Z}px)`
-            : `rotate(${-track_ROTATE + Math.PI}rad) translate3d(calc(-100% * ${prop_RATIO}), 50%, ${track_TRANSLATE_Z}px)`
+            (i
+            ? `rotate(${-track_ROTATE}rad) translate3d(calc(100% * ${1 - prop_RATIO}), -50%`
+            : `rotate(${-track_ROTATE + Math.PI}rad) translate3d(calc(-100% * ${prop_RATIO}), 50%`)
+
+            + `, ${features_SIN * 100}px)`
         }
         style:padding-right="{topic_WIDTH}px"
         >
@@ -129,7 +130,7 @@ class:focus={prop_FOCUS}
 
     <div
     class="track"
-    style:transform="translate3d(calc(-100% * {prop_RATIO}), -50%, {-track_TRANSLATE_Z}px)"
+    style:transform="translate(calc(-100% * {prop_RATIO}), -50%)"
     >
         {#each FEATURES_DATAS as data}
             <ul>
@@ -227,22 +228,10 @@ lang="scss"
     
             p
             {
-                &::before, &::after
-                {
-                    @include position.placement(absolute, 0, auto, auto, 0, attr(data-topic));
-
-                    opacity: 0;
-
-                    transition: transform .4s, opacity .4s;
-                }
-                &::before
-                {
-                    z-index: -1;
-
-                    color: $indicator;
-                }
+                $x: .8rem;
+                $y: .4rem;
         
-                @include font.h-custom(inherit, var(--title-size, map.get(font.$font-sizes, s7)), 1);
+                @include font.h-custom(inherit, var(--title-size, map.get(font.$font-sizes, s7)));
     
                 @extend %m-h-2;
 
@@ -255,15 +244,26 @@ lang="scss"
 
                 &::after
                 {
+                    #{--x}: calc($x * var(--track-sign, 1));
+                    #{--y}: calc($y * var(--track-sign, 1));
+                
+                    @include position.placement(absolute, 0, auto, auto, 0, attr(data-topic));
+
+                    transform: translate(calc(var(--x, $x) * var(--features-sin, 0)), calc(var(--y, $y) * var(--features-sin, 0)));
+            
+                    opacity: var(--features-sin, 0);
+            
                     color: transparent;
-                    -webkit-text-stroke: 1px $light;
+                    -webkit-text-stroke: 3px $intermediate;
+
+                    transition: transform .4s, opacity .4s;
                 }
 
-                &:hover
+                &:hover::after
                 {
-                    &::before, &::after { opacity: 1; }
-                    &::before { transform: translate(.6rem, .3rem); }
-                    &::after { transform: translate(-.6rem, -.3rem); }
+                    transform: translate(var(--x, $x), var(--y, $y));
+
+                    opacity: 1;
                 }
             }
         }
@@ -279,7 +279,7 @@ lang="scss"
 
             li
             {
-                @include font.interact($light, map.get(font.$font-sizes, s3), 2.5, map.get(font.$content-font-weight, w1));
+                @include font.interact($light, map.get(font.$font-sizes, s3), 6, map.get(font.$content-font-weight, w1));
     
                 padding-left: app.$gap-inline;
 
