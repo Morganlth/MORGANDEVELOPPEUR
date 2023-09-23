@@ -15,11 +15,11 @@ class Router
 
 constructor ()
 {
-    let { subscribe, set } = writable(0)
+    let { subscribe, set } = writable(null)
 
     this.#router_$ID =
     {
-        value: 0,
+        value: null,
         subscribe,
         set: function (value) { set(this.value = value) }
     }

@@ -50,8 +50,7 @@
     // --COMPONENT-ICON
     import Logo from '../icons/Logo.svelte'
 
-    // --COMPONENT-DECORS
-    import Particles from '../decors/Particles.svelte'
+    // --COMPONENT-DECOR
     import SpaceCube from '../decors/SpaceCube.svelte'
 
 // #VARIABLES
@@ -91,10 +90,9 @@ style:z-index={prop_FOCUS ? 1 : 0}
     <div
     class="wrapper"
     >
-        <Particles />
-
         <SpaceCube
         prop_TICTACTOE={spacecube_TICTACTOE}
+        {prop_FOCUS}
         {prop_RATIO}
         bind:spacecube_CHARGED
         />

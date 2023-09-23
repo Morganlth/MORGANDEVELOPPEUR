@@ -111,8 +111,8 @@ style:z-index={prop_FOCUS ? 1 : 0}
     class="wrapper"
     >
         <System
-        prop_FOCUS={prop_FOCUS && !prop_INTRO}
-        prop_SCALED={prop_FOCUS}
+        prop_START={prop_FOCUS && !prop_INTRO}
+        {prop_FOCUS}
         {prop_RATIO}
         bind:system_TARGET
         />

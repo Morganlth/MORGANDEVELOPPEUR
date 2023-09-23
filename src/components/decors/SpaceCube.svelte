@@ -19,6 +19,7 @@
 
     // --PROPS
     export let
+    prop_FOCUS = false,
     prop_RATIO = 0,
     prop_TICTACTOE = false
 
@@ -82,10 +83,10 @@
     SPACECUBE_CAMERA_FOV = 75,
     SPACECUBE_CAMERA_NEAR = .1,
     SPACECUBE_CAMERA_Z = 5,
-    SPACECUBE_RADIUS = 2,
-    SPACECUBE_FORCE_POSITION = .1,
-    SPACECUBE_FORCE_ROTATION = .03,
-    SPACECUBE_MOUSE_INTENSITY = 1,
+    SPACECUBE_RADIUS = 3,
+    SPACECUBE_FORCE_POSITION = .05,
+    SPACECUBE_FORCE_ROTATION = .01,
+    SPACECUBE_MOUSE_INTENSITY = .5,
     SPACECUBE_CUBES = new Group(),
     SPACECUBE_FLOATING_UPDATE_CUBES = [],
     SPACECUBE_ROTATION_X = -MATH.rad.r45 / 2,
@@ -100,13 +101,18 @@
             storage: true
         }
     ],
-    SPACECUBE_EVENTS =
+    SPACECUBE_EVENTS = { resize: spacecube_e$Resize },
+    SPACECUBE_EVENTS_2 =
     {
         mouseMove: wait_throttle(spacecube_e$MouseMove, 16.67),
+        animation: wait_throttle(spacecube_e$Animation, 16.67)
+    },
+    SPACECUBE_EVENTS_3 =
+    {
+        scroll: wait_throttle(spacecube_e$Scroll, 16.67),
         mouseDown: spacecube_e$MouseDown,
         mouseUp: spacecube_e$MouseUp,
-        resize: spacecube_e$Resize,
-        animation: wait_throttle(spacecube_e$Animation, 16.67)
+        animation: wait_throttle(spacecube_e$Animation2, 16.67)
     }
 
     // --ELEMENT-SPACECUBE~SHADERS
@@ -144,12 +150,12 @@
     spacecube_MOUSE_X = 0,
     spacecube_MOUSE_Y = 0,
     spacecube_TIMEOUT,
-    spacecube_TIMEOUT2
+    spacecube_TIMEOUT_2
 
 // #REACTIVES
 
     // --ELEMENT-SPACECUBE
-    $: spacecube_CHARGED && !APP.app_OPTIMISE ? spacecube_updateCubesPosition(prop_RATIO) : void 0
+    $: spacecube_CHARGED && !APP.app_$OPTIMISE.on ? spacecube_updateEvents3(prop_FOCUS) : void 0
     $: prop_TICTACTOE && spacecube_CHARGED ? spacecube_setTicTacToe() : void 0
 
 // #FUNCTIONS
@@ -189,7 +195,21 @@
 
     function spacecube_setCommands() { COMMAND.command_setBasicCommands(SPACECUBE_COMMANDS) }
 
-    function spacecube_setEvents() { EVENT.event_add(SPACECUBE_EVENTS) }
+    function spacecube_setEvents()
+    {
+        EVENT.event_add(SPACECUBE_EVENTS)
+
+        spacecube_setEvents2()
+    }
+
+    function spacecube_setEvents2()
+    {
+        EVENT.event_add(SPACECUBE_EVENTS_2)
+
+        if (prop_FOCUS) spacecube_setEvents3()
+    }
+
+    function spacecube_setEvents3() { EVENT.event_add(SPACECUBE_EVENTS_3) }
 
     function spacecube_setCamera()
     {
@@ -354,7 +374,21 @@
     // --DESTROY
     function spacecube_destroy() { spacecube_destroyEvents() }
 
-    function spacecube_destroyEvents() { EVENT.event_remove(SPACECUBE_EVENTS) }
+    function spacecube_destroyEvents()
+    {
+        EVENT.event_remove(SPACECUBE_EVENTS)
+
+        spacecube_destroyEvents2()
+    }
+
+    function spacecube_destroyEvents2()
+    {
+        EVENT.event_remove(SPACECUBE_EVENTS_2)
+
+        spacecube_destroyEvents3()
+    }
+
+    function spacecube_destroyEvents3() { EVENT.event_remove(SPACECUBE_EVENTS_3) }
 
     // --GET
     function spacecube_getCubePoints(x, y)
@@ -387,31 +421,42 @@
     // --UPDATES
     function spacecube_update(on)
     {
-        on ? spacecube_setEvents() : spacecube_destroyEvents()
+        on ? spacecube_setEvents2() : spacecube_destroyEvents2()
     
         spacecube_ON = on
     }
 
+    function spacecube_updateEvents3()
+    {
+        if (prop_FOCUS)
+        {
+            spacecube_setEvents3()
+        }
+        else
+        {
+            spacecube_destroyEvents3()
+
+            spacecube_updateCubesPosition(2)
+        }
+    }
+
     const spacecube_updateFloatingCubes = wait_throttle(() => { for (const UPDATE of SPACECUBE_FLOATING_UPDATE_CUBES) UPDATE() }, 100)
 
-    async function spacecube_updateCubesPosition()
+    async function spacecube_updateCubesPosition(ratio)
     {
         const CUBES = SPACECUBE_CUBES.children
 
-        clearTimeout(spacecube_TIMEOUT2)
-        spacecube_SCROLL_ANIMATION = true
-
         for (const CUBE of CUBES)
         {
-            const [A, B, C, T] = [CUBE.checkPoints[2], CUBE.checkPoints[3], CUBE.checkPoints[4], prop_RATIO * CUBE.vel],
+            const [A, B, C, T] = [CUBE.checkPoints[2], CUBE.checkPoints[3], CUBE.checkPoints[4], ratio * CUBE.vel],
             [X, Y] = [spacecube_getBarycentre(A.x, B.x, C.x, T), spacecube_getBarycentre(A.y, B.y, C.y, T)]
+
+            spacecube_clearAnimationFrame(CUBE)
 
             CUBE.position.x = X + (CUBE.position.x - CUBE.iPosition.x)
             CUBE.position.y = Y + (CUBE.position.y - CUBE.iPosition.y)
             CUBE.iPosition = { x: X, y: Y }
         }
-
-        spacecube_TIMEOUT2 = setTimeout(() => spacecube_SCROLL_ANIMATION = false, 300)
     }
 
     function spacecube_updateSceneVars(radius, forcePosition, forceRotation, mouseIntensity)
@@ -426,8 +471,13 @@
     function spacecube_updateScene()
     {
         spacecube_aMouseCamera()
-        spacecube_updateMouseLight()
-        spacecube_updateCubesLayout()
+        
+        if (prop_FOCUS)
+        {
+            spacecube_updateMouseLight()
+    
+            if (!spacecube_SCROLL_ANIMATION) spacecube_updateCubesLayout()
+        }
     }
     async function spacecube_updateMouseLight()
     {
@@ -436,8 +486,6 @@
     }
     async function spacecube_updateCubesLayout()
     {
-        if (spacecube_SCROLL_ANIMATION) return
-    
         const CUBES = SPACECUBE_CUBES.children
     
         for (let i = 0; i < CUBES.length; i++)
@@ -466,7 +514,17 @@
     function spacecube_c$(on) { COMMAND.command_test(on, 'boolean', spacecube_update, SPACECUBE_NAME, spacecube_ON) }
 
     // --EVENTS
-    function spacecube_e$MouseMove(clientX, clientY) // THROTTLE
+    async function spacecube_e$Scroll(scrollTop)
+    {
+        clearTimeout(spacecube_TIMEOUT_2)
+        spacecube_SCROLL_ANIMATION = true
+
+        spacecube_updateCubesPosition(scrollTop > 0 ? prop_RATIO : 0)
+
+        spacecube_TIMEOUT_2 = setTimeout(() => spacecube_SCROLL_ANIMATION = false, 100)
+    }
+
+    async function spacecube_e$MouseMove(clientX, clientY)
     {
         const
         [RATIO_X, RATIO_Y] = [(clientX / window.innerWidth) * 2 - 1, -(clientY / window.innerHeight) * 2 + 1],
@@ -480,7 +538,7 @@
         spacecube_updateScene()
     }
 
-    async function spacecube_e$MouseDown() { spacecube_TIMEOUT = setTimeout(() => { spacecube_updateSceneVars(3.5, .5, .06, 4) }, 200) }
+    async function spacecube_e$MouseDown() { spacecube_TIMEOUT = setTimeout(() => { spacecube_updateSceneVars(4, .3, .03, 3) }, 200) }
 
     async function spacecube_e$MouseUp()
     {
@@ -508,6 +566,8 @@
         spacecube_RENDERER.render(spacecube_SCENE, spacecube_CAMERA)
     }
 
+    async function spacecube_e$Animation2() { spacecube_updateFloatingCubes() }
+
     // --CONTROL
     async function spacecube_start()
     {
@@ -516,7 +576,7 @@
         ? APP.app_OPTIMISE
             ? 0
             : spacecube_aStart()
-        : spacecube_updateCubesPosition() ?? 0)
+        : spacecube_updateCubesPosition(prop_RATIO) ?? 0)
 
         spacecube_OPACITY = 1
     }
@@ -554,7 +614,7 @@
         [P_X, P_Y] = [spacecube_CAMERA.position.x, spacecube_CAMERA.position.y],
         [STEP_X, STEP_Y] = [spacecube_MOUSE_X * .015 - P_X, spacecube_MOUSE_Y * .015 - P_Y]
 
-        cancelAnimationFrame(spacecube_CAMERA.animation_FRAMEID)
+        spacecube_clearAnimationFrame(spacecube_CAMERA)
 
         animation.call(spacecube_CAMERA, (t) =>
         {
@@ -571,7 +631,7 @@
         [STEP_P_X, STEP_P_Y] = [cube.iPosition.x + X0 * spacecube_FORCE_POSITION - P_X, cube.iPosition.y + Y0 * spacecube_FORCE_POSITION - P_Y],
         [STEP_R_X, STEP_R_Y] = [SPACECUBE_ROTATION_X + X0 * spacecube_FORCE_ROTATION - R_X, SPACECUBE_ROTATION_Y + Y0 * spacecube_FORCE_ROTATION - R_Y]
 
-        cancelAnimationFrame(cube.animation_FRAMEID)
+        spacecube_clearAnimationFrame(cube)
     
         animation.call(cube, (t) =>
         {
@@ -601,6 +661,7 @@
         : [1, 1 / (1 / RATIO / CAMERA_HEIGHT)]
     }
 
+    function spacecube_clearAnimationFrame(obj) { cancelAnimationFrame(obj.animation_FRAMEID) } 
 
 // #CYCLES
 

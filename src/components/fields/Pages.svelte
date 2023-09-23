@@ -27,6 +27,7 @@
     import Home from '../pages/Home.svelte'
     import Presentation from '../pages/Presentation.svelte'
     import Skills from '../pages/Skills.svelte'
+    import Projects from '../pages/Projects.svelte'
 
 // #CONSTANTES
 
@@ -34,11 +35,18 @@
     const
     PAGES_PAGES =
     [
+        // {
+        //     id: 3,
+        //     name: 'projects',
+        //     component: Projects,
+        //     start: 15,
+        //     end: 16,
+        //     props: {}
+        // },
         {
             id: 2,
             name: 'skills',
             component: Skills,
-            top: 8,
             start: 9,
             end: 14,
             props: {}
@@ -47,7 +55,6 @@
             id: 1,
             name: 'presentation',
             component: Presentation,
-            top: 1,
             start: 1.3,
             end: 8,
             props: {}
@@ -87,17 +94,23 @@
 
     function pages_setPages()
     {
-        const [HEIGHT, SCROLLTOP] = [window.innerHeight, APP.app_SCROLLTOP ?? 0] 
+        const [HEIGHT, SCROLLTOP] = [window.innerHeight, APP.app_SCROLLTOP ?? 0]
 
-        for (const PAGE of PAGES_PAGES)
+        let end = 0
+
+        for (let i = PAGES_PAGES.length - 1; i >= 0; i--)
         {
-            PAGE.props.prop_TOP = (PAGE.top ?? 0) * HEIGHT
+            const PAGE = PAGES_PAGES[i]
+    
+            PAGE.props.prop_TOP = end * HEIGHT
             PAGE.props.prop_START = (PAGE.start ?? 0) * HEIGHT
             PAGE.props.prop_END = PAGE.end * HEIGHT
             PAGE.props.prop_DIF = PAGE.props.prop_END - PAGE.props.prop_START
             PAGE.props.prop_INTRO = pages_getIntro(PAGE.props.prop_TOP, SCROLLTOP)
 
-            PAGES_PAGES[PAGE] = PAGE
+            PAGES_PAGES[i] = PAGE
+
+            end = PAGE.end
         }
     }
 

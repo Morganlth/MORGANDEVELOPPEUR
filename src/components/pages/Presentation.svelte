@@ -36,7 +36,6 @@
     // --JS
     import { PRESENTATION_CONTENT_DATAS } from '../../assets/js/datas/dPresentation'
     import { wait_throttle } from '../../assets/js/utils/wait'
-    import { transition_wait, transition_fade } from '../../assets/js/utils/transition'
 
     // --CONTEXTS
     import { APP, COMMAND, EVENT } from '../../App.svelte'
@@ -70,9 +69,6 @@
             storage: true
         }
     ]
-
-    // --ELEMENT-NAV
-    const NAV_INTRO_DURATION = 1400
 
 // #VARIABLES
 
@@ -201,10 +197,7 @@ style:z-index={prop_FOCUS ? 1 : 0}
                 <nav
                 class="nav"
                 class:top={!prop_INTRO}
-                style:--nav-duration="{NAV_INTRO_DURATION}ms"
                 style:transform="translateY({title_DESTROY ? -title_HEIGHT : 0}px)"
-                in:transition_wait={{ duration: NAV_INTRO_DURATION }}
-                out:transition_fade={{ duration: 600 }}
                 >
                     <ul>
                         <li>
@@ -280,37 +273,26 @@ lang="scss"
 
     .nav
     {
-        position: relative;
-
-        z-index: 1;
-
-        transition: transform .4s ease-out;
-
-        &.top ul { border-top-color: transparent !important; }
-
-        ul
-        {
-            @extend %f-a-center;
-
-            position: relative;
+        $animation-duration: 1.4;
         
-            gap: 1rem;
+        &::before
+        {
+            @include position.placement(absolute, 0, 0, auto, 0, true);
 
             transform: translateX(0) rotate(90deg);
 
-            width: max(100vw, 100vh);
-
-            padding-block: 1rem;
+            width: 100%;
+            height: 0;
 
             border-top: solid $light 1px;
 
             transition: border .8s;
 
-            animation: aIntro var(--nav-duration) ease-in-out forwards;
+            animation: aBeforeIntro #{$animation-duration}s ease-in-out forwards;
 
-            @keyframes aIntro
+            @keyframes aBeforeIntro
             {
-                60% { border-top-color: $light; }
+                50% { border-top-color: $light; }
                 70% { transform: translateX(-90%) rotate(0); }  
                 100%
                 {
@@ -318,6 +300,41 @@ lang="scss"
 
                     border-top-color: $intermediate;
                 }    
+            }
+        }
+    
+        position: relative;
+
+        z-index: 1;
+
+        transition: transform .4s ease-out;
+
+        &.top::before { border-top-color: transparent !important; }
+
+        ul
+        {
+            @extend %f-a-center;
+        
+            gap: 1rem;
+
+            transform: translateX(-100%);
+
+            opacity: 0;
+    
+            width: 100%;
+
+            padding-block: 1rem;
+
+            animation: aUlIntro  #{$animation-duration * .3}s  #{$animation-duration * .7}s ease-in-out forwards;
+
+            @keyframes aUlIntro
+            {
+                100%
+                {
+                    transform: translateX(0);
+            
+                    opacity: 1;
+                }
             }
         }
 

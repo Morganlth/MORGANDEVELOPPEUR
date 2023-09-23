@@ -133,7 +133,6 @@
         gravityarea_TRANSLATE_Z = prop_ORBIT_RADIUS * Math.sin(ANGLE)
         
         SLOT_$ROTATION.set({ rX: null, rY: .025 })
-
     }
 
     function gravityarea_updateGrabbing(grabbing)

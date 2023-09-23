@@ -23,7 +23,7 @@
     // --PROPS
     export let
     prop_FOCUS = false,
-    prop_SCALED = false,
+    prop_START = false,
     prop_RATIO = 0
 
     // --BIND
@@ -81,6 +81,9 @@
     // --ELEMENT-ORBIT
     const ORBIT_EVENTS = { resize: orbit_e$Resize }
 
+    // --ELEMENT-GRAVITYAREA
+    const GRAVITYAREA_EVENTS = { scroll: wait_throttle(gravityarea_e$Scroll, 33.34) }
+
 // #VARIABLES
 
     // --APP
@@ -102,11 +105,14 @@
     // --ELEMENT-ORBIT
     let orbit_RADIUS = 0
 
+    // --ELEMENT-GRAVITYAREA
+    let gravityarea_RATIO = 0
+
 // #REACTIVES
 
     // --ELEMENT-GROUP
     $: system_CHARGED
-        ? prop_SCALED
+        ? prop_FOCUS
             ? system_start()
             : system_stop()
         : void 0
@@ -129,11 +135,18 @@
 
     function system_setCommands() { COMMAND.command_setBasicCommands(SYSTEM_COMMANDS) }
 
-    function group_setEvents() { EVENT.event_add(GROUP_EVENTS) }
+    function group_setEvents()
+    {
+        EVENT.event_add(GROUP_EVENTS)
+
+        gravityarea_setEvents()
+    }
 
     function orbit_setVars() { orbit_RADIUS = Math.min(window.innerWidth * .6, window.innerHeight * .6) }
 
     function orbit_setEvents() { EVENT.event_add(ORBIT_EVENTS) }
+
+    function gravityarea_setEvents() { EVENT.event_add(GRAVITYAREA_EVENTS) }
 
     // --DESTROY
     function system_destroy()
@@ -142,9 +155,16 @@
         orbit_destroyEvents()
     }
 
-    function group_destroyEvents() { EVENT.event_remove(GROUP_EVENTS) }
+    function group_destroyEvents()
+    {
+        EVENT.event_remove(GROUP_EVENTS)
+
+        gravityarea_destroyEvents()
+    }
 
     function orbit_destroyEvents() { EVENT.event_remove(ORBIT_EVENTS) }
+    
+    function gravityarea_destroyEvents() { EVENT.event_remove(GRAVITYAREA_EVENTS) }
 
     // --GET
     function group_getIndexFocus()
@@ -173,7 +193,7 @@
 
     function group_updateFocus()
     {
-        const INDEX = prop_FOCUS && !system_OPTIMISED ? group_getIndexFocus() : void 0
+        const INDEX = prop_START && !system_OPTIMISED ? group_getIndexFocus() : void 0
 
         for (let i = 0; i < GROUP_Z_POSITIONS.length; i++) SYSTEM_DATAS[i] = { ...SYSTEM_DATAS[i], focus: i === INDEX }
     }
@@ -200,6 +220,8 @@
     }
 
     async function orbit_e$Resize() { orbit_setVars() }
+
+    async function gravityarea_e$Scroll() { gravityarea_RATIO = prop_RATIO }
 
     function cube_eClick() { if (this.focus || system_OPTIMISED) system_updateTarget(this) }
 
@@ -233,7 +255,7 @@ onDestroy(system_destroy)
 
 <div
 class="system"
-class:focus={prop_SCALED}
+class:focus={prop_FOCUS}
 >
     <Group
     let:resize
@@ -248,6 +270,7 @@ class:focus={prop_SCALED}
             {#each SYSTEM_DATAS as data}
                 <Orbit
                 prop_ROTATE={data.props.prop_ROTATE}
+                prop_OPACITY={prop_FOCUS ? 1 : 0}
                 >
                     <GravityArea
                     let:rotation
@@ -255,12 +278,12 @@ class:focus={prop_SCALED}
                     prop_e$RESIZE={resize}
                     prop_e$ANIMATION={animation}
                     prop_FOCUS={data.focus ?? false}
+                    prop_RATIO={gravityarea_RATIO}
                     prop_GRABBING={false}
                     prop_ORBIT_RADIUS={orbit_RADIUS}
                     prop_ROTATE={data.props.prop_ROTATE}
                     prop_OFFSET={data.props.prop_OFFSET}
                     prop_FORCE={.2}
-                    {prop_RATIO}
                     bind:gravityarea_TRANSLATE_Z={GROUP_Z_POSITIONS[data.id]}
                     >
                         <Cube
@@ -283,7 +306,7 @@ class:focus={prop_SCALED}
     <Group>
         {#each SYSTEM_DATAS as data}
             <Tag
-            prop_FOCUS={prop_FOCUS && !system_TARGET && (data.focus || system_OPTIMISED)}
+            prop_FOCUS={prop_START && !system_TARGET && (data.focus || system_OPTIMISED)}
             prop_OPTIMISED={system_OPTIMISED}
             prop_CONTENT={data.tag}
             prop_X={group_ROTATE_Y * 6}

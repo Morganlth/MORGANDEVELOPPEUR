@@ -96,6 +96,7 @@
     snake_OFFSET_TOP = 0,
     snake_OFFSET_LEFT = 0,
     snake_COLOR_BODY = color_rgba(COLORS.primary, .6),
+    snake_COLOR_APPLE = color_rgba(COLORS.indicator, .8),
     snake_X = -1,
     snake_Y = -1,
     snake_BLOCKSIZE,
@@ -474,7 +475,7 @@
     {
         const [X, Y, SIZE] = [SNAKE_APPLE[0] * snake_BLOCKSIZE + 1, SNAKE_APPLE[1] * snake_BLOCKSIZE + 1, snake_BLOCKSIZE - 2]
     
-        canvas_CONTEXT.fillStyle = COLORS.indicator
+        canvas_CONTEXT.fillStyle = snake_COLOR_APPLE
         canvas_CONTEXT.fillRect(X, Y, SIZE, SIZE)
     }
 
