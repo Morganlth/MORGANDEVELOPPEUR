@@ -50,6 +50,9 @@
 
 // #CONSTANTES
 
+    // --ELEMENT-INFO
+    const INFO_D = 600
+
     // --ELEMENT-TITLE
     const
     TITLE_FRAGS = [],
@@ -58,7 +61,12 @@
     // --ELEMENT-FRAGMENTS
     const FRAGMENTS_EVENTS = {}
 
-// #VARIABLE
+// #VARIABLES
+
+    // --ELEMENT-INFO
+    let
+    info,
+    info_TIMEOUT
 
     // --ELEMENT-FRAGMENTS
     let fragments_TIMEOUT
@@ -83,7 +91,9 @@
 
     function fragments_destroyEvents() { EVENT.event_remove(FRAGMENTS_EVENTS) }
 
-    // --UPDATE
+    // --UPDATES
+    function info_updateOpacity(opacity) { info.style.opacity = opacity }
+
     async function title_update(intro)
     {
         intro
@@ -91,7 +101,9 @@
         :   title_outro()
     }
 
-    // --INTRO
+    // --INTROS
+    function info_intro() { info_TIMEOUT = setTimeout(() => info_updateOpacity(1), INFO_D) }
+
     function title_intro()
     {
         for (const FRAG of TITLE_FRAGS) FRAG.style.transform = `translate3d(0, 0, 0)`
@@ -111,8 +123,39 @@
         }
     }
 
-    // --OUTRO
+    // --OUTROS
+    function info_outro()
+    {
+        clearTimeout(info_TIMEOUT)
+    
+        info_updateOpacity(0)
+    }
+
     function title_outro() { for (const FRAG of TITLE_FRAGS) FRAG.style.transform = transform_getTranslate3d() }
+
+    // --TRANSITIONS
+    function info_t1(node, { delay = 0 })
+    {
+        return {
+            delay,
+            duration: INFO_D,
+            css: (t) =>
+            {
+                const T = t * 100 + '%'
+
+                return `clip-path: polygon(0 0, ${T} 0, ${T} 100%, 0% 100%);`
+            }
+        }
+    }
+
+    function info_t2(node, { delay = 0 })
+    {
+        return {
+            delay,
+            duration: INFO_D,
+            css: (t, u) => `transform: translateX(-${u * 100}%);`
+        }
+    }
 
 // #CYCLE
 
@@ -123,40 +166,68 @@ onDestroy(fragments_destroy)
 
 <section
 class="content"
-style:opacity={prop_CHARGED && prop_FOCUS ? 1 : 0}
 >
     <div
     class="info"
+    bind:this={info}
     >
-        {`{${prop_INFO}}`}
+        {#if prop_FOCUS}
+            <span
+            class="opening"
+            >
+                {'['}
+            </span>
+
+            <p
+            in:info_t1={{ delay: INFO_D }}
+            out:info_t1
+            >
+                {prop_INFO}
+            </p>
+
+            <span
+            class="closure"
+            in:info_t2={{ delay: INFO_D }}
+            out:info_t2
+            on:introstart={info_intro}
+            on:outroend={info_outro}
+            >
+                {']'}
+            </span>
+        {/if}
     </div>
 
-    <svelte:element
-    this={prop_TITLE.htmlElement}
-    class="title"
-    style:opacity={prop_INTRO ? 1 : 0}
-    bind:offsetHeight={title_HEIGHT}
+    <div
+    class="container"
+    style:opacity={prop_CHARGED && prop_FOCUS ? 1 : 0}
     >
-        {#each prop_TITLE.contents as content}
-            <Fragments
-            prop_FRAGS={{ children: TITLE_FRAGS, value: content.frags ?? '-' }}
-            prop_TAGS={{ children: TITLE_TAGS, value: content.tags }}
-            prop_TRANSFORM={transform_getTranslate3d}
-            />
-        {/each}
+        <svelte:element
+        this={prop_TITLE.htmlElement}
+        class="title"
+        style:opacity={prop_INTRO ? 1 : 0}
+        bind:offsetHeight={title_HEIGHT}
+        >
+            {#each prop_TITLE.contents as content}
+                <Fragments
+                prop_FRAGS={{ children: TITLE_FRAGS, value: content.frags ?? '-' }}
+                prop_TAGS={{ children: TITLE_TAGS, value: content.tags }}
+                prop_TRANSFORM={transform_getTranslate3d}
+                />
+            {/each}
 
-        {#if prop_TITLE.element}
-            <div
-            class="element"
-            style:transform={transform_getTranslate3d()}
-            bind:this={TITLE_FRAGS[TITLE_FRAGS.length]}
-            >
-                <slot name="title-element" />
-            </div>
-        {/if}
-    </svelte:element>
+            {#if prop_TITLE.element}
+                <div
+                class="element"
+                style:transform={transform_getTranslate3d()}
+                bind:this={TITLE_FRAGS[TITLE_FRAGS.length]}
+                >
+                    <slot name="title-element" />
+                </div>
+            {/if}
+        </svelte:element>
 
-    <slot />
+        <slot />
+    </div>
 </section>
 
 <!-- #STYLE -->
@@ -181,8 +252,6 @@ lang="scss"
 {
     @extend %any;
 
-    transition: opacity .4s ease-in;
-
     .info, .title
     {
         position: relative;
@@ -194,7 +263,29 @@ lang="scss"
         user-select: none;
     }
 
-    .info { @include font.interact($light, map.get(font.$font-sizes, s2), 1, map.get(font.$content-font-weight, w1)); }
+    .info
+    {
+        &, p { width: min-content; }
+    
+        @include font.interact($light, map.get(font.$font-sizes, s2), 1, map.get(font.$content-font-weight, w1));
+
+        opacity: 0;
+
+        .opening { @include position.placement(absolute, 0, auto, auto, 0); }
+
+        p { margin-left: 1rem; }
+
+        .closure
+        {
+            @include position.placement(absolute, 0, 0, auto, 2rem);
+
+            width: calc(100% - 1rem);
+    
+            text-align: right;
+        }
+    }
+
+    .container { transition: opacity .4s ease-in; }
 
     .title
     {

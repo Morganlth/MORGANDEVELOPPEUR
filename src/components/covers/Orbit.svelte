@@ -8,12 +8,10 @@
 <!-- #SCRIPT -->
 
 <script>
-// #EXPORTS
+// #EXPORT
 
-    // --PROPS
-    export let
-    prop_ROTATE = 0,
-    prop_OPACITY = 0
+    // --PROP
+    export let prop_ROTATE = 0
 </script>
 
 <!-- #HTML -->
@@ -21,7 +19,6 @@
 <div
 class="orbit"
 style:transform="rotate({prop_ROTATE}rad)"
-style:opacity={prop_OPACITY}
 >
     <slot />
 </div>
@@ -44,7 +41,5 @@ lang="scss"
     position: absolute;
 
     transform-style: preserve-3d;
-
-    transition: opacity 1s;
 }
 </style>

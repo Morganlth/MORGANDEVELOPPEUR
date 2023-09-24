@@ -56,7 +56,7 @@ style:z-index={prop_FOCUS ? 1 : 0}
     <div
     class="wrapper"
     >
-        <!-- <Particles /> -->
+        <Particles />
 
         <Content
         prop_CHARGED={projects_CHARGED}

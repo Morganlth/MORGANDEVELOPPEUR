@@ -104,15 +104,15 @@
     SPACECUBE_EVENTS = { resize: spacecube_e$Resize },
     SPACECUBE_EVENTS_2 =
     {
-        mouseMove: wait_throttle(spacecube_e$MouseMove, 16.67),
+        mouseMove: wait_throttle(spacecube_e$MouseMove, 33.34),
         animation: wait_throttle(spacecube_e$Animation, 16.67)
     },
     SPACECUBE_EVENTS_3 =
     {
-        scroll: wait_throttle(spacecube_e$Scroll, 16.67),
+        scroll: wait_throttle(spacecube_e$Scroll, 33.34),
         mouseDown: spacecube_e$MouseDown,
         mouseUp: spacecube_e$MouseUp,
-        animation: wait_throttle(spacecube_e$Animation2, 16.67)
+        animation: wait_throttle(spacecube_e$Animation2, 33.34)
     }
 
     // --ELEMENT-SPACECUBE~SHADERS

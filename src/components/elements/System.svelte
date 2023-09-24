@@ -82,7 +82,7 @@
     const ORBIT_EVENTS = { resize: orbit_e$Resize }
 
     // --ELEMENT-GRAVITYAREA
-    const GRAVITYAREA_EVENTS = { scroll: wait_throttle(gravityarea_e$Scroll, 33.34) }
+    const GRAVITYAREA_EVENTS = { scroll: wait_throttle(gravityarea_e$Scroll, 16.67) }
 
 // #VARIABLES
 
@@ -106,13 +106,15 @@
     let orbit_RADIUS = 0
 
     // --ELEMENT-GRAVITYAREA
-    let gravityarea_RATIO = 0
+    let
+    gravityarea_RATIO = 0,
+    gravityarea_TIMEOUT
 
 // #REACTIVES
 
     // --ELEMENT-GROUP
     $: system_CHARGED
-        ? prop_FOCUS
+        ? prop_FOCUS && !system_OPTIMISED
             ? system_start()
             : system_stop()
         : void 0
@@ -177,12 +179,7 @@
     }
 
     // --UPDATES
-    function system_update(optimised)
-    {
-        system_OPTIMISED = optimised
-
-        optimised ? system_stop() : system_start()
-    }
+    function system_update(optimised) { system_OPTIMISED = optimised }
 
     function system_updateTarget(target)
     {
@@ -197,6 +194,8 @@
 
         for (let i = 0; i < GROUP_Z_POSITIONS.length; i++) SYSTEM_DATAS[i] = { ...SYSTEM_DATAS[i], focus: i === INDEX }
     }
+
+    function gravityarea_update() { gravityarea_RATIO = prop_RATIO }
 
     // --COMMAND
     function system_c$Optimise(optimised) { COMMAND.command_test(optimised, 'boolean', system_update, SYSTEM_OPTIMISE_NAME, system_OPTIMISED) }
@@ -221,7 +220,13 @@
 
     async function orbit_e$Resize() { orbit_setVars() }
 
-    async function gravityarea_e$Scroll() { gravityarea_RATIO = prop_RATIO }
+    async function gravityarea_e$Scroll()
+    {
+        clearTimeout(gravityarea_TIMEOUT)
+        gravityarea_TIMEOUT = setTimeout(gravityarea_update, 33.34)
+
+        gravityarea_update()
+    }
 
     function cube_eClick() { if (this.focus || system_OPTIMISED) system_updateTarget(this) }
 
@@ -230,8 +235,6 @@
     // --CONTROLS
     function system_start()
     {
-        if (system_OPTIMISED) return
-
         group_setEvents()
 
         group_start()
@@ -255,7 +258,8 @@ onDestroy(system_destroy)
 
 <div
 class="system"
-class:focus={prop_FOCUS}
+class:zoom1={prop_FOCUS}
+class:zoom2={prop_RATIO > 1}
 >
     <Group
     let:resize
@@ -270,7 +274,6 @@ class:focus={prop_FOCUS}
             {#each SYSTEM_DATAS as data}
                 <Orbit
                 prop_ROTATE={data.props.prop_ROTATE}
-                prop_OPACITY={prop_FOCUS ? 1 : 0}
                 >
                     <GravityArea
                     let:rotation
@@ -289,7 +292,7 @@ class:focus={prop_FOCUS}
                         <Cube
                         prop_$ROTATION={rotation}
                         prop_$GRABBING={grabbing}
-                        prop_DESTROY={system_TARGET ? true : false}
+                        prop_DESTROY={!prop_FOCUS || system_TARGET}
                         prop_FOCUS={data.focus ?? false}
                         prop_ROTATE={data.props.prop_ROTATE}
                         prop_SRC={data.props.prop_SRC}
@@ -337,12 +340,20 @@ lang="scss"
 
     transform: translate(30%, -30%) scale(.2);
 
+    opacity: 1;
+
     width: 50vw;
     height: 100%;
 
-    transition: transform 1s ease-in-out;
+    transition: transform 1s ease-in-out, opacity 1s;
 
-    &.focus { transform: translate(-50%, 0) scale(1); }
+    &.zoom1 { transform: translate(-50%, 0) scale(1); }
+    &.zoom2
+    {
+        transform: translate(-230%, 60%) scale(5);
+
+        opacity: 0;
+    }
 
     :global
     {

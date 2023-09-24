@@ -34,9 +34,6 @@
     // --LIB
     import COLORS from '$lib/colors'
 
-    // --SVELTE
-    import { onMount } from 'svelte'
-
     // --COMPONENT-COVERS
     import Content from '../covers/Content.svelte'
     import GravityArea from '../covers/GravityArea.svelte'
@@ -65,20 +62,22 @@
     group_start,
     group_stop
 
-// #FUNCTIONS
+// #REACTIVE
 
-    // --SET
-    function home_set() { group_start() }
+    // --ELEMENT-GROUP
+    $: group_start instanceof Function && group_stop instanceof Function
+    ? prop_FOCUS
+        ? group_start()
+        : group_stop()
+    : void 0
+
+// #FUNCTION
 
     // --EVENTS
     async function cube_eClick(id)
     {
         if (id === 0) spacecube_TICTACTOE = true
     }
-
-// #CYCLE
-
-onMount(home_set)
 </script>
 
 <!-- #HTML -->

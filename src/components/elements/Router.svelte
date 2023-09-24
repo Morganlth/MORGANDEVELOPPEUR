@@ -210,13 +210,11 @@ lang="scss"
     {
         &::before
         {
-            @include position.placement(absolute, -70%, -50%, -70%, -50%, true);
+            @include position.placement(absolute, -70%, -50%, -70%, -100%, true);
 
             z-index: -1;
 
             pointer-events: none;
-
-            background: radial-gradient(ellipse at 40%, $dark 30%, transparent 70%);
         }
 
         top: 65%;

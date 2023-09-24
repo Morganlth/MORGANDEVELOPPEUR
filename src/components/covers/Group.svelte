@@ -93,19 +93,8 @@ style={prop_STYLE}
 
 <!-- #STYLE -->
 
-<style
-lang="scss"
->
-/* #USE */
-
-@use '../../assets/scss/styles/size';
-
+<style>
 /* #GROUP */
 
-.group
-{
-    @extend %any;
-
-    pointer-events: none;
-}
+.group { pointer-events: none; }
 </style>

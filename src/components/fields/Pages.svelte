@@ -35,20 +35,22 @@
     const
     PAGES_PAGES =
     [
-        // {
-        //     id: 3,
-        //     name: 'projects',
-        //     component: Projects,
-        //     start: 15,
-        //     end: 16,
-        //     props: {}
-        // },
+        {
+            id: 3,
+            name: 'projects',
+            component: Projects,
+            start: 15,
+            end: 16,
+            overflow: false,
+            props: {}
+        },
         {
             id: 2,
             name: 'skills',
             component: Skills,
             start: 9,
             end: 14,
+            overflow: true,
             props: {}
         },
         {
@@ -57,6 +59,7 @@
             component: Presentation,
             start: 1.3,
             end: 8,
+            overflow: true,
             props: {}
         },
         {
@@ -64,6 +67,7 @@
             name: 'home',
             component: Home,
             end: 1,
+            overflow: false,
             props: {}
         }
     ],
@@ -112,6 +116,8 @@
 
             end = PAGE.end
         }
+
+        pages_update(SCROLLTOP)
     }
 
     function pages_setEvents() { EVENT.event_add(PAGES_EVENTS) }
@@ -133,17 +139,22 @@
         return DIF >= 0 && DIF < window.innerHeight
     }
 
-    // --EVENTS
-    async function pages_e$Scroll(scrollTop)
+    // --UPDATE
+    function pages_update(scrollTop)
     {
         for (const PAGE of PAGES_PAGES)
         {
-            PAGE.props.prop_RATIO = (scrollTop - PAGE.props.prop_START) / PAGE.props.prop_DIF
+            const RATIO = (scrollTop - PAGE.props.prop_START) / PAGE.props.prop_DIF
+
+            PAGE.props.prop_RATIO = PAGE.overflow ? RATIO : RATIO < 0 ? 0 : RATIO > 1 ? 1 : RATIO
             PAGE.props.prop_INTRO = pages_getIntro(PAGE.props.prop_TOP, scrollTop)
 
             PAGES_PAGES[PAGE] = PAGE
         }
     }
+
+    // --EVENTS
+    async function pages_e$Scroll(scrollTop) { pages_update(scrollTop) }
 
     async function pages_e$Resize()
     {

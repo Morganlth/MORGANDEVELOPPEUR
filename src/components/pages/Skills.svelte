@@ -61,20 +61,16 @@
     title_DESTROY = false,
     title_HEIGHT = 0
 
-// #REACTIVE
+// #REACTIVES
 
     // --ELEMENT-TITLE
+    $: prop_FOCUS ? skills_setEvents() : skills_destroyEvents()
     $: prop_TOP != null ? title_setVars() : void 0
 
 // #FUNCTIONS
 
     // --SET
-    function skills_set()
-    {
-        skills_setEvents()
-        
-        skills_CHARGED = true
-    }
+    function skills_set() { skills_CHARGED = true }
 
     function skills_setEvents() { EVENT.event_add(SKILLS_EVENTS) }
 
@@ -86,7 +82,7 @@
     function skills_destroyEvents() { EVENT.event_remove(SKILLS_EVENTS) }
 
     // --EVENTS
-    async function skills_e$Scroll() { title_DESTROY = APP.app_SCROLLTOP > title_END }
+    async function skills_e$Scroll(scrollTop) { title_DESTROY = scrollTop > title_END }
 
     function table_eClick()
     {
@@ -155,9 +151,6 @@ lang="scss"
 
     @extend %any;
 
-    .wrapper
-    {
-        @extend %wrapper;
-    }
+    .wrapper { @extend %wrapper; }
 }
 </style>

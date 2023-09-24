@@ -1,6 +1,5 @@
 <!-- #MAP
 
--APP
 -COMMAND
 -EVENT
     PRESENTATION
@@ -28,6 +27,7 @@
     prop_INTRO = false,
     prop_RATIO = 0,
     prop_TOP = void 0,
+    prop_START = void 0,
     prop_END = void 0,
     prop_DIF = void 0
 
@@ -38,7 +38,7 @@
     import { wait_throttle } from '../../assets/js/utils/wait'
 
     // --CONTEXTS
-    import { APP, COMMAND, EVENT } from '../../App.svelte'
+    import { COMMAND, EVENT } from '../../App.svelte'
 
     // --SVELTE
     import { onMount, onDestroy } from 'svelte'
@@ -54,7 +54,7 @@
 // #CONSTANTES
 
     // --ELEMENT-PRESENTATION
-    const PRESENTATION_EVENTS = { scroll: wait_throttle(presentation_e$Scroll, 20) }
+    const PRESENTATION_EVENTS = { scroll: wait_throttle(presentation_e$Scroll, 16.67) }
 
     // --ELEMENT-SNAKE
     const
@@ -73,7 +73,9 @@
 // #VARIABLES
 
     // --ELEMENT-PRESENTATION
-    let presentation_CHARGED = false
+    let
+    presentation_CHARGED = false,
+    presentation_RATIO_START_DIF = 0
 
     // --ELEMENT-SNAKE
     let
@@ -91,12 +93,10 @@
     features_LENGTH, // LENGTH of FEATURES_DATAS + 1 (padding-right in track)
     features_CONTACT_OFFSET_TOP = 0
 
-    // --ELEMENT-MASK
-    let mask_RATIO = 0
-
-// #REACTIVE
+// #REACTIVES
 
     // --ELEMENT-PRESENTATION
+    $: prop_FOCUS ? presentation_setEvents() : presentation_destroyEvents()
     $: prop_TOP != null ? presentation_setVars() : void 0
 
 // #FUNCTIONS
@@ -104,8 +104,6 @@
     // --SET
     function presentation_set()
     {
-        presentation_setEvents()
-
         snake_setCommands()
 
         presentation_CHARGED = true
@@ -113,6 +111,8 @@
 
     function presentation_setVars() // resize by pages
     {
+        presentation_RATIO_START_DIF = prop_DIF / prop_START
+
         title_setVars()
         features_setVars()
     }
@@ -137,12 +137,7 @@
     function snake_c$(on) { COMMAND.command_test(on, 'boolean', snake_update, SNAKE_NAME, snake_ON) }
 
     // --EVENTS
-    async function presentation_e$Scroll(scrollTop)
-    {
-        title_DESTROY = APP.app_SCROLLTOP > title_END
-
-        mask_RATIO = scrollTop / prop_TOP
-    }
+    async function presentation_e$Scroll(scrollTop) { title_DESTROY = scrollTop > title_END }
 
     async function snake_eClick(i)
     {
@@ -237,9 +232,9 @@ style:z-index={prop_FOCUS ? 1 : 0}
 
         <Mask
         prop_SHADOW={true}
-        prop_COORDS={[65, 50]}
+        prop_COORDS={[45, -10]}
         prop_GRADIENT={[50, 90]}
-        prop_RATIO={mask_RATIO}
+        prop_RATIO={prop_RATIO * presentation_RATIO_START_DIF + 1}
         />
     </div>
 </div>
