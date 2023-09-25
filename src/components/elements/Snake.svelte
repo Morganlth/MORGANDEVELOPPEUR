@@ -653,7 +653,7 @@ lang="scss"
 {
     &, .gameover
     {
-        @include position.placement(absolute, 0, auto, auto, 0);
+        @include position.placement(absolute, $top: 0, $left: 0);
     
         width: 100vw;
         height: 100vh;
@@ -699,7 +699,7 @@ lang="scss"
 
             font-style: italic;
         }
-        span { @include font.interact($primary, map.get(font.$font-sizes, s3), 1.4); }
+        span { @include font.content($primary, false, map.get(font.$font-sizes, s3), 1.4); }
     }
 
     .frame
@@ -723,9 +723,9 @@ lang="scss"
 
             .score, .fps
             {
-                @include font.interact($light, $font-size, 1, map.get(font.$content-font-weight, w1));
+                @include font.content($light, $font-size);
 
-                span { font-weight: map.get(font.$content-font-weight, w2); }
+                span { font-family: font.$family-content-bold !important; }
             }
         }
     }

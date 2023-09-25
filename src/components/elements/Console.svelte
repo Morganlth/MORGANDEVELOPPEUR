@@ -463,7 +463,7 @@ $output-max-height: calc($total-height - ($input-height + $output-margin-top));
 
             background-color: $dark;
 
-            border: solid $intermediate $input-border;
+            border: solid $primary $input-border;
         }
 
         .line
@@ -568,7 +568,7 @@ $output-max-height: calc($total-height - ($input-height + $output-margin-top));
 
     .line
     {
-        @include font.interact;
+        @include font.content($regular: false);
 
         height: $line-height;
         min-height: $line-height;

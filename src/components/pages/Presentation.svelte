@@ -35,13 +35,12 @@
 
     // --JS
     import { PRESENTATION_CONTENT_DATAS } from '../../assets/js/datas/dPresentation'
-    import { wait_throttle } from '../../assets/js/utils/wait'
 
     // --CONTEXTS
     import { COMMAND, EVENT } from '../../App.svelte'
 
     // --SVELTE
-    import { onMount, onDestroy } from 'svelte'
+    import { onMount } from 'svelte'
 
     // --COMPONENT-COVER
     import Content from '../covers/Content.svelte'
@@ -52,9 +51,6 @@
     import Features from '../elements/Features.svelte'
 
 // #CONSTANTES
-
-    // --ELEMENT-PRESENTATION
-    const PRESENTATION_EVENTS = { scroll: wait_throttle(presentation_e$Scroll, 16.67) }
 
     // --ELEMENT-SNAKE
     const
@@ -83,20 +79,16 @@
     snake_GAME = false
 
     // --ELEMENT-TITLE
-    let
-    title_END = 0,
-    title_DESTROY = false,
-    title_HEIGHT = 0
+    let title_HEIGHT = 0
 
     // --ELEMENT-FEATURES
     let
     features_LENGTH, // LENGTH of FEATURES_DATAS + 1 (padding-right in track)
     features_CONTACT_OFFSET_TOP = 0
 
-// #REACTIVES
+// #REACTIVE
 
     // --ELEMENT-PRESENTATION
-    $: prop_FOCUS ? presentation_setEvents() : presentation_destroyEvents()
     $: prop_TOP != null ? presentation_setVars() : void 0
 
 // #FUNCTIONS
@@ -113,22 +105,12 @@
     {
         presentation_RATIO_START_DIF = prop_DIF / prop_START
 
-        title_setVars()
         features_setVars()
     }
 
-    function presentation_setEvents() { EVENT.event_add(PRESENTATION_EVENTS) }
-
     function snake_setCommands() { COMMAND.command_setBasicCommands(SNAKE_COMMANDS) }
 
-    function title_setVars() { title_END = prop_TOP + window.innerHeight }
-
     function features_setVars() { features_CONTACT_OFFSET_TOP = prop_END - prop_DIF / features_LENGTH }
-
-    // --DESTROY
-    function presentation_destroy() { presentation_destroyEvents() }
-
-    function presentation_destroyEvents() { EVENT.event_remove(PRESENTATION_EVENTS) }
 
     // --UPDATE
     function snake_update(on) { snake_ON = on }
@@ -137,8 +119,6 @@
     function snake_c$(on) { COMMAND.command_test(on, 'boolean', snake_update, SNAKE_NAME, snake_ON) }
 
     // --EVENTS
-    async function presentation_e$Scroll(scrollTop) { title_DESTROY = scrollTop > title_END }
-
     async function snake_eClick(i)
     {
         switch (i)
@@ -155,10 +135,9 @@
 
     async function contact_eClick() { EVENT.event_scrollTo(features_CONTACT_OFFSET_TOP, 'instant') }
 
-// #CYCLES
+// #CYCLE
 
 onMount(presentation_set)
-onDestroy(presentation_destroy)
 </script>
 
 <!-- #HTML -->
@@ -177,9 +156,9 @@ style:z-index={prop_FOCUS ? 1 : 0}
 
         <Content
         prop_CHARGED={presentation_CHARGED}
-        prop_INTRO={prop_INTRO && !title_DESTROY}
         {...PRESENTATION_CONTENT_DATAS}
         {prop_FOCUS}
+        {prop_INTRO}
         bind:title_HEIGHT
         >
             <Features
@@ -192,7 +171,7 @@ style:z-index={prop_FOCUS ? 1 : 0}
                 <nav
                 class="nav"
                 class:top={!prop_INTRO}
-                style:transform="translateY({title_DESTROY ? -title_HEIGHT : 0}px)"
+                style:--nav-translate-y="{-title_HEIGHT}px"
                 >
                     <ul>
                         <li>
@@ -260,7 +239,7 @@ lang="scss"
 
 #presentation
 {
-    @include position.placement(absolute, 0, 0, auto, 0);
+    @include position.placement(absolute, $top: 0, $right: 0, $left: 0);
 
     @extend %any;
 
@@ -272,7 +251,7 @@ lang="scss"
         
         &::before
         {
-            @include position.placement(absolute, 0, 0, auto, 0, true);
+            @include position.placement(absolute, $top: 0, $right: 0, $left: 0, $pseudo-element: true);
 
             transform: translateX(0) rotate(90deg);
 
@@ -304,7 +283,12 @@ lang="scss"
 
         transition: transform .4s ease-out;
 
-        &.top::before { border-top-color: transparent !important; }
+        &.top
+        {
+            &::before { border-top-color: transparent !important; }
+
+            transform: translateY(var(--nav-translate-y, -320%));
+        }
 
         ul
         {
@@ -335,7 +319,7 @@ lang="scss"
 
         li button
         {
-            @include font.interact($light, map.get(font.$font-sizes, s3), 1, map.get(font.$content-font-weight, w1));
+            @include font.content($light, $font-size: map.get(font.$font-sizes, s3));
             @include font.simple-hover;
 
             @extend %button-reset;

@@ -93,7 +93,7 @@ lang="scss"
 
         li
         {
-            @include font.interact($primary);
+            @include font.content($primary, false);
 
             white-space: nowrap;
         }

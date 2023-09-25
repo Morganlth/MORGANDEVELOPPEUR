@@ -23,8 +23,12 @@
     // --SVELTE
     import { onMount } from 'svelte'
 
-    // --COMPONENT-COVER
+    // --COMPONENT-COVERS
     import Content from '../covers/Content.svelte'
+    import Group from '../covers/Group.svelte'
+
+    // --COMPONENT-ELEMENT
+    import Card from '../elements/Card.svelte'
 
     // --COMPONENT-DECORS
     import Particles from '../decors/Particles.svelte'
@@ -37,10 +41,13 @@
     // --ELEMENT-TITLE
     let title_HEIGHT
 
+    // --ELEMENT-GROUP
+    let group_update
+
 // #FUNCTION
 
     // --SET
-    function projects_set() { projects_CHARGED = true }
+    function projects_set() { projects_CHARGED = true; group_update() }
 
 // #CYCLE
 
@@ -65,6 +72,17 @@ style:z-index={prop_FOCUS ? 1 : 0}
         {prop_INTRO}
         bind:title_HEIGHT
         >
+            <Group
+            let:children
+            bind:group_update
+            >
+                {#each [0, 1, 2] as id}
+                    <Card
+                    prop_ID={id}
+                    prop_GROUP={children}
+                    />
+                {/each}
+            </Group>
         </Content>
     </div>
 </div>
@@ -78,19 +96,19 @@ lang="scss"
 
 @use '../../assets/scss/styles/elements';
 @use '../../assets/scss/styles/position';
+@use '../../assets/scss/styles/display';
 @use '../../assets/scss/styles/size';
 
 /* #PROJECTS */
 
 #projects
 {
-    @include position.placement(absolute, 0, 0, auto, 0);
+    @include position.placement(absolute, $top: 0, $right: 0, $left: 0);
 
     @extend %any;
 
-    .wrapper
-    {
-        @extend %wrapper;
-    }
+    .wrapper { @extend %wrapper; }
+
+    :global { .group { @extend %f-j-center; } }
 }
 </style>

@@ -175,7 +175,7 @@ lang="scss"
     {
         .icon { #{--icon-size}: calc(var(--title-size) * font.$line-height-title-min) }
 
-        .group { @include position.placement(absolute, 0, auto, auto, 0); }
+        .group { @include position.placement(absolute, $top: 0, $left: 0); }
     }
 }
 </style>

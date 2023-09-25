@@ -315,7 +315,7 @@ lang="scss"
 
 .mask
 {
-    @include position.placement(fixed, 0, auto, auto, 0);
+    @include position.placement(fixed, 0, 0, 0, 0);
 
     @extend %any;
 

@@ -105,7 +105,7 @@ lang="scss"
 
 header
 {
-    @include position.placement(fixed, 0, auto, auto, 0);
+    @include position.placement(fixed, $top: 0, $left: 0);
 
     @extend %aScaled;
 
@@ -129,7 +129,7 @@ header
         display: flex;
         align-items: flex-end;
         
-        p { @include font.interact($light, map.get(font.$font-sizes, s2), 1, map.get(font.$content-font-weight, w1)); }
+        p { @include font.content($light); }
 
         span
         {
@@ -139,6 +139,6 @@ header
         }
     }
 
-    span { @include font.interact($primary); }
+    span { @include font.content($primary, false); }
 }
 </style>

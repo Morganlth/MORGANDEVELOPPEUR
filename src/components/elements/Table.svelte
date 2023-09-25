@@ -71,8 +71,6 @@ on:outrostart={table_outro}
     class="head"
     style:transform="translateY(-{prop_TRANSLATE_Y}px)"
     >
-        <h3>{prop_TITLE}</h3>
-    
         <Cell
         on:click={cell_eClick}
         >
@@ -85,6 +83,8 @@ on:outrostart={table_outro}
                 />
             </Icon>
         </Cell>
+    
+        <h3>{prop_TITLE}</h3>
     </div>
 
     <div
@@ -144,18 +144,35 @@ lang="scss"
     .head, .line { width: 100%; }
     .head
     {
-        $size: map.get(font.$font-sizes, s3);
+        @extend %f-a-center;
+        @extend %m-h-3;
     
-        #{--icon-size}: calc($size * font.$line-height-title-min);
-
         position: relative;
 
         z-index: 1;
 
-        display: flex;
-        justify-content: space-between;
+        gap: 3rem;
 
         height: fit-content;
+
+        :global
+        {
+            .cell
+            {
+                $size: calc(var(--title-size) * font.$line-height-title-min);
+    
+                #{--icon-size}: calc($size * .4);
+
+                @extend %f-center;
+
+                width: $size;
+                height: $size;
+
+                border: solid $light .2rem;
+
+                box-sizing: content-box;
+            }
+        }
 
         h3
         {
@@ -163,8 +180,6 @@ lang="scss"
             $b: polygon(0 0, 100% 0, 100% 100%, 0 100%);
         
             @include font.h-custom($light);
-
-            @extend %m-h-3;
 
             animation: aIntro .6s ease-out forwards;
 
@@ -197,7 +212,7 @@ lang="scss"
 
             &::before
             {
-                @include position.placement(absolute, auto, auto, 0, -100%, true);
+                @include position.placement(absolute, $bottom: 0, $left: -100%, $pseudo-element: true);
         
                 width: 100%;
                 height: 0;
@@ -232,7 +247,7 @@ lang="scss"
                 font-size: map.get(font.$font-sizes, s2);
             }
     
-            p { @include font.interact($light); }
+            p { @include font.content($light, $font-size: map.get(font.$font-sizes, s3)); }
         }
 
         @keyframes a0 { from { transform: translateX(100%); } to { transform: translateX(0%); } }

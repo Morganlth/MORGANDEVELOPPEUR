@@ -168,13 +168,13 @@ lang="scss"
 
         p
         {
-            @include font.interact($light, map.get(font.$font-sizes, s2), 1.3, map.get(font.$content-font-weight, w1));
+            @include font.content($light, $font-size: map.get(font.$font-sizes, s2), $line-height: 1.3);
 
             margin-bottom: .8rem;
     
             text-align: justify;
 
-            &>span { font-weight: map.get(font.$content-font-weight, w2); }
+            &>span { font-family: font.$family-content-bold !important; }
     
             .command
             {
@@ -195,7 +195,7 @@ lang="scss"
 
             button
             {
-                @include font.interact($light);
+                @include font.content($light, false);
 
                 @extend %button-reset;
         
@@ -243,9 +243,6 @@ lang="scss"
 
             .choice {margin-top: app.$gap-block; }
         }
-        @include media.min($ms6, $ms4)
-        {
-            &>section { width: 52%; }
-        }
+        @include media.min($ms6, $ms4) { &>section { width: 52%; } }
     }
 </style>

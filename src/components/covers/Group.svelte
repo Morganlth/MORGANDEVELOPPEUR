@@ -11,9 +11,12 @@
 <script>
 // #EXPORTS
 
-    // --PROP
-    export let prop_STYLE = ''
+    // --PROPS
+    export let
+    prop_STYLE = '',
+    prop_UPDATE = () => {}
 
+    // BIND group_update
     // BIND group_start
     // BIND group_stop
 
@@ -37,6 +40,7 @@
 
     // --ELEMENT-SLOT
     const
+    SLOT_CHILDREN = [],
     SLOT_e$RESIZE = [],
     SLOT_e$ANIMATION = []
 
@@ -59,6 +63,14 @@
     function group_destroyEventResize() { EVENT.event_remove(GROUP_EVENT_RESIZE) }
 
     function group_destroyEventAnimation() { EVENT.event_remove(GROUP_EVENT_ANIMATION) }
+
+    // --UPDATE
+    export function group_update()
+    {
+        prop_UPDATE(SLOT_CHILDREN)
+
+        console.log(SLOT_CHILDREN)
+    }
 
     // --EVENTS
     async function group_e$Resize() { group_run(SLOT_e$RESIZE) }
@@ -86,6 +98,7 @@ class="group"
 style={prop_STYLE}
 >
     <slot
+    children={SLOT_CHILDREN}
     resize={SLOT_e$RESIZE}
     animation={SLOT_e$ANIMATION}
     />

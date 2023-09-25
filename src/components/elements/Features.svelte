@@ -181,7 +181,7 @@ lang="scss"
 
     .track
     {
-        @include utils.solid-border(1px, $intermediate, true, false, true, false);
+        @include utils.solid-border(1px, $intermediate, $right: false, $left: false);
     
         display: flex;
 
@@ -194,7 +194,7 @@ lang="scss"
 
         &:nth-child(1)
         {
-            @include position.placement(absolute, auto, auto, 0, 0);
+            @include position.placement(absolute, $bottom: 0, $left: 0);
 
             transform-origin: bottom left;
 
@@ -204,7 +204,7 @@ lang="scss"
         }
         &:nth-child(2)
         {
-            @include position.placement(absolute, 0, 0, auto, auto);
+            @include position.placement(absolute, $top: 0, $right: 0);
 
             transform-origin: top right;
 
@@ -214,7 +214,7 @@ lang="scss"
         }
         &:nth-child(3)
         {
-            @include position.placement(absolute, 50%, auto, auto, 0);
+            @include position.placement(absolute, $top: 50%, $left: 0);
 
             margin-left: 100vw;
             padding-right: 100vw;
@@ -231,7 +231,7 @@ lang="scss"
                 $x: .8rem;
                 $y: .4rem;
         
-                @include font.h-custom(inherit, var(--title-size, map.get(font.$font-sizes, s7)));
+                @include font.h-custom($font-size: var(--title-size, map.get(font.$font-sizes, s7)), $italic: true);
     
                 @extend %m-h-2;
 
@@ -239,7 +239,6 @@ lang="scss"
 
                 pointer-events: auto;
 
-                font-style: italic;
                 text-align: center;
 
                 &::after
@@ -247,7 +246,7 @@ lang="scss"
                     #{--x}: calc($x * var(--track-sign, 1));
                     #{--y}: calc($y * var(--track-sign, 1));
                 
-                    @include position.placement(absolute, 0, auto, auto, 0, attr(data-topic));
+                    @include position.placement(absolute, $top: 0, $left: 0, $pseudo-element: attr(data-topic));
 
                     transform: translate(calc(var(--x, $x) * var(--features-sin, 0)), calc(var(--y, $y) * var(--features-sin, 0)));
             
@@ -279,7 +278,7 @@ lang="scss"
 
             li
             {
-                @include font.interact($light, map.get(font.$font-sizes, s3), 6, map.get(font.$content-font-weight, w1));
+                @include font.content($light, $font-size: map.get(font.$font-sizes, s3), $line-height: 6);
     
                 padding-left: app.$gap-inline;
 
@@ -290,7 +289,7 @@ lang="scss"
             {
                 @include font.simple-hover($primary);
 
-                font-weight: map.get(font.$content-font-weight, w2);
+                font-family: font.$family-content-bold !important;
         
                 cursor: pointer;
             }

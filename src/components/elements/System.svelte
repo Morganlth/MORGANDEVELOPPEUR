@@ -82,7 +82,7 @@
     const ORBIT_EVENTS = { resize: orbit_e$Resize }
 
     // --ELEMENT-GRAVITYAREA
-    const GRAVITYAREA_EVENTS = { scroll: wait_throttle(gravityarea_e$Scroll, 16.67) }
+    const GRAVITYAREA_EVENTS = { scroll: wait_throttle(gravityarea_e$Scroll, 50.01) }
 
 // #VARIABLES
 
@@ -223,7 +223,7 @@
     async function gravityarea_e$Scroll()
     {
         clearTimeout(gravityarea_TIMEOUT)
-        gravityarea_TIMEOUT = setTimeout(gravityarea_update, 33.34)
+        gravityarea_TIMEOUT = setTimeout(gravityarea_update, 66.68)
 
         gravityarea_update()
     }
@@ -336,7 +336,7 @@ lang="scss"
 
 .system
 {
-    @include position.placement(absolute, 0, auto, auto, 50%);
+    @include position.placement(absolute, $top: 0, $left: 50%);
 
     transform: translate(30%, -30%) scale(.2);
 

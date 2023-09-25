@@ -170,7 +170,7 @@ lang="scss"
         display: flex;
         align-items: flex-end;
 
-        gap: 1.2rem;
+        gap: 1rem;
 
         width: fit-content;
         height: fit-content;
@@ -185,14 +185,29 @@ lang="scss"
 
     a
     {
-        @include font.interact($light, map.get(font.$font-sizes, s2));
+        &::before
+        {
+            @include position.placement(absolute, 50%, 0, 0, 0, true);
+
+            transform: translateX(-50%) scaleX(.05);
+
+            width: 100%;
+            height: 0;
+            
+            border-top: solid $light 1px;
+        }
+
+        @include font.content($light, false, $line-height: 1.4);
 
         @extend %any;
-        @extend %selected;
+
+        position: relative;
 
         display: inline-block;
 
         transform: rotate(-.7deg);
+
+        opacity: .9;
 
         width: 100%;
         height: fit-content;
@@ -204,6 +219,51 @@ lang="scss"
         box-sizing: border-box;
 
         text-decoration: none;
+
+        transition: opacity .3s;
+
+        &::after
+        {
+            @include position.placement(absolute, 50%, 0, 0, 0, true);
+
+            @extend %any;
+
+            transform: translateY(-50%) scale(1, 0);
+
+            border: solid $primary 1px;
+            
+            box-shadow: 0 0 5px $primary;
+            box-sizing: border-box;
+        }
+
+        &.selected
+        {
+            &::before
+            {
+                border-top-color: $primary;
+
+                animation: aSelected-before .3s ease-out;
+
+                @keyframes aSelected-before { 100% { transform: scaleX(1); } }
+            }
+
+            opacity: 1;
+
+            animation: aSelected .4s forwards;
+
+            @keyframes aSelected
+            {
+                40% { color: $indicator; }
+                100% { color: $primary; }    
+            }
+
+            &::after
+            {
+                animation: aSelected-after .2s linear .25s forwards;
+
+                @keyframes aSelected-after { 100% { transform: translateY(-50%) scale(1); } }
+            }
+        }
     }
 
     @include media.min(false, $ms3)
@@ -217,7 +277,7 @@ lang="scss"
             pointer-events: none;
         }
 
-        top: 65%;
+        top: 60%;
         right: auto;
         left: app.$gap-inline;
 
@@ -225,10 +285,12 @@ lang="scss"
         {
             flex-direction: column;
             align-items: flex-start;
+
+            gap: .1rem;
         }
 
         a { font-size: map.get(font.$font-sizes, s3); }
     }
-    @include media.min($ms4, $ms4) { top: 50%; }
+    @include media.min($ms4, $ms4) { top: 55%; }
 }
 </style>

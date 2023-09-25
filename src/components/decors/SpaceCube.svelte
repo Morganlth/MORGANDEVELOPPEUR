@@ -691,7 +691,7 @@ lang="scss"
 
 .spacecube
 {
-    @include position.placement(absolute, 0, auto, auto, 0);
+    @include position.placement(absolute, $top: 0, $left: 0);
 
     transition: opacity .3s;
 }

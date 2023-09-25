@@ -45,8 +45,6 @@ lang="scss"
 >
 /* #USES */
 
-@use 'sass:map';
-
 @use '../../assets/scss/app';
 
 @use '../../assets/scss/styles/utils';
@@ -59,7 +57,7 @@ lang="scss"
 
 footer
 {
-    @include position.placement(fixed, auto, 0, 0, auto);
+    @include position.placement(fixed, $right: 0, $bottom: 0);
 
     @extend %no-drag;
     @extend %aScaled;
@@ -93,7 +91,7 @@ footer
 
         a
         {
-            @include font.interact($light);
+            @include font.content($light, false);
             @include font.simple-hover;
 
             padding: .5rem 1rem 0;
@@ -111,6 +109,6 @@ footer
         }
     }
 
-    &>p { @include font.interact($light, map.get(font.$font-sizes, s2), 1, map.get(font.$content-font-weight, w1)); }
+    &>p { @include font.content($light); }
 }
 </style>

@@ -39,8 +39,8 @@
             id: 3,
             name: 'projects',
             component: Projects,
-            start: 15,
-            end: 16,
+            start: 16,
+            end: 17,
             overflow: false,
             props: {}
         },
@@ -49,7 +49,7 @@
             name: 'skills',
             component: Skills,
             start: 9,
-            end: 14,
+            end: 15,
             overflow: true,
             props: {}
         },

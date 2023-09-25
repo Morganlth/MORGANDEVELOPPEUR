@@ -128,7 +128,7 @@ lang="scss"
 {
     &::before
     {
-        @include position.placement(absolute, auto, -8rem, 0, auto, true);
+        @include position.placement(absolute, $right: -8rem, $bottom: 0, $pseudo-element: true);
 
         transform: translateX(0) scale(1);
     
@@ -173,7 +173,7 @@ lang="scss"
     {
         .fragments>pre::before
         {
-            @include position.placement(absolute, 50%, auto, auto, 50%, true);
+            @include position.placement(absolute, $top: 50%, $left: 50%, $pseudo-element: true);
 
             transform-origin: left;
             

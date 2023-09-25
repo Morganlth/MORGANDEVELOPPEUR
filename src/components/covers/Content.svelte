@@ -164,7 +164,7 @@ onDestroy(fragments_destroy)
 
 <!-- #HTML -->
 
-<section
+<div
 class="content"
 >
     <div
@@ -197,8 +197,7 @@ class="content"
         {/if}
     </div>
 
-    <div
-    class="container"
+    <section
     style:opacity={prop_CHARGED && prop_FOCUS ? 1 : 0}
     >
         <svelte:element
@@ -227,8 +226,8 @@ class="content"
         </svelte:element>
 
         <slot />
-    </div>
-</section>
+    </section>
+</div>
 
 <!-- #STYLE -->
 
@@ -267,17 +266,17 @@ lang="scss"
     {
         &, p { width: min-content; }
     
-        @include font.interact($light, map.get(font.$font-sizes, s2), 1, map.get(font.$content-font-weight, w1));
+        @include font.content($light);
 
         opacity: 0;
 
-        .opening { @include position.placement(absolute, 0, auto, auto, 0); }
+        .opening { @include position.placement(absolute, $top: 0, $left: 0); }
 
         p { margin-left: 1rem; }
 
         .closure
         {
-            @include position.placement(absolute, 0, 0, auto, 2rem);
+            @include position.placement(absolute, $top: 0, $right: 0, $left: 2rem);
 
             width: calc(100% - 1rem);
     
@@ -285,7 +284,7 @@ lang="scss"
         }
     }
 
-    .container { transition: opacity .4s ease-in; }
+    &>section { transition: opacity .4s ease-in; }
 
     .title
     {
@@ -317,7 +316,7 @@ lang="scss"
                 {
                     &::before
                     {
-                        @include position.placement(absolute, -.7rem, auto, auto, 0, true);
+                        @include position.placement(absolute, $top: -.7rem, $left: 0, $pseudo-element: true);
 
                         width: 2.4rem;
                         height: 2.4rem;
