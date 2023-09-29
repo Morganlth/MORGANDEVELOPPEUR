@@ -463,7 +463,7 @@ $output-max-height: calc($total-height - ($input-height + $output-margin-top));
 
             background-color: $dark;
 
-            border: solid $primary $input-border;
+            border: solid rgba($light, .6) $input-border;
         }
 
         .line

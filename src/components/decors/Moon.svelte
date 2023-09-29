@@ -29,8 +29,8 @@ lang="scss"
 
 .moon
 {
-    width: 25%;
-    height: 25%;
+    width: 30%;
+    height: 30%;
 
     fill: $intermediate;
 }

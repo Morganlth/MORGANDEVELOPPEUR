@@ -22,6 +22,7 @@
 
     // --JS
     import MATH from '../../assets/js/utils/math'
+    import { transition_fade } from '../../assets/js/utils/transition'
 
     // --SVELTE
     import { createEventDispatcher } from 'svelte'
@@ -35,7 +36,7 @@
     const SVELTE_DISPATCH = createEventDispatcher()
 
     // --ELEMENT-TAG
-    const TAG_DURATION = 300
+    const TAG_DURATION = 400
 
 // #VARIABLE
 
@@ -78,9 +79,6 @@
         tag_FRAGS = []
     }
 
-    // --TRANSITION
-    function tag_tFade() { return { duration: TAG_DURATION, css: (t) => `opacity: ${t}` } }
-
     // --UTILS
     function fragments_style() { return `--frag-y: ${fragments_getY()}; --frag-scale: 0; --frag-sign: ${Math.round(Math.random()) ? 1 : -1}; --frag-duration: ${TAG_DURATION}ms` }
 
@@ -96,7 +94,7 @@
     style:transform="translate({prop_X}px, {prop_Y}px)"
     type="button"
     on:click={tag_eClick}
-    transition:tag_tFade
+    transition:transition_fade={{ duration: TAG_DURATION }}
     on:introend={tag_intro}
     on:outrostart={tag_outroStart}
     >
@@ -137,7 +135,7 @@ lang="scss"
 
         pointer-events: none;
 
-        border-bottom: solid $intermediate 2px;
+        border-bottom: solid $intermediate 1px;
 
         animation: a .6s ease-out;
 

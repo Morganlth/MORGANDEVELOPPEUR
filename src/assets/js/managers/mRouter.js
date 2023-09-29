@@ -9,7 +9,6 @@ class Router
     #router_$ID = {}
     #router_EVENTS
     #router_PAGES = []
-    #router_TIMEOUT
 
 // #CONSTRUCTOR
 
@@ -24,7 +23,7 @@ constructor ()
         set: function (value) { set(this.value = value) }
     }
 
-    this.router_e$Scroll = wait_throttle.call(this, this.router_e$Scroll, 50)
+    this.router_e$Scroll = wait_throttle.call(this, this.router_e$Scroll, 50.01)
 
     this.#router_EVENTS = { scroll: this.router_e$Scroll }
 }
@@ -32,7 +31,12 @@ constructor ()
 // #FUNCTIONS
 
     // --SET
-    router_set(id) { this.router_update(id, 'instant') }
+    router_set(id)
+    {
+        this.#router_setEvents()
+    
+        this.router_update(id, true)
+    }
 
     #router_setEvents() { EVENT.event_add(this.#router_EVENTS) }
 
@@ -43,28 +47,21 @@ constructor ()
         document.title = subPath ? subPath.toUpperCase() : this.#router_TITLE
     }
 
-    // --DESTROY
-    #router_destroyEvents() { EVENT.event_remove(this.#router_EVENTS) }
+    // --GET
+    router_getInstant(top) { return Math.abs(APP.app_SCROLLTOP - top) > window.innerHeight * 2 }
 
     // --UPDATE
-    router_update(id, behavior)
+    router_update(id, instant)
     {
-        const PAGE = this.#router_PAGES[id]
+        const
+        PAGE = this.#router_PAGES[id],
+        TOP = PAGE.offsetTop
 
-        this.#router_updateEvents()
+        instant ??= this.router_getInstant(TOP)
     
-        EVENT.event_scrollTo(PAGE.offsetTop, behavior)
+        if (instant) this.#router_updatePath(id, PAGE)
 
-        this.#router_updatePath(id, PAGE)
-    }
-
-    #router_updateEvents()
-    {
-        clearTimeout(this.#router_TIMEOUT)
-
-        this.#router_destroyEvents()
-
-        this.#router_TIMEOUT = setTimeout(() => this.#router_setEvents(), 1000)
+        EVENT.event_scrollTo(TOP, instant)
     }
 
     #router_updatePath(id, page)

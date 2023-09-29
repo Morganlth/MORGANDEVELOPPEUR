@@ -1,16 +1,17 @@
 <!-- #MAP
 
+-ROUTER
     HOME
-        WRAPPER
+        DECOR
             PARTICLES
             SPACECUBE
+            GROUP
+                GRAVITYAREA * 3
+                    CUBE
 
-            CONTENT
-                ~~ICON
-
-        GROUP
-            GRAVITYAREA * 3
-                CUBE
+        CONTENT
+            ICON
+                LOGO
 
 -->
 
@@ -34,6 +35,9 @@
     // --LIB
     import COLORS from '$lib/colors'
 
+    // --CONTEXT
+    import { ROUTER } from '../../App.svelte'
+
     // --COMPONENT-COVERS
     import Content from '../covers/Content.svelte'
     import GravityArea from '../covers/GravityArea.svelte'
@@ -53,9 +57,7 @@
 // #VARIABLES
 
     // --ELEMENT-SPACECUBE
-    let
-    spacecube_CHARGED = false,
-    spacecube_TICTACTOE = false
+    let spacecube_CHARGED = false
 
     // --ELEMENT-GROUP
     let
@@ -73,29 +75,24 @@
 
 // #FUNCTION
 
-    // --EVENTS
-    async function cube_eClick(id)
-    {
-        if (id === 0) spacecube_TICTACTOE = true
-    }
+    // --EVENT
+    async function cube_eClick(id) { ROUTER.router_update(id) }
 </script>
 
 <!-- #HTML -->
 
 <div
 id="home"
-style:z-index={prop_FOCUS ? 1 : 0}
 >
     <div
-    class="wrapper"
+    class="decor"
     >
         <SpaceCube
-        prop_TICTACTOE={spacecube_TICTACTOE}
         {prop_FOCUS}
         {prop_RATIO}
         bind:spacecube_CHARGED
         />
-        
+
         <Mask
         prop_BLUR={true}
         prop_COORDS={[68, 50]}
@@ -103,48 +100,49 @@ style:z-index={prop_FOCUS ? 1 : 0}
         prop_RATIO={1 - prop_RATIO}
         />
 
-        <Content
-        prop_CHARGED={spacecube_CHARGED}
-        {...HOME_CONTENT_DATAS}
-        {prop_FOCUS}
-        {prop_INTRO}
+        <Group
+        let:resize
+        let:animation
+        bind:group_start
+        bind:group_stop
         >
-            <Icon
-            prop_COLOR={COLORS.light}
-            prop_SPRING={false}
-            slot="title-element"
-            >
-                <Logo />
-            </Icon>
-        </Content>
+            {#each HOME_CUBES_DATAS as cube, id}
+                <GravityArea
+                let:rotation
+                let:grabbing
+                {...cube}
+                prop_e$RESIZE={resize}
+                prop_e$ANIMATION={animation}
+                prop_GRABBING={!prop_RATIO}
+                >
+                    <Cube
+                    prop_$ROTATION={rotation}
+                    prop_$GRABBING={grabbing}
+                    prop_DESTROY={!prop_FOCUS}
+                    prop_ROTATE={Math.random() * MATH.PI.x2}
+                    prop_ROTATE_Y={Math.random() * MATH.PI.x2}
+                    {prop_FOCUS}
+                    on:click={cube_eClick.bind(null, id + 1)}
+                    />
+                </GravityArea>
+            {/each}
+        </Group>
     </div>
 
-    <Group
-    let:resize
-    let:animation
-    bind:group_start
-    bind:group_stop
+    <Content
+    prop_CHARGED={spacecube_CHARGED}
+    {...HOME_CONTENT_DATAS}
+    {prop_FOCUS}
+    {prop_INTRO}
     >
-        {#each HOME_CUBES_DATAS as cube, i}
-            <GravityArea
-            let:rotation
-            let:grabbing
-            {...cube}
-            prop_e$RESIZE={resize}
-            prop_e$ANIMATION={animation}
-            prop_GRABBING={!prop_RATIO}
-            >
-                <Cube
-                prop_$ROTATION={rotation}
-                prop_$GRABBING={grabbing}
-                prop_FOCUS={true}
-                prop_ROTATE={Math.random() * MATH.PI.x2}
-                prop_ROTATE_Y={Math.random() * MATH.PI.x2}
-                on:click={cube_eClick.bind(null, i)}
-                />
-            </GravityArea>
-        {/each}
-    </Group>
+        <Icon
+        prop_COLOR={COLORS.light}
+        prop_SPRING={false}
+        slot="title-element"
+        >
+            <Logo />
+        </Icon>
+    </Content>
 </div>
 
 <!-- #STYLE -->
@@ -154,7 +152,6 @@ lang="scss"
 >
 /* #USES */
 
-@use '../../assets/scss/styles/elements';
 @use '../../assets/scss/styles/position';
 @use '../../assets/scss/styles/size';
 @use '../../assets/scss/styles/font';
@@ -163,13 +160,12 @@ lang="scss"
 
 #home
 {
-    &, .wrapper { width: 100%; }
+    .decor
+    {
+        @include position.placement(absolute, 0, 0, 0, 0);
 
-    position: relative;
-
-    @extend %any;
-
-    .wrapper { @extend %wrapper; }
+        @extend %any;
+    }
 
     :global
     {

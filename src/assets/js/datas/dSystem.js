@@ -9,7 +9,6 @@
             props:
             {
                 prop_ROTATE: MATH.toRad(150),
-                prop_OFFSET: 1.05,
                 prop_SRC: 'html-5.png',
                 prop_ALT: 'HTML Logo : https://www.flaticon.com/fr/icone-gratuite/html-5_174854?term=html&page=1&position=2&origin=search&related_id=174854',
                 prop_COLOR: '#FC490B'
@@ -43,7 +42,6 @@
             props:
             {
                 prop_ROTATE: MATH.toRad(30),
-                prop_OFFSET: 0,
                 prop_SRC: 'js.png',
                 prop_ALT: 'JavaScript Logo : https://www.flaticon.com/fr/icone-gratuite/js_5968292?term=javascript&page=1&position=7&origin=search&related_id=5968292',
                 prop_COLOR: '#FFDF00'
@@ -95,7 +93,6 @@
             props:
             {
                 prop_ROTATE: MATH.toRad(60),
-                prop_OFFSET: 4.2,
                 prop_SRC: 'node-js.png',
                 prop_ALT: 'Node Js Logo : https://www.pngwing.com/en/free-png-yghmf',
                 prop_COLOR: '#88C043'
@@ -114,11 +111,10 @@
         },
         {
             id: 3,
-            tag: 'GESTION - OUTILS',
+            tag: 'AUTRES',
             props:
             {
                 prop_ROTATE: MATH.toRad(90),
-                prop_OFFSET: 3.15,
                 prop_SRC: 'github-mark-white.png',
                 prop_ALT: 'Github Logo : https://github.com/logos',
                 prop_COLOR: '#FFFFFF'
@@ -134,22 +130,7 @@
                 { text: 'Versionner son projet avec Git et Github' },
                 { text: 'Installer un environnement de développement front-end' },
                 { text: 'Utiliser le logiciel Notion' },
-                { text: 'Déployer un site statique en ligne' }
-            ]
-        },
-        {
-            id: 4,
-            tag: 'ADAPTABILITE',
-            props:
-            {
-                prop_ROTATE: MATH.toRad(120),
-                prop_OFFSET: 2.1,
-                prop_SRC: 'open-graph.png',
-                prop_ALT: 'Open Graph Logo : https://fr.m.wikipedia.org/wiki/Fichier:Open_Graph_protocol_logo.png',
-                prop_COLOR: '#7BA5D8'
-            },
-            skills:
-            [
+                { text: 'Déployer un site statique en ligne' },
                 { topic: true, text: 'ADAPTABILITE' },
                 { text: 'Appliquer les standards du web et les normes en vigueur', tags: ['booki', 'ninacarducci'] },
                 { text: 'Construire un site web fluide s’adaptant à tout type d’écran (web, smartphone et tablette)', tags: ['booki'] },
@@ -161,7 +142,16 @@
                 { text: 'Rédiger un cahier de recette pour tester un site', tags: ['ninacarducci'] }
             ]
         }
-    ]
+    ].map((item, i, array) =>
+    {
+        const
+        LENGTH = array.length,
+        FRACTION = MATH.PI.x2 / LENGTH
+
+        item.props.prop_OFFSET = FRACTION * (LENGTH - i) + FRACTION / 2
+
+        return item
+    })
 
 // #IMPORT
 

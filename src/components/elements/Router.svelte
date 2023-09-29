@@ -111,6 +111,7 @@ onDestroy(router_destroy)
 
 <nav
 class="router"
+class:charged={router_CHARGED}
 style:opacity={router_OPACITY}
 >
     <ul>
@@ -165,6 +166,8 @@ lang="scss"
 
     transition: opacity .3s;
 
+    &.charged a { cursor: pointer; }
+
     ul
     {
         display: flex;
@@ -205,7 +208,7 @@ lang="scss"
 
         display: inline-block;
 
-        transform: rotate(-.7deg);
+        transform: rotate(-.8deg);
 
         opacity: .9;
 
@@ -219,6 +222,8 @@ lang="scss"
         box-sizing: border-box;
 
         text-decoration: none;
+
+        cursor: default;
 
         transition: opacity .3s;
 

@@ -1,12 +1,3 @@
-// #USES
-
-@use '../app';
-
-@use '../global/breakpoints' as *;
-
-@use './position';
-@use './media';
-
 // #ELEMENTS
 
     // --ELEMENTS-BUTTON
@@ -24,22 +15,4 @@
 
         border: none;
         outline: none;
-    }
-
-    // --ELEMENT-WRAPPER
-    %wrapper
-    {
-        @include position.placement(sticky, 0, auto, auto, 0);
-
-        overflow: hidden;
-
-        height: 100vh;
-
-        padding: 11rem app.$gap-inline 8rem;
-
-        pointer-events: none;
-
-        box-sizing: border-box;
-
-        @include media.min(false, $ms2) { padding-top: max(13rem, 80px); }
     }

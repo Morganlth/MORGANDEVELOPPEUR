@@ -259,7 +259,7 @@ onDestroy(system_destroy)
 <div
 class="system"
 class:zoom1={prop_FOCUS}
-class:zoom2={prop_RATIO > 1}
+class:zoom2={prop_RATIO >= 1}
 >
     <Group
     let:resize

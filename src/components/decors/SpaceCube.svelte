@@ -109,7 +109,7 @@
     },
     SPACECUBE_EVENTS_3 =
     {
-        scroll: wait_throttle(spacecube_e$Scroll, 33.34),
+        scroll: wait_throttle(spacecube_e$Scroll, 16.67),
         mouseDown: spacecube_e$MouseDown,
         mouseUp: spacecube_e$MouseUp,
         animation: wait_throttle(spacecube_e$Animation2, 33.34)
@@ -428,10 +428,7 @@
 
     function spacecube_updateEvents3()
     {
-        if (prop_FOCUS)
-        {
-            spacecube_setEvents3()
-        }
+        if (prop_FOCUS) spacecube_setEvents3()
         else
         {
             spacecube_destroyEvents3()

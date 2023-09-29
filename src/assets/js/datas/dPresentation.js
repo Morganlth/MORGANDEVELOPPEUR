@@ -1,4 +1,4 @@
-// #EXPORTS
+// #EXPORT
 
     // --DATAS-PRESENTATION
     export const PRESENTATION_CONTENT_DATAS =

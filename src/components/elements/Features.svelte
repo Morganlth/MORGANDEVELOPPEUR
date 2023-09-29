@@ -170,6 +170,8 @@ lang="scss"
 {
     @include position.placement(absolute, 0, 0, 0, 0);
 
+    opacity: 0;
+
     width: 100vw;
     height: 100%;
 
@@ -177,7 +179,14 @@ lang="scss"
 
     margin-left: 5%;
 
-    &.focus .track { will-change: transform; }
+    transition: opacity .4s;
+
+    &.focus
+    {
+        opacity: 1;
+
+        .track { will-change: transform; }
+    }
 
     .track
     {

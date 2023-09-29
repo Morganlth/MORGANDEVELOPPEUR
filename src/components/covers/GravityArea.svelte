@@ -281,7 +281,7 @@ lang="scss"
 
 .gravityarea
 {
-    --content-ratio: .3;
+    --content-ratio: .4;
     --content-size: calc(var(--default-size) * var(--content-ratio, 1));
 
     @extend %f-center;
@@ -307,7 +307,6 @@ lang="scss"
         transition: transform .6s;
     }
 
-    @include media.min($ms3, $ms2) { --content-ratio: .35; }
     @include media.min($ms4, $ms3) { --content-ratio: .5; }
     @include media.min($ms5, $ms4) { --content-ratio: .75; }
     @include media.min($ms6, $ms4) { --content-ratio: 1; }

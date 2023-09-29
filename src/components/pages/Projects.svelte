@@ -1,8 +1,11 @@
 <!-- #MAP
 
     PROJECTS
-        WRAPPER
-            CONTENT
+        PARTICLES
+
+        CONTENT
+            GROUP
+                #if CARD * n
 -->
 
 <!-- #SCRIPT -->
@@ -20,6 +23,9 @@
     // --JS
     import { PROJECTS_CONTENT_DATAS } from '../../assets/js/datas/dProjects'
 
+    // --LIB
+    import COLORS from '$lib/colors'
+
     // --SVELTE
     import { onMount } from 'svelte'
 
@@ -32,6 +38,28 @@
 
     // --COMPONENT-DECORS
     import Particles from '../decors/Particles.svelte'
+    import Card2Hearts from '../decors/Card2Hearts.svelte'
+    import Card3Diamonds from '../decors/Card3Diamonds.svelte'
+    import Card1Clubs from '../decors/Card1Clubs.svelte'
+
+// #CONSTANTE
+
+    // --ELEMENT-GROUP
+    const GROUP_ELEMENT =
+    [
+        {
+            card: Card3Diamonds,
+            color: COLORS.primary
+        },
+        {
+            card: Card2Hearts,
+            color: COLORS.primary
+        },
+        {
+            card: Card1Clubs,
+            color: COLORS.light
+        }
+    ]
 
 // #VARIABLES
 
@@ -58,33 +86,34 @@ onMount(projects_set)
 
 <div
 id="projects"
-style:z-index={prop_FOCUS ? 1 : 0}
 >
-    <div
-    class="wrapper"
-    >
-        <Particles />
+    <Particles />
 
-        <Content
-        prop_CHARGED={projects_CHARGED}
-        {...PROJECTS_CONTENT_DATAS}
-        {prop_FOCUS}
-        {prop_INTRO}
-        bind:title_HEIGHT
+    <Content
+    prop_CHARGED={projects_CHARGED}
+    {...PROJECTS_CONTENT_DATAS}
+    {prop_FOCUS}
+    {prop_INTRO}
+    bind:title_HEIGHT
+    >
+        <Group
+        let:children
+        bind:group_update
         >
-            <Group
-            let:children
-            bind:group_update
-            >
-                {#each [0, 1, 2] as id}
-                    <Card
-                    prop_ID={id}
-                    prop_GROUP={children}
+            {#each GROUP_ELEMENT as element, id}
+                <Card
+                prop_ID={id}
+                prop_COLOR={element.color}
+                prop_GROUP={children}
+                {prop_FOCUS}
+                >
+                    <svelte:component
+                    this={element.card}
                     />
-                {/each}
-            </Group>
-        </Content>
-    </div>
+                </Card>
+            {/each}
+        </Group>
+    </Content>
 </div>
 
 <!-- #STYLE -->
@@ -94,21 +123,23 @@ lang="scss"
 >
 /* #USES */
 
-@use '../../assets/scss/styles/elements';
 @use '../../assets/scss/styles/position';
-@use '../../assets/scss/styles/display';
 @use '../../assets/scss/styles/size';
 
 /* #PROJECTS */
 
 #projects
 {
-    @include position.placement(absolute, $top: 0, $right: 0, $left: 0);
+    :global
+    {
+        .group
+        {
+            @include position.placement(absolute, 0, 0, 0, 0);
 
-    @extend %any;
+            @extend %any;
 
-    .wrapper { @extend %wrapper; }
-
-    :global { .group { @extend %f-j-center; } }
+            perspective: 2000px;
+        }
+    }
 }
 </style>

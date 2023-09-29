@@ -29,6 +29,9 @@
     import Skills from '../pages/Skills.svelte'
     import Projects from '../pages/Projects.svelte'
 
+    // --COMPONENT-COVER
+    import Page from '../covers/Page.svelte'
+
 // #CONSTANTES
 
     // --ELEMENT-PAGES
@@ -85,6 +88,11 @@
     // --ROUTER
     let router_$ID = ROUTER.router_$ID
 
+// #REACTIVE
+
+    // --ROUTER
+    $: pages_updateFocus($router_$ID)
+
 // #FUNCTIONS
 
     // --SET
@@ -106,11 +114,12 @@
         {
             const PAGE = PAGES_PAGES[i]
     
-            PAGE.props.prop_TOP = end * HEIGHT
+            PAGE.top = end * HEIGHT
+    
             PAGE.props.prop_START = (PAGE.start ?? 0) * HEIGHT
             PAGE.props.prop_END = PAGE.end * HEIGHT
             PAGE.props.prop_DIF = PAGE.props.prop_END - PAGE.props.prop_START
-            PAGE.props.prop_INTRO = pages_getIntro(PAGE.props.prop_TOP, SCROLLTOP)
+            PAGE.props.prop_INTRO = pages_getIntro(PAGE.top, SCROLLTOP)
 
             PAGES_PAGES[i] = PAGE
 
@@ -122,7 +131,7 @@
 
     function pages_setEvents() { EVENT.event_add(PAGES_EVENTS) }
 
-    function router_setPages() { for (const PAGES of PAGES_PAGES) ROUTER.router_add(PAGES.id, PAGES.name, PAGES.props.prop_TOP) }
+    function router_setPages() { for (const PAGES of PAGES_PAGES) ROUTER.router_add(PAGES.id, PAGES.name, PAGES.top) }
 
     // --DESTROY
     function pages_destroy() { pages_destroyEvents() }
@@ -139,17 +148,31 @@
         return DIF >= 0 && DIF < window.innerHeight
     }
 
-    // --UPDATE
+    // --UPDATES
     function pages_update(scrollTop)
     {
-        for (const PAGE of PAGES_PAGES)
+        for (let i = 0; i < PAGES_PAGES.length; i++)
         {
-            const RATIO = (scrollTop - PAGE.props.prop_START) / PAGE.props.prop_DIF
+            const
+            PAGE = PAGES_PAGES[i],
+            RATIO = (scrollTop - PAGE.props.prop_START) / PAGE.props.prop_DIF
 
             PAGE.props.prop_RATIO = PAGE.overflow ? RATIO : RATIO < 0 ? 0 : RATIO > 1 ? 1 : RATIO
-            PAGE.props.prop_INTRO = pages_getIntro(PAGE.props.prop_TOP, scrollTop)
+            PAGE.props.prop_INTRO = pages_getIntro(PAGE.top, scrollTop)
 
-            PAGES_PAGES[PAGE] = PAGE
+            PAGES_PAGES[i] = PAGE
+        }
+    }
+
+    function pages_updateFocus(id)
+    {
+        for (let i = 0; i < PAGES_PAGES.length; i++)
+        {
+            const PAGE = PAGES_PAGES[i]
+    
+            PAGE.props.prop_FOCUS = PAGE.id === id
+
+            PAGES_PAGES[i] = PAGE
         }
     }
 
@@ -177,17 +200,22 @@ class:hide={$app_$HIDE}
 style:height="{pages_getHeight()}vh"
 >
     {#each PAGES_PAGES as page}
-        <svelte:component
-        this={page.component}
-        prop_FOCUS={$router_$ID === page.id}
-        {...page.props}
-        />
+        <Page
+        prop_FOCUS={page.props.prop_FOCUS}
+        >
+            <svelte:component
+            this={page.component}
+            {...page.props}
+            />
+        </Page>
     {/each}
 </main>
 
 <!-- #STYLE -->
 
-<style>
+<style
+lang="scss"
+>
 /* #PAGES */
 
 .pages

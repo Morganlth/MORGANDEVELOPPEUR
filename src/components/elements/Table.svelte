@@ -179,7 +179,7 @@ lang="scss"
             $a: polygon(0 0, 0 0, 0 100%, 0 100%);
             $b: polygon(0 0, 100% 0, 100% 100%, 0 100%);
         
-            @include font.h-custom($light);
+            @include font.h-custom($light, $line-height: 1);
 
             animation: aIntro .6s ease-out forwards;
 

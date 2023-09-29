@@ -197,13 +197,11 @@ class="content"
         {/if}
     </div>
 
-    <section
-    style:opacity={prop_CHARGED && prop_FOCUS ? 1 : 0}
-    >
+    <section>
         <svelte:element
         this={prop_TITLE.htmlElement}
         class="title"
-        style:opacity={prop_INTRO ? 1 : 0}
+        style:opacity={prop_CHARGED && prop_INTRO ? 1 : 0}
         bind:offsetHeight={title_HEIGHT}
         >
             {#each prop_TITLE.contents as content}
@@ -283,8 +281,6 @@ lang="scss"
             text-align: right;
         }
     }
-
-    &>section { transition: opacity .4s ease-in; }
 
     .title
     {
