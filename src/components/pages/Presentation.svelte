@@ -87,9 +87,7 @@
 // #VARIABLES
 
     // --ELEMENT-PRESENTATION
-    let
-    presentation_CHARGED = false,
-    presentation_RATIO_START_DIF = 0
+    let  presentation_CHARGED = false
 
     // --ELEMENT-SNAKE
     let
@@ -103,6 +101,9 @@
     let
     features_LENGTH, // LENGTH of FEATURES_DATAS + 1 (padding-right in track)
     features_CONTACT_TOP = 0
+
+    // --ELEMENT-MASK
+    let mask_RATIO = 0
 
 // #REACTIVES
 
@@ -128,14 +129,15 @@
 
     function presentation_setVars() // resize by pages
     {
-        presentation_RATIO_START_DIF = prop_DIF / prop_START
-
         features_setVars()
+        mask_setVars()
     }
 
     function snake_setCommands() { COMMAND.command_setBasicCommands(SNAKE_COMMANDS) }
 
     function features_setVars() { features_CONTACT_TOP = prop_END - prop_DIF / features_LENGTH }
+
+    function mask_setVars() { mask_RATIO = prop_DIF / prop_START }
 
     // --UPDATE
     function snake_update(on)
@@ -154,7 +156,7 @@
     function snake_c$(on) { COMMAND.command_test(on, 'boolean', snake_update, SNAKE_NAME, snake_ON) }
 
     // --EVENT
-    function nav_eClick(id)
+    function nav_eClick({detail: {id}})
     {
         switch (id)
         {
@@ -203,9 +205,9 @@ id="presentation"
         <Nav
         prop_TRANSLATE_Y={title_HEIGHT}
         prop_ITEMS={NAV_ITEMS}
-        prop_EVENT={nav_eClick}
         {prop_FOCUS}
         {prop_INTRO}
+        on:click={nav_eClick}
         />
     </Content>
 
@@ -213,6 +215,6 @@ id="presentation"
     prop_SHADOW={true}
     prop_COORDS={[45, -10]}
     prop_GRADIENT={[50, 90]}
-    prop_RATIO={prop_RATIO * presentation_RATIO_START_DIF + 1}
+    prop_RATIO={prop_RATIO * mask_RATIO + 1}
     />
 </div>

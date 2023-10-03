@@ -17,6 +17,7 @@
     // --ELEMENT-SPRING
     let
     spring_$ON = SPRING.spring_$ON,
+    spring_$STATE = SPRING.spring_$STATE,
     spring_$COORDS = SPRING.spring_$COORDS,
     spring_$SIZE = SPRING.spring_$SIZE
 </script>
@@ -26,6 +27,8 @@
 {#if $spring_$ON}
     <svg
     class="spring"
+    class:true={$spring_$STATE === 1}
+    class:false={$spring_$STATE === -1}
     >
         <circle
         cx={$spring_$COORDS.x}
@@ -59,6 +62,15 @@ lang="scss"
 
     pointer-events: none;
 
-    circle { fill: $light; }
+    &.true, &.false { mix-blend-mode: screen !important; }
+    &.true circle { fill: $primary !important; }
+    &.false circle { fill: $indicator !important; }
+
+    circle
+    {
+        fill: $light;
+
+        transition: fill .4s;
+    }
 }
 </style>

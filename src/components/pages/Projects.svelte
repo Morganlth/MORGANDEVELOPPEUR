@@ -5,7 +5,7 @@
 
         CONTENT
             GROUP
-                #if CARD * n
+                CARD * n
 -->
 
 <!-- #SCRIPT -->
@@ -21,7 +21,7 @@
 // #IMPORT
 
     // --JS
-    import { PROJECTS_CONTENT_DATAS } from '../../assets/js/datas/dProjects'
+    import { PROJECTS_CONTENT_DATAS, PROJECTS_CARDS_DATAS } from '../../assets/js/datas/dProjects'
 
     // --LIB
     import COLORS from '$lib/colors'
@@ -69,13 +69,27 @@
     // --ELEMENT-TITLE
     let title_HEIGHT
 
-    // --ELEMENT-GROUP
-    let group_update
+    // --ELEMENT-CARD
+    let
+    card_FOCUS,
+    card_TARGET
 
-// #FUNCTION
+// #REACTIVE
+
+    // --ELEMENT-CARD
+    $: !prop_FOCUS ? card_e$Click(void 0) : void 0
+
+// #FUNCTIONS
 
     // --SET
-    function projects_set() { projects_CHARGED = true; group_update() }
+    function projects_set() { projects_CHARGED = true }
+
+    // --EVENTS
+    function card_e$MouseEnter(id) { card_FOCUS = id }
+
+    function card_e$MouseLeave() { card_FOCUS = null }
+
+    function card_e$Click(id) { card_TARGET = id }
 
 // #CYCLE
 
@@ -97,15 +111,19 @@ id="projects"
     bind:title_HEIGHT
     >
         <Group
-        let:children
-        bind:group_update
+        let:resize
         >
             {#each GROUP_ELEMENT as element, id}
                 <Card
+                prop_$RESIZE={resize}
+                prop_ON={prop_FOCUS && (card_TARGET == null || card_TARGET === id)}
+                prop_FOCUS={card_FOCUS}
                 prop_ID={id}
+                prop_CONTENT={PROJECTS_CARDS_DATAS[id]}
                 prop_COLOR={element.color}
-                prop_GROUP={children}
-                {prop_FOCUS}
+                prop_$MOUSEENTER={card_e$MouseEnter}
+                prop_$MOUSELEAVE={card_e$MouseLeave}
+                prop_$CLICK={card_e$Click}
                 >
                     <svelte:component
                     this={element.card}
@@ -138,7 +156,7 @@ lang="scss"
 
             @extend %any;
 
-            perspective: 2000px;
+            perspective: 3000px;
         }
     }
 }

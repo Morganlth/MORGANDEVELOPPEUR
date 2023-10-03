@@ -1,5 +1,6 @@
 <!-- #MAP
 
+-SPRING
     #if NAV
 
 -->
@@ -14,8 +15,36 @@
     prop_FOCUS = false,
     prop_INTRO = false,
     prop_TRANSLATE_Y = 0,
-    prop_ITEMS = [],
-    prop_EVENT = () => {}
+    prop_ITEMS = []
+
+// #IMPORTS
+
+    // --CONTEXT
+    import { SPRING } from '../../App.svelte'
+
+    // --SVELTE
+    import { createEventDispatcher } from 'svelte'
+
+// #CONSTANTE
+
+    // --SVELTE
+    const SVELTE_DISPATCH = createEventDispatcher()
+
+// #FUNCTIONS
+
+    // --UPDATE
+    function spring_update(state, size)
+    {
+        SPRING.spring_$STATE = state
+        SPRING.spring_$SIZE = size
+    }
+
+    // --EVENTS
+    function nav_eMouseEnter() { spring_update(1, SPRING.spring_D_SIZE * 3) }
+
+    function nav_eMouseLeave() { spring_update(0, SPRING.spring_D_SIZE) }
+
+    async function nav_eClick(id) { SVELTE_DISPATCH('click', { id: id, item: prop_ITEMS[id] }) }
 </script>
 
 <!-- #HTML -->
@@ -32,7 +61,9 @@
                     <button
                     type="button"
                     title={item.title ?? (item.value ?? '')}
-                    on:click={prop_EVENT.bind(null, item.id)}
+                    on:mouseenter={nav_eMouseEnter}
+                    on:mouseleave={nav_eMouseLeave}
+                    on:click={nav_eClick.bind(null, item.id)}
                     >
                         #{item.value ?? ''}
                     </button>
@@ -136,7 +167,6 @@ lang="scss"
     li button
     {
         @include font.content($light, $font-size: map.get(font.$font-sizes, s3));
-        @include font.simple-hover;
 
         @extend %button-reset;
 

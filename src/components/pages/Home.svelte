@@ -111,8 +111,8 @@ id="home"
                 let:rotation
                 let:grabbing
                 {...cube}
-                prop_e$RESIZE={resize}
-                prop_e$ANIMATION={animation}
+                prop_$RESIZE={resize}
+                prop_$ANIMATION={animation}
                 prop_GRABBING={!prop_RATIO}
                 >
                     <Cube

@@ -117,6 +117,6 @@ lang="scss"
 {
     @extend %f-center;
 
-    transition: opacity .4s;
+    transition: opacity .6s;
 }
 </style>

@@ -9,6 +9,7 @@ class Spring
     static __spring_D_SIZE = 7
 
     #spring_$ON = true
+    #spring_$STATE = writable(0)
     #spring_HOVER = false // icon hover
     #spring_HIDE = false
     #spring_$COORDS = spring({ x: -Spring.__spring_D_SIZE, y: -Spring.__spring_D_SIZE }, { stiffness: 0.1, damping: 0.4 })
@@ -96,6 +97,8 @@ constructor ()
 
     get spring_$ON() { return this.#spring_$ON }
 
+    get spring_$STATE() { return this.#spring_$STATE }
+
     get spring_HOVER() { return this.#spring_HOVER }
 
     get spring_HIDE() { return this.#spring_HIDE }
@@ -105,6 +108,8 @@ constructor ()
     get spring_$SIZE() { return this.#spring_$SIZE }
 
     // --SETTER
+    set spring_$STATE(value) { this.#spring_$STATE.set(value === -1 || value === 0 || value === 1 ? value : 0) }
+
     set spring_HOVER(on) { this.#spring_HOVER = on }
 
     set spring_$COORDS(coords) { this.#spring_$COORDS.set(coords) }

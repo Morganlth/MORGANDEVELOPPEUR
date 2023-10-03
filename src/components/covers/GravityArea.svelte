@@ -16,8 +16,8 @@
 
     // --PROPS
     export let
-    prop_e$RESIZE = [],
-    prop_e$ANIMATION = [],
+    prop_$RESIZE = {},
+    prop_$ANIMATION = {},
     prop_FOCUS = false,
     prop_RATIO = null,
     prop_GRABBING = false,
@@ -49,11 +49,7 @@
 // #CONSTANTES
 
     // --ELEMENT-GRAVITYAREA
-    const GRAVITYAREA_EVENTS =
-    {
-        mouseMove: wait_throttle(gravityarea_e$MouseMove, 50),
-        resize: gravityarea_e$Resize
-    }
+    const GRAVITYAREA_EVENTS = { mouseMove: wait_throttle(gravityarea_e$MouseMove, 50) }
 
     // --ELEMENT-SLOT
     const
@@ -94,7 +90,8 @@
     function gravityarea_set()
     {
         gravityarea_setVars()
-        gravityarea_push(prop_e$RESIZE, gravityarea_e$Resize)
+    
+        prop_$RESIZE.push(gravityarea_e$Resize)
 
         content_start()
 
@@ -108,7 +105,7 @@
 
         gravityarea_RATIO = prop_RADIUS / Math.sqrt(prop_RADIUS * prop_RADIUS * 2)
 
-        setTimeout(() => { gravityarea_TRANSITION_DELAY = 300 }, 50)
+        if (!gravityarea_TRANSITION_DELAY) setTimeout(() => { gravityarea_TRANSITION_DELAY = 300 }, 50.01)
     }
 
     function gravityarea_setEvents() { EVENT.event_add(GRAVITYAREA_EVENTS) }
@@ -117,7 +114,8 @@
     function gravityarea_destroy()
     {
         gravityarea_destroyEvents()
-        gravityarea_splice(prop_e$RESIZE, gravityarea_e$Resize)
+
+        prop_$RESIZE.splice(gravityarea_e$Resize)
     
         content_stop()
     }
@@ -201,24 +199,9 @@
     async function content_e$Animation() { content_FORCE_Y = content_FLOATING_UPDATE.update() }
 
     // --CONTROLS
-    function content_start() { gravityarea_push(prop_e$ANIMATION, content_e$Animation) }
+    function content_start() { prop_$ANIMATION.push(content_e$Animation) }
 
-    function content_stop() { gravityarea_splice(prop_e$ANIMATION, content_e$Animation) }
-
-    // --UTILS
-    function gravityarea_push(array = [], value)
-    {
-        const INDEX = array.indexOf(value)
-
-        if (INDEX === -1) array.push(value)
-    }
-
-    function gravityarea_splice(array = [], value)
-    {
-        const INDEX = array.indexOf(value)
-
-        if (~INDEX) array.splice(INDEX, 1)
-    }
+    function content_stop() { prop_$ANIMATION.splice(content_e$Animation) }
 
 // #CYCLES
 
@@ -282,7 +265,9 @@ lang="scss"
 .gravityarea
 {
     --content-ratio: .4;
-    --content-size: calc(var(--default-size) * var(--content-ratio, 1));
+    --content-size: calc(var(--default-size, '100px') * var(--content-ratio, 1));
+
+    $size: var(--content-size, '100px');
 
     @extend %f-center;
 
@@ -290,8 +275,8 @@ lang="scss"
 
     transform-style: preserve-3d;
 
-    width: calc(var(--content-size) * 2);
-    height: calc(var(--content-size) * 2);
+    width: calc($size * 2);
+    height: calc($size * 2);
 
     border-radius: 50%;
 
@@ -301,8 +286,8 @@ lang="scss"
     {
         transform-style: preserve-3d;
 
-        width: var(--content-size);
-        height: var(--content-size);
+        width: $size;
+        height: $size;
 
         transition: transform .6s;
     }

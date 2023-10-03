@@ -34,6 +34,7 @@
     // --JS
     import { SYSTEM_DATAS } from '../../assets/js/datas/dSystem'
     import { wait_throttle } from '../../assets/js/utils/wait'
+    import MATH from '../../assets/js/utils/math'
 
     // --CONTEXTS
     import { APP, COMMAND, EVENT } from '../../App.svelte'
@@ -45,6 +46,7 @@
     import Group from '../covers/Group.svelte'
     import Orbit from '../covers/Orbit.svelte'
     import GravityArea from '../covers/GravityArea.svelte'
+    import Cell from '../covers/Cell.svelte'
 
     // --COMPONENT-ELEMENTS
     import Tag from './Tag.svelte'
@@ -84,10 +86,10 @@
     // --ELEMENT-GRAVITYAREA
     const GRAVITYAREA_EVENTS = { scroll: wait_throttle(gravityarea_e$Scroll, 50.01) }
 
-// #VARIABLES
+    // --ELEMENT-TAG
+    const TAG_DURATION = 400
 
-    // --APP
-    let app_$FREEZE = APP.app_$FREEZE
+// #VARIABLES
 
     // --ELEMENT-SYSTEM
     let
@@ -110,17 +112,14 @@
     gravityarea_RATIO = 0,
     gravityarea_TIMEOUT
 
-// #REACTIVES
+// #REACTIVE
 
     // --ELEMENT-GROUP
     $: system_CHARGED
-        ? prop_FOCUS && !system_OPTIMISED
+        ? prop_FOCUS
             ? system_start()
             : system_stop()
         : void 0
-
-    // --ELEMENT-ORBIT
-    $: !$app_$FREEZE ? system_TARGET = null : void 0
 
 // #FUNCTIONS
 
@@ -171,12 +170,16 @@
     // --GET
     function group_getIndexFocus()
     {
-        let index = GROUP_Z_POSITIONS.indexOf(Math.max(...GROUP_Z_POSITIONS))
+        let index = system_OPTIMISED
+        ? Math.floor(SYSTEM_DATAS.length * prop_RATIO)
+        : GROUP_Z_POSITIONS.indexOf(Math.max(...GROUP_Z_POSITIONS))
 
         if (!~index) index = 0
 
         return index
     }
+
+    function tag_getY() { return 1000 * Math.random() + '%' }
 
     // --UPDATES
     function system_update(optimised) { system_OPTIMISED = optimised }
@@ -190,12 +193,19 @@
 
     function group_updateFocus()
     {
-        const INDEX = prop_START && !system_OPTIMISED ? group_getIndexFocus() : void 0
+        const INDEX = prop_START ? group_getIndexFocus() : void 0
 
         for (let i = 0; i < GROUP_Z_POSITIONS.length; i++) SYSTEM_DATAS[i] = { ...SYSTEM_DATAS[i], focus: i === INDEX }
     }
 
     function gravityarea_update() { gravityarea_RATIO = prop_RATIO }
+
+    function tag_update(tag, fragments, y, scale)
+    {
+        for (let i = 0; i < fragments.length; i++) fragments[i].style.setProperty('--frag-y', y)
+
+        tag.style.setProperty('--frag-scale', scale)
+    }
 
     // --COMMAND
     function system_c$Optimise(optimised) { COMMAND.command_test(optimised, 'boolean', system_update, SYSTEM_OPTIMISE_NAME, system_OPTIMISED) }
@@ -228,7 +238,7 @@
         gravityarea_update()
     }
 
-    function cube_eClick() { if (this.focus || system_OPTIMISED) system_updateTarget(this) }
+    function cube_eClick() { if (this.focus) system_updateTarget(this) }
 
     function tag_eClick() { system_updateTarget(this) }
 
@@ -248,6 +258,35 @@
         group_stop()
     }
 
+    // --INTRO
+    function tag_intro(tag, fragments)
+    {
+        const Y = MATH.headsOrTails() * 2 + '%'
+    
+        tag_update(tag, fragments, Y, 1)
+    }
+
+    // --OUTRO
+    function tag_outro(tag, fragments) { tag_update(tag, fragments, tag_getY(), 0) }
+
+    // --STYLES
+    function tag_style()
+    {
+        return `
+        --frag-scale: 0;
+        --frag-duration: ${TAG_DURATION}ms;`
+    }
+
+    function fragments_style()
+    {
+        return `
+        --frag-y: ${tag_getY()};
+        --frag-sign: ${MATH.headsOrTails() ? 1 : -1};
+        transform: translateY(calc(var(--frag-y, 0) * var(--frag-sign, 1))) scaleX(var(--frag-scale, 1));
+        transition: transform var(--frag-duration, ${TAG_DURATION}ms) ease-out;
+        `
+    }
+
 // #CYCLES
 
 onMount(system_set)
@@ -260,11 +299,12 @@ onDestroy(system_destroy)
 class="system"
 class:zoom1={prop_FOCUS}
 class:zoom2={prop_RATIO >= 1}
+style:--system-rotate-x={group_ROTATE_X}
+style:--system-rotate-y={group_ROTATE_Y}
 >
     <Group
     let:resize
     let:animation
-    prop_STYLE="transform: rotate3d({group_ROTATE_X}, {group_ROTATE_Y}, 0, .02rad);"
     bind:group_start
     bind:group_stop
     >
@@ -278,8 +318,8 @@ class:zoom2={prop_RATIO >= 1}
                     <GravityArea
                     let:rotation
                     let:grabbing
-                    prop_e$RESIZE={resize}
-                    prop_e$ANIMATION={animation}
+                    prop_$RESIZE={resize}
+                    prop_$ANIMATION={animation}
                     prop_FOCUS={data.focus ?? false}
                     prop_RATIO={gravityarea_RATIO}
                     prop_GRABBING={false}
@@ -308,14 +348,19 @@ class:zoom2={prop_RATIO >= 1}
 
     <Group>
         {#each SYSTEM_DATAS as data}
-            <Tag
-            prop_FOCUS={prop_START && !system_TARGET && (data.focus || system_OPTIMISED)}
-            prop_OPTIMISED={system_OPTIMISED}
-            prop_CONTENT={data.tag}
-            prop_X={group_ROTATE_Y * 6}
-            prop_Y={group_ROTATE_X * 6}
-            on:click={tag_eClick.bind(data)}
-            />
+            {#if prop_START && !system_TARGET && data.focus}
+                <Cell
+                on:click={tag_eClick.bind(data)}
+                >
+                    <Tag
+                    prop_CONTENT={data.tag}
+                    prop_DURATION={TAG_DURATION}
+                    prop_INTRO={tag_intro}
+                    prop_OUTRO={tag_outro}
+                    prop_STYLE={{ tag_style, fragments_style }}
+                    />
+                </Cell>
+            {/if}
         {/each}
     </Group>
 </div>
@@ -327,7 +372,6 @@ lang="scss"
 >
 /* #USES */
 
-@use '../../assets/scss/styles/utils';
 @use '../../assets/scss/styles/position';
 @use '../../assets/scss/styles/display';
 @use '../../assets/scss/styles/size';
@@ -357,6 +401,9 @@ lang="scss"
 
     :global
     {
+        $rotate-x: var(--system-rotate-x, 0);
+        $rotate-y: var(--system-rotate-y, 0);
+    
         .group:nth-child(1)
         {
             @include position.placement(absolute, 0, 0, 0, 0);
@@ -365,6 +412,7 @@ lang="scss"
             @extend %any;
     
             transform-style: preserve-3d;
+            transform: rotate3d($rotate-x, $rotate-y, 0, .02rad);
 
             transition: transform .3s;
         }
@@ -381,6 +429,63 @@ lang="scss"
 
             width: fit-content;
             height: fit-content;
+
+            .cell
+            {
+                @include position.placement(absolute, $top: 0, $right: 0);
+        
+                transform: translate(calc($rotate-x * 6px), calc($rotate-y * 6px));
+
+                transition: transform .4s;
+            }
+
+            .tag
+            {
+                &::before
+                {
+                    @include position.placement(absolute, $right: -8rem, $bottom: 0, $pseudo-element: true);
+
+                    transform: translateX(0) scale(1);
+                
+                    width: 150%;
+                    height: 0;
+
+                    pointer-events: none;
+
+                    border-bottom: solid $intermediate 1px;
+
+                    animation: a .6s ease-out;
+
+                    transition: transform 1s ease-out, border .6s ease-out;
+
+                    @keyframes a { from { transform: translateX(100%) scaleX(0); } }
+                }
+
+                padding: 2rem;
+
+                &:hover::before
+                {
+                    transform: translateX(8%);
+                
+                    border-bottom-color: $light;
+                }
+            }
+
+            .fragments>pre:not(.void)::before
+            {
+                @include position.placement(absolute, $top: 50%, $left: 50%, $pseudo-element: true);
+
+                transform-origin: left;
+                
+                width: 100%;
+                height: 1px;
+
+                background-color: $light;
+
+                transform: rotate(calc(-90deg * var(--frag-sign, 1))) scaleX(var(--frag-y, 0));
+
+                transition: transform var(--frag-duration, .4s) ease-out;
+            }
         }
     }
 }

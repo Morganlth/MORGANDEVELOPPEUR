@@ -1,4 +1,4 @@
-// #EXPORT
+// #EXPORTS
 
     // --DATAS-PROJECTS
     export const PROJECTS_CONTENT_DATAS =
@@ -17,3 +17,10 @@
         },
         prop_INFO: 'SPACE'
     }
+
+    export const PROJECTS_CARDS_DATAS =
+    [
+        'NINA CARDUCCI',
+        'SOPHIE BLUEL',
+        'BOOKI'
+    ]

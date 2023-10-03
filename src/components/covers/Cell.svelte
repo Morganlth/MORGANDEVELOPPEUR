@@ -8,26 +8,32 @@
 <!-- #SCRIPT -->
 
 <script>
-    // #IMPORT
+// #EXPORT
 
-        // --SVELTE
-        import { createEventDispatcher } from 'svelte'
+    // --PROP
+    export let prop_CONTAINER = false
 
-    // #CONSTANTE
+// #IMPORT
 
-        // --SVELTE
-        const SVELTE_DISPATCH = createEventDispatcher()
+    // --SVELTE
+    import { createEventDispatcher } from 'svelte'
 
-    // #FUNCTION
+// #CONSTANTE
 
-        // --EVENT
-        function cell_eClick(e) { SVELTE_DISPATCH('click', { event: e }) }
+    // --SVELTE
+    const SVELTE_DISPATCH = createEventDispatcher()
+
+// #FUNCTION
+
+    // --EVENT
+    function cell_eClick(e) { SVELTE_DISPATCH('click', { event: e }) }
 </script>
 
 <!-- #HTML -->
 
 <button
 class="cell"
+class:container={prop_CONTAINER}
 type="button"
 on:click={cell_eClick}
 >
@@ -39,9 +45,13 @@ on:click={cell_eClick}
 <style
 lang="scss"
 >
-/* #USE */
+/* #USES */
+
+@use 'sass:map';
 
 @use '../../assets/scss/styles/elements';
+@use '../../assets/scss/styles/display';
+@use '../../assets/scss/styles/font';
 
 /* #CELL */
 
@@ -50,5 +60,21 @@ lang="scss"
     @extend %button-reset;
 
     pointer-events: auto;
+
+    &.container
+    {
+        $size: var(--cell-size, map.get(font.$font-sizes, s5));
+    
+        #{--icon-size}: calc($size * .4);
+
+        @extend %f-center;
+
+        width: $size;
+        height: $size;
+
+        border: solid $light .2rem;
+
+        box-sizing: content-box;
+    }
 }
 </style>

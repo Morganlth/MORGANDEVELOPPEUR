@@ -137,7 +137,7 @@ on:mousedown={cube_eMouseDown}
             <Icon
             prop_OPACITY={prop_DESTROY ? 0 : icon_OPACITY}
             prop_SIZE="30%"
-            prop_COLOR={COLORS[prop_FOCUS ? 'light' : 'intermediate']}
+            prop_COLOR={COLORS[prop_FOCUS && !prop_DESTROY ? 'light' : 'intermediate']}
             prop_SPRING={false}
             >
                 {#if prop_SRC}
@@ -168,6 +168,8 @@ lang="scss"
 
 .cube
 {
+    $size: var(--content-size, '100px');
+
     &, .side { @extend %any; }
 
     transform-style: preserve-3d;
@@ -183,7 +185,7 @@ lang="scss"
         {
             opacity: 1;
 
-            animation: aBuild 1.2s ease-in;
+            animation: aBuild 1s ease-in;
         }
     }
     &.destroy
@@ -192,7 +194,7 @@ lang="scss"
         {
             opacity: 0;
 
-            animation: aDestroy 1.2s ease-in forwards;
+            animation: aDestroy 1s ease-in forwards;
         }
     }
 
@@ -204,7 +206,7 @@ lang="scss"
 
         background-color: $dark;
 
-        border: solid $intermediate calc(var(--content-size) * .05);
+        border: solid $intermediate calc($size * .05);
 
         box-sizing: border-box;
 
@@ -213,12 +215,12 @@ lang="scss"
         &.focus { border-color: var(--cube-color, $primary); }
         &.grabbing { border-color: $indicator !important; }
     }
-    .side:nth-child(1) { transform: translate3d(0, 0, calc(var(--content-size) / 2))        rotate3d(0, 0, 0, 0); }
-    .side:nth-child(2) { transform: translate3d(0, -150%, 0)                                rotate3d(1, 0, 0, 90deg); }
-    .side:nth-child(3) { transform: translate3d(-50%, -200%, 0)                             rotate3d(0, -1, 0, 90deg); }
-    .side:nth-child(4) { transform: translate3d(0, -250%, 0)                                rotate3d(-1, 0, 0, 90deg); }
-    .side:nth-child(5) { transform: translate3d(50%, -400%, 0)                              rotate3d(0, 1, 0, 90deg); }
-    .side:nth-child(6) { transform: translate3d(0, -500%, calc(var(--content-size) / -2))   rotate3d(0, 1, 0, 180deg); }
+    .side:nth-child(1) { transform: translate3d(0, 0, calc($size / 2))        rotate3d(0, 0, 0, 0); }
+    .side:nth-child(2) { transform: translate3d(0, -150%, 0)                  rotate3d(1, 0, 0, 90deg); }
+    .side:nth-child(3) { transform: translate3d(-50%, -200%, 0)               rotate3d(0, -1, 0, 90deg); }
+    .side:nth-child(4) { transform: translate3d(0, -250%, 0)                  rotate3d(-1, 0, 0, 90deg); }
+    .side:nth-child(5) { transform: translate3d(50%, -400%, 0)                rotate3d(0, 1, 0, 90deg); }
+    .side:nth-child(6) { transform: translate3d(0, -500%, calc($size / -2))   rotate3d(0, 1, 0, 180deg); }
 
     @keyframes aBuild
     {

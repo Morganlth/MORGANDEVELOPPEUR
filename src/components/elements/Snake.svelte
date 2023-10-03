@@ -560,6 +560,7 @@ onDestroy(snake_destroy)
 <div
 class="snake"
 class:game={snake_GAME}
+style:--snake-blocksize="{snake_BLOCKSIZE}px"
 bind:this={snake}
 on:fullscreenchange={snake_eFullscreenChange}
 >
@@ -574,7 +575,6 @@ on:fullscreenchange={snake_eFullscreenChange}
     {#if snake_GAME}
         <div
         class="grid"
-        style:--grid-size="{snake_BLOCKSIZE}px"
         style:width="{snake_WIDTH}px"
         style:height="{snake_HEIGHT}px"
         >
@@ -616,6 +616,7 @@ on:fullscreenchange={snake_eFullscreenChange}
             </ul>
             
             <Cell
+            prop_CONTAINER={true}
             on:click={cell_eClick}
             >
                 <Icon
@@ -651,6 +652,8 @@ lang="scss"
 
 .snake
 {
+    $blocksize: var(--snake-blocksize, '40px');
+
     &, .gameover
     {
         @include position.placement(absolute, $top: 0, $left: 0);
@@ -677,9 +680,9 @@ lang="scss"
         background:
         repeating-linear-gradient($intermediate 0 1px, transparent 1px 100%),
         repeating-linear-gradient(90deg, $intermediate 0 1px, transparent 1px 100%);
-        background-size: var(--grid-size, 40) var(--grid-size, 40);
+        background-size: $blocksize $blocksize;
 
-        border: solid $intermediate var(--grid-size, 40);
+        border: solid $intermediate $blocksize;
     }
 
     .gameover
@@ -704,16 +707,18 @@ lang="scss"
 
     .frame
     {
-        $font-size: map.get(font.$font-sizes, s2);
+        #{--cell-size}: calc($blocksize * .7);
 
-        #{--icon-size}: $font-size;
-
-        @include position.placement(absolute, calc(app.$gap-block * 2), app.$gap-inline, auto, app.$gap-inline);
+        @include position.placement(absolute, $top: calc(app.$gap-block * 2), $right: 0, $left: 0);
     
         display: flex;
         justify-content: space-between;
 
         height: fit-content;
+
+        padding-inline: $blocksize;
+
+        box-sizing: border-box;
 
         ul
         {
@@ -723,7 +728,7 @@ lang="scss"
 
             .score, .fps
             {
-                @include font.content($light, $font-size);
+                @include font.content($light);
 
                 span { font-family: font.$family-content-bold !important; }
             }

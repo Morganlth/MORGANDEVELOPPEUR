@@ -91,6 +91,14 @@
 
     function fragments_destroyEvents() { EVENT.event_remove(FRAGMENTS_EVENTS) }
 
+    // --GET
+    function title_getStyle()
+    {
+        return `
+        transform: ${transform_getTranslate3d()};
+        transition: transform 1.2s ease-out;`
+    }
+
     // --UPDATES
     function info_updateOpacity(opacity) { info.style.opacity = opacity }
 
@@ -208,7 +216,7 @@ class="content"
                 <Fragments
                 prop_FRAGS={{ children: TITLE_FRAGS, value: content.frags ?? '-' }}
                 prop_TAGS={{ children: TITLE_TAGS, value: content.tags }}
-                prop_TRANSFORM={transform_getTranslate3d}
+                prop_STYLE={title_getStyle}
                 />
             {/each}
 

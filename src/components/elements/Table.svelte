@@ -22,6 +22,9 @@
     prop_LINES = [],
     prop_TRANSLATE_Y = 0
 
+    // --BIND
+    export let head_HEIGHT = 0
+
 // #IMPORTS
 
     // --JS
@@ -70,8 +73,10 @@ on:outrostart={table_outro}
     <div
     class="head"
     style:transform="translateY(-{prop_TRANSLATE_Y}px)"
+    bind:offsetHeight={head_HEIGHT}
     >
         <Cell
+        prop_CONTAINER={true}
         on:click={cell_eClick}
         >
             <Icon
@@ -144,10 +149,12 @@ lang="scss"
     .head, .line { width: 100%; }
     .head
     {
+        #{--cell-size}: calc(var(--title-size) * font.$line-height-title-min);
+    
         @extend %f-a-center;
         @extend %m-h-3;
     
-        position: relative;
+        position: absolute;
 
         z-index: 1;
 
@@ -155,24 +162,7 @@ lang="scss"
 
         height: fit-content;
 
-        :global
-        {
-            .cell
-            {
-                $size: calc(var(--title-size) * font.$line-height-title-min);
-    
-                #{--icon-size}: calc($size * .4);
-
-                @extend %f-center;
-
-                width: $size;
-                height: $size;
-
-                border: solid $light .2rem;
-
-                box-sizing: content-box;
-            }
-        }
+        padding-bottom: 2rem;
 
         h3
         {

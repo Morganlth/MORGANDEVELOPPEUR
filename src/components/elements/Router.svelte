@@ -2,6 +2,7 @@
 
 -ROUTER
 -EVENT
+-SPRING
     ROUTER
         FRAGMENTS
 
@@ -17,7 +18,7 @@
     import { animation_writing } from '../../assets/js/utils/animation'
 
     // --CONTEXTS
-    import { ROUTER, EVENT } from '../../App.svelte'
+    import { ROUTER, EVENT, SPRING } from '../../App.svelte'
 
     // --SVELTE
     import { onMount, onDestroy } from 'svelte'
@@ -71,16 +72,22 @@
 
     function router_destroyEvents() { EVENT.event_remove(ROUTER_EVENTS) }
 
-    // --UPDATE
+    // --UPDATES
     function router_update(id)
     {
         const LINK = ROUTER_LINKS_DATAS[id]
 
-        if (LINK.on) return
+        if (LINK.selected) return
 
-        try { ROUTER_LINKS_DATAS.find(link => link.on).on = false } catch { /* recuperer le chemin dans l'url pour définir le lien sélectionné */ }
+        try { ROUTER_LINKS_DATAS.find(link => link.selected).selected = false } catch { /* recuperer le chemin dans l'url pour définir le lien sélectionné */ }
 
-        ROUTER_LINKS_DATAS[id] = { ...LINK, on: true }
+        ROUTER_LINKS_DATAS[id] = { ...LINK, selected: true }
+    }
+
+    function spring_update(state, size)
+    {
+        SPRING.spring_$STATE = state
+        SPRING.spring_$SIZE = size
     }
 
     // --INTRO
@@ -98,7 +105,11 @@
         router_CHARGED = true
     }
 
-    // --EVENT
+    // --EVENTS
+    function router_eMouseEnter(id) { spring_update(ROUTER_LINKS_DATAS[id].selected ? -1 : 1, SPRING.spring_D_SIZE * 4) }
+
+    function router_eMouseLeave() { spring_update(0, SPRING.spring_D_SIZE) }
+
     async function router_eClick(id) { if (router_CHARGED) ROUTER.router_update(id) }
 
 // #CYCLE
@@ -119,9 +130,11 @@ style:opacity={router_OPACITY}
         {#each ROUTER_LINKS_DATAS as link, id}
             <li>
                 <a
-                class:selected={link.on}
+                class:selected={link.selected}
                 aria-label={link.label}
                 {...link.attributes}
+                on:mouseenter={router_eMouseEnter.bind(null, id)}
+                on:mouseleave={router_eMouseLeave}
                 on:click|preventDefault={router_eClick.bind(null, id)}
                 >
                     <Fragments
@@ -291,7 +304,7 @@ lang="scss"
             flex-direction: column;
             align-items: flex-start;
 
-            gap: .1rem;
+            gap: 0;
         }
 
         a { font-size: map.get(font.$font-sizes, s3); }

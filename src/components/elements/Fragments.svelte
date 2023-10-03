@@ -13,9 +13,8 @@
     export let
     prop_FRAGS = { children: [], value: '' },
     prop_TAGS = { children: [], value: '' },
-    prop_DURATION = '1.2s',
-    prop_STYLE = () => {},
-    prop_TRANSFORM = () => {}
+
+    prop_STYLE = () => {}
 </script>
 
 <!-- #HTML -->
@@ -23,11 +22,10 @@
 <div
 class="fragments"
 >
-    {#each prop_FRAGS.value as char, i}
+    {#each prop_FRAGS.value as char}
         <pre
+        class:void={char === ' '}
         style={prop_STYLE()}
-        style:transform={prop_TRANSFORM(i)}
-        style:transition="transform {prop_DURATION} ease-out"
         bind:this={prop_FRAGS.children[prop_FRAGS.children.length]}
         >{char}</pre>
     {/each}

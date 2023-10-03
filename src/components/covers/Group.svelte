@@ -12,11 +12,8 @@
 // #EXPORTS
 
     // --PROPS
-    export let
-    prop_STYLE = '',
-    prop_UPDATE = () => {}
+    export let prop_STYLE = ''
 
-    // BIND group_update
     // BIND group_start
     // BIND group_stop
 
@@ -35,54 +32,61 @@
 
     // --ELEMENT-GROUP
     const
-    GROUP_EVENT_RESIZE = { resize: group_e$Resize },
-    GROUP_EVENT_ANIMATION = { animation: wait_throttle(group_e$Animation, 100) }
+    GROUP_EVENTS = { resize: group_e$Resize },
+    GROUP_EVENTS_2 = { animation: wait_throttle(group_e$Animation, 100) },
+    GROUP_RESIZE = [],
+    GROUP_ANIMATION = []
 
     // --ELEMENT-SLOT
     const
-    SLOT_CHILDREN = [],
-    SLOT_e$RESIZE = [],
-    SLOT_e$ANIMATION = []
+    SLOT_$RESIZE = { push: group_push.bind(GROUP_RESIZE), splice: group_splice.bind(GROUP_RESIZE) },
+    SLOT_$ANIMATION = { push: group_push.bind(GROUP_ANIMATION), splice: group_splice.bind(GROUP_ANIMATION) }
 
 // #FUNCTIONS
 
     // --SET
-    function group_set() { group_setEventResize() }
+    function group_set() { group_setEvents() }
 
-    function group_setEventResize() { EVENT.event_add(GROUP_EVENT_RESIZE) }
+    function group_setEvents() { EVENT.event_add(GROUP_EVENTS) }
 
-    function group_setEventAnimation() { EVENT.event_add(GROUP_EVENT_ANIMATION) }
+    function group_setEvents2() { EVENT.event_add(GROUP_EVENTS_2) }
 
     // --DESTROY
     function group_destroy()
     {
-        group_destroyEventResize()
-        group_destroyEventAnimation()
+        group_destroyEvents()
+        group_destroyEvents2()
     }
 
-    function group_destroyEventResize() { EVENT.event_remove(GROUP_EVENT_RESIZE) }
+    function group_destroyEvents() { EVENT.event_remove(GROUP_EVENTS) }
 
-    function group_destroyEventAnimation() { EVENT.event_remove(GROUP_EVENT_ANIMATION) }
-
-    // --UPDATE
-    export function group_update()
-    {
-        prop_UPDATE(SLOT_CHILDREN)
-
-        console.log(SLOT_CHILDREN)
-    }
+    function group_destroyEvents2() { EVENT.event_remove(GROUP_EVENTS_2) }
 
     // --EVENTS
-    async function group_e$Resize() { group_run(SLOT_e$RESIZE) }
+    async function group_e$Resize() { group_run(GROUP_RESIZE) }
 
-    async function group_e$Animation() { group_run(SLOT_e$ANIMATION) }
+    async function group_e$Animation() { group_run(GROUP_ANIMATION) }
 
     // --CONTROLS
-    export function group_start() { group_setEventAnimation() }
+    export function group_start() { group_setEvents2() }
 
-    export function group_stop() { group_destroyEventAnimation() }
+    export function group_stop() { group_destroyEvents2() }
 
-    // --UTIL
+    // --UTILS
+    function group_push(call)
+    {
+        const INDEX = this.indexOf(call)
+
+        if (INDEX === -1) this.push(call)
+    }
+
+    function group_splice(call)
+    {
+        const INDEX = this.indexOf(call)
+
+        if (~INDEX) this.splice(INDEX, 1)
+    }
+
     function group_run(array = []) { for (const FUNC of array) FUNC() }
 
 // #CYCLES
@@ -98,9 +102,8 @@ class="group"
 style={prop_STYLE}
 >
     <slot
-    children={SLOT_CHILDREN}
-    resize={SLOT_e$RESIZE}
-    animation={SLOT_e$ANIMATION}
+    resize={SLOT_$RESIZE}
+    animation={SLOT_$ANIMATION}
     />
 </div>
 

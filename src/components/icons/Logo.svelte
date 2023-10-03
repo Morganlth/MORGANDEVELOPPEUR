@@ -36,6 +36,6 @@ svg
 {
     @extend %any;
 
-    path { transition: stroke .7s; }
+    path { transition: stroke .8s; }
 }
 </style>

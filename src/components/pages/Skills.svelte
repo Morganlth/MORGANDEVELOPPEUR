@@ -54,7 +54,7 @@
         {
             id: 0,
             title: 'HTML et CSS',
-            value: 'H.& C.'
+            value: 'HTML & CSS'
         },
         {
             id: 1,
@@ -75,6 +75,9 @@
 
 // #VARIABLES
 
+    // --APP
+    let app_$FREEZE = APP.app_$FREEZE
+
     // --ELEMENT-SKILLS
     let skills_CHARGED = false
 
@@ -84,7 +87,13 @@
     // --ELEMENT-TITLE
     let title_HEIGHT = 0
 
+    // --ELEMENT-TABLE
+    let table_HEIGHT = 0
+
 // #REACTIVES
+
+    // --ELEMENT-SKILLS
+    $: !$app_$FREEZE ? skills_reset() : void 0
 
     // --ELEMENT-NAV
     $: prop_START != null && prop_DIF != null ? nav_setVars() : void 0
@@ -108,15 +117,18 @@
         }
     }
 
-    // --EVENTS
-    function system_eClick(id) { EVENT.event_scrollTo(NAV_ITEMS[id].top) }
-
-    function table_eClick()
+    // --RESET
+    function skills_reset()
     {
         system_TARGET = null
 
-        APP.app_$FREEZE = { on: false, target: APP.app_$FREEZE.target }
+        table_HEIGHT = 0
     }
+
+    // --EVENTS
+    function nav_eClick({detail: {item}}) { EVENT.event_scrollTo(item.top) }
+
+    function table_eClick() { APP.app_$FREEZE = { on: false, target: APP.app_$FREEZE.target } } // call skills_reset with reactive app_$FREEZE
 
 // #CYCLE
 
@@ -142,21 +154,22 @@ id="skills"
         bind:system_TARGET
         />
 
-        <Nav
-        prop_TRANSLATE_Y={title_HEIGHT}
-        prop_ITEMS={NAV_ITEMS}
-        prop_EVENT={system_eClick}
-        {prop_FOCUS}
-        {prop_INTRO}
-        />
-
         {#if system_TARGET}
             <Table
             prop_TITLE={system_TARGET.tag}
             prop_LINES={system_TARGET.skills}
             prop_TRANSLATE_Y={title_HEIGHT}
+            bind:head_HEIGHT={table_HEIGHT}
             on:click={table_eClick}
             />
         {/if}
+
+        <Nav
+        prop_TRANSLATE_Y={title_HEIGHT - table_HEIGHT}
+        prop_ITEMS={NAV_ITEMS}
+        {prop_FOCUS}
+        {prop_INTRO}
+        on:click={nav_eClick}
+        />
     </Content>
 </div>

@@ -12,100 +12,56 @@
 
     // --PROPS
     export let
-    prop_FOCUS = false,
-    prop_OPTIMISED = false,
     prop_CONTENT = '',
-    prop_X = 0,
-    prop_Y = 0
+    prop_DURATION = 0,
+
+    prop_INTRO = () => {},
+    prop_OUTRO = () => {},
+
+    prop_STYLE = { tag_style: () => '', fragments_style: () => '' }
 
 // #IMPORTS
 
     // --JS
-    import MATH from '../../assets/js/utils/math'
-    import { transition_fade } from '../../assets/js/utils/transition'
-
-    // --SVELTE
-    import { createEventDispatcher } from 'svelte'
+    import { transition_wait } from '../../assets/js/utils/transition'
 
     // --COMPONENT-ELEMENT
     import Fragments from './Fragments.svelte'
 
-// #CONSTANTES
-
-    // --SVELTE
-    const SVELTE_DISPATCH = createEventDispatcher()
+// #CONSTANTE
 
     // --ELEMENT-TAG
-    const TAG_DURATION = 400
+    const TAG_FRAGS = []
 
 // #VARIABLE
 
     // --ELEMENT-TAG
-    let tag_FRAGS = []
+    let tag
 
 // #FUNCTIONS
 
-    // --GET
-    function fragments_getY() { return 1000 * Math.random() + '%' }
-
-    // --UPDATE
-    function tag_update(y, scale)
-    {
-        for (let i = 0; i < tag_FRAGS.length; i++)
-        {
-            const FRAG = tag_FRAGS[i]
-
-            FRAG.style.setProperty('--frag-y', y)
-            FRAG.style.setProperty('--frag-scale', scale)
-        }
-    }
-
-    // --EVENT
-    function tag_eClick() { SVELTE_DISPATCH('click') }
-
     // --INTRO
-    function tag_intro()
-    {
-        const Y = MATH.headsOrTails() * 2 + '%'
-    
-        tag_update(Y, 1)
-    }
+    function tag_intro() { prop_INTRO(tag, TAG_FRAGS) }
 
     // --OUTRO
-    function tag_outroStart()
-    {
-        tag_update(fragments_getY(), 0)
-
-        tag_FRAGS = []
-    }
-
-    // --UTILS
-    function fragments_style() { return `--frag-y: ${fragments_getY()}; --frag-scale: 0; --frag-sign: ${Math.round(Math.random()) ? 1 : -1}; --frag-duration: ${TAG_DURATION}ms` }
-
-    function fragments_transform() { return `translateY(calc(var(--frag-y, 0) * var(--frag-sign, 1))) scaleX(var(--frag-scale, 1))` }
+    function tag_outro() { prop_OUTRO(tag, TAG_FRAGS) }
 </script>
 
 <!-- #HTML -->
 
-{#if prop_FOCUS}
-    <button
-    class="tag"
-    style:position={prop_OPTIMISED ? 'relative' : 'absolute' }
-    style:transform="translate({prop_X}px, {prop_Y}px)"
-    type="button"
-    on:click={tag_eClick}
-    transition:transition_fade={{ duration: TAG_DURATION }}
-    on:introend={tag_intro}
-    on:outrostart={tag_outroStart}
-    >
-        <Fragments
-        prop_FRAGS={{ children: tag_FRAGS, value: prop_CONTENT }}
-        prop_STYLE={fragments_style}
-        prop_TRANSFORM={fragments_transform}
-        prop_DURATION="var(--frag-duration, .3s)"
-        />
-    </button>
-{/if}
+<h3
+class="tag"
+style={prop_STYLE.tag_style()}
+bind:this={tag}
+transition:transition_wait={{ duration: prop_DURATION }}
+on:introend={tag_intro}
+on:outrostart={tag_outro}
+>
+    <Fragments
+    prop_FRAGS={{ children: TAG_FRAGS, value: prop_CONTENT }}
+    prop_STYLE={prop_STYLE.fragments_style}
+    />
+</h3>
 
 <!-- #STYLE -->
 
@@ -116,74 +72,17 @@ lang="scss"
 
 @use 'sass:map';
 
-@use '../../assets/scss/styles/elements';
-@use '../../assets/scss/styles/position';
 @use '../../assets/scss/styles/font';
 
 /* #TAG */
 
 .tag
 {
-    &::before
-    {
-        @include position.placement(absolute, $right: -8rem, $bottom: 0, $pseudo-element: true);
-
-        transform: translateX(0) scale(1);
-    
-        width: 150%;
-        height: 0;
-
-        pointer-events: none;
-
-        border-bottom: solid $intermediate 1px;
-
-        animation: a .6s ease-out;
-
-        transition: transform 1s ease-out, border .6s ease-out;
-
-        @keyframes a { from { transform: translateX(100%) scaleX(0); } }
-    }
-
     @include font.h-custom($light, var(--title-size, map.get(font.$font-sizes, s5)));
 
-    @extend %button-reset;
     @extend %m-h-3;
-
-    display: block;
 
     width: fit-content;
     height: fit-content;
-
-    padding: 2rem;
-
-    pointer-events: auto;
-
-    transition: transform .3s;
-
-    &:hover::before
-    {
-        transform: translateX(8%);
-    
-        border-bottom-color: $light;
-    }
-
-    :global
-    {
-        .fragments>pre::before
-        {
-            @include position.placement(absolute, $top: 50%, $left: 50%, $pseudo-element: true);
-
-            transform-origin: left;
-            
-            width: 100%;
-            height: 1px;
-
-            background-color: $light;
-
-            transform: rotate(calc(-90deg * var(--frag-sign, 1))) scaleX(var(--frag-y, 0));
-
-            transition: transform var(--frag-duration, .3s) ease-out;
-        }
-    }
 }
 </style>
