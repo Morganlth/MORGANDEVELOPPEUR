@@ -14,14 +14,7 @@ class Router
 
 constructor ()
 {
-    let { subscribe, set } = writable(null)
-
-    this.#router_$ID =
-    {
-        value: null,
-        subscribe,
-        set: function (value) { set(this.value = value) }
-    }
+    this.#router_setVars()
 
     this.router_e$Scroll = wait_throttle.call(this, this.router_e$Scroll, 50.01)
 
@@ -36,6 +29,18 @@ constructor ()
         this.#router_setEvents()
     
         this.router_update(id, true)
+    }
+
+    #router_setVars()
+    {
+        let { subscribe, set } = writable(null)
+
+        this.#router_$ID =
+        {
+            value: null,
+            subscribe,
+            set: function (value) { set(this.value = value) }
+        }
     }
 
     #router_setEvents() { EVENT.event_add(this.#router_EVENTS) }
@@ -55,7 +60,7 @@ constructor ()
     {
         const
         PAGE = this.#router_PAGES[id],
-        TOP = PAGE.offsetTop
+        TOP = PAGE.top
 
         instant ??= this.router_getInstant(TOP)
     
@@ -79,11 +84,13 @@ constructor ()
         const PAGES = this.#router_PAGES
 
         for (let i = PAGES.length - 1; i >= 0; i--)
-            if (PAGES[i].offsetTop <= APP.app_SCROLLTOP) return this.#router_updatePath(i, PAGES[i])
+            if (PAGES[i].top <= APP.app_SCROLLTOP) return this.#router_updatePath(i, PAGES[i])
     }
 
-    // --UTIL
-    router_add(id, name, offsetTop) { this.#router_PAGES[id] = { name: name, offsetTop: offsetTop } }
+    // --UTILS
+    router_add({ id, name, top }) { this.#router_PAGES[id] = { name: name, top: top } } // rendre router_PAGES reactif ?
+
+    router_remove(id) { this.#router_PAGES.splice(id, 1) }
 
     // --GETTER
     get router_$ID() { return this.#router_$ID }

@@ -180,12 +180,10 @@ lang="scss"
     .lines
     {
         &, .line { box-sizing: border-box; }
-    
-        @extend %scroll-bar;
-        @extend %any;
 
         @include position.placement(absolute, 0, 0, 0, 0);
-
+    
+        @extend %scroll-bar;
         @extend %any;
 
         overflow: hidden scroll;

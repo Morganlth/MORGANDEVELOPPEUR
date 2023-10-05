@@ -25,7 +25,7 @@
     $line-height-title-min: .71;
 
     // --FONT-TITLE
-    $h-1: (color: $light, font-family: $family-title, font-size: var(--title-size, map.get($font-sizes, s6)), font-weight: 900, line-height: 1);
+    $h-1: (color: $light, font-family: $family-title, font-size: var(--title-size, map.get($font-sizes, s6)), font-weight: 900, line-height: $line-height-title-min);
     $h-2: (color: $indicator, font-family: $family-title, font-size: var(--title-size, map.get($font-sizes, s5)), font-weight: 900, line-height: 1.2);
     $h-3: (color: $indicator, font-family: $family-title, font-size: map.get($font-sizes, s4), font-weight: 900, line-height: 1.2);
     $h-4: (color: $light, font-family: $family-title, font-size: map.get($font-sizes, s3), font-weight: 900, line-height: 1.2); 
@@ -101,12 +101,7 @@
         #{--title-size}: map.get($font-sizes, s6);
     
         @include media.min($ms2) { #{--title-size}: map.get($font-sizes, s7); }
-        @include media.min($ms3, $ms3)
-        {
-            #{--title-size}: map.get($font-sizes, s8);
-
-            line-height: .9 !important;
-        }
+        @include media.min($ms3, $ms3) { #{--title-size}: map.get($font-sizes, s8); }
     }
     %m-h-2
     {

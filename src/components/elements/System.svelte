@@ -346,9 +346,9 @@ style:--system-rotate-y={group_ROTATE_Y}
         {/if}
     </Group>
 
-    <Group>
+    {#if prop_START && !system_TARGET}
         {#each SYSTEM_DATAS as data}
-            {#if prop_START && !system_TARGET && data.focus}
+            {#if data.focus}
                 <Cell
                 on:click={tag_eClick.bind(data)}
                 >
@@ -362,7 +362,7 @@ style:--system-rotate-y={group_ROTATE_Y}
                 </Cell>
             {/if}
         {/each}
-    </Group>
+    {/if}
 </div>
 
 <!-- #STYLE -->
@@ -404,7 +404,7 @@ lang="scss"
         $rotate-x: var(--system-rotate-x, 0);
         $rotate-y: var(--system-rotate-y, 0);
     
-        .group:nth-child(1)
+        .group
         {
             @include position.placement(absolute, 0, 0, 0, 0);
     
@@ -417,27 +417,13 @@ lang="scss"
             transition: transform .3s;
         }
 
-        .group:nth-child(2)
+        .cell
         {
             @include position.placement(absolute, 51%, 10%);
-            
-            @extend %f-column;
     
-            align-items: flex-end;
-    
-            transform: translateY(-50%);
+            transform: translate(calc($rotate-x * 6px), calc($rotate-y * 6px - 50%));
 
-            width: fit-content;
-            height: fit-content;
-
-            .cell
-            {
-                @include position.placement(absolute, $top: 0, $right: 0);
-        
-                transform: translate(calc($rotate-x * 6px), calc($rotate-y * 6px));
-
-                transition: transform .4s;
-            }
+            transition: transform .4s;
 
             .tag
             {

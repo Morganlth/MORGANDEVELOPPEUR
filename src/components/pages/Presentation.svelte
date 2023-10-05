@@ -23,7 +23,9 @@
     export let
     prop_FOCUS = false,
     prop_INTRO = false,
+
     prop_RATIO = 0,
+
     prop_START = void 0,
     prop_END = void 0,
     prop_DIF = void 0
@@ -31,7 +33,7 @@
 // #IMPORTS
 
     // --JS
-    import { PRESENTATION_CONTENT_DATAS } from '../../assets/js/datas/dPresentation'
+    import { PRESENTATION_CONTENT_DATAS, NAV_ITEMS_DATAS } from '../../assets/js/datas/dPresentation'
 
     // --CONTEXTS
     import { ROUTER, COMMAND, EVENT } from '../../App.svelte'
@@ -61,26 +63,6 @@
             params: { defaultValue: true },
             tests: { testBoolean: true },
             storage: true
-        }
-    ]
-
-    // --ELEMENT-NAV
-    const NAV_ITEMS =
-    [
-        {
-            id: 0,
-            title: 'Page de contact',
-            value: 'CONTACT'
-        },
-        {
-            id: 1,
-            title: 'Jouer au jeu du serpent revisité',
-            value: 'JOUER'
-        },
-        {
-            id: 2,
-            title: '',
-            value: ''
         }
     ]
 
@@ -144,9 +126,9 @@
     {
         snake_ON = on
 
-        NAV_ITEMS[2] =
+        NAV_ITEMS_DATAS[2] =
         {
-            ...NAV_ITEMS[2],
+            ...NAV_ITEMS_DATAS[2],
             title: `${on ? 'Masque' : 'Affiche'} le serpent`,
             value: on ? 'MASQUER' : 'AFFICHER'
         }
@@ -202,13 +184,14 @@ id="presentation"
         bind:features_LENGTH
         />
 
-        <Nav
-        prop_TRANSLATE_Y={title_HEIGHT}
-        prop_ITEMS={NAV_ITEMS}
-        {prop_FOCUS}
-        {prop_INTRO}
-        on:click={nav_eClick}
-        />
+        {#if prop_FOCUS}
+            <Nav
+            prop_TRANSLATE_Y={title_HEIGHT}
+            prop_ITEMS={NAV_ITEMS_DATAS}
+            {prop_INTRO}
+            on:click={nav_eClick}
+            />
+        {/if}
     </Content>
 
     <Mask

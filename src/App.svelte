@@ -7,7 +7,7 @@
     APP
         #if
             HEADER
-            PAGES
+            MAIN
             ASIDE
             FOOTER
 
@@ -51,7 +51,7 @@ context="module"
 
     // --COMPONENT-FIELDS
     import Header from './components/fields/Header.svelte'
-    import Pages from './components/fields/Pages.svelte'
+    import Main from './components/fields/Main.svelte'
     import Footer from './components/fields/Footer.svelte'
     import Aside from './components/fields/Aside.svelte'
 
@@ -155,7 +155,7 @@ on:touchstart|once={app_eTouchStart}
 >
     {#if app$_CHARGED}
         <Header />
-        <Pages />
+        <Main />
         <Aside />
         <Footer />
     {/if}

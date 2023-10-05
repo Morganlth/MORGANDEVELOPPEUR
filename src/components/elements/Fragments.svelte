@@ -91,7 +91,7 @@ lang="scss"
 
         li
         {
-            @include font.content($primary, false);
+            @include font.content($primary, false, $line-height: font.$line-height-title-min);
 
             white-space: nowrap;
         }

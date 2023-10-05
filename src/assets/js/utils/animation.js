@@ -13,7 +13,13 @@
             {
                 const TIME = +new Date() - START
 
-                if (TIME > duration) return resolve()
+                if (TIME > duration)
+                {
+                    callback(1)
+                    resolve()
+
+                    return
+                }
         
                 callback(TIME / duration)
 

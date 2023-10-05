@@ -24,6 +24,7 @@
     export let
     prop_FOCUS = false,
     prop_INTRO = false,
+
     prop_RATIO = 0
 
 // #IMPORTS

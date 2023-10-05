@@ -12,7 +12,6 @@
 
     // --PROPS
     export let
-    prop_FOCUS = false,
     prop_INTRO = false,
     prop_TRANSLATE_Y = 0,
     prop_ITEMS = []
@@ -23,7 +22,7 @@
     import { SPRING } from '../../App.svelte'
 
     // --SVELTE
-    import { createEventDispatcher } from 'svelte'
+    import { onDestroy, createEventDispatcher } from 'svelte'
 
 // #CONSTANTE
 
@@ -31,6 +30,9 @@
     const SVELTE_DISPATCH = createEventDispatcher()
 
 // #FUNCTIONS
+
+    // --DESTROY
+    function nav_destroy() { nav_eMouseLeave() }
 
     // --UPDATE
     function spring_update(state, size)
@@ -45,33 +47,35 @@
     function nav_eMouseLeave() { spring_update(0, SPRING.spring_D_SIZE) }
 
     async function nav_eClick(id) { SVELTE_DISPATCH('click', { id: id, item: prop_ITEMS[id] }) }
+
+// #CYCLE
+
+onDestroy(nav_destroy)
 </script>
 
 <!-- #HTML -->
 
-{#if prop_FOCUS}
-    <nav
-    class="nav"
-    class:top={!prop_INTRO}
-    style:--nav-translate-y="-{prop_TRANSLATE_Y}px"
-    >
-        <ul>
-            {#each prop_ITEMS as item}
-                <li>
-                    <button
-                    type="button"
-                    title={item.title ?? (item.value ?? '')}
-                    on:mouseenter={nav_eMouseEnter}
-                    on:mouseleave={nav_eMouseLeave}
-                    on:click={nav_eClick.bind(null, item.id)}
-                    >
-                        #{item.value ?? ''}
-                    </button>
-                </li>
-            {/each}
-        </ul>
-    </nav>
-{/if}
+<nav
+class="nav"
+class:top={!prop_INTRO}
+style:--nav-translate-y="-{prop_TRANSLATE_Y}px"
+>
+    <ul>
+        {#each prop_ITEMS as item}
+            <li>
+                <button
+                type="button"
+                title={item.title ?? (item.value ?? '')}
+                on:mouseenter={nav_eMouseEnter}
+                on:mouseleave={nav_eMouseLeave}
+                on:click={nav_eClick.bind(null, item.id)}
+                >
+                    #{item.value ?? ''}
+                </button>
+            </li>
+        {/each}
+    </ul>
+</nav>
 
 <!-- #STYLE -->
 
@@ -95,14 +99,14 @@ lang="scss"
     
     &::before
     {
-        @include position.placement(absolute, $top: 0, $right: 0, $left: 0, $pseudo-element: true);
+        @include position.placement(absolute, $top: -1.4rem, $right: 0, $left: 0, $pseudo-element: true);
 
         transform: translateX(0) rotate(90deg);
 
         width: 100%;
         height: 0;
 
-        border-top: solid $light 1px;
+        border-top: solid $intermediate 1px;
 
         transition: border .8s;
 
@@ -149,8 +153,6 @@ lang="scss"
 
         width: 100%;
 
-        padding-block: 1rem;
-
         animation: aUlIntro  #{$animation-duration * .3}s  #{$animation-duration * .7}s ease-in-out forwards;
 
         @keyframes aUlIntro
@@ -170,7 +172,7 @@ lang="scss"
 
         @extend %button-reset;
 
-        padding-block: .5rem;
+        padding-block: .6rem;
 
         pointer-events: auto;
     }

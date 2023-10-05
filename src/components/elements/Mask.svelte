@@ -13,8 +13,10 @@
     export let
     prop_BLUR = false,
     prop_SHADOW = false,
+
     prop_COORDS = [50, 50],
     prop_GRADIENT = [0, 100],
+
     prop_RATIO = 1
 </script>
 
@@ -60,7 +62,7 @@ lang="scss"
     {
         backdrop-filter: blur(10px);
 
-        mask: $gradient;
+        mask: $gradient no-repeat;
     }
     &.shadow { background: $gradient; }
 }

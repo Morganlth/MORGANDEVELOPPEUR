@@ -5,7 +5,7 @@
     {
         prop_TITLE:
         {
-            htmlElement: 'h1',
+            htmlElement: 'h2',
             contents:
             [
                 {
@@ -18,9 +18,21 @@
         prop_INFO: 'SPACE'
     }
 
-    export const PROJECTS_CARDS_DATAS =
+    export const NAV_ITEMS_DATAS =
     [
-        'NINA CARDUCCI',
-        'SOPHIE BLUEL',
-        'BOOKI'
+        {
+            id: 0,
+            title: 'Booki',
+            value: 'BOOKI'
+        },
+        {
+            id: 1,
+            title: 'Sophie Bluel',
+            value: 'SOPHIE BLUEL'
+        },
+        {
+            id: 2,
+            title: 'Nina Carducci',
+            value: 'NINA CARDUCCI'
+        }
     ]

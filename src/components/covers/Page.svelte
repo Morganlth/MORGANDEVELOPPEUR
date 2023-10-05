@@ -9,9 +9,9 @@
 <!-- #SCRIPT -->
 
 <script>
-// #EXPORT
+// #EXPORTS
 
-    // --PROP
+    // --PROPS
     export let prop_FOCUS = false
 </script>
 
@@ -65,7 +65,7 @@ lang="scss"
 
         :global { &>* { @extend %any; } }
 
-        @include media.min(false, $ms2) { padding-top: max(13rem, 80px); }
+        @include media.min(false, $ms2) { padding-top: max(12rem, 80px); }
     }
 }
 </style>

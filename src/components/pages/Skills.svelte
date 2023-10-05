@@ -21,14 +21,16 @@
     export let
     prop_FOCUS = false,
     prop_INTRO = false,
+
     prop_RATIO = 0,
+
     prop_START = void 0,
     prop_DIF = void 0
 
 // #IMPORTS
 
     // --JS
-    import { SKILLS_CONTENT_DATAS } from '../../assets/js/datas/dSkills'
+    import { SKILLS_CONTENT_DATAS, NAV_ITEMS_DATAS } from '../../assets/js/datas/dSkills'
     import { SYSTEM_DATAS } from '../../assets/js/datas/dSystem'
     import MATH from '../../assets/js/utils/math'
 
@@ -45,33 +47,6 @@
     import System from '../elements/System.svelte'
     import Nav from '../elements/Nav.svelte'
     import Table from '../elements/Table.svelte'
-
-// #CONSTANTE
-
-    // --ELEMENT-NAV
-    const NAV_ITEMS =
-    [
-        {
-            id: 0,
-            title: 'HTML et CSS',
-            value: 'HTML & CSS'
-        },
-        {
-            id: 1,
-            title: 'Javascript',
-            value: 'JS'
-        },
-        {
-            id: 2,
-            title: 'Node JS',
-            value: 'NODE JS'
-        },
-        {
-            id: 3,
-            title: 'Gestion, Outils et Adaptabilité',
-            value: 'AUTRES'
-        }
-    ]
 
 // #VARIABLES
 
@@ -107,10 +82,10 @@
     {
         const PI_DIV_2 = Math.PI / 2
 
-        for (let i = 0; i < NAV_ITEMS.length; i++)
+        for (let i = 0; i < NAV_ITEMS_DATAS.length; i++)
         {
             const
-            ITEM = NAV_ITEMS[i],
+            ITEM = NAV_ITEMS_DATAS[i],
             RATIO = ((PI_DIV_2 - SYSTEM_DATAS[i].props.prop_OFFSET) + MATH.PI.x2) % MATH.PI.x2 / MATH.PI.x2
 
             ITEM.top = prop_START + prop_DIF * RATIO
@@ -164,12 +139,13 @@ id="skills"
             />
         {/if}
 
-        <Nav
-        prop_TRANSLATE_Y={title_HEIGHT - table_HEIGHT}
-        prop_ITEMS={NAV_ITEMS}
-        {prop_FOCUS}
-        {prop_INTRO}
-        on:click={nav_eClick}
-        />
+        {#if prop_FOCUS}
+            <Nav
+            prop_TRANSLATE_Y={title_HEIGHT - table_HEIGHT}
+            prop_ITEMS={NAV_ITEMS_DATAS}
+            {prop_INTRO}
+            on:click={nav_eClick}
+            />
+        {/if}
     </Content>
 </div>

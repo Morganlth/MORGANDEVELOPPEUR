@@ -1,87 +1,52 @@
 <!-- #MAP
 
 -ROUTER
--EVENT
 -SPRING
     ROUTER
-        FRAGMENTS
+        ROUTE * n
 
 -->
 
 <!-- #SCRIPT -->
 
 <script>
+// #EXPORTS
+
+    // --PROPS
+    export let
+    prop_ROUTES = [],
+
+    prop_OPACITY = 1
+
 // #IMPORTS
 
-    // --JS
-    import ROUTER_LINKS_DATAS from '../../assets/js/datas/dRouter'
-    import { animation_writing } from '../../assets/js/utils/animation'
-
     // --CONTEXTS
-    import { ROUTER, EVENT, SPRING } from '../../App.svelte'
-
-    // --SVELTE
-    import { onMount, onDestroy } from 'svelte'
+    import { ROUTER, SPRING } from '../../App.svelte'
 
     // --COMPONENT-ELEMENT
-    import Fragments from './Fragments.svelte'
-
-// #CONSTANTES
-
-    // --ELEMENT-ROUTER
-    const
-    ROUTER_TAGS = [],
-    ROUTER_EVENTS = []
+    import Route from './Route.svelte'
 
 // #VARIABLE
 
     // --ROUTER
     let router_$ID = ROUTER.router_$ID
 
-    // --ELEMENT-ROUTER
-    let
-    router_CHARGED = false,
-    router_OPACITY = 0,
-    router_TIMEOUT
-
 // #REACTIVE
 
-    $: router_CHARGED ? router_update($router_$ID) : void 0
+    $: router_update($router_$ID)
 
 // #FUNCTIONS
-
-    // --SET
-    function router_set()
-    {
-        router_setVars()
-
-        router_TIMEOUT = setTimeout(router_intro, 300)
-    }
-
-    function router_setVars() { router_OPACITY = 1 }
-
-    function router_setEvents() { EVENT.event_add(ROUTER_EVENTS) }
-
-    // --DESTROY
-    function router_destroy()
-    {
-        clearTimeout(router_TIMEOUT)
-
-        router_destroyEvents()
-    }
-
-    function router_destroyEvents() { EVENT.event_remove(ROUTER_EVENTS) }
 
     // --UPDATES
     function router_update(id)
     {
-        const LINK = ROUTER_LINKS_DATAS[id]
+        const LINK = prop_ROUTES[id]
 
-        if (LINK.selected) return
+        if (!LINK || LINK.on) return
 
-        try { ROUTER_LINKS_DATAS.find(link => link.selected).selected = false } catch { /* recuperer le chemin dans l'url pour définir le lien sélectionné */ }
+        try { prop_ROUTES.find(link => link.on).on = false } catch { /* recuperer le chemin dans l'url pour définir le lien sélectionné */ }
 
-        ROUTER_LINKS_DATAS[id] = { ...LINK, selected: true }
+        prop_ROUTES[id] = { ...LINK, on: true }
     }
 
     function spring_update(state, size)
@@ -90,58 +55,40 @@
         SPRING.spring_$SIZE = size
     }
 
-    // --INTRO
-    async function router_intro()
-    {
-        await new Promise(resolve =>
-        {
-            ROUTER_EVENTS.animation = animation_writing(ROUTER_TAGS, resolve)
-            
-            router_setEvents()
-        })
-
-        router_destroyEvents()
-        
-        router_CHARGED = true
-    }
-
     // --EVENTS
-    function router_eMouseEnter(id) { spring_update(ROUTER_LINKS_DATAS[id].selected ? -1 : 1, SPRING.spring_D_SIZE * 4) }
+    function router_eMouseEnter(id) { spring_update(prop_ROUTES[id].on ? -1 : 1, SPRING.spring_D_SIZE * 4) }
 
     function router_eMouseLeave() { spring_update(0, SPRING.spring_D_SIZE) }
 
-    async function router_eClick(id) { if (router_CHARGED) ROUTER.router_update(id) }
+    async function router_eClick(id)
+    {
+        router_update(id)
 
-// #CYCLE
-
-onMount(router_set)
-onDestroy(router_destroy)
+        ROUTER.router_update(id)
+    }
 </script>
 
 <!-- #HTML -->
 
 <nav
 class="router"
-class:charged={router_CHARGED}
-style:opacity={router_OPACITY}
+style:opacity={prop_OPACITY}
+on:mouseleave={router_eMouseLeave}
 >
     <ul>
-        <!-- svelte-ignore a11y-no-static-element-interactions a11y-missing-attribute -->
-        {#each ROUTER_LINKS_DATAS as link, id}
-            <li>
-                <a
-                class:selected={link.selected}
-                aria-label={link.label}
-                {...link.attributes}
-                on:mouseenter={router_eMouseEnter.bind(null, id)}
-                on:mouseleave={router_eMouseLeave}
-                on:click|preventDefault={router_eClick.bind(null, id)}
-                >
-                    <Fragments
-                    prop_TAGS={{ children: ROUTER_TAGS, value: link.content }}
+        {#each prop_ROUTES as route}
+            {#if route.actif}
+                <li>
+                    <Route
+                    prop_ON={route.on}
+                    prop_ID={route.id}
+                    prop_VALUE={route.value ?? ''}
+                    prop_ATTRIBUTES={route.attributes}
+                    prop_$MOUSEENTER={router_eMouseEnter}
+                    prop_$CLICK={router_eClick}
                     />
-                </a>
-            </li>
+                </li>
+            {/if}
         {/each}
     </ul>
 </nav>
@@ -153,13 +100,9 @@ lang="scss"
 >
 /* #USES */
 
-@use 'sass:map';
-
 @use '../../assets/scss/app';
 
 @use '../../assets/scss/styles/position';
-@use '../../assets/scss/styles/size';
-@use '../../assets/scss/styles/font';
 @use '../../assets/scss/styles/media';
 
 /* #ROUTER */
@@ -170,16 +113,12 @@ lang="scss"
 
     z-index: 1;
 
-    opacity: 0;
-
     width: fit-content;
     height: fit-content;
 
     user-select: none;
 
-    transition: opacity .3s;
-
-    &.charged a { cursor: pointer; }
+    transition: opacity .4s;
 
     ul
     {
@@ -196,91 +135,6 @@ lang="scss"
         {
             width: 100%;
             height: fit-content;
-        }
-    }
-
-    a
-    {
-        &::before
-        {
-            @include position.placement(absolute, 50%, 0, 0, 0, true);
-
-            transform: translateX(-50%) scaleX(.05);
-
-            width: 100%;
-            height: 0;
-            
-            border-top: solid $light 1px;
-        }
-
-        @include font.content($light, false, $line-height: 1.4);
-
-        @extend %any;
-
-        position: relative;
-
-        display: inline-block;
-
-        transform: rotate(-.8deg);
-
-        opacity: .9;
-
-        width: 100%;
-        height: fit-content;
-        
-        padding-inline: 1.1rem;
-
-        pointer-events: auto;
-
-        box-sizing: border-box;
-
-        text-decoration: none;
-
-        cursor: default;
-
-        transition: opacity .3s;
-
-        &::after
-        {
-            @include position.placement(absolute, 50%, 0, 0, 0, true);
-
-            @extend %any;
-
-            transform: translateY(-50%) scale(1, 0);
-
-            border: solid $primary 1px;
-            
-            box-shadow: 0 0 5px $primary;
-            box-sizing: border-box;
-        }
-
-        &.selected
-        {
-            &::before
-            {
-                border-top-color: $primary;
-
-                animation: aSelected-before .3s ease-out;
-
-                @keyframes aSelected-before { 100% { transform: scaleX(1); } }
-            }
-
-            opacity: 1;
-
-            animation: aSelected .4s forwards;
-
-            @keyframes aSelected
-            {
-                40% { color: $indicator; }
-                100% { color: $primary; }    
-            }
-
-            &::after
-            {
-                animation: aSelected-after .2s linear .25s forwards;
-
-                @keyframes aSelected-after { 100% { transform: translateY(-50%) scale(1); } }
-            }
         }
     }
 
@@ -306,8 +160,6 @@ lang="scss"
 
             gap: 0;
         }
-
-        a { font-size: map.get(font.$font-sizes, s3); }
     }
     @include media.min($ms4, $ms4) { top: 55%; }
 }

@@ -226,7 +226,9 @@ class="content"
                 style:transform={transform_getTranslate3d()}
                 bind:this={TITLE_FRAGS[TITLE_FRAGS.length]}
                 >
-                    <slot name="title-element" />
+                    <slot
+                    name="title-element"
+                    />
                 </div>
             {/if}
         </svelte:element>
@@ -262,8 +264,6 @@ lang="scss"
         position: relative;
 
         z-index: 1;
-
-        padding-bottom: 3rem;
     
         user-select: none;
     }
@@ -275,6 +275,8 @@ lang="scss"
         @include font.content($light);
 
         opacity: 0;
+
+        padding-bottom: 2rem;
 
         .opening { @include position.placement(absolute, $top: 0, $left: 0); }
 
@@ -301,17 +303,16 @@ lang="scss"
         width: fit-content;
         height: fit-content;
 
+        padding-bottom: 5rem;
+
         transition: opacity .6s ease-in;
 
-        .element
-        {
-            margin-top: .9rem;
-
-            transition: transform 1.2s ease-out;
-        }
+        .element { transition: transform 1.2s ease-out; }
 
         :global
         {
+            &>* { padding-top: 2rem; }
+
             @include media.min($ms1) { .fragments:nth-child(1) { margin-left: app.$gap-inline; } }
 
             @include media.min($ms2, $ms3)
@@ -320,7 +321,7 @@ lang="scss"
                 {
                     &::before
                     {
-                        @include position.placement(absolute, $top: -.7rem, $left: 0, $pseudo-element: true);
+                        @include position.placement(absolute, $top: 1rem, $left: 0, $pseudo-element: true);
 
                         width: 2.4rem;
                         height: 2.4rem;

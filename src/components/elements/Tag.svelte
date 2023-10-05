@@ -53,7 +53,7 @@
 class="tag"
 style={prop_STYLE.tag_style()}
 bind:this={tag}
-transition:transition_wait={{ duration: prop_DURATION }}
+transition:transition_wait|global={{ duration: prop_DURATION }}
 on:introend={tag_intro}
 on:outrostart={tag_outro}
 >
