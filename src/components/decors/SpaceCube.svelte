@@ -20,6 +20,9 @@
     // --PROPS
     export let
     prop_FOCUS = false,
+
+    prop_SPACECUBE = new Float64Array([]),
+
     prop_RATIO = 0,
     prop_TICTACTOE = false
 
@@ -29,7 +32,6 @@
 // #IMPORTS
 
     // --JS
-    import SPACECUBE_CUBES_DATAS from '../../assets/js/datas/dSpacecube'
     import SHADER_VERTEX from '../../assets/js/glsl/vertex'
     import SHADER_FRAGMENT from '../../assets/js/glsl/fragment'
     import MATH from '../../assets/js/utils/math'
@@ -288,10 +290,10 @@
 
     function spacecube_setCubes()
     {
-        for (let i = 0; i < SPACECUBE_CUBES_DATAS.length; i += 4)
+        for (let i = 0; i < prop_SPACECUBE.length; i += 4)
         {
             const
-            [SIZE, X, Y, FLOAT] = [SPACECUBE_CUBES_DATAS[i], SPACECUBE_CUBES_DATAS[i + 1], SPACECUBE_CUBES_DATAS[i + 2], SPACECUBE_CUBES_DATAS[i + 3]],
+            [SIZE, X, Y, FLOAT] = [prop_SPACECUBE[i], prop_SPACECUBE[i + 1], prop_SPACECUBE[i + 2], prop_SPACECUBE[i + 3]],
             MATERIAL = new MeshStandardMaterial({ color: COLORS.dark }),
             CUBE = new Mesh(new BoxGeometry(SIZE, SIZE, SIZE), MATERIAL)
 

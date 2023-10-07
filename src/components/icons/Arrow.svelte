@@ -40,6 +40,8 @@ lang="scss"
 
 .arrow
 {
+    width: 100%;
+
     pointer-events: none;
 
     transition: transform .4s;

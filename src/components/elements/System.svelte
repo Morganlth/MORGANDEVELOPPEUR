@@ -24,6 +24,9 @@
     export let
     prop_FOCUS = false,
     prop_START = false,
+
+    prop_SYSTEM = [],
+
     prop_RATIO = 0
 
     // --BIND
@@ -32,7 +35,6 @@
 // #IMPORTS
 
     // --JS
-    import { SYSTEM_DATAS } from '../../assets/js/datas/dSystem'
     import { wait_throttle } from '../../assets/js/utils/wait'
     import MATH from '../../assets/js/utils/math'
 
@@ -73,7 +75,7 @@
 
     // --ELEMENT-GROUP
     const
-    GROUP_Z_POSITIONS = new Float64Array(SYSTEM_DATAS.length),
+    GROUP_Z_POSITIONS = new Float64Array(prop_SYSTEM.length),
     GROUP_EVENTS =
     {
         scroll: wait_throttle(group_e$Scroll, 200),
@@ -171,7 +173,7 @@
     function group_getIndexFocus()
     {
         let index = system_OPTIMISED
-        ? Math.floor(SYSTEM_DATAS.length * prop_RATIO)
+        ? Math.floor(prop_SYSTEM.length * prop_RATIO)
         : GROUP_Z_POSITIONS.indexOf(Math.max(...GROUP_Z_POSITIONS))
 
         if (!~index) index = 0
@@ -195,7 +197,7 @@
     {
         const INDEX = prop_START ? group_getIndexFocus() : void 0
 
-        for (let i = 0; i < GROUP_Z_POSITIONS.length; i++) SYSTEM_DATAS[i] = { ...SYSTEM_DATAS[i], focus: i === INDEX }
+        for (let i = 0; i < GROUP_Z_POSITIONS.length; i++) prop_SYSTEM[i] = { ...prop_SYSTEM[i], focus: i === INDEX }
     }
 
     function gravityarea_update() { gravityarea_RATIO = prop_RATIO }
@@ -311,7 +313,7 @@ style:--system-rotate-y={group_ROTATE_Y}
         <Moon />
 
         {#if !system_OPTIMISED}
-            {#each SYSTEM_DATAS as data}
+            {#each prop_SYSTEM as data}
                 <Orbit
                 prop_ROTATE={data.props.prop_ROTATE}
                 >
@@ -326,7 +328,6 @@ style:--system-rotate-y={group_ROTATE_Y}
                     prop_ORBIT_RADIUS={orbit_RADIUS}
                     prop_ROTATE={data.props.prop_ROTATE}
                     prop_OFFSET={data.props.prop_OFFSET}
-                    prop_FORCE={.2}
                     bind:gravityarea_TRANSLATE_Z={GROUP_Z_POSITIONS[data.id]}
                     >
                         <Cube
@@ -347,7 +348,7 @@ style:--system-rotate-y={group_ROTATE_Y}
     </Group>
 
     {#if prop_START && !system_TARGET}
-        {#each SYSTEM_DATAS as data}
+        {#each prop_SYSTEM as data}
             {#if data.focus}
                 <Cell
                 on:click={tag_eClick.bind(data)}

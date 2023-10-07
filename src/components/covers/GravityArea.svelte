@@ -18,16 +18,18 @@
     export let
     prop_$RESIZE = {},
     prop_$ANIMATION = {},
+
     prop_FOCUS = false,
-    prop_RATIO = null,
     prop_GRABBING = false,
+
+    prop_RATIO = null,
+    
     prop_ORBIT_RADIUS = null,
     prop_ROTATE = 0,
     prop_OFFSET = 0,
     prop_X = 0,
     prop_Y = 0,
-    prop_RADIUS = 100,
-    prop_FORCE = .5
+    prop_RADIUS = 100
 
     // --BIND
     export let gravityarea_TRANSLATE_Z = 0
@@ -100,7 +102,7 @@
 
     function gravityarea_setVars()
     {
-        gravityarea_TRANSLATE_X = prop_X * window.innerWidth
+        gravityarea_TRANSLATE_X = prop_X * window.innerWidth - gravityarea.offsetWidth / 2
         gravityarea_TRANSLATE_Y = prop_Y * window.innerHeight
 
         gravityarea_RATIO = prop_RADIUS / Math.sqrt(prop_RADIUS * prop_RADIUS * 2)
@@ -148,8 +150,8 @@
         [DIF_X, DIF_Y] = [clientX - (CLIENTRECT.left + SIZE), clientY - (CLIENTRECT.top + SIZE)],
         [ANGLE, RADIUS] = [Math.atan(DIF_Y / DIF_X), SIZE * gravityarea_RATIO]
     
-        content_FORCE_X = DIF_X * (1 - Math.abs(DIF_X) / (Math.cos(ANGLE) * RADIUS)) * prop_FORCE
-        content_FORCE_Y = DIF_Y * (1 - Math.abs(DIF_Y) / Math.abs(Math.sin(ANGLE) * RADIUS)) * prop_FORCE
+        content_FORCE_X = DIF_X * (1 - Math.abs(DIF_X) / (Math.cos(ANGLE) * RADIUS)) * .5
+        content_FORCE_Y = DIF_Y * (1 - Math.abs(DIF_Y) / Math.abs(Math.sin(ANGLE) * RADIUS)) * .5
     }
 
     // --EVENTS

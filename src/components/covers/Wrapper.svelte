@@ -1,13 +1,13 @@
 <!-- #MAP
 
 -EVENT
-    CONTENT
+    WRAPPER
         INFO
         TITLE
-            #if FRAGMENTS * n
-            #else FRAGMENT
-            #if ELEMENT
-                ~SLOT
+            ?FRAGMENTS * n
+            ?FRAGMENT
+            ?ELEMENT
+                :COMPONENT
         ~SLOT
 
 -->
@@ -26,9 +26,9 @@
     prop_TITLE =
     {
         htmlElement: 'h2',
-        contents: [{ value: '' }],
-        element: false
+        contents: [{ value: '' }]
     },
+    prop_ELEMENT = void {},
     prop_INFO = ''
 
     // --BIND
@@ -74,7 +74,7 @@
 
 // #REACTIVE
 
-    // --ELEMENT-CONTENT
+    // --ELEMENT-WRAPPER
     $: prop_CHARGED ? title_update(prop_INTRO) : void 0
 
 // #FUNCTIONS
@@ -174,7 +174,7 @@ onDestroy(fragments_destroy)
 <!-- #HTML -->
 
 <div
-class="content"
+class="wrapper"
 >
     <div
     class="info"
@@ -221,15 +221,23 @@ class="content"
                 />
             {/each}
 
-            {#if prop_TITLE.element}
+            {#if prop_ELEMENT}
                 <div
                 class="element"
                 style:transform={transform_getTranslate3d()}
                 bind:this={TITLE_FRAGS[TITLE_FRAGS.length]}
                 >
-                    <slot
-                    name="title-element"
-                    />
+                    <svelte:component
+                    this={prop_ELEMENT.component}
+                    {...prop_ELEMENT.props ?? {}}
+                    >
+                        {#each prop_ELEMENT.children ?? [] as child}
+                            <svelte:component
+                            this={child.component}
+                            {...child.props ?? {}}
+                            />
+                        {/each}
+                    </svelte:component>
                 </div>
             {/if}
         </svelte:element>
@@ -254,11 +262,24 @@ lang="scss"
 @use '../../assets/scss/styles/font';
 @use '../../assets/scss/styles/media';
 
-/* #CONTENT */
+/* #WRAPPER */
 
-.content
+.wrapper
 {
-    @extend %any;
+    @include position.placement(sticky, $top: 0, $right: 0, $left: 0);
+
+    overflow: hidden;
+
+    width: 100%;
+    height: 100vh;
+
+    padding: 11rem app.$gap-inline 8rem;
+
+    pointer-events: none;
+
+    box-sizing: border-box;
+
+    @include media.min(false, $ms2) { padding-top: max(12rem, 80px); }
 
     .info, .title
     {

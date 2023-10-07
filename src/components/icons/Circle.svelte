@@ -32,7 +32,17 @@ xmlns="http://www.w3.org/2000/svg"
 <style
 lang="scss"
 >
-    .animate-circle
+/* #USE */
+
+@use '../../assets/scss/styles/size';
+
+/* #CIRCLE */
+
+.circle
+{
+    @extend %any;
+
+    &.animate-circle
     {
         stroke-dasharray: 300%;
         stroke-dashoffset: 300%;
@@ -41,4 +51,5 @@ lang="scss"
 
         @keyframes draw { to { stroke-dashoffset: 0%; } }
     }
+}
 </style>

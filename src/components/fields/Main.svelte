@@ -18,7 +18,7 @@
 // #IMPORTS
 
     // --JS
-    import PAGES_DATAS from '../../assets/js/datas/dPages'
+    import PAGES_DATAS from '../../assets/js/app'
     import { wait_throttle } from '../../assets/js/utils/wait'
 
     // --CONTEXTS
@@ -66,7 +66,7 @@
 
     // --ELEMENT-ROUTER
     let
-    router_OPACITY = 1,
+    router_HIDE = false,
 
     router_INTERVAL
 
@@ -95,9 +95,7 @@
         {
             const PAGE = PAGES_PAGES[i]
     
-            pages_setVars(PAGE, h)
-
-            PAGES_PAGES[i] = PAGE
+            page_setVars(PAGE, i, h)
 
             h += PAGE.h
         }
@@ -105,19 +103,22 @@
         pages_update(APP.app_SCROLLTOP ?? 0)
     }
 
-    function pages_setVars(page, h)
+    function pages_setEvents() { EVENT.event_add(PAGES_EVENTS) }
+
+    function page_setVars(page, i, h)
     {
         const HEIGHT = window.innerHeight
     
         page.top = h * HEIGHT
-    
-        page.props.prop_START = (h + (page.h > 1 ? 1 : 0)) * HEIGHT
-        page.props.prop_END = (h + page.h) * HEIGHT
-        page.props.prop_DIF = page.props.prop_END - page.props.prop_START
-        page.props.prop_INTRO = page_getIntro(page.top, APP.app_SCROLLTOP ?? 0)
-    }
 
-    function pages_setEvents() { EVENT.event_add(PAGES_EVENTS) }
+        page_updateProps(page, i,
+        {
+            prop_INTRO: (page.intro = page_getIntro(page.top, APP.app_SCROLLTOP ?? 0)),
+            prop_START: (page.start = (h + (page.h > 1 ? 1 : 0)) * HEIGHT),
+            prop_END: (page.end = (h + page.h) * HEIGHT),
+            prop_DIF: (page.dif = page.end - page.start)
+        })
+    }
 
     function router_setPages() { for (const PAGE of PAGES_PAGES) ROUTER.router_add(PAGE) }
 
@@ -139,7 +140,6 @@
             return {
             ...page,
             component:  [Home, Presentation, Skills, Projects][i],
-            props: {}
             }
         }).reverse()
     }
@@ -160,15 +160,15 @@
         {
             const
             PAGE = PAGES_PAGES[i],
-            INTRO = page_getIntro(PAGE.top, scrollTop),
-            RATIO = (scrollTop - PAGE.props.prop_START) / PAGE.props.prop_DIF
+            RATIO = (scrollTop - PAGE.start) / PAGE.dif
 
-            PAGE.props.prop_INTRO = INTRO
-            PAGE.props.prop_RATIO = PAGE.overflow ? RATIO : RATIO < 0 ? 0 : RATIO > 1 ? 1 : RATIO
+            page_updateProps(PAGE, i,
+            {
+                prop_INTRO: (PAGE.intro = page_getIntro(PAGE.top, scrollTop)),
+                prop_RATIO: PAGE.overflow ? RATIO : RATIO < 0 ? 0 : RATIO > 1 ? 1 : RATIO
+            })
 
-            if (PAGE.props.prop_FOCUS) router_OPACITY = INTRO ? 1 : .1
-
-            PAGES_PAGES[i] = PAGE
+            if (PAGE.focus) router_HIDE = !PAGE.intro
         }
     }
 
@@ -178,10 +178,17 @@
         {
             const PAGE = PAGES_PAGES[i]
     
-            PAGE.props.prop_FOCUS = PAGE.id === id
+            PAGE.focus = PAGE.id === id
 
-            PAGES_PAGES[i] = PAGE
+            page_updateProps(PAGE, i, { prop_FOCUS: PAGE.focus })
         }
+    }
+
+    function page_updateProps(page, i, props = {})
+    {
+        for (const KEY in props) if (KEY in page.props) page.props[KEY] = props[KEY]
+
+        PAGES_PAGES[i] = page
     }
 
     // --EVENTS
@@ -228,19 +235,14 @@ style:height="{MAIN_HEIGHT}vh"
     >
         {#each PAGES_PAGES as page (page.id)}
             <Page
-            prop_FOCUS={page.props.prop_FOCUS}
-            >
-                <svelte:component
-                this={page.component}
-                {...page.props}
-                />
-            </Page>
+            prop_PAGE={page}
+            />
         {/each}
     </div>
 
     <Router
     prop_ROUTES={ROUTER_LINKS}
-    prop_OPACITY={router_OPACITY}
+    prop_HIDE={router_HIDE}
     />
 </main>
 

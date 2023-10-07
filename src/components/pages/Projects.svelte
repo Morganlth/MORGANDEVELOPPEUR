@@ -4,27 +4,30 @@
     PROJECTS
         PARTICLES
 
-        CONTENT
-            GROUP
-                CARD * n
+        GROUP
+            CARD * n
+
 -->
 
 <!-- #SCRIPT -->
 
 <script>
-// #EXPORT
+// #EXPORTS
 
-    // --PROP
+    // --PROPS
     export let
-    prop_FOCUS = false,
     prop_INTRO = false,
+
+    prop_CARDS = [],
 
     prop_RATIO = 0
 
-// #IMPORT
+    // --BINDS
+    export let page_CHARGED = false
 
-    // --JS
-    import { PROJECTS_CONTENT_DATAS, NAV_ITEMS_DATAS } from '../../assets/js/datas/dProjects'
+    export const page_$NAV_CLICK = nav_eClick
+
+// #IMPORTS
 
     // --LIB
     import COLORS from '$lib/colors'
@@ -38,14 +41,12 @@
     // --COMPONENT-PAGE
     import Booki from './Booki.svelte'
 
-    // --COMPONENT-COVERS
-    import Content from '../covers/Content.svelte'
+    // --COMPONENT-COVER
     import Group from '../covers/Group.svelte'
 
     // --COMPONENT-ELEMENTS
     import Card from '../elements/Card.svelte'
     import Mask2 from '../elements/Mask2.svelte'
-    import Nav from '../elements/Nav.svelte'
 
     // --COMPONENT-CARDS
     import AceClubs from '../cards/AceClubs.svelte'
@@ -58,35 +59,23 @@
 // #CONSTANTE
 
     // --ELEMENT-GROUP
-    const GROUP_CARDS =
-    [
-        {
-            id: 0,
-            texture: ThreeDiamonds,
-            color: COLORS.indicator
-        },
-        {
-            id: 1,
-            texture: TwoHearts,
-            color: COLORS.indicator
-        },
-        {
-            id: 2,
-            texture: AceClubs,
-            color: COLORS.primary
+    const GROUP_CARDS = prop_CARDS.map(card =>
+    {
+        return {
+        ...card,
+        ...
+        [
+            { texture: ThreeDiamonds, color: COLORS.indicator },
+            { texture: TwoHearts, color: COLORS.indicator },
+            { texture: AceClubs, color: COLORS.primary }
+        ][card.id]
         }
-    ]
+    })
 
 // #VARIABLES
 
     // --ELEMENT-PROJECTS
-    let
-    projects_CHARGED = false,
-
-    projects_TARGET
-
-    // --ELEMENT-TITLE
-    let title_HEIGHT
+    let projects_TARGET
 
     // --ELEMENT-CARD
     let
@@ -106,7 +95,7 @@
 // #FUNCTIONS
 
     // --SET
-    function projects_set() { projects_CHARGED = true }
+    function projects_set() { page_CHARGED = true }
 
     // --DESTROY
     function projects_destroy() { card_clear() }
@@ -135,7 +124,7 @@
 
     function card_e$Click(id) { projects_updateTarget(id) }
 
-    function nav_eClick({detail: { id }}) { projects_updateTarget(projects_TARGET === id ? null : id) }
+    function nav_eClick({id}) { projects_updateTarget(projects_TARGET === id ? null : id) }
 
     // --INTRO
     function card_intro()
@@ -162,71 +151,54 @@ onDestroy(projects_destroy)
 <!-- #HTML -->
 
 <div
-id="projects"
+class="projects"
 >
     <Particles />
 
-    <Content
-    prop_CHARGED={projects_CHARGED}
-    {...PROJECTS_CONTENT_DATAS}
-    {prop_FOCUS}
-    {prop_INTRO}
-    bind:title_HEIGHT
+    <div
+    class="container"
+    class:scroller={projects_TARGET}
     >
-        <div
-        class="container"
-        class:scroller={projects_TARGET}
-        >
-            {#if card_ON}
-                <Group
-                let:resize
-                >
-                    {#each GROUP_CARDS.slice(0, card_I) as card}
-                        {#if !projects_TARGET || projects_TARGET.id === card.id}
-                            <Card
-                            prop_$RESIZE={resize}
-                            prop_CARD_HOVER={card_HOVER}
-                            prop_ID={card.id}
-                            prop_TARGET={projects_TARGET != null}
-                            prop_CONTENT={NAV_ITEMS_DATAS[card.id].value}
-                            prop_COLOR={card.color}
-                            prop_$MOUSEENTER={card_e$MouseEnter}
-                            prop_$MOUSELEAVE={card_e$MouseLeave}
-                            prop_$CLICK={card_e$Click}
-                            >
-                                <svelte:component
-                                this={card.texture}
-                                />
-                            </Card>
-                        {/if}
-                    {/each}
-                </Group>
-            {/if}
-        
-            {#if projects_TARGET}
-                <Mask2
-                prop_DURATION={1000}
-                />
-
-                <div
-                class="project"
-                >
-                    <svelte:component
-                    this={projects_TARGET.component}
-                    />
-                </div>
-            {/if}
-        </div>
-
-        {#if prop_FOCUS}
-            <Nav
-            prop_TRANSLATE_Y={title_HEIGHT}
-            prop_ITEMS={NAV_ITEMS_DATAS}
-            {prop_INTRO}
-            on:click={nav_eClick}
-            />
+        {#if card_ON}
+            <Group
+            let:resize
+            >
+                {#each GROUP_CARDS.slice(0, card_I) as card}
+                    {#if !projects_TARGET || projects_TARGET.id === card.id}
+                        <Card
+                        prop_$RESIZE={resize}
+                        prop_CARD_HOVER={card_HOVER}
+                        prop_ID={card.id}
+                        prop_TARGET={projects_TARGET != null}
+                        prop_CONTENT={card.value}
+                        prop_COLOR={card.color}
+                        prop_$MOUSEENTER={card_e$MouseEnter}
+                        prop_$MOUSELEAVE={card_e$MouseLeave}
+                        prop_$CLICK={card_e$Click}
+                        >
+                            <svelte:component
+                            this={card.texture}
+                            />
+                        </Card>
+                    {/if}
+                {/each}
+            </Group>
         {/if}
-    </Content>
+    
+        {#if projects_TARGET}
+            <Mask2
+            prop_DURATION={1000}
+            />
+
+            <div
+            class="project"
+            >
+                <svelte:component
+                this={projects_TARGET.component}
+                />
+            </div>
+        {/if}
+    </div>
 </div>
 
 <!-- #STYLE -->
@@ -242,7 +214,7 @@ lang="scss"
 
 /* #PROJECTS */
 
-#projects
+.projects
 {
     .container
     {

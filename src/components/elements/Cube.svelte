@@ -16,10 +16,14 @@
     export let
     prop_$GRABBING = {},
     prop_$ROTATION = {},
+
     prop_DESTROY = false,
     prop_FOCUS = false,
+
     prop_ROTATE = 0,
     prop_ROTATE_Y = 0,
+
+    prop_COMPONENT = void {},
     prop_SRC = void '',
     prop_ALT = '',
     prop_COLOR = void 0
@@ -140,7 +144,11 @@ on:mousedown={cube_eMouseDown}
             prop_COLOR={COLORS[prop_FOCUS && !prop_DESTROY ? 'light' : 'intermediate']}
             prop_SPRING={false}
             >
-                {#if prop_SRC}
+                {#if prop_COMPONENT}
+                    <svelte:component
+                    this={prop_COMPONENT}
+                    />
+                {:else if prop_SRC}
                     <Image
                     {prop_FOCUS}
                     {prop_SRC}

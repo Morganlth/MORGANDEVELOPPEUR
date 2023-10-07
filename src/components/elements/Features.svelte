@@ -16,15 +16,14 @@
     // --PROP
     export let
     prop_FOCUS = false,
+
+    prop_FEATURES = [],
     prop_RATIO = 0
 
     // --BIND
-    export let features_LENGTH = FEATURES_DATAS.length + 1
+    export let features_LENGTH = prop_FEATURES.length + 1
 
 // #IMPORTS
-
-    // --JS
-    import FEATURES_DATAS from '../../assets/js/datas/dFeature'
 
     // --CONTEXT
     import { EVENT } from '../../App.svelte'
@@ -112,7 +111,7 @@ style:--features-sin={features_SIN}
         }
         style:padding-right="{topic_WIDTH}px"
         >
-            {#each FEATURES_DATAS as data}
+            {#each prop_FEATURES as data}
                 <div
                 class="topic"
                 style:width="{topic_WIDTH}px"
@@ -132,7 +131,7 @@ style:--features-sin={features_SIN}
     class="track"
     style:transform="translate(calc(-100% * {prop_RATIO}), -50%)"
     >
-        {#each FEATURES_DATAS as data}
+        {#each prop_FEATURES as data}
             <ul>
                 {#each data.contents as content}
                     <li>

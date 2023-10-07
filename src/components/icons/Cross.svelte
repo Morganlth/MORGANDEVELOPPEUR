@@ -33,12 +33,15 @@ xmlns="http://www.w3.org/2000/svg"
 <style
 lang="scss"
 >
+/* #USE */
+
+@use '../../assets/scss/styles/size';
+
 /* #CROSS */
 
 .cross
 {
-    width: var(--icon-size, 100%);
-    height: var(--icon-size, 100%);
+    @extend %any;
 
     &.build path
     {

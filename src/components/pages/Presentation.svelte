@@ -5,11 +5,7 @@
 -EVENT
     PRESENTATION
         SNAKE
-
-        CONTENT
-            FEATURE
-            NAV
-
+        FEATURE
         MASK
 
 -->
@@ -22,7 +18,8 @@
     // --PROPS
     export let
     prop_FOCUS = false,
-    prop_INTRO = false,
+
+    prop_FEATURES = [],
 
     prop_RATIO = 0,
 
@@ -30,10 +27,12 @@
     prop_END = void 0,
     prop_DIF = void 0
 
-// #IMPORTS
+    // --BINDS
+    export let page_CHARGED = false
 
-    // --JS
-    import { PRESENTATION_CONTENT_DATAS, NAV_ITEMS_DATAS } from '../../assets/js/datas/dPresentation'
+    export const page_$NAV_CLICK = nav_eClick
+
+// #IMPORTS
 
     // --CONTEXTS
     import { ROUTER, COMMAND, EVENT } from '../../App.svelte'
@@ -41,13 +40,9 @@
     // --SVELTE
     import { onMount } from 'svelte'
 
-    // --COMPONENT-COVER
-    import Content from '../covers/Content.svelte'
-
     // --COMPONENT-ELEMENTS
     import Snake from '../elements/Snake.svelte'
     import Features from '../elements/Features.svelte'
-    import Nav from '../elements/Nav.svelte'
     import Mask from '../elements/Mask.svelte'
 
 // #CONSTANTES
@@ -68,16 +63,10 @@
 
 // #VARIABLES
 
-    // --ELEMENT-PRESENTATION
-    let  presentation_CHARGED = false
-
     // --ELEMENT-SNAKE
     let
     snake_ON = true,
     snake_GAME = false
-
-    // --ELEMENT-TITLE
-    let title_HEIGHT = 0
 
     // --ELEMENT-FEATURES
     let
@@ -106,7 +95,7 @@
     {
         snake_setCommands()
 
-        presentation_CHARGED = true
+        page_CHARGED = true
     }
 
     function presentation_setVars() // resize by pages
@@ -122,23 +111,13 @@
     function mask_setVars() { mask_RATIO = prop_DIF / prop_START }
 
     // --UPDATE
-    function snake_update(on)
-    {
-        snake_ON = on
-
-        NAV_ITEMS_DATAS[2] =
-        {
-            ...NAV_ITEMS_DATAS[2],
-            title: `${on ? 'Masque' : 'Affiche'} le serpent`,
-            value: on ? 'MASQUER' : 'AFFICHER'
-        }
-    }
+    function snake_update(on) { snake_ON = on }
 
     // --COMMAND
     function snake_c$(on) { COMMAND.command_test(on, 'boolean', snake_update, SNAKE_NAME, snake_ON) }
 
     // --EVENT
-    function nav_eClick({detail: {id}})
+    function nav_eClick({id, item})
     {
         switch (id)
         {
@@ -150,6 +129,9 @@
                 break
             case 2:
                 COMMAND.command_COMMANDS[SNAKE_NAME](!snake_ON)
+
+                item.update(snake_ON)
+        
                 break
             default:
                 break
@@ -164,35 +146,19 @@ onMount(presentation_set)
 <!-- #HTML -->
 
 <div
-id="presentation"
+class="presentation"
 >
     <Snake
     prop_ON={snake_ON && prop_RATIO < 1}
     bind:snake_GAME
     />
 
-    <Content
-    prop_CHARGED={presentation_CHARGED}
-    {...PRESENTATION_CONTENT_DATAS}
+    <Features
     {prop_FOCUS}
-    {prop_INTRO}
-    bind:title_HEIGHT
-    >
-        <Features
-        {prop_FOCUS}
-        {prop_RATIO}
-        bind:features_LENGTH
-        />
-
-        {#if prop_FOCUS}
-            <Nav
-            prop_TRANSLATE_Y={title_HEIGHT}
-            prop_ITEMS={NAV_ITEMS_DATAS}
-            {prop_INTRO}
-            on:click={nav_eClick}
-            />
-        {/if}
-    </Content>
+    {prop_FEATURES}
+    {prop_RATIO}
+    bind:features_LENGTH
+    />
 
     <Mask
     prop_SHADOW={true}

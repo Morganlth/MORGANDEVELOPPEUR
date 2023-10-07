@@ -51,6 +51,10 @@
 // #CYCLE
 
 onDestroy(nav_destroy)
+
+// #CODE
+
+for (const ITEM of prop_ITEMS) if (ITEM.update instanceof Function) ITEM.update()
 </script>
 
 <!-- #HTML -->

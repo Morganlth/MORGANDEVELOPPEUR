@@ -16,7 +16,7 @@
     export let
     prop_ROUTES = [],
 
-    prop_OPACITY = 1
+    prop_HIDE = false
 
 // #IMPORTS
 
@@ -72,13 +72,15 @@
 
 <nav
 class="router"
-style:opacity={prop_OPACITY}
+class:hide={prop_HIDE}
 on:mouseleave={router_eMouseLeave}
 >
     <ul>
-        {#each prop_ROUTES as route}
+        {#each prop_ROUTES as route, i}
             {#if route.actif}
-                <li>
+                <li
+                style:--route-t-delay="{i * 100}ms"
+                >
                     <Route
                     prop_ON={route.on}
                     prop_ID={route.id}
@@ -109,6 +111,9 @@ lang="scss"
 
 .router
 {
+    $t-duration: .4s;
+    $li-d-clip: polygon(-10% -10%, 110% -10%, 110% 110%, -10% 110%);
+
     @include position.placement(fixed, app.$gap-block, calc(app.$gap-inline * 3));
 
     z-index: 1;
@@ -118,7 +123,12 @@ lang="scss"
 
     user-select: none;
 
-    transition: opacity .4s;
+    &.hide
+    {
+        &:hover li { clip-path: $li-d-clip !important; }
+
+        li { clip-path: polygon(0 0, 0 0, 0 100%, 0% 100%); }
+    }
 
     ul
     {
@@ -135,6 +145,10 @@ lang="scss"
         {
             width: 100%;
             height: fit-content;
+
+            clip-path: $li-d-clip;
+
+            transition: clip-path $t-duration var(--route-t-delay, 0s) ease-out;
         }
     }
 
@@ -149,7 +163,7 @@ lang="scss"
             pointer-events: none;
         }
 
-        top: 60%;
+        top: 40%;
         right: auto;
         left: app.$gap-inline;
 
