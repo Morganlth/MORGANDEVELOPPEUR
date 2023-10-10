@@ -21,6 +21,7 @@
 
     prop_SYSTEM = [],
 
+    prop_TOP = 0,
     prop_RATIO = 0,
 
     prop_START = void 0,
@@ -29,7 +30,8 @@
     // --BIND
     export let page_CHARGED = false
 
-    export const page_$NAV_CLICK = nav_eClick
+    // BIND page_process
+    // BIND nav_e$Click
 
 // #IMPORTS
 
@@ -40,7 +42,7 @@
     import { APP, EVENT } from '../../App.svelte'
 
     // --SVELTE
-    import { onMount } from 'svelte'
+    import { onMount, tick } from 'svelte'
 
     // --COMPONENT-ELEMENTS
     import System from '../elements/System.svelte'
@@ -63,14 +65,14 @@
     $: !$app_$FREEZE ? skills_reset() : void 0
 
     // --ELEMENT-NAV
-    $: prop_START != null && prop_DIF != null ? nav_setVars() : void 0
+    $: prop_START != null && prop_DIF != null ? system_setVars() : void 0
 
 // #FUNCTIONS
 
     // --SET
     function skills_set() { page_CHARGED = true }
 
-    function nav_setVars()
+    function system_setVars()
     {
         const PI_DIV_2 = Math.PI / 2
 
@@ -93,9 +95,19 @@
     }
 
     // --EVENTS
-    function nav_eClick({id}) { EVENT.event_scrollTo(prop_SYSTEM[id].top) }
+    export function nav_e$Click({id}) { skills_goTo(id) }
 
-    function table_eClick() { APP.app_$FREEZE = { on: false, target: APP.app_$FREEZE.target } } // call skills_reset with reactive app_$FREEZE
+    function table_eClick() { APP.app_$FREEZE = { value: false, target: APP.app_$FREEZE.target } } // call skills_reset with reactive app_$FREEZE
+
+    // --UTILS
+    export function page_process(id)
+    {
+        EVENT.event_scrollTo(id ? prop_TOP : prop_START, true)
+
+        if (id > 0) tick().then(() => skills_goTo(id - 1))
+    }
+
+    function skills_goTo(id) { EVENT.event_scrollTo(prop_SYSTEM[id].top) }
 
 // #CYCLE
 

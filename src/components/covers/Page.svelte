@@ -1,5 +1,6 @@
 <!-- #MAP
 
+-PROCESS
     PAGE
         WRAPPER
             :COMPONENT
@@ -17,6 +18,12 @@
 
 // #IMPORTS
 
+    // --CONTEXT
+    import { PROCESS } from '../../App.svelte'
+
+    // --SVELTE
+    import { onMount } from 'svelte'
+
     // --COMPONENT-COVER
     import Wrapper from './Wrapper.svelte'
 
@@ -31,22 +38,32 @@
 
     page_ELEMENT,
 
-    page_$NAV_CLICK
+    page_process
 
     // --ELEMENT-TITLE
     let title_HEIGHT = 0
 
-// #FUNCTION
+    // --ELEMENT-NAV
+    let nav_e$Click
+
+// #FUNCTIONS
+
+    // --SET
+    function page_set() { PROCESS.process_push(prop_PAGE.process, page_process) }
 
     // --EVENT
     function nav_eClick({detail})
     {
         const ID = detail.id
     
-        page_$NAV_CLICK(detail)
+        nav_e$Click(detail)
 
         prop_PAGE.nav[ID] = prop_PAGE.nav[ID]
     }
+
+// #CYCLE
+
+onMount(page_set)
 </script>
 
 <!-- #HTML -->
@@ -64,15 +81,7 @@ style:z-index={prop_PAGE.focus ? 1 : 0}
     {...prop_PAGE.wrapper}
     bind:title_HEIGHT
     >
-        <svelte:component
-        this={prop_PAGE.component}
-        {...prop_PAGE.props}
-        bind:page_CHARGED
-        bind:page_ELEMENT
-        bind:page_$NAV_CLICK
-        />
-
-        {#if page_$NAV_CLICK instanceof Function && prop_PAGE.focus}
+        {#if nav_e$Click instanceof Function && prop_PAGE.focus}
             <Nav
             prop_INTRO={prop_PAGE.intro}
             prop_TRANSLATE_Y={title_HEIGHT}
@@ -80,6 +89,15 @@ style:z-index={prop_PAGE.focus ? 1 : 0}
             on:click={nav_eClick}
             />
         {/if}
+
+        <svelte:component
+        this={prop_PAGE.component}
+        {...prop_PAGE.props}
+        bind:page_CHARGED
+        bind:PAGE_ELEMENT={page_ELEMENT}
+        bind:page_process
+        bind:nav_e$Click
+        />
     </Wrapper>
 </div>
 

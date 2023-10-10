@@ -1,6 +1,7 @@
 <!-- #MAP
 
 -APP
+-EVENT
     PROJECTS
         PARTICLES
 
@@ -20,20 +21,22 @@
 
     prop_CARDS = [],
 
+    prop_TOP = 0,
     prop_RATIO = 0
 
     // --BINDS
     export let page_CHARGED = false
 
-    export const page_$NAV_CLICK = nav_eClick
+    // BIND page_process
+    // BIND nav_e$Click
 
 // #IMPORTS
 
     // --LIB
     import COLORS from '$lib/colors'
 
-    // --CONTEXT
-    import { APP } from '../../App.svelte'
+    // --CONTEXTS
+    import { APP, EVENT } from '../../App.svelte'
 
     // --SVELTE
     import { onMount, onDestroy } from 'svelte'
@@ -56,7 +59,10 @@
     // --COMPONENT-DECOR
     import Particles from '../decors/Particles.svelte'
 
-// #CONSTANTE
+// #CONSTANTES
+
+    // --ELEMENT-PROJECTS
+    const PROJECTS = 'projects'
 
     // --ELEMENT-GROUP
     const GROUP_CARDS = prop_CARDS.map(card =>
@@ -105,7 +111,7 @@
     {
         projects_TARGET = id == null ? null : { id: id, component: Booki }
 
-        APP.app_$FREEZE = { on: id != null, target: 'system' }
+        APP.app_$FREEZE = { value: id != null, target: PROJECTS }
     }
 
     function card_update(intro)
@@ -124,7 +130,7 @@
 
     function card_e$Click(id) { projects_updateTarget(id) }
 
-    function nav_eClick({id}) { projects_updateTarget(projects_TARGET === id ? null : id) }
+    export function nav_e$Click({id}) { projects_updateTarget(projects_TARGET === id ? null : id) }
 
     // --INTRO
     function card_intro()
@@ -141,6 +147,9 @@
 
     // --CLEAR
     function card_clear() { clearInterval(card_INTERVAL) }
+
+    // --UTIL
+    export function page_process(id) { EVENT.event_scrollTo(prop_TOP, true) }
 
 // #CYCLES
 

@@ -163,7 +163,7 @@ lang="scss"
             pointer-events: none;
         }
 
-        top: 40%;
+        top: 36%;
         right: auto;
         left: app.$gap-inline;
 

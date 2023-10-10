@@ -150,7 +150,7 @@ constructor () { this.event_resize = wait_debounce.call(this, this.event_resize,
     {
         const APP_$FREEZE = APP.app_$FREEZE
     
-        if (APP_$FREEZE.on) APP.app_$FREEZE = { on: false, target: APP_$FREEZE.target }
+        if (APP_$FREEZE.value) APP.app_$FREEZE = { value: false, target: APP_$FREEZE.target }
         if (instant) APP.app_$HIDE = true
 
         ;(APP.app ?? document.getElementById('app')).scrollTo({ top: top, behavior: instant ? 'instant' : 'smooth' })

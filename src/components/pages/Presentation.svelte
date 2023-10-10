@@ -21,6 +21,7 @@
 
     prop_FEATURES = [],
 
+    prop_TOP = 0,
     prop_RATIO = 0,
 
     prop_START = void 0,
@@ -30,7 +31,8 @@
     // --BINDS
     export let page_CHARGED = false
 
-    export const page_$NAV_CLICK = nav_eClick
+    // BIND page_process
+    // BIND nav_e$Click
 
 // #IMPORTS
 
@@ -49,11 +51,11 @@
 
     // --ELEMENT-SNAKE
     const
-    SNAKE_NAME = 'snake',
+    SNAKE = 'snake',
     SNAKE_COMMANDS =
     [
         {
-            name: SNAKE_NAME,
+            name: SNAKE,
             callback: snake_c$,
             params: { defaultValue: true },
             tests: { testBoolean: true },
@@ -69,24 +71,22 @@
     snake_GAME = false
 
     // --ELEMENT-FEATURES
-    let
-    features_LENGTH, // LENGTH of FEATURES_DATAS + 1 (padding-right in track)
-    features_CONTACT_TOP = 0
+    let features_LENGTH // LENGTH of FEATURES_DATAS + 1 (padding-right in track)
 
     // --ELEMENT-MASK
     let mask_RATIO = 0
 
 // #REACTIVES
+    
+    // --ELEMENT-SNAKE
+    $: snake_update(snake_ON)
 
-    // --ELEMENT-PRESENTATION
+    // --ELEMENT-MASK
     $:
     prop_START != null &&
     prop_END != null &&
     prop_DIF != null
-    ? presentation_setVars() : void 0
-    
-    // --ELEMENT-SNAKE
-    $: snake_update(snake_ON)
+    ? mask_setVars() : void 0
 
 // #FUNCTIONS
 
@@ -98,15 +98,7 @@
         page_CHARGED = true
     }
 
-    function presentation_setVars() // resize by pages
-    {
-        features_setVars()
-        mask_setVars()
-    }
-
     function snake_setCommands() { COMMAND.command_setBasicCommands(SNAKE_COMMANDS) }
-
-    function features_setVars() { features_CONTACT_TOP = prop_END - prop_DIF / features_LENGTH }
 
     function mask_setVars() { mask_RATIO = prop_DIF / prop_START }
 
@@ -114,21 +106,21 @@
     function snake_update(on) { snake_ON = on }
 
     // --COMMAND
-    function snake_c$(on) { COMMAND.command_test(on, 'boolean', snake_update, SNAKE_NAME, snake_ON) }
+    function snake_c$(on) { COMMAND.command_test(on, 'boolean', snake_update, SNAKE, snake_ON) }
 
     // --EVENT
-    function nav_eClick({id, item})
+    export function nav_e$Click({id, item})
     {
         switch (id)
         {
             case 0:
-                EVENT.event_scrollTo(features_CONTACT_TOP, ROUTER.router_getInstant(features_CONTACT_TOP))
+                presentation_goTo(1)
                 break
             case 1:
                 snake_GAME = true
                 break
             case 2:
-                COMMAND.command_COMMANDS[SNAKE_NAME](!snake_ON)
+                COMMAND.command_COMMANDS[SNAKE](!snake_ON)
 
                 item.update(snake_ON)
         
@@ -138,6 +130,36 @@
         }
     }
 
+    // --UTILS
+    export function page_process(id)
+    {
+        switch (id)
+        {
+            case -1:
+            case 0:
+                EVENT.event_scrollTo(id ? prop_TOP : prop_START)
+                break
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+            case 5:
+                presentation_goTo(features_LENGTH - id)
+                break
+            case 6:
+                snake_GAME = true
+                break
+            default:
+                break
+        }
+    }
+
+    function presentation_goTo(i)
+    {
+        const TOP = prop_END - prop_DIF / features_LENGTH * i
+
+        EVENT.event_scrollTo(TOP, ROUTER.router_getInstant(TOP))
+    }
 // #CYCLE
 
 onMount(presentation_set)

@@ -22,10 +22,10 @@
 <div
 class="fragments"
 >
-    {#each prop_FRAGS.value as char}
+    {#each prop_FRAGS.value as char, i}
         <pre
         class:void={char === ' '}
-        style={prop_STYLE()}
+        style={prop_STYLE(i)}
         bind:this={prop_FRAGS.children[prop_FRAGS.children.length]}
         >{char}</pre>
     {/each}

@@ -12,14 +12,14 @@
 // #IMPORTS
 
     // --COMPONENT-ELEMENTS
-    import Console from '../elements/Console.svelte'
+    // import Console from '../elements/Console.svelte'
     import Spring from '../elements/Spring.svelte'
 </script>
 
 <!-- #HTML -->
 
 <aside>
-    <Console />
+    <!-- <Console /> -->
     <Spring />
 </aside>
 

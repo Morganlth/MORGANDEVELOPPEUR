@@ -93,11 +93,11 @@
     function fragments_destroyEvents() { EVENT.event_remove(FRAGMENTS_EVENTS) }
 
     // --GET
-    function title_getStyle()
+    function title_getStyle(i)
     {
         return `
         transform: ${transform_getTranslate3d()};
-        transition: transform 1.2s ease-out;`
+        transition: transform 1.2s ${50 * i}ms ease-out;`
     }
 
     // --UPDATES

@@ -61,6 +61,7 @@
 
     // --ELEMENT-SYSTEM
     const
+    SYSTEM = 'system',
     SYSTEM_OPTIMISE_NAME = 'system_optimise',
     SYSTEM_COMMANDS =
     [
@@ -190,7 +191,7 @@
     {
         system_TARGET = target
 
-        APP.app_$FREEZE = { on: true, target: 'system' }
+        APP.app_$FREEZE = { value: true, target: SYSTEM }
     }
 
     function group_updateFocus()
@@ -240,7 +241,7 @@
         gravityarea_update()
     }
 
-    function cube_eClick() { if (this.focus) system_updateTarget(this) }
+    function gravityarea_eClick() { if (this.focus) system_updateTarget(this) }
 
     function tag_eClick() { system_updateTarget(this) }
 
@@ -325,21 +326,22 @@ style:--system-rotate-y={group_ROTATE_Y}
                     prop_FOCUS={data.focus ?? false}
                     prop_RATIO={gravityarea_RATIO}
                     prop_GRABBING={false}
+                    prop_TITLE={data.props.prop_TITLE}
                     prop_ORBIT_RADIUS={orbit_RADIUS}
                     prop_ROTATE={data.props.prop_ROTATE}
                     prop_OFFSET={data.props.prop_OFFSET}
                     bind:gravityarea_TRANSLATE_Z={GROUP_Z_POSITIONS[data.id]}
+                    on:click={gravityarea_eClick.bind(data)}
                     >
                         <Cube
                         prop_$ROTATION={rotation}
-                        prop_$GRABBING={grabbing}
+                        prop_GRABBING={grabbing}
                         prop_DESTROY={!prop_FOCUS || system_TARGET}
                         prop_FOCUS={data.focus ?? false}
                         prop_ROTATE={data.props.prop_ROTATE}
                         prop_SRC={data.props.prop_SRC}
                         prop_ALT={data.props.prop_ALT}
                         prop_COLOR={data.props.prop_COLOR}
-                        on:click={cube_eClick.bind(data)}
                         />
                     </GravityArea>
                 </Orbit>

@@ -24,20 +24,19 @@ class App
 
 constructor ()
 {
-    this.#app_setFreeze()
-    this.#app_setOptitmise()
+    this.#app_setVars2()
+    this.#app_setVars3()
 
     this.app_updateMode = this.app_updateMode.bind(this)
 
     this.#app_COMMANDS.push(
-        {
-            name: App.__app_OPTIMISE_NAME,
-            callback: this.app_c$Optimise.bind(this),
-            params: { defaultValue: this.#app_$OPTIMISE.on },
-            tests: { testBoolean: true },
-            storage: true
-        }
-    )
+    {
+        name: App.__app_OPTIMISE_NAME,
+        callback: this.app_c$Optimise.bind(this),
+        params: { defaultValue: this.#app_$OPTIMISE.value },
+        tests: { testBoolean: true },
+        storage: true
+    })
 }
 
 // #FUNCTIONS
@@ -58,43 +57,43 @@ constructor ()
         this.app_updateSmallScreen()
     }
 
-    #app_setCommands() { COMMAND.command_setBasicCommands(this.#app_COMMANDS) }
-
-    #app_setFreeze()
+    #app_setVars2()
     {
         let { set, subscribe } = writable(false)
 
         this.#app_$FREEZE =
         {
-            on: false,
+            value: false,
             target: null,
-            set: function (on, target)
+            set: function (value, target)
             {
-                this.on = on
+                this.value = value
                 this.target = target
 
-                set(on)
+                set(value)
             },
             subscribe
         }
     }
 
-    #app_setOptitmise()
+    #app_setVars3()
     {
         let { set, subscribe } = writable(false)
 
         this.#app_$OPTIMISE =
         {
-            on: false,
-            set: function (on)
+            value: false,
+            set: function (value)
             {
-                this.on = on
+                this.value = value
 
-                set(on)
+                set(value)
             },
             subscribe
         }
     }
+
+    #app_setCommands() { COMMAND.command_setBasicCommands(this.#app_COMMANDS) }
 
     #app_setStorage()
     {
@@ -114,7 +113,7 @@ constructor ()
     #app_restore()
     {
         const
-        OPTIMISE = this.#app_$OPTIMISE.on,
+        OPTIMISE = this.#app_$OPTIMISE.value,
         OPTIMISE_CONFIG = this.#app_OPTIMISE_CONFIG,
         COMMANDS = COMMAND.command_COMMANDS
 
@@ -147,7 +146,7 @@ constructor ()
     }
     
     // --COMMAND
-    app_c$Optimise(on) { COMMAND.command_test(on, 'boolean', this.app_updateMode, App.__app_OPTIMISE_NAME, this.#app_$OPTIMISE.on) }
+    app_c$Optimise(on) { COMMAND.command_test(on, 'boolean', this.app_updateMode, App.__app_OPTIMISE_NAME, this.#app_$OPTIMISE.value) }
 
     // --TEST
     app_testScreen(width, height) { return window.innerWidth < (width ?? -Infinity) || window.innerHeight < (height ?? -Infinity) }
@@ -166,29 +165,29 @@ constructor ()
     get app_OPTIMISE_CONFIG() { return this.#app_OPTIMISE_CONFIG }
 
     // --SETTER
-    set app_$FREEZE({ on, target })
+    set app_$FREEZE({value, target})
     {
         const CURRENT_TARGET = this.#app_$FREEZE.target
     
-        if (!CURRENT_TARGET || CURRENT_TARGET === target) this.#app_$FREEZE.set(on, on ? target : null)
+        if (!CURRENT_TARGET || CURRENT_TARGET === target) this.#app_$FREEZE.set(value, value ? target : null)
     }
 
-    set app_$HIDE(on)
+    set app_$HIDE(value)
     {
         clearTimeout(this.#app_TIMEOUT)
 
-        this.#app_$HIDE.set(on)
+        this.#app_$HIDE.set(value)
 
         this.#app_TIMEOUT = setTimeout(() => this.#app_$HIDE.set(false), 600)
     }
 
-    set app_$OPTIMISE(on)
+    set app_$OPTIMISE(value)
     {
-        if (this.#app_$OPTIMISE.on !== on)
+        if (this.#app_$OPTIMISE.value !== value)
         {
-            this.#app_$OPTIMISE.set(on)
+            this.#app_$OPTIMISE.set(value)
 
-            localStorage.setItem('optimise', on) 
+            localStorage.setItem('optimise', value) 
         }
     }
 

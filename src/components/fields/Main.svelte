@@ -42,7 +42,9 @@
 // #CONSTANTES
 
     // --ELEMENT-MAIN
-    const MAIN_HEIGHT = PAGES_DATAS.reduce((accumulator, page) => accumulator + page.h, 0) * 100
+    const
+    MAIN = 'main',
+    MAIN_HEIGHT = PAGES_DATAS.reduce((accumulator, page) => accumulator + page.h, 0) * 100
 
     // --ELEMENT-PAGES
     const
@@ -62,13 +64,15 @@
     let app_$HIDE = APP.app_$HIDE
 
     // --ROUTER
-    let router_$ID = ROUTER.router_$ID
+    let
+    router_$ID = ROUTER.router_$ID,
+    router_$HIDE = ROUTER.router_$HIDE
+
+    // --ELEMENT-MAIN
+    let main_CHARGED = false
 
     // --ELEMENT-ROUTER
-    let
-    router_HIDE = false,
-
-    router_INTERVAL
+    let router_INTERVAL
 
 // #REACTIVE
 
@@ -83,8 +87,9 @@
         pages_setPages()
         pages_setEvents()
     
-        router_setPages()
         router_intro()
+
+        main_CHARGED = true
     }
 
     function pages_setPages()
@@ -96,6 +101,8 @@
             const PAGE = PAGES_PAGES[i]
     
             page_setVars(PAGE, i, h)
+    
+            ROUTER.router_add(PAGE)
 
             h += PAGE.h
         }
@@ -108,19 +115,16 @@
     function page_setVars(page, i, h)
     {
         const HEIGHT = window.innerHeight
-    
-        page.top = h * HEIGHT
 
         page_updateProps(page, i,
         {
+            prop_TOP: (page.top = h * HEIGHT),
             prop_INTRO: (page.intro = page_getIntro(page.top, APP.app_SCROLLTOP ?? 0)),
             prop_START: (page.start = (h + (page.h > 1 ? 1 : 0)) * HEIGHT),
             prop_END: (page.end = (h + page.h) * HEIGHT),
             prop_DIF: (page.dif = page.end - page.start)
         })
     }
-
-    function router_setPages() { for (const PAGE of PAGES_PAGES) ROUTER.router_add(PAGE) }
 
     // --DESTROY
     function main_destroy()
@@ -168,7 +172,7 @@
                 prop_RATIO: PAGE.overflow ? RATIO : RATIO < 0 ? 0 : RATIO > 1 ? 1 : RATIO
             })
 
-            if (PAGE.focus) router_HIDE = !PAGE.intro
+            if (PAGE.focus) ROUTER.router_$HIDE = { value: !PAGE.intro, target: MAIN }
         }
     }
 
@@ -194,12 +198,7 @@
     // --EVENTS
     async function pages_e$Scroll(scrollTop) { pages_update(scrollTop) }
 
-    async function pages_e$Resize()
-    {
-        pages_setPages()
-
-        router_setPages()
-    }
+    async function pages_e$Resize() { pages_setPages() }
 
     // --INTRO
     function router_intro()
@@ -242,7 +241,7 @@ style:height="{MAIN_HEIGHT}vh"
 
     <Router
     prop_ROUTES={ROUTER_LINKS}
-    prop_HIDE={router_HIDE}
+    prop_HIDE={$router_$HIDE}
     />
 </main>
 

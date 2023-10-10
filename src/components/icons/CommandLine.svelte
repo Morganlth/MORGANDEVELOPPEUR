@@ -1,6 +1,6 @@
 <!-- #MAP
 
-    TERMINAL
+    COMMANDLINE
 
 -->
 
@@ -16,7 +16,7 @@
 <!-- #HTML -->
 
 <svg
-class="terminal"
+class="commandline"
 viewBox="0 0 90 72"
 fill="none"
 xmlns="http://www.w3.org/2000/svg"
@@ -33,9 +33,9 @@ xmlns="http://www.w3.org/2000/svg"
 <!-- #STYLE -->
 
 <style>
-/* #TERMINAL */
+/* #COMMANDLINE */
 
-.terminal
+.commandline
 {
     width: 100%;
     height: auto;

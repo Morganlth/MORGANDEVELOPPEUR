@@ -25,6 +25,10 @@
     prop_RATIO = null,
     
     prop_ORBIT_RADIUS = null,
+
+    prop_TITLE = '',
+
+    prop_Z = 0,
     prop_ROTATE = 0,
     prop_OFFSET = 0,
     prop_X = 0,
@@ -45,30 +49,36 @@
     import { EVENT } from '../../App.svelte'
 
     // --SVELTE
-    import { onMount, onDestroy } from 'svelte'
+    import { onMount, onDestroy, createEventDispatcher } from 'svelte'
     import { writable } from 'svelte/store'
 
 // #CONSTANTES
 
     // --ELEMENT-GRAVITYAREA
-    const GRAVITYAREA_EVENTS = { mouseMove: wait_throttle(gravityarea_e$MouseMove, 50) }
+    const
+    GRAVITYAREA_EVENTS = { mouseMove: wait_throttle(gravityarea_e$MouseMove, 50) },
+    GRAVITYAREA_EVENTS_2 = { mouseUp: gravityarea_e$MouseUp }
 
     // --ELEMENT-SLOT
-    const
-    SLOT_$GRABBING = writable(false),
-    SLOT_$ROTATION = writable({ rX: 0, rY: 0 })
+    const SLOT_$ROTATION = writable({ rX: 0, rY: 0 })
 
 // #VARIABLES
+
+     // --SVELTE
+     const SVELTE_DISPATCH = createEventDispatcher()
 
     // --ELEMENT-GRAVITYAREA
     let
     gravityarea,
-    gravityarea_CHARGED = false,
+
     gravityarea_TRANSLATE_X = 0,
     gravityarea_TRANSLATE_Y = 0,
     gravityarea_TRANSITION_DELAY = 0,
+
     gravityarea_RATIO = 1,
+
     gravityarea_LAST = +new Date(),
+    gravityarea_LAST_2 = +new Date(),
     gravityarea_TIMEOUT
 
     // --ELEMENT-CONTENT
@@ -84,7 +94,7 @@
 
     // --ELEMENT-GRAVITYAREA
     $: prop_ORBIT_RADIUS ? gravityarea_update(prop_RATIO) : void 0
-    $: gravityarea_CHARGED ? gravityarea_updateGrabbing($SLOT_$GRABBING && prop_GRABBING) : void 0
+    $: slot_GRABBING && prop_GRABBING ? gravityarea_setEvents() : gravityarea_destroyEvents()
 
 // #FUNCTIONS
 
@@ -96,8 +106,6 @@
         prop_$RESIZE.push(gravityarea_e$Resize)
 
         content_start()
-
-        gravityarea_CHARGED = true
     }
 
     function gravityarea_setVars()
@@ -112,10 +120,13 @@
 
     function gravityarea_setEvents() { EVENT.event_add(GRAVITYAREA_EVENTS) }
 
+    function gravityarea_setEvents2() { EVENT.event_add(GRAVITYAREA_EVENTS_2) }
+
     // --DESTROY
     function gravityarea_destroy()
     {
         gravityarea_destroyEvents()
+        gravityarea_destroyEvents2()
 
         prop_$RESIZE.splice(gravityarea_e$Resize)
     
@@ -123,6 +134,8 @@
     }
 
     function gravityarea_destroyEvents() { EVENT.event_remove(GRAVITYAREA_EVENTS) }
+
+    function gravityarea_destroyEvents2() { EVENT.event_remove(GRAVITYAREA_EVENTS_2) }
 
     // --UPDATES
     function gravityarea_update(ratio)
@@ -133,13 +146,6 @@
         gravityarea_TRANSLATE_Z = prop_ORBIT_RADIUS * Math.sin(ANGLE)
         
         SLOT_$ROTATION.set({ rX: null, rY: .025 })
-    }
-
-    function gravityarea_updateGrabbing(grabbing)
-    {
-        slot_GRABBING = grabbing
-
-        grabbing ? gravityarea_setEvents() : gravityarea_destroyEvents()
     }
 
     function content_update(clientX, clientY)
@@ -196,6 +202,24 @@
         }, 200)
     }
 
+    function gravityarea_eMouseDown() // no async
+    {
+        slot_GRABBING = true
+
+        gravityarea_setEvents2()
+
+        gravityarea_LAST_2 = +new Date()
+    }
+
+    function gravityarea_e$MouseUp() // no async
+    {
+        if (+new Date() - gravityarea_LAST_2 < 200) SVELTE_DISPATCH('click')
+
+        slot_GRABBING = false
+    
+        gravityarea_destroyEvents2()
+    }
+
     async function gravityarea_e$Resize() { gravityarea_setVars() }
 
     async function content_e$Animation() { content_FORCE_Y = content_FLOATING_UPDATE.update() }
@@ -218,6 +242,7 @@ onDestroy(gravityarea_destroy)
 class="gravityarea"
 class:focus={prop_FOCUS}
 style:--default-size="{prop_RADIUS}px"
+style:z-index={prop_Z}
 style:transform="
 perspective({prop_ORBIT_RADIUS ? '1200px' : 'none'})
 translate3d(
@@ -226,9 +251,12 @@ translate3d(
 {gravityarea_TRANSLATE_Z}px)"
 style:transition="transform {gravityarea_TRANSITION_DELAY}ms ease-out"
 type="button"
+title={prop_TITLE}
+data-tag={prop_TITLE.toLowerCase()}
 bind:this={gravityarea}
 on:mouseenter={gravityarea_eMouseEnter}
 on:mousemove={gravityarea_eMouseMove}
+on:mousedown={gravityarea_eMouseDown}
 on:mouseleave={gravityarea_eMouseLeave}
 >
     <div
@@ -237,7 +265,7 @@ on:mouseleave={gravityarea_eMouseLeave}
     >
         <slot
         rotation={SLOT_$ROTATION}
-        grabbing={SLOT_$GRABBING}
+        grabbing={slot_GRABBING}
         />
     </div>
 </div>
@@ -282,6 +310,8 @@ lang="scss"
 
     border-radius: 50%;
 
+    cursor: grab;
+
     &.focus { will-change: transform; }
 
     .content
@@ -290,6 +320,8 @@ lang="scss"
 
         width: $size;
         height: $size;
+
+        pointer-events: none;
 
         transition: transform .6s;
     }

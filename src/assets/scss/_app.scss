@@ -29,42 +29,66 @@
         {
             font-family: 'CodeNext-BLACK';
             src: local('CodeNext-Trial-Black'),
-                url('./fonts/CodeNext/CodeNext-Trial-Black.ttf') format('truetype'),
-                url('./fonts/CodeNext/CodeNext-Trial-Black.otf') format('opentype');
+            url('./fonts/CodeNext/CodeNext-Trial-Black.ttf') format('truetype'),
+            url('./fonts/CodeNext/CodeNext-Trial-Black.otf') format('opentype');
         }
         @font-face
         {
             font-family: 'CodeNext-BLACK-ITALIC';
             src: local('CodeNext-Trial-BlackItalic'),
-                url('./fonts/CodeNext/CodeNext-Trial-BlackItalic.ttf') format('truetype'),
-                url('./fonts/CodeNext/CodeNext-Trial-BlackItalic.otf') format('opentype');
+            url('./fonts/CodeNext/CodeNext-Trial-BlackItalic.ttf') format('truetype'),
+            url('./fonts/CodeNext/CodeNext-Trial-BlackItalic.otf') format('opentype');
         }
         @font-face
         {
             font-family: 'CodeNext';
             src: local('CodeNext-ExtraBold'),
-                url('./fonts/CodeNext/CodeNext-ExtraBold.ttf') format('truetype'),
-                url('./fonts/CodeNext/CodeNext-ExtraBold.otf') format('opentype');
+            url('./fonts/CodeNext/CodeNext-ExtraBold.ttf') format('truetype'),
+            url('./fonts/CodeNext/CodeNext-ExtraBold.otf') format('opentype');
         }
         @font-face
         {
             font-family: 'AnonymousProBold';
             src: url('./fonts/AnonymousPro/AnonymousPro-Bold.eot');
             src: local('Anonymous Pro Bold'), local('AnonymousPro-Bold'),
-                url('./fonts/AnonymousPro/AnonymousPro-Bold.eot?#iefix') format('embedded-opentype'),
-                url('./fonts/AnonymousPro/AnonymousPro-Bold.woff2') format('woff2'),
-                url('./fonts/AnonymousPro/AnonymousPro-Bold.woff') format('woff'),
-                url('./fonts/AnonymousPro/AnonymousPro-Bold.ttf') format('truetype');
+            url('./fonts/AnonymousPro/AnonymousPro-Bold.eot?#iefix') format('embedded-opentype'),
+            url('./fonts/AnonymousPro/AnonymousPro-Bold.woff2') format('woff2'),
+            url('./fonts/AnonymousPro/AnonymousPro-Bold.woff') format('woff'),
+            url('./fonts/AnonymousPro/AnonymousPro-Bold.ttf') format('truetype');
         }
         @font-face
         {
             font-family: 'AnonymousPro';
             src: url('./fonts/AnonymousPro/AnonymousPro.eot');
             src: local('Anonymous Pro Regular'), local('AnonymousPro-Regular'),
-                url('./fonts/AnonymousPro/AnonymousPro.eot?#iefix') format('embedded-opentype'),
-                url('./fonts/AnonymousPro/AnonymousPro.woff2') format('woff2'),
-                url('./fonts/AnonymousPro/AnonymousPro.woff') format('woff'),
-                url('./fonts/AnonymousPro/AnonymousPro.ttf') format('truetype');
+            url('./fonts/AnonymousPro/AnonymousPro.eot?#iefix') format('embedded-opentype'),
+            url('./fonts/AnonymousPro/AnonymousPro.woff2') format('woff2'),
+            url('./fonts/AnonymousPro/AnonymousPro.woff') format('woff'),
+            url('./fonts/AnonymousPro/AnonymousPro.ttf') format('truetype');
+        }
+        @font-face
+        {
+            font-family: 'Pixelmania';
+            src: local('Pixelmania'),
+            url('./fonts/Pixelmania/Pixelmania.ttf') format('truetype');
+        }
+        @font-face
+        {
+            font-family: '8bitArcadeIn';
+            src: local('8-bit Arcade In'),
+            url('./fonts/8_bit_arcade/8bitArcadeIn.ttf') format('truetype');
+        }
+        @font-face
+        {
+            font-family: '8bitArcadeOut';
+            src: local('8-bit Arcade Out'),
+            url('./fonts/8_bit_arcade/8bitArcadeOut.ttf') format('truetype');
+        }
+        @font-face
+        {
+            font-family: 'edunline';
+            src: local('edunline'),
+            url('./fonts/edit_undo_line/edunline.ttf') format('truetype');
         }
 
         // #SET

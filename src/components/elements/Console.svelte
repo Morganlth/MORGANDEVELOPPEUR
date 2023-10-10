@@ -242,7 +242,7 @@
         }
         else console_destroyEvents()
 
-        APP.app_$FREEZE = { on: console_ON, target: 'console' }
+        APP.app_$FREEZE = { value: console_ON, target: 'console' }
     }
 
     // --TEST

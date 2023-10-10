@@ -29,14 +29,14 @@
 
     // --ELEMENT-PARTICLES
     const
-    PARTICLES_NAME = 'particles',
+    PARTICLES = 'particles',
     PARTICLES_DELAY_NAME = 'particles_delay',
     PARTICLES_GAP = 100,
     PARTICLES_PARTICLES = [],
     PARTICLES_COMMANDS =
     [
         {
-            name: PARTICLES_NAME,
+            name: PARTICLES,
             callback: particles_c$,
             params: { defaultValue: true, optimise: { value: false } },
             tests: { testBoolean: true },
@@ -174,7 +174,7 @@
     function particles_testMax() { if (PARTICLES_PARTICLES.length > particles_MAX) PARTICLES_PARTICLES.shift() }
 
     // --COMMANDS
-    function particles_c$(on) { COMMAND.command_test(on, 'boolean', particles_update, PARTICLES_NAME, particles_ON) }
+    function particles_c$(on) { COMMAND.command_test(on, 'boolean', particles_update, PARTICLES, particles_ON) }
 
     function particles_c$Delay(delay) { COMMAND.command_test(delay, 'number', particles_updateDelay, PARTICLES_DELAY_NAME, particles_DELAY) }
 

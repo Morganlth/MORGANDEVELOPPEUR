@@ -27,6 +27,7 @@ context="module"
     export const ROUTER = r
     export const COMMAND = c
     export const EVENT = e
+    export const PROCESS = p
     export const SPRING = s
 
 // #IMPORTS
@@ -36,6 +37,7 @@ context="module"
     import r from './assets/js/managers/mRouter'
     import c from './assets/js/managers/mCommand'
     import e from './assets/js/managers/mEvent'
+    import p from './assets/js/managers/mProcess'
     import s from './assets/js/managers/mSpring'
 </script>
 
@@ -44,6 +46,7 @@ context="module"
 
     // --PROP
     export let prop_PAGE_ID = 0
+
 // #IMPORTS
 
     // --SVELTE

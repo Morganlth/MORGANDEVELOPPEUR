@@ -1,6 +1,5 @@
 <!-- #MAP
 
--EVENT
     CUBE
         SIDE * 6
             ICON
@@ -14,9 +13,9 @@
 
     // --PROPS
     export let
-    prop_$GRABBING = {},
     prop_$ROTATION = {},
 
+    prop_GRABBING = false,
     prop_DESTROY = false,
     prop_FOCUS = false,
 
@@ -33,11 +32,8 @@
     // --LIB
     import COLORS from '$lib/colors'
 
-    // --CONTEXT
-    import { EVENT } from '../../App.svelte'
-
     // --SVELTE
-    import { onMount, onDestroy, createEventDispatcher } from 'svelte'
+    import { onMount } from 'svelte'
 
     // --COMPONENT-COVER
     import Icon from '../covers/Icon.svelte'
@@ -46,13 +42,6 @@
     import Logo from '../icons/Logo.svelte'
     import Image from '../icons/Image.svelte'
 
-// #CONSTANTE
-
-    // --SVELTE
-    const SVELTE_DISPATCH = createEventDispatcher()
-
-    // --ELEMENT-CUBE
-    const CUBE_EVENTS = { mouseUp: cube_e$MouseUp }
 
 // #VARIABLES
 
@@ -60,8 +49,7 @@
     let
     cube_CHARGED = false,
     cube_ROTATE = prop_ROTATE,
-    cube_ROTATE_Y = prop_ROTATE_Y,
-    cube_LAST_MOUSEDOWN
+    cube_ROTATE_Y = prop_ROTATE_Y
 
     // --ELEMENT-ICON
     let icon_OPACITY = 0
@@ -81,13 +69,6 @@
         setTimeout(() => icon_OPACITY = 1, 1200)
     }
 
-    function cube_setEvents() { EVENT.event_add(CUBE_EVENTS) }
-
-    // --DESTROY
-    function cube_destroy() { cube_destroyEvents() }
-
-    function cube_destroyEvents() { EVENT.event_remove(CUBE_EVENTS) }
-
     // --UPDATES
     function cube_updatePosition({ rX, rY })
     {
@@ -95,47 +76,23 @@
         cube_ROTATE_Y += rY ?? 0
     }
 
-    function cube_updateCursor(grabbing) { prop_$GRABBING.set(grabbing) }
-
-    // --EVENTS
-    function cube_eMouseDown() // no async
-    {
-        cube_updateCursor(true)
-
-        cube_setEvents()
-
-        cube_LAST_MOUSEDOWN = +new Date()
-    }
-
-    function cube_e$MouseUp() // no async
-    {
-        if (+new Date() - cube_LAST_MOUSEDOWN < 200) SVELTE_DISPATCH('click')
-
-        cube_updateCursor(false)
-    
-        cube_destroyEvents()
-    }
-
-// #CYCLES
+// #CYCLE
 
 onMount(cube_set)
-onDestroy(cube_destroy)
 </script>
 
 <!-- #HTML -->
 
-<!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
 class="cube {prop_DESTROY ? 'destroy' : 'build'}"
+class:focus={prop_FOCUS}
+class:grabbing={prop_GRABBING}
 style:--cube-color={prop_COLOR ?? COLORS.primary}
 style:transform="rotate({cube_ROTATE}rad) rotate3d(0, 1, 0, {cube_ROTATE_Y}rad)"
-on:mousedown={cube_eMouseDown}
 >
     {#each [0, 1, 2, 3, 4, 5] as id}
         <div
         class="side"
-        class:focus={prop_FOCUS}
-        class:grabbing={$prop_$GRABBING}
         data-side-id={id}
         >
             <Icon
@@ -183,8 +140,6 @@ lang="scss"
     transform-style: preserve-3d;
     transform-origin: center;
 
-    cursor: grab;
-
     transition: transform .35s ease-out;
 
     &.build
@@ -205,6 +160,8 @@ lang="scss"
             animation: aDestroy 1s ease-in forwards;
         }
     }
+    &.focus .side  { border-color: var(--cube-color, $primary); }
+    &.grabbing .side { border-color: $indicator !important; }
 
     .side
     {
@@ -219,9 +176,6 @@ lang="scss"
         box-sizing: border-box;
 
         transition: border .7s ease-in, opacity .7s ease-in;
-
-        &.focus { border-color: var(--cube-color, $primary); }
-        &.grabbing { border-color: $indicator !important; }
     }
     .side:nth-child(1) { transform: translate3d(0, 0, calc($size / 2))        rotate3d(0, 0, 0, 0); }
     .side:nth-child(2) { transform: translate3d(0, -150%, 0)                  rotate3d(1, 0, 0, 90deg); }

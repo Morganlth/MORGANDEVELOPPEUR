@@ -18,9 +18,19 @@
             end: 0,
             dif: 0,
 
+            process:
+            {
+                home: -1,
+                accueil: -1,
+                landing: -1,
+                morpion: 1,
+                terminal: 2
+            }
+        ,
             props:
             {
                 prop_FOCUS: false,
+                prop_TOP: 0,
                 prop_RATIO: 0
             ,
                 prop_SPACECUBE: new Float64Array(
@@ -106,6 +116,7 @@
                         id: 0,
                         props:
                         {
+                            prop_TITLE: '!en développement!',
                             prop_X: .85,
                             prop_Y: .03,
                             prop_RADIUS: 120
@@ -115,6 +126,7 @@
                         id: 1,
                         props:
                         {
+                            prop_TITLE: 'Morpion',
                             prop_X: .34,
                             prop_Y: .6,
                             prop_RADIUS: 140
@@ -124,13 +136,16 @@
                         id: 2,
                         props:
                         {
+                            prop_TITLE: 'Terminal',
+                            prop_Z: 1,
                             prop_X: .9,
                             prop_Y: .5,
                             prop_RADIUS: 160
                         }
                     }
                 ]
-            },
+            }
+        ,
             link:
             {
                 on: false,
@@ -141,7 +156,8 @@
                     alt: 'Accueil',
                     'aria-label': 'Page accueil / home du site Morgan Développeur' 
                 }
-            },
+            }
+        ,
             wrapper:
             {
                 prop_TITLE:
@@ -163,6 +179,7 @@
         {
             id: 1,
             name: 'presentation',
+            // tags: ['features', 'caractéristiques', 'nom', 'age', 'localité', 'etudes', 'formations', 'profession', 'contact', 'serpent', 'snake'],
 
             focus: false,
             intro: false,
@@ -173,7 +190,23 @@
             start: 0,
             end: 0,
             dif: 0,
-        
+
+            process:
+            {
+                presentation: -1,
+                caracteristique: -1,
+                features: 0,
+                nom: 1,
+                age: 1,
+                localite: 2,
+                etudes: 3,
+                formations: 3,
+                profession: 4,
+                contact: 5,
+                snake: 6,
+                serpent: 6
+            }
+        ,
             nav:
             [
                 {
@@ -198,10 +231,12 @@
                         this.value = on ? 'MASQUER' : 'AFFICHER'
                     }
                 }
-            ],
+            ]
+        ,
             props:
             {
                 prop_FOCUS: false,
+                prop_TOP: 0,
                 prop_RATIO: 0,
                 prop_START: void 0,
                 prop_END: void 0,
@@ -283,11 +318,6 @@
                                 data: 'Email: lethuaut.morgan@gmail.com'
                             },
                             {
-                                htmlElement: 'p',
-                                props: {},
-                                data: 'Tel: 06 09 23 72 08'
-                            },
-                            {
                                 htmlElement: 'a',
                                 props: {},
                                 data: 'LinkedIn: https://www.linkedin.com/in/le-thuaut-morgan'
@@ -295,7 +325,8 @@
                         ]
                     },
                 ]
-            },
+            }
+        ,
             link:
             {
                 on: false,
@@ -306,7 +337,8 @@
                     alt: 'Ma présentation',
                     'aria-label': 'Page de ma présentation personnel'
                 }
-            },
+            }
+        ,
             wrapper:
             {
                 prop_TITLE:
@@ -339,6 +371,21 @@
             end: 0,
             dif: 0,
         
+            process:
+            {
+                skills: -1,
+                competences: -1,
+                system: 0,
+                html: 1,
+                css: 1,
+                javascript: 2,
+                nodejs: 3,
+                node: 3,
+                gestion: 4,
+                outils: 4,
+                adaptabilite: 4
+            }
+        ,
             nav:
             [
                 {
@@ -361,11 +408,13 @@
                     title: 'Gestion, Outils et Adaptabilité',
                     value: 'AUTRES'
                 }
-            ],
+            ]
+        ,
             props:
             {
                 prop_FOCUS: false,
                 prop_INTRO: false,
+                prop_TOP: 0,
                 prop_RATIO: 0,
                 prop_START: void 0,
                 prop_DIF: void 0
@@ -517,11 +566,13 @@
                     LENGTH = array.length,
                     FRACTION = MATH.PI.x2 / LENGTH
             
+                    item.props.prop_TITLE = item.tag
                     item.props.prop_OFFSET = FRACTION * (LENGTH - i) + FRACTION / 2
             
                     return item
                 })
-            },
+            }
+        ,
             link:
             {
                 on: false,
@@ -532,7 +583,8 @@
                     alt: 'Mes compétences',
                     'aria-label': 'Page de mes compétences de développeur web'
                 }
-            },
+            }
+        ,
             wrapper:
             {
                 prop_TITLE:
@@ -565,6 +617,12 @@
             end: 0,
             dif: 0,
         
+            process:
+            {
+                projects: -1,
+                projets: -1
+            }
+        ,
             nav:
             [
                 {
@@ -582,10 +640,12 @@
                     title: 'Nina Carducci',
                     value: 'NINA CARDUCCI'
                 }
-            ],
+            ]
+        ,
             props:
             {
                 prop_INTRO: false,
+                prop_TOP: 0,
                 prop_RATIO: 0
             ,
                 prop_CARDS:
@@ -603,7 +663,8 @@
                         value: 'NINA CARDUCCI'
                     }
                 ]
-            },
+            }
+        ,
             link:
             {
                 on: false,
@@ -614,7 +675,8 @@
                     alt: 'Mes projets',
                     'aria-label': 'Page de mes projets web'
                 }
-            },
+            }
+        ,
             wrapper:
             {
                 prop_TITLE:

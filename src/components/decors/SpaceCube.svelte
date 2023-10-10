@@ -79,7 +79,7 @@
 
     // --ELEMENT-SPACECUBE
     const
-    SPACECUBE_NAME = 'spacecube',
+    SPACECUBE = 'spacecube',
     SPACECUBE_ANTIALIAS = true,
     SPACECUBE_PIXELRATIO = 2,
     SPACECUBE_CAMERA_FOV = 75,
@@ -96,7 +96,7 @@
     SPACECUBE_COMMANDS =
     [
         {
-            name: SPACECUBE_NAME,
+            name: SPACECUBE,
             callback: spacecube_c$,
             params: { defaultValue: true, optimise: { value: false } },
             tests: { testBoolean: true },
@@ -157,7 +157,7 @@
 // #REACTIVES
 
     // --ELEMENT-SPACECUBE
-    $: spacecube_CHARGED && !APP.app_$OPTIMISE.on ? spacecube_updateEvents3(prop_FOCUS) : void 0
+    $: spacecube_CHARGED && !APP.app_$OPTIMISE.value ? spacecube_updateEvents3(prop_FOCUS) : void 0
     $: prop_TICTACTOE && spacecube_CHARGED ? spacecube_setTicTacToe() : void 0
 
 // #FUNCTIONS
@@ -510,7 +510,7 @@
     }
 
     // --COMMAND
-    function spacecube_c$(on) { COMMAND.command_test(on, 'boolean', spacecube_update, SPACECUBE_NAME, spacecube_ON) }
+    function spacecube_c$(on) { COMMAND.command_test(on, 'boolean', spacecube_update, SPACECUBE, spacecube_ON) }
 
     // --EVENTS
     async function spacecube_e$Scroll(scrollTop)

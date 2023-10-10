@@ -7,6 +7,7 @@ class Router
     // --CONTEXT-ROUTER
     #router_TITLE = 'LE THUAUT MORGAN - Développeur Web'
     #router_$ID = {}
+    #router_$HIDE = {}
     #router_EVENTS
     #router_PAGES = []
 
@@ -33,6 +34,12 @@ constructor ()
 
     #router_setVars()
     {
+        this.#router_setVars2()
+        this.#router_setVars3()
+    }
+
+    #router_setVars2()
+    {
         let { subscribe, set } = writable(null)
 
         this.#router_$ID =
@@ -40,6 +47,23 @@ constructor ()
             value: null,
             subscribe,
             set: function (value) { set(this.value = value) }
+        }
+    }
+
+    #router_setVars3()
+    {
+        let { set, subscribe } = writable(false)
+
+        this.#router_$HIDE =
+        {
+            target: null,
+            set: function (value, target)
+            {
+                this.target = target
+
+                set(value)
+            },
+            subscribe
         }
     }
 
@@ -94,6 +118,16 @@ constructor ()
 
     // --GETTER
     get router_$ID() { return this.#router_$ID }
+
+    get router_$HIDE() { return this.#router_$HIDE }
+
+    // --SETTER
+    set router_$HIDE({value, target})
+    {
+        const CURRENT_TARGET = this.#router_$HIDE.target
+    
+        if (!CURRENT_TARGET || CURRENT_TARGET === target) this.#router_$HIDE.set(value, value ? target : null)
+    }
 }
 
 // #IMPORTS
