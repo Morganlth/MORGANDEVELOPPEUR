@@ -22,6 +22,7 @@
     prop_CARDS = [],
 
     prop_TOP = 0,
+    prop_START = 0,
     prop_RATIO = 0
 
     // --BINDS
@@ -68,7 +69,8 @@
     const GROUP_CARDS = prop_CARDS.map(card =>
     {
         return {
-        ...card,
+        id: card.id,
+        value: card.value,
         ...
         [
             { texture: ThreeDiamonds, color: COLORS.indicator },
@@ -149,7 +151,22 @@
     function card_clear() { clearInterval(card_INTERVAL) }
 
     // --UTIL
-    export function page_process(id) { EVENT.event_scrollTo(prop_TOP, true) }
+    export function page_process(str, target)
+    {
+        switch (target)
+        {
+            case 'top':
+                EVENT.event_scrollTo(prop_TOP, true)
+                break
+            case 'start':
+                EVENT.event_scrollTo(prop_START, true)
+                break
+            case 'cards':
+                EVENT.event_scrollTo(prop_START, true)
+            default:
+                break
+        }
+    }
 
 // #CYCLES
 

@@ -314,34 +314,34 @@ style:--system-rotate-y={group_ROTATE_Y}
         <Moon />
 
         {#if !system_OPTIMISED}
-            {#each prop_SYSTEM as data}
+            {#each prop_SYSTEM as orbit}
                 <Orbit
-                prop_ROTATE={data.props.prop_ROTATE}
+                prop_ROTATE={orbit.props.prop_ROTATE}
                 >
                     <GravityArea
                     let:rotation
                     let:grabbing
                     prop_$RESIZE={resize}
                     prop_$ANIMATION={animation}
-                    prop_FOCUS={data.focus ?? false}
+                    prop_FOCUS={orbit.focus ?? false}
                     prop_RATIO={gravityarea_RATIO}
                     prop_GRABBING={false}
-                    prop_TITLE={data.props.prop_TITLE}
+                    prop_TITLE={orbit.props.prop_TITLE}
                     prop_ORBIT_RADIUS={orbit_RADIUS}
-                    prop_ROTATE={data.props.prop_ROTATE}
-                    prop_OFFSET={data.props.prop_OFFSET}
-                    bind:gravityarea_TRANSLATE_Z={GROUP_Z_POSITIONS[data.id]}
-                    on:click={gravityarea_eClick.bind(data)}
+                    prop_ROTATE={orbit.props.prop_ROTATE}
+                    prop_OFFSET={orbit.props.prop_OFFSET}
+                    bind:gravityarea_TRANSLATE_Z={GROUP_Z_POSITIONS[orbit.id]}
+                    on:click={gravityarea_eClick.bind(orbit)}
                     >
                         <Cube
                         prop_$ROTATION={rotation}
                         prop_GRABBING={grabbing}
                         prop_DESTROY={!prop_FOCUS || system_TARGET}
-                        prop_FOCUS={data.focus ?? false}
-                        prop_ROTATE={data.props.prop_ROTATE}
-                        prop_SRC={data.props.prop_SRC}
-                        prop_ALT={data.props.prop_ALT}
-                        prop_COLOR={data.props.prop_COLOR}
+                        prop_FOCUS={orbit.focus ?? false}
+                        prop_ROTATE={orbit.props.prop_ROTATE}
+                        prop_SRC={orbit.props.prop_SRC}
+                        prop_ALT={orbit.props.prop_ALT}
+                        prop_COLOR={orbit.props.prop_COLOR}
                         />
                     </GravityArea>
                 </Orbit>

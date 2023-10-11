@@ -76,8 +76,8 @@
 
 // #CONSTANTE
 
-    // --ELEMENT-CUBE
-    const CUBE_DATAS = prop_CUBES.map(cube =>
+    // --ELEMENT-GROUP
+    const GROUP_DATAS = prop_CUBES.map(cube =>
     {
         cube.component = [Logo, Grid, CommandLine][cube.id]
 
@@ -122,13 +122,15 @@
     }
 
     // --UTIL
-    export async function page_process(id)
+    export async function page_process(str)
     {
         EVENT.event_scrollTo(prop_TOP)
 
         await tick()
 
-        terminal_update(id === 2)
+        console.log(str)
+
+        terminal_update(str === 'terminal')
     }
 </script>
 
@@ -157,7 +159,7 @@ class="home"
     bind:group_start
     bind:group_stop
     >
-        {#each CUBE_DATAS as cube}
+        {#each GROUP_DATAS as cube}
             <GravityArea
             let:rotation
             let:grabbing

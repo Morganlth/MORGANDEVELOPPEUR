@@ -111,16 +111,16 @@ style:--features-sin={features_SIN}
         }
         style:padding-right="{topic_WIDTH}px"
         >
-            {#each prop_FEATURES as data}
+            {#each prop_FEATURES as feature}
                 <div
                 class="topic"
                 style:width="{topic_WIDTH}px"
                 >
                     <p
                     style:transform="rotate({track_ROTATE + (i ? 0 : Math.PI)}rad)"
-                    data-topic={data.topic[i ? 0 : data.topic.length - 1]}
+                    data-topic={feature.topics[i ? 0 : feature.topics.length - 1]}
                     >
-                        {data.topic[i ? 0 : data.topic.length - 1]}
+                        {feature.topics[i ? 0 : feature.topics.length - 1]}
                     </p>
                 </div>
             {/each}
@@ -131,9 +131,9 @@ style:--features-sin={features_SIN}
     class="track"
     style:transform="translate(calc(-100% * {prop_RATIO}), -50%)"
     >
-        {#each prop_FEATURES as data}
+        {#each prop_FEATURES as feature}
             <ul>
-                {#each data.contents as content}
+                {#each feature.contents as content}
                     <li>
                         <svelte:element
                         this={content.htmlElement}

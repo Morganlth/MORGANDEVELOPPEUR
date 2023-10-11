@@ -4,18 +4,25 @@
 
 class Process
 {
+    static __process_KEYWORDS_NAME = 'keywords'
     static __process_D_MIN = 3
 
+    #process_KEYWORDS = []
     #process_TREE = { children: {} }
-    #process_STR = ''
-    #process_FIND = null
-    #process_LENGTH = 0
-    #process_PREVIOUS_L = null
-    #process_MIN = Process.__process_D_MIN
+
+//  {   current string
+        #process_STR = ''
+        #process_FIND = null
+        #process_LENGTH = 0
+        #process_PREVIOUS_L = null
+        #process_MIN = Process.__process_D_MIN
+//  }
 
 // #FUNCTIONS
 
     // --SET
+    process_set() { this.#process_setCommands() }
+
     #process_setVars(str)
     {
         this.#process_STR = str
@@ -24,6 +31,8 @@ class Process
         this.#process_PREVIOUS_L = null,
         this.#process_MIN = Process.__process_D_MIN
     }
+
+    #process_setCommands() { COMMAND.command_add(Process.__process_KEYWORDS_NAME, this.#process_c$Keywords.bind(this)) }
 
     // --GET
     static process_getLevenshteinDistance(s1 = '', s2 = '') // not used
@@ -96,11 +105,20 @@ class Process
         return CURRENT_ROW
     }
 
+    // --COMMAND
+    #process_c$Keywords()
+    {
+        if (COMMAND.command_testCommand('log'))
+            for (const NAME of this.#process_KEYWORDS) COMMAND.command_COMMANDS.log(NAME)
+    }
+
     // --UTILS
     process_push(datas, callback)
     {
         for (const STR in datas)
         {
+            this.#process_KEYWORDS.push(STR)
+    
             let _ = this.#process_TREE
 
             for (let i = 0; i < STR.length; i++)
@@ -112,7 +130,7 @@ class Process
                 _ = _.children[L]
             }
 
-            _.data = { id: datas[STR], callback }
+            _.data = { target: datas[STR], str: STR, callback }
         }
     }
 
@@ -167,6 +185,11 @@ class Process
         }
     }
 }
+
+// #IMPORT
+
+    // --CONTEXT
+    import COMMAND from './mCommand'
 
 // #EXPORT
 

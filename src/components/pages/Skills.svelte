@@ -86,6 +86,9 @@
         }
     }
 
+    // --GET
+    function system_getTarget(target) { return prop_SYSTEM.find(orbit => orbit.tags.includes(target)) }
+
     // --RESET
     function skills_reset()
     {
@@ -100,11 +103,25 @@
     function table_eClick() { APP.app_$FREEZE = { value: false, target: APP.app_$FREEZE.target } } // call skills_reset with reactive app_$FREEZE
 
     // --UTILS
-    export function page_process(id)
+    export function page_process(str, target)
     {
-        EVENT.event_scrollTo(id ? prop_TOP : prop_START, true)
+        switch (target)
+        {
+            case 'top':
+                EVENT.event_scrollTo(prop_TOP, true)
+                break
+            case 'start':
+                EVENT.event_scrollTo(prop_START, true)
+                break
+            case 'system':
+                const ORBIT = system_getTarget(str)
+        
+                EVENT.event_scrollTo(prop_START, true)
 
-        if (id > 0) tick().then(() => skills_goTo(id - 1))
+                tick().then(() => { if (ORBIT) skills_goTo(ORBIT.id) })
+            default:
+                break
+        }
     }
 
     function skills_goTo(id) { EVENT.event_scrollTo(prop_SYSTEM[id].top) }

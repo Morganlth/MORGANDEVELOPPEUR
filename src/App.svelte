@@ -100,6 +100,7 @@ context="module"
         APP.app_set()
         ROUTER.router_set(prop_PAGE_ID)
         EVENT.event_set()
+        PROCESS.process_set()
     }
 
     function app_setCommands()

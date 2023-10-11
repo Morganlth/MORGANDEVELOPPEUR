@@ -54,7 +54,7 @@
     // --ELEMENT-TERMINAL
     const
     TERMINAL = 'terminal',
-    TERMINAL_ROTATE_Y = MATH.toRad(8),
+    TERMINAL_ROTATE_Y = MATH.toRad(6),
     TERMINAL_HISTORY = ['app '],
     TERMINAL_EVENTS = { mouseDown: terminal_e$MouseDown }
 
@@ -157,7 +157,7 @@
     // --RESTORE
     function terminal_restore()
     {
-        terminal_testRange()
+        terminal_updateIndex()
 
         input_CURRENT_VALUE = TERMINAL_HISTORY[terminal_INDEX]
 
@@ -200,6 +200,12 @@
         TERMINAL_HISTORY.push(VALUE)
 
         terminal_INDEX = TERMINAL_HISTORY.length
+    }
+
+    function terminal_updateIndex()
+    {
+        if (terminal_INDEX < 0) terminal_INDEX = 0
+        else if (terminal_INDEX >= TERMINAL_HISTORY.length) terminal_INDEX = TERMINAL_HISTORY.length - 1
     }
 
     function mirror_update(status = false, values = [input_CURRENT_VALUE])
@@ -261,9 +267,9 @@
 
     async function input_e$Resize() { input_setVars() }
 
-    async function input_eKeyup(e)
+    async function input_eKeyup({key})
     {
-        switch (e.key)
+        switch (key)
         {
             case 'Enter':
                 mirror_APP_AVAILABLE ? terminal_execute() : terminal_analyse()
@@ -282,16 +288,16 @@
 
     function input_eInput() // no async
     {
-        (input_CURRENT_VALUE.length === 3 || input_CURRENT_VALUE[3] === ' ') && input_CURRENT_VALUE.substring(0, 3).toLowerCase() === 'app'
-        ? input_analyse()
-        : mirror_update()
-    }
-
-    // --TEST
-    function terminal_testRange()
-    {
-        if (terminal_INDEX < 0) terminal_INDEX = 0
-        else if (terminal_INDEX >= TERMINAL_HISTORY.length) terminal_INDEX = TERMINAL_HISTORY.length - 1
+        if ((
+        input_CURRENT_VALUE.length === 3 ||
+        input_CURRENT_VALUE[3] === ' ') &&
+        input_CURRENT_VALUE.substring(0, 3).toLowerCase() === 'app') input_analyse()
+        else
+        {
+            input_CURRENT_VALUE = input_CURRENT_VALUE.replaceAll(/\s/g, '')
+    
+            mirror_update()
+        }
     }
 
     // --CLEAR
@@ -350,11 +356,13 @@
 
         if (FIND)
         {
+            terminal_c$Log('=> ' + FIND.str)
+
             terminal_ON = false
             
             input_reset()
     
-            FIND.callback(FIND.id)
+            FIND.callback(FIND.str, FIND.target)
         }
     }
 
@@ -481,7 +489,7 @@ lang="scss"
 
 .terminal
 {
-    $r-y: var(--r-y, 8deg);
+    $r-y: var(--r-y, 6deg);
 
     @include position.placement(absolute, $top: 44%, $right: app.$gap-inline);
 

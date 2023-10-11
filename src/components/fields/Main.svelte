@@ -44,16 +44,15 @@
     // --ELEMENT-MAIN
     const
     MAIN = 'main',
-    MAIN_HEIGHT = PAGES_DATAS.reduce((accumulator, page) => accumulator + page.h, 0) * 100
+    MAIN_HEIGHT = PAGES_DATAS.reduce((accumulator, page) => accumulator + page.h, 0) * 100,
+    MAIN_EVENTS =
+    {
+        scroll: wait_throttle(main_e$Scroll, 16.67),
+        resize: main_e$Resize
+    }
 
     // --ELEMENT-PAGES
-    const
-    PAGES_PAGES = pages_get(),
-    PAGES_EVENTS =
-    {
-        scroll: wait_throttle(pages_e$Scroll, 20),
-        resize: pages_e$Resize
-    }
+    const PAGES_PAGES = pages_get()
 
     // --ELEMENT-ROUTER
     const ROUTER_LINKS = PAGES_DATAS.map(page => router_getRoute(page))
@@ -84,13 +83,16 @@
     // --SET
     function main_set()
     {
+        main_setEvents()
+
         pages_setPages()
-        pages_setEvents()
     
         router_intro()
 
         main_CHARGED = true
     }
+
+    function main_setEvents() { EVENT.event_add(MAIN_EVENTS) }
 
     function pages_setPages()
     {
@@ -109,8 +111,6 @@
 
         pages_update(APP.app_SCROLLTOP ?? 0)
     }
-
-    function pages_setEvents() { EVENT.event_add(PAGES_EVENTS) }
 
     function page_setVars(page, i, h)
     {
@@ -131,10 +131,10 @@
     {
         router_clear()
 
-        pages_destroyEvents()
+        main_destroyEvents()
     }
 
-    function pages_destroyEvents() { EVENT.event_remove(PAGES_EVENTS) }
+    function main_destroyEvents() { EVENT.event_remove(MAIN_EVENTS) }
 
     // --GET
     function pages_get()
@@ -196,9 +196,14 @@
     }
 
     // --EVENTS
-    async function pages_e$Scroll(scrollTop) { pages_update(scrollTop) }
+    async function main_e$Scroll(scrollTop)
+    {
+        ROUTER.router_e$Scroll()
 
-    async function pages_e$Resize() { pages_setPages() }
+        pages_update(scrollTop)
+    }
+
+    async function main_e$Resize() { pages_setPages() }
 
     // --INTRO
     function router_intro()

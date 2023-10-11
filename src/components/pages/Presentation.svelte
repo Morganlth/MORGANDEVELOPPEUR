@@ -102,6 +102,9 @@
 
     function mask_setVars() { mask_RATIO = prop_DIF / prop_START }
 
+    // --GET
+    function features_getTarget(target) { return prop_FEATURES.find(feature => feature.tags.includes(target)) }
+
     // --UPDATE
     function snake_update(on) { snake_ON = on }
 
@@ -114,7 +117,10 @@
         switch (id)
         {
             case 0:
-                presentation_goTo(1)
+                const CONTACT = features_getTarget('contact')
+        
+                presentation_goTo(CONTACT ? CONTACT.id : prop_FEATURES.length - 1)
+        
                 break
             case 1:
                 snake_GAME = true
@@ -131,22 +137,23 @@
     }
 
     // --UTILS
-    export function page_process(id)
+    export function page_process(str, target)
     {
-        switch (id)
+        switch (target)
         {
-            case -1:
-            case 0:
-                EVENT.event_scrollTo(id ? prop_TOP : prop_START)
+            case 'top':
+                EVENT.event_scrollTo(prop_TOP)
                 break
-            case 1:
-            case 2:
-            case 3:
-            case 4:
-            case 5:
-                presentation_goTo(features_LENGTH - id)
+            case 'start':
+                EVENT.event_scrollTo(prop_START)
                 break
-            case 6:
+            case 'features':
+                const FEATURE = features_getTarget(str)
+
+                if (FEATURE) presentation_goTo(FEATURE.id)
+
+                break
+            case 'snake':
                 snake_GAME = true
                 break
             default:
@@ -154,9 +161,9 @@
         }
     }
 
-    function presentation_goTo(i)
+    function presentation_goTo(id = 0)
     {
-        const TOP = prop_END - prop_DIF / features_LENGTH * i
+        const TOP = prop_END - prop_DIF / features_LENGTH * (prop_FEATURES.length - id)
 
         EVENT.event_scrollTo(TOP, ROUTER.router_getInstant(TOP))
     }

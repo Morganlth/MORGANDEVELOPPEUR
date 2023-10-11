@@ -8,29 +8,16 @@ class Router
     #router_TITLE = 'LE THUAUT MORGAN - Développeur Web'
     #router_$ID = {}
     #router_$HIDE = {}
-    #router_EVENTS
     #router_PAGES = []
 
 // #CONSTRUCTOR
 
-constructor ()
-{
-    this.#router_setVars()
-
-    this.router_e$Scroll = wait_throttle.call(this, this.router_e$Scroll, 50.01)
-
-    this.#router_EVENTS = { scroll: this.router_e$Scroll }
-}
+constructor () { this.#router_setVars() }
 
 // #FUNCTIONS
 
     // --SET
-    router_set(id)
-    {
-        this.#router_setEvents()
-    
-        this.router_update(id, true)
-    }
+    router_set(id) { this.router_update(id, true) }
 
     #router_setVars()
     {
@@ -66,8 +53,6 @@ constructor ()
             subscribe
         }
     }
-
-    #router_setEvents() { EVENT.event_add(this.#router_EVENTS) }
 
     router_setSubPath(id, subPath)
     {
@@ -131,9 +116,6 @@ constructor ()
 }
 
 // #IMPORTS
-
-    // --JS
-    import { wait_throttle } from '../utils/wait'
 
     // --CONTEXTS
     import APP from './mApp'
