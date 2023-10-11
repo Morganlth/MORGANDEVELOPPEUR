@@ -43,9 +43,11 @@ constructor () { this.#router_setVars() }
 
         this.#router_$HIDE =
         {
+            value: false,
             target: null,
             set: function (value, target)
             {
+                this.value = value
                 this.target = target
 
                 set(value)
@@ -88,12 +90,12 @@ constructor () { this.#router_setVars() }
     }
 
     // --EVENT
-    async router_e$Scroll()
+    async router_e$Scroll(scrolltop)
     {
         const PAGES = this.#router_PAGES
 
         for (let i = PAGES.length - 1; i >= 0; i--)
-            if (PAGES[i].top <= APP.app_SCROLLTOP) return this.#router_updatePath(i, PAGES[i])
+            if (PAGES[i].top <= scrolltop) return this.#router_updatePath(i, PAGES[i])
     }
 
     // --UTILS

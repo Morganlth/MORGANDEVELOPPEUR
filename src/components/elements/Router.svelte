@@ -163,7 +163,7 @@ lang="scss"
             pointer-events: none;
         }
 
-        top: 36%;
+        top: max(36%, 48rem);
         right: auto;
         left: app.$gap-inline;
 
@@ -175,6 +175,6 @@ lang="scss"
             gap: 0;
         }
     }
-    @include media.min($ms4, $ms4) { top: 55%; }
+    @include media.min($ms4, $ms4) { top: 54%; }
 }
 </style>

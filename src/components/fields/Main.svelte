@@ -68,7 +68,10 @@
     router_$HIDE = ROUTER.router_$HIDE
 
     // --ELEMENT-MAIN
-    let main_CHARGED = false
+    let
+    main_CHARGED = false,
+
+    main_TIMEOUT
 
     // --ELEMENT-ROUTER
     let router_INTERVAL
@@ -158,6 +161,13 @@
     function router_getRoute(page) { return { id: page.id, ...page.link } }
 
     // --UPDATES
+    function main_update(scrollTop)
+    {
+        ROUTER.router_e$Scroll(scrollTop)
+
+        pages_update(scrollTop)
+    }
+
     function pages_update(scrollTop)
     {
         for (let i = 0; i < PAGES_PAGES.length; i++)
@@ -172,7 +182,7 @@
                 prop_RATIO: PAGE.overflow ? RATIO : RATIO < 0 ? 0 : RATIO > 1 ? 1 : RATIO
             })
 
-            if (PAGE.focus) ROUTER.router_$HIDE = { value: !PAGE.intro, target: MAIN }
+            if (PAGE.focus) router_update(!PAGE.intro)
         }
     }
 
@@ -195,12 +205,16 @@
         PAGES_PAGES[i] = page
     }
 
+    function router_update(value) { if (ROUTER.router_$HIDE.value !== value) ROUTER.router_$HIDE = { value, target: MAIN } }
+
     // --EVENTS
     async function main_e$Scroll(scrollTop)
     {
-        ROUTER.router_e$Scroll()
+        clearTimeout(main_TIMEOUT)
 
-        pages_update(scrollTop)
+        main_TIMEOUT = setTimeout(() => main_update(APP.app_SCROLLTOP), 50.01)
+
+        main_update(scrollTop)
     }
 
     async function main_e$Resize() { pages_setPages() }

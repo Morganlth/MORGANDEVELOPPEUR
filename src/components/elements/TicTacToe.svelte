@@ -1,8 +1,10 @@
 <!-- #MAP
 
+-SPRING
     TICTACTOE
         CELL * 9
             ICON
+                CIRCLE | CROSS
 
 -->
 
@@ -54,7 +56,9 @@
     // --ELEMENT-TICTACTOE
     let
     tictactoe_BORDER_COLOR = COLORS.light,
+
     tictactoe_SIMULATION = [],
+
     tictactoe_ROUND = 0,
     tictactoe_AI_ROUND = false
 
@@ -233,8 +237,8 @@ lang="scss"
     @include display.grid(calc(100% / 3), calc(100% / 3), 3, 3);
 
     position: absolute;
-    right: 10%;
-    bottom: 30%;
+    right: 24%;
+    top: 50%;
 
     width: 100px;
     height: 100px;

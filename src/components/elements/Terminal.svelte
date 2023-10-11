@@ -8,6 +8,10 @@
 -SPRING
     TERMINAL
         CONTAINER
+            INFOS
+                CELL
+                    ICON
+                        QUESTION
             INPUT
                 LINE
                     ICON
@@ -26,7 +30,7 @@
     // --BIND
     export let terminal_ON = false
 
-// #IMPORT
+// #IMPORTS
 
     // --JS
     import { CommandError, CommandSuccess } from '../../assets/js/managers/mCommand'
@@ -46,7 +50,9 @@
     import Cell from '../covers/Cell.svelte'
     import Icon from '../covers/Icon.svelte'
 
-    // --COMPONENT-ICON
+    // --COMPONENT-ICONS
+    import Question from '../icons/Question.svelte'
+    import Cross from '../icons/Cross.svelte'
     import CommandLine from '../icons/CommandLine.svelte'
 
 // #CONSTANTES
@@ -54,7 +60,7 @@
     // --ELEMENT-TERMINAL
     const
     TERMINAL = 'terminal',
-    TERMINAL_ROTATE_Y = MATH.toRad(6),
+    TERMINAL_ROTATE_Y = MATH.toRad(5),
     TERMINAL_HISTORY = ['app '],
     TERMINAL_EVENTS = { mouseDown: terminal_e$MouseDown }
 
@@ -91,6 +97,9 @@
     output,
 
     output_LINES = []
+
+    // --ELEMENT-MANUAL
+    let manual_ON = false
 
 // #REACTIVE
 
@@ -225,13 +234,15 @@
     }
 
     // --COMMANDS
-    function terminal_c$Log(msg)
+    function terminal_c$Log(msg, datas = null)
     {
         const
         [ERROR, SUCCESS] = [msg instanceof Error, msg instanceof CommandSuccess],
         [NAME, MESSAGE] = ERROR || SUCCESS ? [msg.name, msg.message.trim()] : [void 0, msg.trim()]
 
-        output_LINES = [...output_LINES, { error: ERROR, success: SUCCESS, name: NAME, message: MESSAGE }] // svelte update array
+        const LINE = { error: ERROR, success: SUCCESS, name: NAME, message: MESSAGE, datas }
+
+        output_LINES = [...output_LINES, LINE]
 
         output_update()
     }
@@ -263,7 +274,9 @@
         terminal_FOCUS = false
     }
 
-    function cell_eClick() { input_fieldFocus() }
+    function cell_eClick(on) { manual_ON = on }
+
+    function cell_eClick2() { input_fieldFocus() }
 
     async function input_e$Resize() { input_setVars() }
 
@@ -352,18 +365,23 @@
 
     async function terminal_analyse()
     {
-        const FIND = (await PROCESS.process_spellChecker(input_CURRENT_VALUE))[0]
+        const DATAS = (await PROCESS.process_spellChecker(input_CURRENT_VALUE))[0]
 
-        if (FIND)
+        if (DATAS)
         {
-            terminal_c$Log('=> ' + FIND.str)
-
-            terminal_ON = false
-            
-            input_reset()
+            terminal_c$Log('=> ' + DATAS.str)
     
-            FIND.callback(FIND.str, FIND.target)
+            terminal_goTo(DATAS)
+
+            input_reset()
         }
+    }
+
+    function terminal_goTo(datas)
+    {
+        terminal_ON = false
+
+        datas.callback(datas.str, datas.target)
     }
 
 // #CYCLES
@@ -384,84 +402,148 @@ on:mouseleave={terminal_eMouseLeave}
 >
     <div
     class="container"
+    class:manual={manual_ON}
     >
-        <p>
-            recherche:
-            [<span>text</span>]
-            commande:
-            [<span>app...</span>]
-        </p>
-
-        <h3>TERMINAL</h3>
-
-        <Line>
+        <div
+        class="back"
+        >
             <Cell
-            on:click={cell_eClick}
-            slot="id"
+            prop_CONTAINER={true}
+            on:click={cell_eClick.bind(null, false)}
             >
                 <Icon
-                prop_COLOR={COLORS.primary}
+                prop_COLOR={COLORS.light}
                 >
-                    <CommandLine />
+                    <Cross />
                 </Icon>
             </Cell>
-
-            <div
-            class="input"
-            slot="content"
-            >
-                <input
-                type="text"
-                maxlength={input_LENGTH}
-                spellcheck="false"
-                bind:this={input_FIELD}
-                bind:value={input_CURRENT_VALUE}
-                on:input={input_eInput}
-                on:keyup|preventDefault={input_eKeyup}
-                />
-
-                <div
-                class="mirror"
-                class:app-available={mirror_APP_AVAILABLE}
-                class:command-available={mirror_COMMAND_AVAILABLE}
-                >
-                    {#each [0, 1, 2] as i}
-                        <pre
-                        bind:this={MIRROR_FIELDS[i]}
-                        ></pre>
-                    {/each}
-                </div>
-            </div>
-        </Line>
+    
+            <p>
+                FONCTIONS DU TERMINAL:
+            <br>
+            <br>
+                - RECHERCHER PAR MOTS CLÉS UNE SECTION OU UNE INFORMATION
+            <br>
+                <span>
+                    Vous pouvez retrouver la liste des mots clés avec la commande
+                    <span>app keywords</span>
+                </span>
+            <br>
+            <br>
+                - TAPER UNE COMMANDE POUR OBTENIR UNE INFORMATION, MODIFIER L'AFFICHAGE OU OPTIMISER LE SITE WEB
+            <br>
+                <span>
+                    Vous pouvez retrouver la liste des commandes avec la commande
+                    <span>app commands</span>
+                </span>
+            </p>
+        </div>
 
         <div
-        class="output"
-        bind:this={output}
+        class="face"
         >
-            {#each output_LINES as line, i}
-                <Line>
-                    <span
-                    slot="id"
+            <div
+            class="infos"
+            >
+                <Cell
+                prop_CONTAINER={true}
+                on:click={cell_eClick.bind(null, true)}
+                >
+                    <Icon
+                    prop_COLOR={COLORS.light}
                     >
-                        {i}
-                    </span>
+                        <Question />
+                    </Icon>
+                </Cell>
+        
+                <p>
+                    recherche:
+                    [<span>text</span>]
+                    commande:
+                    [<span>app...</span>]
+                </p>
+            </div>
+
+            <h3>TERMINAL</h3>
+
+            <Line>
+                <Cell
+                on:click={cell_eClick2}
+                slot="id"
+                >
+                    <Icon
+                    prop_COLOR={COLORS.primary}
+                    >
+                        <CommandLine />
+                    </Icon>
+                </Cell>
+
+                <div
+                class="input"
+                slot="content"
+                >
+                    <input
+                    type="text"
+                    maxlength={input_LENGTH}
+                    spellcheck="false"
+                    bind:this={input_FIELD}
+                    bind:value={input_CURRENT_VALUE}
+                    on:input={input_eInput}
+                    on:keyup|preventDefault={input_eKeyup}
+                    />
 
                     <div
-                    slot="content"
+                    class="mirror"
+                    class:app-available={mirror_APP_AVAILABLE}
+                    class:command-available={mirror_COMMAND_AVAILABLE}
                     >
-                        {#if line.name}
-                            <span
-                            class:error={line.error}
-                            class:success={line.success}
-                            >
-                                {line.name}:
-                            </span>
-                        {/if}
-
-                        <pre>{line.message}</pre>
+                        {#each [0, 1, 2] as i}
+                            <pre
+                            bind:this={MIRROR_FIELDS[i]}
+                            ></pre>
+                        {/each}
                     </div>
-                </Line>
-            {/each}
+                </div>
+            </Line>
+
+            <div
+            class="output"
+            bind:this={output}
+            >
+                {#each output_LINES as line, i}
+                    <Line>
+                        <span
+                        slot="id"
+                        >
+                            {i}
+                        </span>
+
+                        <div
+                        slot="content"
+                        >
+                            {#if line.name}
+                                <span
+                                class:error={line.error}
+                                class:success={line.success}
+                                >
+                                    {line.name}:
+                                </span>
+                            {/if}
+
+                            {#if line.datas}
+                                <button
+                                title={line.datas.str ?? ''}
+                                on:click={terminal_goTo(line.datas)}
+                                >
+                                    {line.message}
+                                </button>
+                            {:else}
+                                <pre>{line.message}</pre>
+                            {/if}
+                        </div>
+                    </Line>
+                {/each}
+            </div>
         </div>
     </div>
 </div>
@@ -489,7 +571,7 @@ lang="scss"
 
 .terminal
 {
-    $r-y: var(--r-y, 6deg);
+    $r-y: var(--r-y, 5deg);
 
     @include position.placement(absolute, $top: 44%, $right: app.$gap-inline);
 
@@ -510,40 +592,87 @@ lang="scss"
 
     .container
     {
-        #{--icon-size}: 2.4rem;
-
-        @extend %f-column;
-        @extend %any;
+        #{--cell-size}: var(--icon-size, 2.4rem);
 
         transform-origin: right;
         transform-style: preserve-3d;
         transform: rotateY(calc($r-y * -1)) translateX(calc(100% + app.$gap-inline));
 
-        padding: 2rem 4rem;
-
-        background-color: $dark;
-
-        border: solid $light .1rem;
-
-        box-sizing: border-box;
-        box-shadow: 0 0 .6rem $light;
-
-        transition: transform .4s ease-out;
-
-        &>p
+        &, .back, .face
         {
-            @include font.content($light, $font-size: map.get(font.$font-sizes, s1));
+            @extend %any;
 
-            text-align: right;
+            transition: transform .4s ease-out;
+        }
+
+        &, .face { @include position.placement(absolute, 0, 0, 0, 0); }
+
+        .back, .face
+        {
+            padding: 2rem 4rem;
+
+            background-color: $dark;
+            backface-visibility: hidden;
+
+            border: solid $light .1rem;
+
+            box-sizing: border-box;
+        }
+
+        .back
+        {
+            transform: rotateY(180deg);
+
+            box-shadow: 0 0 .6rem $light;
             
-            span { color: $primary; }
+            p
+            {
+                @include font.content($light, $font-size: map.get(font.$font-sizes, s3));
+
+                margin-top: 2rem;
+
+                &>span
+                {
+                    font-size: map.get(font.$font-sizes, s2);
+
+                    span
+                    {
+                        color: $primary;
+                        user-select: text;
+                    }
+                }
+            }
+        }
+
+        .face
+        {
+            #{--icon-size}: 2.4rem;
+
+            @extend %f-column;
+
+            box-shadow: 0 0 .6rem $primary;
+        }
+
+        .infos
+        {
+            display: flex;
+            justify-content: space-between;
+
+            p
+            {
+                @include font.content($light, $font-size: map.get(font.$font-sizes, s1));
+
+                text-align: right;
+                
+                span { color: $primary; }
+            }
         }
 
         h3
         {
             &::before
             {
-                @include position.placement(absolute, $top: 4%, $left: -1%, $pseudo-element: 'TERMINAL');
+                @include position.placement(absolute, $top: 4%, $left: -.5%, $pseudo-element: 'TERMINAL');
 
                 color: $dark;
             }
@@ -556,6 +685,13 @@ lang="scss"
             font-family: '8bitArcadeIn';
             font-size: map.get(font.$font-sizes, s4);
             line-height: .6;
+        }
+
+        &.manual
+        {
+            .back { transform: rotateY(0); }
+
+            .face { transform: rotateY(-180deg); }
         }
     }
 
@@ -625,6 +761,19 @@ lang="scss"
 
         .error { color: $indicator; }
         .success { color: $primary; }
+
+        button
+        {
+            padding: .2rem .6rem;
+
+            background-color: $light;
+
+            border: none;
+
+            color: $dark;
+
+            cursor: pointer;
+        }
     }
 
     @include media.min($ms3)
@@ -634,7 +783,7 @@ lang="scss"
 
         .container
         {
-            &>p { font-size: map.get(font.$font-sizes, s2); }
+            .infos p { font-size: map.get(font.$font-sizes, s2); }
     
             h3 { font-size: map.get(font.$font-sizes, s7); }
         }

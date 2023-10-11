@@ -109,16 +109,18 @@ class Process
     #process_c$Keywords()
     {
         if (COMMAND.command_testCommand('log'))
-            for (const NAME of this.#process_KEYWORDS) COMMAND.command_COMMANDS.log(NAME)
+            for (const DATAS of this.#process_KEYWORDS) COMMAND.command_COMMANDS.log(DATAS.str, DATAS)
     }
 
     // --UTILS
-    process_push(datas, callback)
+    process_push(strs, callback)
     {
-        for (const STR in datas)
+        for (const STR in strs)
         {
-            this.#process_KEYWORDS.push(STR)
-    
+            const DATAS = { target: strs[STR], str: STR, callback }
+
+            this.#process_KEYWORDS.push(DATAS)
+
             let _ = this.#process_TREE
 
             for (let i = 0; i < STR.length; i++)
@@ -130,7 +132,7 @@ class Process
                 _ = _.children[L]
             }
 
-            _.data = { target: datas[STR], str: STR, callback }
+            _.datas = DATAS
         }
     }
 
@@ -172,9 +174,9 @@ class Process
 
         this.#process_PREVIOUS_L = l
 
-        if (DISTANCE < this.#process_MIN && node.data)
+        if (DISTANCE < this.#process_MIN && node.datas)
         {
-            this.#process_FIND = node.data
+            this.#process_FIND = node.datas
             this.#process_MIN = DISTANCE
         }
         else

@@ -63,6 +63,7 @@
     // --COMPONENT-ELEMENTS
     import Mask from '../elements/Mask.svelte'
     import Cube from '../elements/Cube.svelte'
+    import TicTacToe from '../elements/TicTacToe.svelte'
     import Terminal from '../elements/Terminal.svelte'
 
     // --COMPONENT-ICONS
@@ -91,6 +92,9 @@
     group_start,
     group_stop
 
+    // --ELEMENT-TICTACTOE
+    let tictactoe_ON = false
+
     // --ELEMENT-TERMINAL
     let terminal_ON = false
 
@@ -105,7 +109,9 @@
 
 // #FUNCTIONS
 
-    // --UPDATE
+    // --UPDATES
+    function tictactoe_update(on) { tictactoe_ON = on }
+
     function terminal_update(on) { terminal_ON = on }
 
     // --EVENT
@@ -113,6 +119,9 @@
     {
         switch (id)
         {
+            case 1:
+                tictactoe_update(!tictactoe_ON)
+                break
             case 2:
                 terminal_update(!terminal_ON)
                 break
@@ -128,8 +137,7 @@
 
         await tick()
 
-        console.log(str)
-
+        tictactoe_update(str === 'tictactoe')
         terminal_update(str === 'terminal')
     }
 </script>
@@ -181,6 +189,10 @@ class="home"
             </GravityArea>
         {/each}
     </Group>
+
+    {#if tictactoe_ON}
+        <TicTacToe />
+    {/if}
 
     <Terminal
     bind:terminal_ON

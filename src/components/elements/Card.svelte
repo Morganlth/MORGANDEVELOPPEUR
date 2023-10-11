@@ -135,7 +135,7 @@
         const [WIDTH, HEIGHT] = [window.innerWidth, window.innerHeight]
 
         card_TRANSLATE_X = WIDTH * .5 - WIDTH * .05 * prop_ID
-        card_TRANSLATE_Y = HEIGHT * .85 - card.offsetHeight - HEIGHT * .08 * prop_ID
+        card_TRANSLATE_Y = HEIGHT * .8 - card.offsetHeight - HEIGHT * .08 * prop_ID
 
         card_ROTATE_X = (card_ROTATE_Y = 0)
         card_ROTATE_Z = card_getRZ()
