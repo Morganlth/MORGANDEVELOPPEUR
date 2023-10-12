@@ -117,7 +117,7 @@ style:--features-sin={features_SIN}
                 style:width="{topic_WIDTH}px"
                 >
                     <p
-                    style:transform="rotate({track_ROTATE + (i ? 0 : Math.PI)}rad)"
+                    style:transform="translateX(40%) rotate({track_ROTATE + (i ? 0 : Math.PI)}rad)"
                     data-topic={feature.topics[i ? 0 : feature.topics.length - 1]}
                     >
                         {feature.topics[i ? 0 : feature.topics.length - 1]}
@@ -161,6 +161,7 @@ lang="scss"
 @use '../../assets/scss/styles/utils';
 @use '../../assets/scss/styles/position';
 @use '../../assets/scss/styles/display';
+@use '../../assets/scss/styles/size';
 @use '../../assets/scss/styles/font';
 
 /* #FEATURES */
@@ -169,10 +170,9 @@ lang="scss"
 {
     @include position.placement(absolute, 0, 0, 0, 0);
 
-    opacity: 0;
+    @extend %any;
 
-    width: 100vw;
-    height: 100%;
+    opacity: 0;
 
     perspective: 200px;
 

@@ -65,8 +65,12 @@ constructor ()
 
     command_c$Commands()
     {
-        if (this.command_testCommand('log'))
+        if (this.command_testCommand('log') && this.command_testCommand('clear'))
+        {
+            this.command_COMMANDS.clear()
+        
             for (const NAME of this.#command_KEYWORDS) this.#command_COMMANDS.log(NAME)
+        }
     }
 
     command_c$Fps() { if (this.command_testCommand('log')) fps_get().then(fps => this.#command_COMMANDS.log(fps + ' fps')) }

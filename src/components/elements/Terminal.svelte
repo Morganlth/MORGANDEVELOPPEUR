@@ -679,7 +679,7 @@ lang="scss"
 
             position: relative;
 
-            margin-bottom: 3rem;
+            margin-bottom: 2rem;
 
             color: $light;
             font-family: '8bitArcadeIn';
@@ -788,6 +788,6 @@ lang="scss"
             h3 { font-size: map.get(font.$font-sizes, s7); }
         }
     }
-    @include media.min($height: $ms4) { top: 36%; }
+    @include media.min($height: $ms4) { top: 33%; }
 }
 </style>

@@ -27,18 +27,6 @@
 
     // --BINDS
     export let page_CHARGED = false
-    
-    export const PAGE_ELEMENT =
-    {
-        component: Icon,
-        props:
-        {
-            prop_SIZE: 'calc(var(--title-size) * .71)',
-            prop_COLOR: COLORS.light,
-            prop_SPRING: false
-        },
-        children: [{ component: Logo }]
-    }
 
     // BIND page_process
 
@@ -46,9 +34,6 @@
 
     // --JS
     import MATH from '../../assets/js/utils/math'
-
-    // --LIB
-    import COLORS from '$lib/colors'
 
     // --CONTEXT
     import { EVENT } from '../../App.svelte'
@@ -66,24 +51,8 @@
     import TicTacToe from '../elements/TicTacToe.svelte'
     import Terminal from '../elements/Terminal.svelte'
 
-    // --COMPONENT-ICONS
-    import Logo from '../icons/Logo.svelte'
-    import Grid from '../icons/Grid.svelte'
-    import CommandLine from '../icons/CommandLine.svelte'
-
     // --COMPONENT-DECOR
     import SpaceCube from '../decors/SpaceCube.svelte'
-    import Icon from '../covers/Icon.svelte';
-
-// #CONSTANTE
-
-    // --ELEMENT-GROUP
-    const GROUP_DATAS = prop_CUBES.map(cube =>
-    {
-        cube.component = [Logo, Grid, CommandLine][cube.id]
-
-        return cube
-    })
 
 // #VARIABLES
 
@@ -167,7 +136,7 @@ class="home"
     bind:group_start
     bind:group_stop
     >
-        {#each GROUP_DATAS as cube}
+        {#each prop_CUBES as cube}
             <GravityArea
             let:rotation
             let:grabbing

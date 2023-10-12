@@ -662,7 +662,11 @@ lang="scss"
         height: 100vh;
     }
 
+    @include position.placement(absolute, 0, 0, 0, 0);
+
     @extend %f-center;
+
+    z-index: 1;
 
     pointer-events: none;
 

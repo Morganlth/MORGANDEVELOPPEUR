@@ -108,8 +108,12 @@ class Process
     // --COMMAND
     #process_c$Keywords()
     {
-        if (COMMAND.command_testCommand('log'))
+        if (COMMAND.command_testCommand('log') && COMMAND.command_testCommand('clear'))
+        {
+            COMMAND.command_COMMANDS.clear()
+        
             for (const DATAS of this.#process_KEYWORDS) COMMAND.command_COMMANDS.log(DATAS.str, DATAS)
+        }
     }
 
     // --UTILS

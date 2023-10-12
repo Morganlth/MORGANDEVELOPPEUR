@@ -27,12 +27,6 @@
     // --SVELTE
     import { onMount, onDestroy } from 'svelte'
 
-    // --COMPONENT-PAGES
-    import Home from '../pages/Home.svelte'
-    import Presentation from '../pages/Presentation.svelte'
-    import Skills from '../pages/Skills.svelte'
-    import Projects from '../pages/Projects.svelte'
-
     // --COMPONENT-COVER
     import Page from '../covers/Page.svelte'
 
@@ -50,9 +44,6 @@
         scroll: wait_throttle(main_e$Scroll, 16.67),
         resize: main_e$Resize
     }
-
-    // --ELEMENT-PAGES
-    const PAGES_PAGES = pages_get()
 
     // --ELEMENT-ROUTER
     const ROUTER_LINKS = PAGES_DATAS.map(page => router_getRoute(page))
@@ -101,9 +92,9 @@
     {
         let h = 0
 
-        for (let i = PAGES_PAGES.length - 1; i >= 0; i--)
+        for (let i = 0; i < PAGES_DATAS.length; i++)
         {
-            const PAGE = PAGES_PAGES[i]
+            const PAGE = PAGES_DATAS[i]
     
             page_setVars(PAGE, i, h)
     
@@ -140,17 +131,6 @@
     function main_destroyEvents() { EVENT.event_remove(MAIN_EVENTS) }
 
     // --GET
-    function pages_get()
-    {
-        return PAGES_DATAS.map((page, i) =>
-        {
-            return {
-            ...page,
-            component:  [Home, Presentation, Skills, Projects][i],
-            }
-        }).reverse()
-    }
-
     function page_getIntro(start, scrollTop)
     {
         const DIF = scrollTop - start
@@ -158,7 +138,7 @@
         return DIF >= 0 && DIF < window.innerHeight
     }
 
-    function router_getRoute(page) { return { id: page.id, ...page.link } }
+    function router_getRoute(page) { return { id: page.id, ...page.route } }
 
     // --UPDATES
     function main_update(scrollTop)
@@ -170,10 +150,10 @@
 
     function pages_update(scrollTop)
     {
-        for (let i = 0; i < PAGES_PAGES.length; i++)
+        for (let i = 0; i < PAGES_DATAS.length; i++)
         {
             const
-            PAGE = PAGES_PAGES[i],
+            PAGE = PAGES_DATAS[i],
             RATIO = (scrollTop - PAGE.start) / PAGE.dif
 
             page_updateProps(PAGE, i,
@@ -188,9 +168,9 @@
 
     function pages_updateFocus(id)
     {
-        for (let i = 0; i < PAGES_PAGES.length; i++)
+        for (let i = 0; i < PAGES_DATAS.length; i++)
         {
-            const PAGE = PAGES_PAGES[i]
+            const PAGE = PAGES_DATAS[i]
     
             PAGE.focus = PAGE.id === id
 
@@ -202,7 +182,7 @@
     {
         for (const KEY in props) if (KEY in page.props) page.props[KEY] = props[KEY]
 
-        PAGES_PAGES[i] = page
+        PAGES_DATAS[i] = page
     }
 
     function router_update(value) { if (ROUTER.router_$HIDE.value !== value) ROUTER.router_$HIDE = { value, target: MAIN } }
@@ -251,9 +231,17 @@ style:height="{MAIN_HEIGHT}vh"
     class="pages"
     class:hide={$app_$HIDE}
     >
-        {#each PAGES_PAGES as page (page.id)}
+        {#each PAGES_DATAS as page (page.id)}
             <Page
-            prop_PAGE={page}
+            prop_NAME={page.name}
+            prop_FOCUS={page.focus}
+            prop_INTRO={page.intro}
+            prop_COMPONENT={page.component}
+            prop_INFO={page.info}
+            prop_TITLE={page.title}
+            prop_NAV={page.nav}
+            prop_PROPS={page.props}
+            prop_PROCESS={page.process}
             />
         {/each}
     </div>

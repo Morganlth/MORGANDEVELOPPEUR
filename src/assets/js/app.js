@@ -6,9 +6,42 @@
   /////////////////////////////////////////////HOME////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         {
             name: 'home',
+            component: Home,
             tags: ['landing', 'accueil'],
             overflow: false,
             h: 1
+        ,
+            route:
+            {
+                value: 'ACCUEIL',
+                alt: 'Accueil',
+                label: 'Page accueil / home du site Morgan Développeur'
+            }
+        ,
+            info: 'FR'
+        ,
+            title:
+            {   
+                fragments:
+                [
+                    { frags: 'DEVELOPPEUR' },
+                    {
+                        frags: 'WEB',
+                        tags: ['FRONT', 'BACK', '& DESIGNER']
+                    }
+                ],
+                element:
+                {
+                    component: Icon,
+                    props:
+                    {
+                        prop_SIZE: 'calc(var(--title-size) * .71)',
+                        prop_COLOR: COLORS.light,
+                        prop_SPRING: false
+                    },
+                    children: [{ component: Logo }]
+                }
+            }
         ,
             children: [HOME_SPACECUBE, HOME_CUBES]
         ,
@@ -18,61 +51,68 @@
                 prop_TOP: 0,
                 prop_RATIO: 0
             }
-        ,
-            link:
-            {
-                value: 'ACCUEIL',
-                alt: 'Accueil',
-                label: 'Page accueil / home du site Morgan Développeur'
-            }
-        ,
-            wrapper:
-            {
-                contents:
-                [
-                    { frags: 'DEVELOPPEUR' },
-                    {
-                        frags: 'WEB',
-                        tags: ['FRONT', 'BACK', '& DESIGNER']
-                    }
-                ],
-                info: 'FR'
-            }
         }
 , /////////////////////////////////////////////PRESENTATION////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         {
             name: 'presentation',
+            component: Presentation,
             tags: ['caracteristique'],
             overflow: true,
             h: 7
         ,
-            children: [PRESENTATION_FEATURES]
+            route:
+            {
+                value: 'PRÉSENTATION',
+                alt: 'Ma présentation',
+                label: 'Page de ma présentation personnel'
+            }
+        ,
+            info: 'SNAKE'
+        ,
+            title:
+            {
+                fragments:
+                [
+                    {
+                        frags: 'MA',
+                        tags: ['IDENTITÉ', 'LOCALITÉ', 'ÉTUDES', 'PRO', 'CONTACT']
+                    },
+                    { frags: 'PRESENTATION' }
+                ]
+            }
         ,
             nav:
             [
                 {
                     id: 0,
                     title: 'Page de contact',
-                    value: 'CONTACT'
+                    value: 'CONTACT',
+                    component: Arroba
                 },
                 {
                     id: 1,
                     title: 'Jouer au jeu du serpent revisité',
-                    value: 'JOUER'
+                    value: 'JOUER',
+                    component: Game
                 },
                 {
                     id: 2,
                     title: '',
                     value: '',
+                    component: Snake2,
+                    color: COLORS.indicator,
                     update: function (on)
                     {
                         on ??= !localStorage.getItem('snake')
             
                         this.title = `${on ? 'Masque' : 'Affiche'} le serpent`,
                         this.value = on ? 'MASQUER' : 'AFFICHER'
+                        this.color = COLORS[on ? 'indicator' : 'primary']
                     }
                 }
             ]
+        ,
+            children: [PRESENTATION_FEATURES]
         ,
             props:
             {
@@ -83,35 +123,35 @@
                 prop_END: void 0,
                 prop_DIF: void 0
             }
-        ,
-            link:
-            {
-                value: 'PRÉSENTATION',
-                alt: 'Ma présentation',
-                label: 'Page de ma présentation personnel'
-            }
-        ,
-            wrapper:
-            {
-                contents:
-                [
-                    {
-                        frags: 'MA',
-                        tags: ['IDENTITÉ', 'LOCALITÉ', 'ÉTUDES', 'PRO', 'CONTACT']
-                    },
-                    { frags: 'PRESENTATION' }
-                ],
-                info: 'SNAKE'
-            }
         }
 , /////////////////////////////////////////////SKILLS////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         {
             name: 'skills',
+            component: Skills,
             tags: ['competences'],
             overflow: true,
             h: 7
         ,
-            children: [SKILLS_SYSTEM]
+            route:
+            {
+                value: 'COMPÉTENCES',
+                alt: 'Mes compétences',
+                label: 'Page de mes compétences de développeur web'
+            }
+        ,
+            info: 'SYSTEM'
+        ,
+            title:
+            {
+                fragments:
+                [
+                    {
+                        frags: 'MES',
+                        tags: ['HTML', 'CSS', 'JS', 'NODE JS', 'GESTION', 'ADAPTABILITÉ']
+                    },
+                    { frags: 'COMPETENCES' }
+                ]
+            }
         ,
             nav:
             [
@@ -137,6 +177,8 @@
                 }
             ]
         ,
+            children: [SKILLS_SYSTEM]
+        ,
             props:
             {
                 prop_FOCUS: false,
@@ -146,35 +188,35 @@
                 prop_START: void 0,
                 prop_DIF: void 0
             }
-        ,
-            link:
-            {
-                value: 'COMPÉTENCES',
-                alt: 'Mes compétences',
-                label: 'Page de mes compétences de développeur web'
-            }
-        ,
-            wrapper:
-            {
-                contents:
-                [
-                    {
-                        frags: 'MES',
-                        tags: ['HTML', 'CSS', 'JS', 'NODE JS', 'GESTION', 'ADAPTABILITÉ']
-                    },
-                    { frags: 'COMPETENCES' }
-                ],
-                info: 'SYSTEM'
-            }
         }
 , /////////////////////////////////////////////PROJECTS////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         {
             name: 'projects',
+            component: Projects,
             tags: ['projets'],
             overflow: false,
             h: 3
         ,
-            children: [PROJECTS_CARDS]
+            route:
+            {
+                value: 'PROJETS',
+                alt: 'Mes projets',
+                label: 'Page de mes projets web'
+            }
+        ,
+            info: 'CARDS'
+        ,
+            title:
+            {
+                fragments:
+                [
+                    {
+                        frags: 'MES',
+                        tags: ['BOOKI', 'SOPHIE BLUEL', 'NINA CARDUCCI']
+                    },
+                    { frags: 'PROJETS' }
+                ]
+            }
         ,
             nav:
             [
@@ -195,53 +237,34 @@
                 }
             ]
         ,
+            children: [PROJECTS_CARDS]
+        ,
             props:
             {
+                prop_FOCUS: false,
                 prop_INTRO: false,
                 prop_TOP: 0,
-                prop_RATIO: 0
-            }
-        ,
-            link:
-            {
-                value: 'PROJETS',
-                alt: 'Mes projets',
-                label: 'Page de mes projets web'
-            }
-        ,
-            wrapper:
-            {
-                contents:
-                [
-                    {
-                        frags: 'MES',
-                        tags: ['BOOKI', 'SOPHIE BLUEL', 'NINA CARDUCCI']
-                    },
-                    { frags: 'PROJETS' }
-                ],
-                info: 'SPACE'
+                prop_START: void 0
             }
         }
     ].map((page, id) =>
     {
         page.id = id
-
         page.focus = (page.intro = false)
-
         page.top = (page.start = (page.end = (page.dif = 0)))
+
+        page.route = app_getRoute({ ...page.route, href: page.name })
+        page.title = app_getTitle(id, page.title)
 
         const [PROCESS, PROPS] = app_getChildrenDatas(page.children)
 
-        page.process = Object.assign(PROCESS, app_getProcess([page.name, ...page.tags]))
         page.props = Object.assign(PROPS, page.props)
-
-        page.link = app_getLink({ ...page.link, href: page.name })
-        page.wrapper = app_getWrapper(id, page.wrapper)
+        page.process = Object.assign(PROCESS, app_getProcess([page.name, ...page.tags]))
 
         return page
     })
 
-// #IMPORT
+// #IMPORTS
 
     // --JS
     import HOME_SPACECUBE from './datas/home/dSpacecube'
@@ -253,9 +276,51 @@
 
     import PROJECTS_CARDS from './datas/projects/dCards'
 
+    // --LIB
+    import COLORS from '$lib/colors'
+
+    // --COMPONENT-PAGES
+    import Home from '../../components/pages/Home.svelte'
+    import Presentation from '../../components/pages/Presentation.svelte'
+    import Skills from '../../components/pages/Skills.svelte'
+    import Projects from '../../components/pages/Projects.svelte'
+
+    // --COMPONENT-COVER
+    import Icon from '../../components/covers/Icon.svelte'
+
+    // --COMPONENT-ICONS
+    import Logo from '../../components/icons/Logo.svelte'
+    import Arroba from '../../components/icons/Arroba.svelte'
+    import Game from '../../components/icons/Game.svelte'
+    import Snake2 from '../../components/icons/Snake2.svelte'
+
 // #FUNCTIONS
 
     // --GET
+    function app_getRoute({value, href, alt, label})
+    {
+        return (
+        {
+            on: false,
+            value,
+            attributes:
+            {
+                href: '#' + href,
+                alt,
+                'aria-label': label
+            }
+        })
+    }
+
+    function app_getTitle(id, title)
+    {
+        return (
+        {
+            html: 'h' + (id ? 2 : 1),
+            ...title
+        })
+    }
+
     function app_getChildrenDatas(children = [])
     {
         const
@@ -291,33 +356,4 @@
         for (const TAG of tags) PROCESS[TAG] = 'top'
 
         return PROCESS
-    }
-
-
-    function app_getLink({value, href, alt, label})
-    {
-        return (
-        {
-            on: false,
-            value,
-            attributes:
-            {
-                href: '#' + href,
-                alt,
-                'aria-label': label
-            }
-        })
-    }
-
-    function app_getWrapper(id, {contents, info})
-    {
-        return (
-        {
-            prop_TITLE:
-            {
-                htmlElement: id ? 'h2' : 'h1',
-                contents
-            },
-            prop_INFO: info
-        })
     }

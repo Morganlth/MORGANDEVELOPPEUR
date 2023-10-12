@@ -23,10 +23,11 @@
     export let
     prop_$RESIZE = {},
 
-    prop_CARD_HOVER = void 0,    // hovering card id
+    prop_CARD_HOVER = void 0,   // hovering card id
 
     prop_ID = void 0,
 
+    prop_ON = false,
     prop_TARGET = false,
 
     prop_CONTENT = '',
@@ -40,6 +41,7 @@
 
     // --JS
     import { wait_throttle } from '../../assets/js/utils/wait'
+    import { animation } from '../../assets/js/utils/animation'
 
     // --LIB
     import COLORS from '$lib/colors'
@@ -49,7 +51,7 @@
 
     // --SVELTE
     import { onMount, onDestroy } from 'svelte'
-    import { cubicIn } from 'svelte/easing'
+    import { cubicIn, cubicOut, cubicInOut } from 'svelte/easing'
 
     // --COMPONENT-COVER
     import Icon from '../covers/Icon.svelte'
@@ -64,6 +66,7 @@
 
     // --ELEMENT-CARD
     const
+    CARD_DELAY = (prop_ID ?? 0) * 600, 
     CARD_PERSPECTIVE = 3000,
     CARD_EVENTS =
     {
@@ -82,6 +85,8 @@
     card,
 
     card_CHARGED = false,
+    card_ON = false,
+    card_START = true,
     card_GRABBING = false,
 
     card_TRANSLATE_X = 0,
@@ -90,6 +95,8 @@
     card_ROTATE_X = 0,
     card_ROTATE_Y = 0,
     card_ROTATE_Z = 0,
+
+    card_OPACITY = 0,
 
     card_TRANSITION_DURATION = 0,
 
@@ -108,10 +115,21 @@
     card_LAST,
     card_TIMEOUT
 
+    // --ELEMENT-DECOR
+    let
+    decor_TRANSLATE_Z = 0,
+
+    decor_ROTATE_Y = 0
+
     // --ELEMENT-TAG
     let
     tag_FOCUS = false,
     tag_DELAY
+
+// #REACTIVE
+
+    // --ELEMENT-CARD
+    $: card_CHARGED ? card_update(prop_ON, prop_TARGET) : void 0
 
 // #FUNCTIONS
 
@@ -122,27 +140,20 @@
 
         prop_$RESIZE.push(card_e$Resize)
 
-        card_TIMEOUT = setTimeout(() =>
-        {
-            card_setTransition()
-
-            card_CHARGED = true
-        }, 200.04)
+        card_CHARGED = true
     }
 
     function card_setVars()
     {
-        const [WIDTH, HEIGHT] = [window.innerWidth, window.innerHeight]
-
-        card_TRANSLATE_X = WIDTH * .5 - WIDTH * .05 * prop_ID
-        card_TRANSLATE_Y = HEIGHT * .8 - card.offsetHeight - HEIGHT * .08 * prop_ID
+        card_TRANSLATE_X = card_getTranslateX()
+        card_TRANSLATE_Y = card_getTranslateY() + (card_ON ? 0 : window.innerHeight)
 
         card_ROTATE_X = (card_ROTATE_Y = 0)
         card_ROTATE_Z = card_getRZ()
     
         card_HALF_WIDTH = card.offsetWidth / 2
         card_HALF_HEIGHT = card.offsetHeight / 2
-
+    
         card_X = card_HALF_WIDTH
         card_Y = card_HALF_HEIGHT
     }
@@ -151,12 +162,12 @@
 
     function card_setEvents2() { EVENT.event_add(CARD_EVENTS_2) }
 
-    function card_setTransition() { card_TRANSITION_DURATION = 400 }
+    function card_setTransition(value) { card_TRANSITION_DURATION = value }
 
     // --DESTROY
     function card_destroy()
     {
-        clearTimeout(card_TIMEOUT)
+        card_clear()
 
         card_destroyEvents()
 
@@ -168,11 +179,31 @@
     function card_destroyEvents2() { EVENT.event_remove(CARD_EVENTS_2) }
 
     // --GET
+    function card_getTranslateX() { return window.innerWidth * .5 - window.innerWidth * .05 * prop_ID }
+
+    function card_getTranslateY() { return window.innerHeight * .8 - card.offsetHeight - window.innerHeight * .08 * prop_ID }
+
     function card_getRZ() { return 10 - 10 * prop_ID }
 
     function tag_getTransform(x, y, scale) { return `translate(${x}, ${y}) scale(${scale})` }
 
     // --UPDATES
+    function card_update(on, target)
+    {
+        const ON = ~target && on
+
+        if (card && ON != card_ON)
+        {
+            card_clear()
+
+            ON ? card_aIn() : card_aOut()
+
+            card_ON = ON
+
+            if (!on) card_START = true
+        }
+    }
+
     function card_updateTranslate(x, y)
     {
         card_TRANSLATE_X = x - card_HALF_WIDTH
@@ -199,6 +230,14 @@
             }
             else return
         }
+    }
+
+    // --CLEAR
+    function card_clear()
+    {
+        clearTimeout(card_TIMEOUT)
+
+        cancelAnimationFrame(card.animation_FRAMEID)
     }
 
     // --EVENTS
@@ -279,14 +318,75 @@
         card_U -= .1
     }
 
-    // --TRANSITION
-    function card_tOut()
+    // --ANIMATIONS
+    function card_aIn()
     {
-        return {
-            duration: 400,
-            css: (t, u) => `transform: translate(${card_TRANSLATE_X}px, ${card_TRANSLATE_Y + window.innerHeight * u}px) rotateZ(${card_ROTATE_Z * t}deg)`,
-            easing: cubicIn
-        }
+        const
+        START_Y = card_TRANSLATE_Y,
+        END_Y = card_getTranslateY(),
+        DIF_Y = END_Y - START_Y
+    
+        card_ROTATE_Z = card_getRZ()
+        decor_ROTATE_Y = 180
+    
+        card_TIMEOUT = setTimeout(async () =>
+        {
+            card_OPACITY = 1
+
+            await animation.call(
+            card,
+            (t) =>
+            {
+                const EASING_T = cubicOut(t)
+
+                card_TRANSLATE_Y = START_Y + DIF_Y * EASING_T
+                decor_TRANSLATE_Z = -1000 * (1 - EASING_T)
+            },
+            200.04)
+
+            card_START = false
+        
+            card_aIn2()
+        },
+        card_START ? CARD_DELAY : 0)
+    }
+
+    function card_aIn2()
+    {
+        card_TIMEOUT = setTimeout(async () =>
+        {
+            await animation.call(
+            card,
+            (t) => decor_ROTATE_Y = 180 * cubicInOut(1 - t),
+            400.08)
+
+            card_setTransition(400)
+        },
+        50.01)
+    }
+
+    async function card_aOut()
+    {
+        const
+        TRANSLATE_Y = card_TRANSLATE_Y,
+        ROTATE_Z = card_ROTATE_Z
+
+        card_setTransition(0)
+    
+        await animation.call(
+        card,
+        (t) =>
+        {
+            const
+            EASING_T = cubicIn(t),
+            U = (1 - EASING_T)
+        
+            card_TRANSLATE_Y = TRANSLATE_Y + window.innerHeight * EASING_T
+            card_ROTATE_Z = ROTATE_Z * U
+        },
+        400.08)
+
+        card_OPACITY = 0
     }
 
     // --INTRO
@@ -345,16 +445,17 @@ perspective({CARD_PERSPECTIVE}px)
 rotateX({card_ROTATE_X}rad)
 rotateY({card_ROTATE_Y}rad)
 rotateZ({card_ROTATE_Z}deg)"
+style:opacity={card_OPACITY}
 style:transition-duration="{card_TRANSITION_DURATION}ms"
 bind:this={card}
 on:mousemove={card_eMouseMove}
 on:mouseenter={card_eMouseEnter}
 on:mouseleave={card_eMouseLeave}
 on:mousedown={card_eMouseDown}
-out:card_tOut|global
 >
     <div
     class="decor"
+    style:transform="rotateY({decor_ROTATE_Y}deg) translateZ({decor_TRANSLATE_Z}px)"
     >
         <svg
         class="background"
@@ -389,7 +490,7 @@ out:card_tOut|global
         </Icon>
     </div>
 
-    {#if card_CHARGED && (tag_FOCUS || prop_TARGET)}
+    {#if card_CHARGED && (tag_FOCUS || prop_TARGET === 1)}
         <Tag
         prop_DURATION={TAG_DURATION}
         prop_INTRO={tag_intro}
@@ -421,11 +522,11 @@ lang="scss"
     $card-ratio: math.div(333, 234);
     $size: max(14vw, 14vh);
 
+    &, .decor, .texture, :global .tag { transform-style: preserve-3d; }
+
     @extend %button-reset;
 
     position: absolute;
-
-    transform-style: preserve-3d;
 
     aspect-ratio: 234 / 333;
 
@@ -434,25 +535,16 @@ lang="scss"
 
     pointer-events: auto;
 
-    transition: transform ease-out;
+    transition: transform ease-out, opacity .2s;
 
     .decor
     {
-        $d: .15s;
-
         @extend %f-center;
 
-        transform-style: preserve-3d;
-        transform: rotateY(180deg) translate3d(0, 100vh, -800px);
-
         pointer-events: none;
-    
-        animation: aCardTranslate $d ease-out forwards, aCardRotate .4s $d + .05s ease-in-out forwards;
-
-        @keyframes aCardTranslate { to { transform: rotateY(180deg) translate3d(0, 0, 0); } }
-        @keyframes aCardRotate { to { transform: rotateY(0deg); } }
 
         .background { @extend %any; }
+
         .texture
         {
             position: absolute;

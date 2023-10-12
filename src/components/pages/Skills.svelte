@@ -28,10 +28,12 @@
     prop_DIF = void 0
 
     // --BIND
-    export let page_CHARGED = false
+    export let
+    page_CHARGED = false,
+
+    PAGE_NAV = { callback: nav_e$Click }
 
     // BIND page_process
-    // BIND nav_e$Click
 
 // #IMPORTS
 
@@ -55,9 +57,6 @@
 
     // --ELEMENT-SYSTEM
     let system_TARGET = null
-
-    // --ELEMENT-TABLE
-    let table_HEIGHT = 0
 
 // #REACTIVES
 
@@ -92,9 +91,9 @@
     // --RESET
     function skills_reset()
     {
+        PAGE_NAV.offset = 0
+    
         system_TARGET = null
-
-        table_HEIGHT = 0
     }
 
     // --EVENTS
@@ -149,7 +148,7 @@ class="skills"
         prop_TITLE={system_TARGET.tag}
         prop_LINES={system_TARGET.skills}
         prop_TRANSLATE_Y={0}
-        bind:head_HEIGHT={table_HEIGHT}
+        bind:head_HEIGHT={PAGE_NAV.offset}
         on:click={table_eClick}
         />
     {/if}

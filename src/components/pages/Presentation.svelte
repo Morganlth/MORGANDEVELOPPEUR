@@ -31,8 +31,9 @@
     // --BINDS
     export let page_CHARGED = false
 
+    export const PAGE_NAV = { callback: nav_e$Click }
+
     // BIND page_process
-    // BIND nav_e$Click
 
 // #IMPORTS
 
@@ -177,11 +178,6 @@ onMount(presentation_set)
 <div
 class="presentation"
 >
-    <Snake
-    prop_ON={snake_ON && prop_RATIO < 1}
-    bind:snake_GAME
-    />
-
     <Features
     {prop_FOCUS}
     {prop_FEATURES}
@@ -191,8 +187,12 @@ class="presentation"
 
     <Mask
     prop_SHADOW={true}
-    prop_COORDS={[45, -10]}
-    prop_GRADIENT={[50, 90]}
+    prop_GRADIENT={[50, 100]}
     prop_RATIO={prop_RATIO * mask_RATIO + 1}
+    />
+
+    <Snake
+    prop_ON={snake_ON && prop_RATIO < 1}
+    bind:snake_GAME
     />
 </div>

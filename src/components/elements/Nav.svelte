@@ -1,7 +1,7 @@
 <!-- #MAP
 
 -SPRING
-    #if NAV
+    NAV
 
 -->
 
@@ -13,16 +13,27 @@
     // --PROPS
     export let
     prop_INTRO = false,
+
     prop_TRANSLATE_Y = 0,
+
     prop_ITEMS = []
 
 // #IMPORTS
+
+    // --LIB
+    import COLORS from '$lib/colors'
 
     // --CONTEXT
     import { SPRING } from '../../App.svelte'
 
     // --SVELTE
     import { onDestroy, createEventDispatcher } from 'svelte'
+
+    // --COMPONENT-COVER
+    import Icon from '../covers/Icon.svelte'
+
+    // --COMPONENT-ICON
+    import Logo from '../icons/Logo.svelte'
 
 // #CONSTANTE
 
@@ -68,13 +79,23 @@ style:--nav-translate-y="-{prop_TRANSLATE_Y}px"
         {#each prop_ITEMS as item}
             <li>
                 <button
+                style:--item-color={item.color ?? COLORS.light}
                 type="button"
                 title={item.title ?? (item.value ?? '')}
                 on:mouseenter={nav_eMouseEnter}
                 on:mouseleave={nav_eMouseLeave}
                 on:click={nav_eClick.bind(null, item.id)}
                 >
-                    #{item.value ?? ''}
+                    <Icon
+                    prop_COLOR="var(--item-color, {COLORS.light})"
+                    prop_SPRING={false}
+                    >
+                        <svelte:component
+                        this={item.component ?? Logo}
+                        />
+                    </Icon>
+                    
+                    {item.value ?? ''}
                 </button>
             </li>
         {/each}
@@ -131,7 +152,7 @@ lang="scss"
 
     position: relative;
 
-    z-index: 1;
+    z-index: 2;
 
     transition: transform .4s ease-out;
 
@@ -144,6 +165,8 @@ lang="scss"
 
     ul
     {
+        --icon-size: 2.4rem;
+
         @extend %f-a-center;
 
         justify-content: flex-start;
@@ -172,9 +195,13 @@ lang="scss"
 
     li button
     {
-        @include font.content($light, $font-size: map.get(font.$font-sizes, s3));
+        @include font.content(var(--item-color, $light), $font-size: map.get(font.$font-sizes, s3));
 
         @extend %button-reset;
+
+        display: flex;
+
+        gap: .8rem;
 
         padding-block: .6rem;
 
