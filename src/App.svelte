@@ -56,7 +56,6 @@ context="module"
     import Header from './components/fields/Header.svelte'
     import Main from './components/fields/Main.svelte'
     import Footer from './components/fields/Footer.svelte'
-    import Aside from './components/fields/Aside.svelte'
 
     // --COMPONENT-WARN
     import Opti from './components/warn/Opti.svelte'
@@ -166,7 +165,6 @@ on:touchstart|once={app_eTouchStart}
     {#if app$_CHARGED}
         <Header />
         <Main />
-        <Aside />
         <Footer />
     {/if}
 

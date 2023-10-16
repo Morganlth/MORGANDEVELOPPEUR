@@ -220,8 +220,6 @@ lang="scss"
 
             min-height: 24%;
 
-            padding-inline: 11%;
-
             text-align: right;
 
             transition: color .2s;

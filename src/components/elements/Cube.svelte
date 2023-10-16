@@ -147,6 +147,8 @@ lang="scss"
     width: 50%;
     height: 50%;
 
+    pointer-events: none;
+
     transition: transform .6s ease-out;
 
     &.build

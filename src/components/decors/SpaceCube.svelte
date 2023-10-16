@@ -23,8 +23,7 @@
 
     prop_SPACECUBE = new Float64Array([]),
 
-    prop_RATIO = 0,
-    prop_TICTACTOE = false
+    prop_RATIO = 0
 
     // --BIND
     export let spacecube_CHARGED = false
@@ -114,15 +113,16 @@
     SPACECUBE_EVENTS = { resize: spacecube_e$Resize },
     SPACECUBE_EVENTS_2 =
     {
+        scroll: spacecube_e$Scroll,
         mouseMove: wait_throttle(spacecube_e$MouseMove, 33.34),
+        mouseDown: spacecube_e$MouseDown,
+        mouseUp: spacecube_e$MouseUp,
         animation: spacecube_e$Animation
     },
     SPACECUBE_EVENTS_3 =
     {
-        scroll: spacecube_e$Scroll,
-        mouseDown: spacecube_e$MouseDown,
-        mouseUp: spacecube_e$MouseUp,
-        animation: wait_throttle(spacecube_e$Animation2, 33.34)
+        mouseMove: wait_throttle(spacecube_e$MouseMove, 100.02),
+        animation: wait_throttle(spacecube_e$Animation2, 100.02)
     }
 
     // --ELEMENT-SPACECUBE~SHADERS
@@ -169,18 +169,15 @@
     spacecube_MOUSE_X = 0,
     spacecube_MOUSE_Y = 0,
 
-    spacecube_ANIMATION = [],
-
     spacecube_TIMEOUT,
     spacecube_TIMEOUT_2,
 
     spacecube_cancel = () => {}
 
-// #REACTIVES
+// #REACTIVE
 
     // --ELEMENT-SPACECUBE
-    $: spacecube_CHARGED && !APP.app_$OPTIMISE.value ? spacecube_updateEvents3(prop_FOCUS) : void 0
-    $: prop_TICTACTOE && spacecube_CHARGED ? spacecube_setTicTacToe() : void 0
+    $: spacecube_ON ? spacecube_updateEvents2(prop_FOCUS) : void 0
 
 // #FUNCTIONS
 
@@ -219,19 +216,9 @@
 
     function spacecube_setCommands() { COMMAND.command_setBasicCommands(SPACECUBE_COMMANDS) }
 
-    function spacecube_setEvents()
-    {
-        EVENT.event_add(SPACECUBE_EVENTS)
+    function spacecube_setEvents() { EVENT.event_add(SPACECUBE_EVENTS) }
 
-        spacecube_setEvents2()
-    }
-
-    function spacecube_setEvents2()
-    {
-        EVENT.event_add(SPACECUBE_EVENTS_2)
-
-        if (prop_FOCUS) spacecube_setEvents3()
-    }
+    function spacecube_setEvents2() { EVENT.event_add(SPACECUBE_EVENTS_2) }
 
     function spacecube_setEvents3() { EVENT.event_add(SPACECUBE_EVENTS_3) }
 
@@ -362,14 +349,6 @@
         SPACECUBE_FLOATING_UPDATE_CUBES.push(async () => cube.position.y += UPDATE() * 0.0015)
     }
 
-    function spacecube_setTicTacToe()
-    {
-        new TextureLoader().load('./images/tictactoe.png', (texture) =>
-        {
-            SHADER_UNIFORMS.projectedTexture.value = texture
-        })
-    }
-
     function shader_set(shader)
     {
         shader.uniforms =
@@ -403,14 +382,10 @@
         EVENT.event_remove(SPACECUBE_EVENTS)
 
         spacecube_destroyEvents2()
-    }
-
-    function spacecube_destroyEvents2()
-    {
-        EVENT.event_remove(SPACECUBE_EVENTS_2)
-
         spacecube_destroyEvents3()
     }
+
+    function spacecube_destroyEvents2() { EVENT.event_remove(SPACECUBE_EVENTS_2) }
 
     function spacecube_destroyEvents3() { EVENT.event_remove(SPACECUBE_EVENTS_3) }
 
@@ -465,25 +440,25 @@
     }
 
     // --UPDATES
-    function spacecube_update(on)
-    {
-        on ? spacecube_setEvents2() : spacecube_destroyEvents2()
-    
-        spacecube_ON = on
-    }
+    function spacecube_update(on) { spacecube_ON = on }
 
-    function spacecube_updateEvents3()
+    function spacecube_updateEvents2(focus)
     {
-        if (prop_FOCUS) spacecube_setEvents3()
+        if (focus)
+        {
+            spacecube_setEvents2()
+            spacecube_destroyEvents3()
+        }
         else
         {
-            spacecube_destroyEvents3()
+            spacecube_setEvents3()
+            spacecube_destroyEvents2()
 
             spacecube_updateCubesPosition(2)
         }
     }
 
-    const spacecube_updateFloatingCubes = wait_throttle(() => { for (const UPDATE of SPACECUBE_FLOATING_UPDATE_CUBES) UPDATE() }, 100.02)
+    const spacecube_updateFloatingCubes = wait_throttle(async () => { for (const UPDATE of SPACECUBE_FLOATING_UPDATE_CUBES) UPDATE() }, 100.02)
 
     async function spacecube_updateCubesPosition(ratio)
     {
@@ -495,8 +470,6 @@
         {
             const [A, B, C, T] = [CUBE.checkPoints[2], CUBE.checkPoints[3], CUBE.checkPoints[4], ratio * CUBE.vel],
             [X, Y] = [spacecube_getBarycentre(A.x, B.x, C.x, T), spacecube_getBarycentre(A.y, B.y, C.y, T)]
-
-            // spacecube_clear(CUBE)
 
             CUBE.position.x = X + (CUBE.position.x - CUBE.iPosition.x)
             CUBE.position.y = Y + (CUBE.position.y - CUBE.iPosition.y)
@@ -608,18 +581,23 @@
         shader_updateTextureDimensions()
     }
 
-    async function spacecube_e$Animation() { spacecube_RENDERER.render(spacecube_SCENE, spacecube_CAMERA) }
+    async function spacecube_e$Animation()
+    {
+        spacecube_updateFloatingCubes()
 
-    async function spacecube_e$Animation2() { spacecube_updateFloatingCubes() }
+        spacecube_e$Animation2()
+    }
+
+    async function spacecube_e$Animation2() { spacecube_RENDERER.render(spacecube_SCENE, spacecube_CAMERA) }
 
     // --CONTROL
     async function spacecube_start()
     {
         setTimeout(() => spacecube_CHARGED = true,
         prop_RATIO === 0
-        ? APP.app_OPTIMISE
-            ? 0
-            : spacecube_aStart()
+        ? spacecube_ON
+            ? spacecube_aStart()
+            : void 0
         : spacecube_updateCubesPosition(prop_RATIO) ?? 0)
 
         spacecube_OPACITY = 1

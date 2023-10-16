@@ -325,7 +325,6 @@ lang="scss"
 >
 /* #USES */
 
-@use '../../assets/scss/styles/utils';
 @use '../../assets/scss/styles/position';
 @use '../../assets/scss/styles/display';
 @use '../../assets/scss/styles/size';
@@ -342,8 +341,10 @@ lang="scss"
 
     $size: var(--cube-size, '100px');
 
-    @extend %strict;
     @extend %f-center;
+
+    contain: layout size;
+    isolation: isolate;
 
     position: absolute;
 

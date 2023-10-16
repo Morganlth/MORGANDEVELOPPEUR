@@ -26,14 +26,19 @@ class Event
 
 // #CONSTRUCTOR
 
-constructor () { this.#event_setVars() }
+constructor ()
+{
+    this.#event_setVars()
+
+    this.event_resize = wait_debounce.call(this, this.event_resize, 100)
+}
 
 // #FUNCTIONS
 
     // --SET
     event_set()
     {
-        window.addEventListener('resize', wait_debounce.call(this, this.#event_resize, 100))
+        window.addEventListener('resize', this.event_resize)
 
         this.#event_setAnimationLoop()
     }
@@ -123,7 +128,7 @@ constructor () { this.#event_setVars() }
         })
     }
 
-    #event_resize()
+    event_resize()
     {
         APP.app_updateSize()
         APP.app_updateSmallScreen()

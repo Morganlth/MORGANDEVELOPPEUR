@@ -7,8 +7,8 @@
         PAGES
             PAGE * 4
                 HOME | PRESENTATION | SKILLS | PROJECTS
-
         ROUTER
+        SPRING
 
 -->
 
@@ -30,8 +30,9 @@
     // --COMPONENT-COVER
     import Page from '../covers/Page.svelte'
 
-    // --COMPONENT-ELEMENT
+    // --COMPONENT-ELEMENTS
     import Router from '../elements/Router.svelte'
+    import Spring from '../elements/Spring.svelte'
 
 // #CONSTANTES
 
@@ -248,6 +249,8 @@ style:height="{MAIN_HEIGHT}vh"
     prop_ROUTES={ROUTER_LINKS}
     prop_HIDE={$router_$HIDE}
     />
+
+    <Spring />
 </main>
 
 <!-- #STYLE -->

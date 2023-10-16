@@ -60,8 +60,11 @@
     // --ELEMENT-TERMINAL
     const
     TERMINAL = 'terminal',
+
     TERMINAL_ROTATE_Y = MATH.toRad(5),
+
     TERMINAL_HISTORY = ['app '],
+
     TERMINAL_EVENTS = { mouseDown: terminal_e$MouseDown }
 
     // --ELEMENT-INPUT

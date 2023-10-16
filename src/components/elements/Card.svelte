@@ -107,9 +107,6 @@
     card_X = 0,
     card_Y = 0,
 
-    card_T1 = 0,
-    card_T2 = 0,
-
     card_U,
     card_X_I,
     card_Y_I,
@@ -187,7 +184,7 @@
     // --GET
     function card_getTranslateX() { return APP.app_WIDTH * .5 - APP.app_WIDTH * .05 * prop_ID }
 
-    function card_getTranslateY() { return APP.app_HEIGHT * .8 - card.offsetHeight - APP.app_HEIGHT * .08 * prop_ID }
+    function card_getTranslateY() { return APP.app_HEIGHT * .8 - card_HALF_HEIGHT * 2 - APP.app_HEIGHT * .08 * prop_ID }
 
     function card_getRZ() { return 10 - 10 * prop_ID }
 
@@ -341,8 +338,6 @@
 
             let {cancel, promise} = animation((t) =>
             {
-                card_T1 = t
-
                 if (t < .33)
                 {
                     const T = cubicOut(t / .33)
@@ -357,30 +352,14 @@
                     decor_ROTATE_Y = 180 * U
                 }
             },
-            600.12, card_T1)
+            600.12)
 
             card_START = false
             card_cancel = cancel
 
             promise.then(() => card_setTransition(400))
-        
-            // card_aIn2()
         },
         card_START ? CARD_DELAY : 0)
-    }
-
-    function card_aIn2()
-    {
-        card_TIMEOUT = setTimeout(async () =>
-        {
-            await animation.call(
-            card,
-            (t) => decor_ROTATE_Y = 180 * cubicInOut(1 - t),
-            400.08)
-
-            card_setTransition(400)
-        },
-        50.01)
     }
 
     async function card_aOut()
@@ -394,21 +373,19 @@
         let {cancel, promise} = animation(
         (t) =>
         {
-            card_T2 = t
-    
             const T = cubicIn(t)
         
             card_TRANSLATE_Y = TRANSLATE_Y + APP.app_HEIGHT * T
             card_ROTATE_Z = ROTATE_Z * (1 - T)
         },
-        400.08, card_T2)
+        400.08)
 
         card_cancel = cancel
         promise.then(() => card_OPACITY = 0)
     }
 
     // --INTRO
-    function tag_intro(tag, fragments)
+    function tag_in(tag, fragments)
     {
         tag_DELAY ??= TAG_DURATION / fragments.length
 
@@ -418,7 +395,7 @@
     }
 
     // --OUTRO
-    function tag_outro(tag, fragments)
+    function tag_out(tag, fragments)
     {
         const STYLE = tag_getTransform(`calc(var(--card-x, ${card_X}px) + 200%)`, `calc(var(--card-y, ${card_Y}px) + 100%)`, 0)
 
@@ -509,15 +486,14 @@ on:mousedown={card_eMouseDown}
         </Icon>
     </div>
 
-    {#if card_CHARGED && (tag_FOCUS || prop_TARGET === 1)}
-        <Tag
-        prop_DURATION={TAG_DURATION}
-        prop_INTRO={tag_intro}
-        prop_OUTRO={tag_outro}
-        prop_STYLE={{ tag_style: () => '', fragments_style }}
-        {prop_CONTENT}
-        />
-    {/if}
+    <Tag
+    prop_FOCUS={card_CHARGED && (tag_FOCUS || prop_TARGET === 1)}
+    prop_DURATION={TAG_DURATION}
+    prop_IN={tag_in}
+    prop_OUT={tag_out}
+    prop_STYLE={{ tag_style: () => '', fragments_style }}
+    {prop_CONTENT}
+    />
 </button>
 
 <!-- #STYLE -->
@@ -544,8 +520,10 @@ lang="scss"
 
     &, .decor, .texture, :global .tag { transform-style: preserve-3d; }
 
-    @extend %strict;
     @extend %button-reset;
+
+    contain: layout size;
+    isolation: isolate;
 
     position: absolute;
 

@@ -272,8 +272,8 @@
         group_stop()
     }
 
-    // --ANIMATIONS
-    function tag_aIn(tag, fragments)
+    // --INTRO
+    function tag_in(tag, fragments)
     {
         const Y = MATH.headsOrTails() * 2 + '%'
     
@@ -281,7 +281,7 @@
     }
 
     // --OUTRO
-    function tag_aOut(tag, fragments) { tag_update(tag, fragments, tag_getY(), 0) }
+    function tag_out(tag, fragments) { tag_update(tag, fragments, tag_getY(), 0) }
 
     // --STYLES
     function tag_style()
@@ -365,8 +365,8 @@ style:--system-r-y={system_ROTATE_Y}
             prop_FOCUS={cube.focus ?? false}
             prop_CONTENT={cube.tag}
             prop_DURATION={TAG_DURATION}
-            prop_IN={tag_aIn}
-            prop_OUT={tag_aOut}
+            prop_IN={tag_in}
+            prop_OUT={tag_out}
             prop_STYLE={{ tag_style, fragments_style }}
             />
         </Cell>
