@@ -5,9 +5,10 @@ class Event
 // #VARIABLES
 
     // --EVENT-CONTEXT
+    #event_$FPS = {}
     event_GRABBING = writable(false)
     event_CLIENT_XY = [0, 0]
-    event_MANAGER =
+    #event_MANAGER =
     {
         scroll: [],
         wheel: [],
@@ -18,32 +19,53 @@ class Event
         touchMove: [],
         animation: []
     }
-    event_ANIMATION
-    event_SCROLLFRAME
-    event_MOUSEFRAME
-    event_TOUCHFRAME
+    #event_ANIMATION
+    #event_SCROLLFRAME
+    #event_MOUSEFRAME
+    #event_TOUCHFRAME
 
 // #CONSTRUCTOR
 
-constructor () { this.event_resize = wait_debounce.call(this, this.event_resize, 100) }
+constructor () { this.#event_setVars() }
 
 // #FUNCTIONS
 
     // --SET
     event_set()
     {
-        window.addEventListener('resize', this.event_resize)
+        window.addEventListener('resize', wait_debounce.call(this, this.#event_resize, 100))
 
-        this.event_setAnimationLoop()
+        this.#event_setAnimationLoop()
     }
 
-    event_setAnimationLoop()
+    #event_setVars()
     {
-        if (!this.event_ANIMATION)
+        let { subscribe, set } = writable(0)
+    
+        this.#event_$FPS =
         {
-            this.event_ANIMATION = this.event_MANAGER.animation
+            value: 0,
+            count: 0,
+            start: performance.now(),
+            update: function ()
+            {
+                this.value = this.count * 2
+                this.count = 0
+                this.start = performance.now()
 
-            this.event_animationLoop()
+                set(this.value)
+            },
+            subscribe
+        }
+    }
+
+    #event_setAnimationLoop()
+    {
+        if (!this.#event_ANIMATION)
+        {
+            this.#event_ANIMATION = this.#event_MANAGER.animation
+
+            this.#event_animationLoop()
         }
     }
 
@@ -53,67 +75,74 @@ constructor () { this.event_resize = wait_debounce.call(this, this.event_resize,
     // --EVENTS
     event_scroll({target})
     {
-        if (this.event_SCROLLFRAME) return
+        if (this.#event_SCROLLFRAME) return
 
-        this.event_SCROLLFRAME = requestAnimationFrame(() =>
+        this.#event_SCROLLFRAME = requestAnimationFrame(() =>
         {
             const SCROLLTOP = target.scrollTop
 
             APP.app_SCROLLTOP = SCROLLTOP
 
-            this.event_run.call(this.event_MANAGER.scroll, SCROLLTOP)
+            this.#event_run.call(this.#event_MANAGER.scroll, SCROLLTOP)
 
-            this.event_SCROLLFRAME = false
+            this.#event_SCROLLFRAME = false
         })
     }
 
-    event_wheel({deltaY}) { this.event_run.call(this.event_MANAGER.wheel, deltaY) }
+    event_wheel({deltaY}) { this.#event_run.call(this.#event_MANAGER.wheel, deltaY) }
 
     event_mouseMove({clientX, clientY})
     {
-        if (this.event_MOUSEFRAME) return
+        if (this.#event_MOUSEFRAME) return
 
-        this.event_MOUSEFRAME = requestAnimationFrame(() =>
+        this.#event_MOUSEFRAME = requestAnimationFrame(() =>
         {
             this.event_CLIENT_XY = [clientX, clientY]
     
-            this.event_run.call(this.event_MANAGER.mouseMove, clientX, clientY)
+            this.#event_run.call(this.#event_MANAGER.mouseMove, clientX, clientY)
 
-            this.event_MOUSEFRAME = false
+            this.#event_MOUSEFRAME = false
         })
     }
 
-    event_mouseDown(e) { this.event_run.call(this.event_MANAGER.mouseDown, e) }
+    event_mouseDown(e) { this.#event_run.call(this.#event_MANAGER.mouseDown, e) }
 
-    event_mouseUp() { this.event_run.call(this.event_MANAGER.mouseUp) }
-
-    event_resize()
-    {
-        APP.app_updateSmallScreen()
-
-        this.event_run.call(this.event_MANAGER.resize)
-    }
+    event_mouseUp() { this.#event_run.call(this.#event_MANAGER.mouseUp) }
 
     event_touchMove(e)
     {
-        if (this.event_TOUCHFRAME) return
+        if (this.#event_TOUCHFRAME) return
 
-        this.event_TOUCHFRAME = requestAnimationFrame(() =>
+        this.#event_TOUCHFRAME = requestAnimationFrame(() =>
         {
             const TOUCH = e.changedTouches[0]
 
-            this.event_run.apply(this.event_MANAGER.touchMove, [TOUCH.clientX, TOUCH.clientY])
+            this.#event_run.apply(this.#event_MANAGER.touchMove, [TOUCH.clientX, TOUCH.clientY])
 
-            this.event_TOUCHFRAME = false
+            this.#event_TOUCHFRAME = false
         })
     }
 
-    // --LOOP
-    event_animationLoop()
+    #event_resize()
     {
-        for (let i = 0; i < this.event_ANIMATION.length; i++) this.event_ANIMATION[i]()
+        APP.app_updateSize()
+        APP.app_updateSmallScreen()
 
-        requestAnimationFrame(this.event_animationLoop.bind(this))
+        this.#event_run.call(this.#event_MANAGER.resize)
+    }
+
+    // --LOOP
+    #event_animationLoop()
+    {
+        const FPS = this.#event_$FPS
+    
+        FPS.count++
+    
+        if (performance.now() - FPS.start >= 500) FPS.update()
+
+        for (let i = 0; i < this.#event_ANIMATION.length; i++) this.#event_ANIMATION[i]()
+
+        requestAnimationFrame(this.#event_animationLoop.bind(this))
     }
 
     // --UTILS
@@ -123,7 +152,7 @@ constructor () { this.event_resize = wait_debounce.call(this, this.event_resize,
         {
             const FUNC = events[CATEGORY]
 
-            if (this.event_contain(CATEGORY, FUNC) === -1) this.event_MANAGER[CATEGORY].push(FUNC)
+            if (this.event_contain(CATEGORY, FUNC) === -1) this.#event_MANAGER[CATEGORY].push(FUNC)
         }
     }
 
@@ -133,18 +162,18 @@ constructor () { this.event_resize = wait_debounce.call(this, this.event_resize,
         {
             const INDEX = this.event_contain(CATEGORY, events[CATEGORY])
 
-            if (~INDEX) this.event_MANAGER[CATEGORY].splice(INDEX, 1)
+            if (~INDEX) this.#event_MANAGER[CATEGORY].splice(INDEX, 1)
         }
     }
 
     event_contain(category, func)
     {
-        const EVENT = this.event_MANAGER[category]
+        const EVENT = this.#event_MANAGER[category]
 
         return EVENT.indexOf(func)
     }
 
-    event_run() { for (const FUNC of this) FUNC(...arguments) }
+    #event_run() { for (const FUNC of this) FUNC(...arguments) }
 
     event_scrollTo(top, instant)
     {
@@ -155,6 +184,9 @@ constructor () { this.event_resize = wait_debounce.call(this, this.event_resize,
 
         ;(APP.app ?? document.getElementById('app')).scrollTo({ top: top, behavior: instant ? 'instant' : 'smooth' })
     }
+
+    // --GETTER
+    get event_$FPS() { return this.#event_$FPS }
 }
 
 // #IMPORTS

@@ -33,7 +33,6 @@
 // #IMPORTS
 
     // --JS
-    import fps_get from '../../assets/js/utils/fps'
     import { color_rgba } from '../../assets/js/utils/color'
 
     // --LIB
@@ -85,25 +84,34 @@
 
     // --EVENT
     let
+    event_$FPS = EVENT.event_$FPS,
+
     event_CLIENT_X = 0,
     event_CLIENT_Y = 0
 
     // --ELEMENT-SNAKE
     let
     snake,
+
     snake_WIDTH = 0,
     snake_HEIGHT = 0,
+
     snake_OFFSET_TOP = 0,
     snake_OFFSET_LEFT = 0,
+
     snake_COLOR_BODY = color_rgba(COLORS.primary, .6),
     snake_COLOR_APPLE = color_rgba(COLORS.indicator, .8),
+
     snake_X = -1,
     snake_Y = -1,
+
     snake_BLOCKSIZE,
     snake_CUSTOM_BLOCKSIZE,
+
     snake_INVINCIBLE = true,
+
     snake_SCORE = 10,
-    snake_FPS = 0,
+
     snake_TIMEOUT,
     snake_FRAME_ID
 
@@ -385,14 +393,6 @@
         })()
     }
 
-    // --LOOP
-    async function snake_lFps()
-    {
-        snake_FPS = await fps_get()
-
-        if (snake_GAME) snake_lFps()
-    }
-
     // --CONTROLS
     function snake_start()
     {
@@ -421,8 +421,6 @@
             snake.requestFullscreen().then(snake_notInvincible)
 
             if (!prop_ON) snake_start()
-
-            snake_lFps()
         }
         catch (e) { snake_stopGame() }
     }
@@ -611,7 +609,7 @@ on:fullscreenchange={snake_eFullscreenChange}
                 class="fps"
                 >
                     FPS
-                    <span>{snake_FPS}</span>
+                    <span>{$event_$FPS}</span>
                 </li>
             </ul>
             

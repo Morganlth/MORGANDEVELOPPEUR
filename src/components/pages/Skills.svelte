@@ -37,9 +37,6 @@
 
 // #IMPORTS
 
-    // --JS
-    import MATH from '../../assets/js/utils/math'
-
     // --CONTEXTS
     import { APP, EVENT } from '../../App.svelte'
 
@@ -73,15 +70,11 @@
 
     function system_setVars()
     {
-        const PI_DIV_2 = Math.PI / 2
-
         for (let i = 0; i < prop_SYSTEM.length; i++)
         {
-            const
-            ITEM = prop_SYSTEM[i],
-            RATIO = ((PI_DIV_2 - prop_SYSTEM[i].props.prop_OFFSET) + MATH.PI.x2) % MATH.PI.x2 / MATH.PI.x2
+            const ITEM = prop_SYSTEM[i]
 
-            ITEM.top = prop_START + prop_DIF * RATIO
+            ITEM.top = prop_START + prop_DIF * ITEM.props.prop_OFFSET
         }
     }
 

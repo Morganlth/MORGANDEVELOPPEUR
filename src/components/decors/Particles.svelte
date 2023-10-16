@@ -1,5 +1,6 @@
 <!-- #MAP
 
+-APP
 -COMMAND
 -EVENT
     PARTICLES
@@ -20,7 +21,7 @@
     import COLORS from '$lib/colors'
 
     // --CONTEXTS
-    import { COMMAND, EVENT } from '../../App.svelte'
+    import { APP, COMMAND, EVENT } from '../../App.svelte'
 
     // --SVELTE
     import { onMount, onDestroy } from 'svelte'
@@ -85,8 +86,8 @@
 
     function particles_setVars()
     {
-        particles.width = (particles_WIDTH = window.innerWidth)
-        particles.height = (particles_HEIGHT = window.innerHeight)
+        particles.width = (particles_WIDTH = APP.app_WIDTH)
+        particles.height = (particles_HEIGHT = APP.app_HEIGHT)
 
         particles_ANGLE_X = Math.atan(PARTICLES_GAP / particles_HEIGHT)
         particles_ANGLE_Y = Math.atan(PARTICLES_GAP / particles_WIDTH)

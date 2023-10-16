@@ -65,6 +65,8 @@ lang="scss"
     .header
     {
         position: absolute;
+
+        width: calc(100% - app.$gap-inline * 2);
     
         user-select: none;
     }

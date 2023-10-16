@@ -80,19 +80,27 @@
     // --ELEMENT-SPACECUBE
     const
     SPACECUBE = 'spacecube',
+
     SPACECUBE_ANTIALIAS = true,
     SPACECUBE_PIXELRATIO = 2,
+
     SPACECUBE_CAMERA_FOV = 75,
     SPACECUBE_CAMERA_NEAR = .1,
     SPACECUBE_CAMERA_Z = 5,
+
     SPACECUBE_RADIUS = 3,
+
     SPACECUBE_FORCE_POSITION = .05,
     SPACECUBE_FORCE_ROTATION = .01,
-    SPACECUBE_MOUSE_INTENSITY = .5,
-    SPACECUBE_CUBES = new Group(),
-    SPACECUBE_FLOATING_UPDATE_CUBES = [],
+
     SPACECUBE_ROTATION_X = -MATH.rad.r45 / 2,
     SPACECUBE_ROTATION_Y = MATH.rad.r45,
+
+    SPACECUBE_MOUSE_INTENSITY = .5,
+
+    SPACECUBE_CUBES = new Group(),
+    SPACECUBE_FLOATING_UPDATE_CUBES = [],
+
     SPACECUBE_COMMANDS =
     [
         {
@@ -107,11 +115,11 @@
     SPACECUBE_EVENTS_2 =
     {
         mouseMove: wait_throttle(spacecube_e$MouseMove, 33.34),
-        animation: wait_throttle(spacecube_e$Animation, 16.67)
+        animation: spacecube_e$Animation
     },
     SPACECUBE_EVENTS_3 =
     {
-        scroll: wait_throttle(spacecube_e$Scroll, 16.67),
+        scroll: spacecube_e$Scroll,
         mouseDown: spacecube_e$MouseDown,
         mouseUp: spacecube_e$MouseUp,
         animation: wait_throttle(spacecube_e$Animation2, 33.34)
@@ -135,24 +143,38 @@
     // --ELEMENT-SPACECUBE
     let
     spacecube,
+
     spacecube_ON = true,
-    spacecube_OPACITY = 0,
     spacecube_SCROLL_ANIMATION = false,
+
     spacecube_SCENE,
     spacecube_CAMERA,
     spacecube_RENDERER,
+    spacecube_MOUSELIGHT,
+
+    spacecube_OPACITY = 0,
+
     spacecube_WIDTH,
     spacecube_HEIGHT,
+
     spacecube_DEPTH,
-    spacecube_MOUSELIGHT,
+
     spacecube_TEXTURE = null,
+
     spacecube_RADIUS = SPACECUBE_RADIUS,
+
     spacecube_FORCE_POSITION = SPACECUBE_FORCE_POSITION,
     spacecube_FORCE_ROTATION = SPACECUBE_FORCE_ROTATION,
+
     spacecube_MOUSE_X = 0,
     spacecube_MOUSE_Y = 0,
+
+    spacecube_ANIMATION = [],
+
     spacecube_TIMEOUT,
-    spacecube_TIMEOUT_2
+    spacecube_TIMEOUT_2,
+
+    spacecube_cancel = () => {}
 
 // #REACTIVES
 
@@ -180,7 +202,7 @@
     function spacecube_setVars()
     {
         const
-        ASPECT = window.innerWidth / window.innerHeight,
+        ASPECT = spacecube_getAspectRatio(),
         HEIGHT = Math.tan(MATH.toRad(SPACECUBE_CAMERA_FOV / 2)) * SPACECUBE_CAMERA_Z,
         DEPTH = SPACECUBE_CAMERA_Z + 1
     
@@ -221,7 +243,7 @@
 
     function spacecube_setRenderer()
     {
-        spacecube_RENDERER.setSize(window.innerWidth, window.innerHeight)
+        spacecube_RENDERER.setSize(APP.app_WIDTH, APP.app_HEIGHT)
         spacecube_RENDERER.setPixelRatio(Math.min(window.devicePixelRatio, SPACECUBE_PIXELRATIO))
         spacecube_RENDERER.setClearColor(0x000000, 0)
     }
@@ -393,6 +415,8 @@
     function spacecube_destroyEvents3() { EVENT.event_remove(SPACECUBE_EVENTS_3) }
 
     // --GET
+    function spacecube_getAspectRatio() { return APP.app_WIDTH / APP.app_HEIGHT }
+
     function spacecube_getCubePoints(x, y)
     {
         const
@@ -420,6 +444,26 @@
 
     function spacecube_getBarycentre(a, b, c, t) { return a + a*t*t + 2*b*t - 2*t*t*b + t*t*c - 2*a*t }
 
+    function spacecube_getCubeLayout(cube, dif_X, dif_Y, dif_X_ABS, dif_Y_ABS)
+    {
+        const
+        ANGLE = Math.atan(dif_Y / dif_X),
+        [X0, Y0] = [(1 - dif_X_ABS / (Math.cos(ANGLE) * spacecube_RADIUS)) * dif_X, (1 - dif_Y_ABS / (Math.abs(Math.sin(ANGLE)) * spacecube_RADIUS)) * dif_Y]
+
+        return (
+        {
+            cube,
+            x: cube.position.x,
+            y: cube.position.y,
+            rX: cube.rotation.x,
+            rY: cube.rotation.y,
+            step_P_X: cube.iPosition.x + X0 * spacecube_FORCE_POSITION - cube.position.x,
+            step_P_Y: cube.iPosition.y + Y0 * spacecube_FORCE_POSITION - cube.position.y,
+            step_R_X: SPACECUBE_ROTATION_X + X0 * spacecube_FORCE_ROTATION - cube.rotation.x,
+            step_R_Y: SPACECUBE_ROTATION_Y + Y0 * spacecube_FORCE_ROTATION - cube.rotation.y
+        })
+    }
+
     // --UPDATES
     function spacecube_update(on)
     {
@@ -439,18 +483,20 @@
         }
     }
 
-    const spacecube_updateFloatingCubes = wait_throttle(() => { for (const UPDATE of SPACECUBE_FLOATING_UPDATE_CUBES) UPDATE() }, 100)
+    const spacecube_updateFloatingCubes = wait_throttle(() => { for (const UPDATE of SPACECUBE_FLOATING_UPDATE_CUBES) UPDATE() }, 100.02)
 
     async function spacecube_updateCubesPosition(ratio)
     {
         const CUBES = SPACECUBE_CUBES.children
+
+        spacecube_cancel()
 
         for (const CUBE of CUBES)
         {
             const [A, B, C, T] = [CUBE.checkPoints[2], CUBE.checkPoints[3], CUBE.checkPoints[4], ratio * CUBE.vel],
             [X, Y] = [spacecube_getBarycentre(A.x, B.x, C.x, T), spacecube_getBarycentre(A.y, B.y, C.y, T)]
 
-            spacecube_clearAnimationFrame(CUBE)
+            // spacecube_clear(CUBE)
 
             CUBE.position.x = X + (CUBE.position.x - CUBE.iPosition.x)
             CUBE.position.y = Y + (CUBE.position.y - CUBE.iPosition.y)
@@ -485,7 +531,9 @@
     }
     async function spacecube_updateCubesLayout()
     {
-        const CUBES = SPACECUBE_CUBES.children
+        const
+        CUBES = SPACECUBE_CUBES.children,
+        DATAS = []
     
         for (let i = 0; i < CUBES.length; i++)
         {
@@ -495,8 +543,10 @@
             [DIF_X_ABS, DIF_Y_ABS] = [Math.abs(DIF_X), Math.abs(DIF_Y)],
             HYP = Math.sqrt(DIF_X_ABS * DIF_X_ABS + DIF_Y_ABS * DIF_Y_ABS)
 
-            if (HYP < spacecube_RADIUS) spacecube_aCubeLayout(CUBE, DIF_X, DIF_Y, DIF_X_ABS, DIF_Y_ABS)
+            if (HYP < spacecube_RADIUS) DATAS.push(spacecube_getCubeLayout(CUBE, DIF_X, DIF_Y, DIF_X_ABS, DIF_Y_ABS))
         }
+
+        if (DATAS.length) spacecube_a(spacecube_aCubeLayout, DATAS, 200)
     }
 
     function shader_updateProjectionMatrixCamera() { SHADER_UNIFORMS.projectionMatrixCamera.value.copy(spacecube_CAMERA.projectionMatrix) }
@@ -526,7 +576,7 @@
     async function spacecube_e$MouseMove(clientX, clientY)
     {
         const
-        [RATIO_X, RATIO_Y] = [(clientX / window.innerWidth) * 2 - 1, -(clientY / window.innerHeight) * 2 + 1],
+        [RATIO_X, RATIO_Y] = [(clientX / APP.app_WIDTH) * 2 - 1, -(clientY / APP.app_HEIGHT) * 2 + 1],
         [RAYCASTER, INTERSECTION] = [new Raycaster(), new Vector3()]
     
         RAYCASTER.setFromCamera(new Vector2(RATIO_X, RATIO_Y), spacecube_CAMERA)
@@ -548,7 +598,7 @@
 
     async function spacecube_e$Resize()
     {
-        spacecube_CAMERA.aspect = window.innerWidth / window.innerHeight
+        spacecube_CAMERA.aspect = spacecube_getAspectRatio()
         spacecube_CAMERA.updateProjectionMatrix()
 
         spacecube_setRenderer()
@@ -558,12 +608,7 @@
         shader_updateTextureDimensions()
     }
 
-    async function spacecube_e$Animation()
-    {
-        spacecube_updateFloatingCubes()
-
-        spacecube_RENDERER.render(spacecube_SCENE, spacecube_CAMERA)
-    }
+    async function spacecube_e$Animation() { spacecube_RENDERER.render(spacecube_SCENE, spacecube_CAMERA) }
 
     async function spacecube_e$Animation2() { spacecube_updateFloatingCubes() }
 
@@ -581,6 +626,13 @@
     }
 
     // --ANIMATIONS
+    function spacecube_a(a = () => {}, datas = [], duration)
+    {
+        spacecube_cancel()
+
+        spacecube_cancel = animation((t) => { for (const ARGS of datas) a(t, ARGS) }, duration).cancel
+    }
+
     function spacecube_aStart()
     {
         const
@@ -598,9 +650,10 @@
             CUBE.position.set(A.x, A.y, Z)
 
             setTimeout(() =>
-                animation((t) => CUBE.position.set(spacecube_getBarycentre(A.x, B.x, C.x, t), spacecube_getBarycentre(A.y, B.y, C.y, t), Z * (1 - t)), DURATION)
-            , DELAY)
-
+            animation((t) => CUBE.position.set(spacecube_getBarycentre(A.x, B.x, C.x, t), spacecube_getBarycentre(A.y, B.y, C.y, t), Z * (1 - t)),
+            DURATION),
+            DELAY)
+    
             total_DURATION = Math.max(total_DURATION, DURATION)
         }
 
@@ -613,30 +666,23 @@
         [P_X, P_Y] = [spacecube_CAMERA.position.x, spacecube_CAMERA.position.y],
         [STEP_X, STEP_Y] = [spacecube_MOUSE_X * .015 - P_X, spacecube_MOUSE_Y * .015 - P_Y]
 
-        spacecube_clearAnimationFrame(spacecube_CAMERA)
+        if (spacecube_CAMERA.cancel instanceof Function) spacecube_CAMERA.cancel()
 
-        animation.call(spacecube_CAMERA, (t) =>
+        spacecube_CAMERA.cancel = animation((t) =>
         {
             spacecube_CAMERA.position.x = P_X + STEP_X * t
             spacecube_CAMERA.position.y = P_Y + STEP_Y * t
-        }, 300)
+        },
+        300).cancel
     }
-    async function spacecube_aCubeLayout(cube, dif_X, dif_Y, dif_X_ABS, dif_Y_ABS)
-    {
-        const
-        ANGLE = Math.atan(dif_Y / dif_X),
-        [X0, Y0] = [(1 - dif_X_ABS / (Math.cos(ANGLE) * spacecube_RADIUS)) * dif_X, (1 - dif_Y_ABS / (Math.abs(Math.sin(ANGLE)) * spacecube_RADIUS)) * dif_Y],
-        [P_X, P_Y, R_X, R_Y] = [cube.position.x, cube.position.y, cube.rotation.x, cube.rotation.y],
-        [STEP_P_X, STEP_P_Y] = [cube.iPosition.x + X0 * spacecube_FORCE_POSITION - P_X, cube.iPosition.y + Y0 * spacecube_FORCE_POSITION - P_Y],
-        [STEP_R_X, STEP_R_Y] = [SPACECUBE_ROTATION_X + X0 * spacecube_FORCE_ROTATION - R_X, SPACECUBE_ROTATION_Y + Y0 * spacecube_FORCE_ROTATION - R_Y]
 
-        spacecube_clearAnimationFrame(cube)
-    
-        animation.call(cube, (t) =>
-        {
-            [cube.position.x, cube.position.y, cube.rotation.x, cube.rotation.y] = [P_X + STEP_P_X * t, P_Y + STEP_P_Y * t, R_X + STEP_R_X * t, R_Y + STEP_R_Y * t]
-        }, 200)
-    }
+    async function spacecube_aCubeLayout(t, { cube, x, y, rX, rY, step_P_X, step_P_Y, step_R_X, step_R_Y })
+    {
+        cube.position.x = x + step_P_X * t
+        cube.position.y = y + step_P_Y * t
+        cube.rotation.x = rX + step_R_X * t
+        cube.rotation.y = rY + step_R_Y * t
+    } 
 
     // --UTILS
     function spacecube_monkeyPatch(shader, _ref)
@@ -659,8 +705,6 @@
         ? [1 / (CAMERA_HEIGHT * RATIO), 1]
         : [1, 1 / (1 / RATIO / CAMERA_HEIGHT)]
     }
-
-    function spacecube_clearAnimationFrame(obj) { cancelAnimationFrame(obj.animation_FRAMEID) } 
 
 // #CYCLES
 

@@ -37,7 +37,6 @@
 // #IMPORTS
 
     // --JS
-    import { transform_getTranslate3d } from '../../assets/js/utils/transform'
     import { animation_writing } from '../../assets/js/utils/animation'
 
     // --CONTEXTS
@@ -103,11 +102,21 @@
     function fragments_destroyEvents() { EVENT.event_remove(FRAGMENTS_EVENTS) }
 
     // --GET
+    function fragments_getTranslate3d()
+    {
+        const
+        FORCE = 2000,
+        GET = () => Math.random() * FORCE - FORCE / 2,
+        [X, Y, Z] = [GET(), GET(), GET()]
+
+        return `translate3d(${X}px, ${Y}px, ${Z}px)`
+    }
+
     function fragments_getStyle(i)
     {
         return `
-        transform: ${transform_getTranslate3d()};
-        transition: transform 1.2s ${50 * i}ms ease-out;`
+        transform: ${fragments_getTranslate3d()};
+        transition: transform .8s ${50 * i}ms ease-out;`
     }
 
     // --UPDATE
@@ -147,7 +156,7 @@
     // --OUTROS
     function title_outro() { fragments_outroFrags() }
 
-    function fragments_outroFrags() { for (const FRAG of FRAGMENTS_FRAGS) FRAG.style.transform = transform_getTranslate3d() }
+    function fragments_outroFrags() { for (const FRAG of FRAGMENTS_FRAGS) FRAG.style.transform = fragments_getTranslate3d() }
 
 // #CYCLES
 
@@ -187,7 +196,7 @@ style:z-index={prop_FOCUS ? 1 : 0}
             {#if prop_TITLE.element}
                 <div
                 class="element"
-                style:transform={transform_getTranslate3d()}
+                style:transform={fragments_getTranslate3d()}
                 bind:this={FRAGMENTS_FRAGS[FRAGMENTS_FRAGS.length]}
                 >
                     <svelte:component
@@ -208,10 +217,11 @@ style:z-index={prop_FOCUS ? 1 : 0}
         <svelte:fragment
         slot="nav"
         >
-            {#if page_NAV && prop_FOCUS}
+            {#if page_NAV}
                 <Nav
                 prop_TRANSLATE_Y={title_HEIGHT - (page_NAV.offset ?? 0)}
                 prop_ITEMS={prop_NAV}
+                {prop_FOCUS}
                 {prop_INTRO}
                 on:click={nav_eClick}
                 />
@@ -260,16 +270,16 @@ lang="scss"
 
         z-index: 1;
 
-        perspective: 300px;
+        perspective: 800px;
 
         width: fit-content;
         height: fit-content;
 
         padding-bottom: 5rem;
 
-        transition: opacity .6s ease-in;
+        transition: opacity .8s ease-in;
 
-        .element { transition: transform 1.2s ease-out; }
+        .element { transition: transform .8s ease-out; }
 
         :global
         {

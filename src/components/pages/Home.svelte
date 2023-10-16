@@ -51,6 +51,8 @@
     import TicTacToe from '../elements/TicTacToe.svelte'
     import Terminal from '../elements/Terminal.svelte'
 
+    import System from '../elements/System.svelte'
+
     // --COMPONENT-DECOR
     import SpaceCube from '../decors/SpaceCube.svelte'
 
@@ -159,9 +161,9 @@ class="home"
         {/each}
     </Group>
 
-    {#if tictactoe_ON}
-        <TicTacToe />
-    {/if}
+    <!-- <TicTacToe
+    prop_ON={tictactoe_ON}
+    /> -->
 
     <Terminal
     bind:terminal_ON

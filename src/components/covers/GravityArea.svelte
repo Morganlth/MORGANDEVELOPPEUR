@@ -1,9 +1,9 @@
 <!-- #MAP
 
+-APP
 -EVENT
     GRAVITYAREA
-        CONTENT
-            ~SLOT
+        ~SLOT
 
     MASK
 
@@ -45,8 +45,8 @@
     import { wait_throttle } from '../../assets/js/utils/wait'
     import { update_floating } from '../../assets/js/utils/update'
 
-    // --CONTEXT
-    import { EVENT } from '../../App.svelte'
+    // --CONTEXTS
+    import { APP, EVENT } from '../../App.svelte'
 
     // --SVELTE
     import { onMount, onDestroy, createEventDispatcher } from 'svelte'
@@ -56,6 +56,7 @@
 
     // --ELEMENT-GRAVITYAREA
     const
+    GRAVITYAREA_PERSPECTIVE = 1200,
     GRAVITYAREA_EVENTS = { mouseMove: wait_throttle(gravityarea_e$MouseMove, 50) },
     GRAVITYAREA_EVENTS_2 = { mouseUp: gravityarea_e$MouseUp }
 
@@ -75,20 +76,25 @@
     gravityarea_TRANSLATE_Y = 0,
     gravityarea_TRANSITION_DELAY = 0,
 
-    gravityarea_RATIO = 1,
+    gravityarea_ANIMATION_Y = 0,
+
+    gravityarea_RADIUS = prop_RADIUS,
+    gravityarea_RATIO = prop_RADIUS / Math.sqrt(prop_RADIUS * prop_RADIUS * 2),
+
+    gravityarea_FLOATING = update_floating(),
 
     gravityarea_LAST = +new Date(),
     gravityarea_LAST_2 = +new Date(),
     gravityarea_TIMEOUT
 
-    // --ELEMENT-CONTENT
-    let
-    content_FORCE_X = 0,
-    content_FORCE_Y = 0,
-    content_FLOATING_UPDATE = update_floating()
-
     // --ELEMENT-SLOT
-    let slot_GRABBING = false
+    let
+    slot_GRABBING = false,
+
+    slot_FORCE_X = 0,
+    slot_FORCE_Y = 0,
+
+    slot_update = prop_ORBIT_RADIUS == null ? slot_update2d : slot_update3d
 
 // #REACTIVES
 
@@ -105,17 +111,17 @@
     
         prop_$RESIZE.push(gravityarea_e$Resize)
 
-        content_start()
+        gravityarea_start()
     }
 
     function gravityarea_setVars()
     {
-        gravityarea_TRANSLATE_X = prop_X * window.innerWidth - gravityarea.offsetWidth / 2
-        gravityarea_TRANSLATE_Y = prop_Y * window.innerHeight
+        gravityarea_TRANSLATE_X = prop_X * APP.app_WIDTH - gravityarea.offsetWidth / 2
+        gravityarea_TRANSLATE_Y = prop_Y * APP.app_HEIGHT
 
-        gravityarea_RATIO = prop_RADIUS / Math.sqrt(prop_RADIUS * prop_RADIUS * 2)
+        gravityarea_RADIUS = gravityarea.offsetWidth / 2
 
-        if (!gravityarea_TRANSITION_DELAY) setTimeout(() => { gravityarea_TRANSITION_DELAY = 300 }, 50.01)
+        if (!gravityarea_TRANSITION_DELAY) setTimeout(() => { gravityarea_TRANSITION_DELAY = 400 }, 50.01)
     }
 
     function gravityarea_setEvents() { EVENT.event_add(GRAVITYAREA_EVENTS) }
@@ -125,45 +131,83 @@
     // --DESTROY
     function gravityarea_destroy()
     {
+        gravityarea_clear()
+    
         gravityarea_destroyEvents()
         gravityarea_destroyEvents2()
 
         prop_$RESIZE.splice(gravityarea_e$Resize)
     
-        content_stop()
+        gravityarea_stop()
     }
 
     function gravityarea_destroyEvents() { EVENT.event_remove(GRAVITYAREA_EVENTS) }
 
     function gravityarea_destroyEvents2() { EVENT.event_remove(GRAVITYAREA_EVENTS_2) }
 
+    // --GET
+    function slot_get3d()
+    {
+        // size / (perspective - z) * perspective * 2   ==detail==>   tan(ANGLE = atan(size / (D = perspective - z))) * perspective
+    
+        const D = GRAVITYAREA_PERSPECTIVE - gravityarea_TRANSLATE_Z
+    
+        return ([
+        gravityarea_TRANSLATE_X / D * GRAVITYAREA_PERSPECTIVE + APP.app_WIDTH * .5,   // X
+        gravityarea_TRANSLATE_Y / D * GRAVITYAREA_PERSPECTIVE + APP.app_HEIGHT * .5,  // Y
+        gravityarea_RADIUS / D * GRAVITYAREA_PERSPECTIVE                                     // RADIUS
+        ])
+    }
+
     // --UPDATES
     function gravityarea_update(ratio)
     {
-        const ANGLE = ratio * MATH.PI.x2 + prop_OFFSET
+        const
+        ANGLE = (ratio - prop_OFFSET) * MATH.PI.x2,
+        H = Math.sin(ANGLE) * prop_ORBIT_RADIUS
 
-        gravityarea_TRANSLATE_X = prop_ORBIT_RADIUS * Math.cos(ANGLE)
-        gravityarea_TRANSLATE_Z = prop_ORBIT_RADIUS * Math.sin(ANGLE)
-        
+        gravityarea_TRANSLATE_X = Math.cos(prop_ROTATE) * H
+        gravityarea_TRANSLATE_Y = Math.sin(prop_ROTATE) * H
+        gravityarea_TRANSLATE_Z = Math.cos(ANGLE) * prop_ORBIT_RADIUS
+
         SLOT_$ROTATION.set({ rX: null, rY: .025 })
     }
 
-    function content_update(clientX, clientY)
+    function slot_update2d(clientX, clientY)
     {
         const
-        CLIENTRECT = gravityarea.getBoundingClientRect(),
-        SIZE = CLIENTRECT.width / 2,
-        [DIF_X, DIF_Y] = [clientX - (CLIENTRECT.left + SIZE), clientY - (CLIENTRECT.top + SIZE)],
-        [ANGLE, RADIUS] = [Math.atan(DIF_Y / DIF_X), SIZE * gravityarea_RATIO]
+        X = gravityarea_TRANSLATE_X + gravityarea_RADIUS,
+        Y = gravityarea_TRANSLATE_Y + gravityarea_RADIUS
     
-        content_FORCE_X = DIF_X * (1 - Math.abs(DIF_X) / (Math.cos(ANGLE) * RADIUS)) * .5
-        content_FORCE_Y = DIF_Y * (1 - Math.abs(DIF_Y) / Math.abs(Math.sin(ANGLE) * RADIUS)) * .5
+        slot_updateForces(clientX, clientY, X, Y, gravityarea_RADIUS)
     }
+
+    function slot_update3d(clientX, clientY)
+    {
+        const [X, Y, R] = slot_get3d()
+
+        slot_updateForces(clientX, clientY, X, Y, R)
+    }
+
+    function slot_updateForces(clientX, clientY, x, y, r)
+    {
+        const
+        [DIF_X, DIF_Y] = [clientX - x, clientY - y],
+        [ANGLE, RADIUS] = [Math.atan(DIF_Y / DIF_X), r * gravityarea_RATIO]
+
+        if (!ANGLE) return
+    
+        slot_FORCE_X = DIF_X * .3 * (1 - Math.abs(DIF_X) / (Math.cos(ANGLE) * RADIUS))
+        slot_FORCE_Y = DIF_Y * .3 * (1 - Math.abs(DIF_Y) / Math.abs(Math.sin(ANGLE) * RADIUS))
+    }
+
+    // --CLEAR
+    function gravityarea_clear() { clearTimeout(gravityarea_TIMEOUT) }
 
     // --EVENTS
     function gravityarea_e$MouseMove(clientX, clientY) // THROTTLE
     {
-        const [X, Y] = [clientX - prop_RADIUS, clientY - prop_RADIUS]
+        const [X, Y] = [clientX - gravityarea_RADIUS, clientY - gravityarea_RADIUS]
 
         SLOT_$ROTATION.set({ rX: (X - gravityarea_TRANSLATE_X) * .005, rY: (Y - gravityarea_TRANSLATE_Y) * .005 })
 
@@ -175,30 +219,30 @@
     {
         const NOW = +new Date()
 
-        clearTimeout(gravityarea_TIMEOUT)
+        gravityarea_clear()
 
-        if (NOW > gravityarea_LAST + 50)
+        if (NOW > gravityarea_LAST + 50.01)
         {
-            content_update(clientX, clientY)
+            slot_update(clientX, clientY)
 
             gravityarea_LAST = NOW
         }
-        else gravityarea_TIMEOUT = setTimeout(() => content_update(clientX, clientY), 200)
+        else gravityarea_TIMEOUT = setTimeout(() => slot_update(clientX, clientY), 200.04)
     }
 
-    async function gravityarea_eMouseEnter() { if (!slot_GRABBING) content_stop() }
+    async function gravityarea_eMouseEnter() { if (!slot_GRABBING) gravityarea_stop() }
 
     async function gravityarea_eMouseLeave()
     {
-        [content_FORCE_X, content_FORCE_Y] = [0, 0]
+        [slot_FORCE_X, slot_FORCE_Y] = [0, 0]
 
-        clearTimeout(gravityarea_TIMEOUT)
+        gravityarea_clear()
 
         gravityarea_TIMEOUT = setTimeout(() =>
         {
-            content_FLOATING_UPDATE.setTime(.5)
+            gravityarea_FLOATING.setTime(.5)
 
-            if (!slot_GRABBING) content_start()
+            if (!slot_GRABBING) gravityarea_start()
         }, 200)
     }
 
@@ -213,7 +257,7 @@
 
     function gravityarea_e$MouseUp() // no async
     {
-        if (+new Date() - gravityarea_LAST_2 < 200) SVELTE_DISPATCH('click')
+        if (+new Date() - gravityarea_LAST_2 < 200.04) SVELTE_DISPATCH('click')
 
         slot_GRABBING = false
     
@@ -222,12 +266,12 @@
 
     async function gravityarea_e$Resize() { gravityarea_setVars() }
 
-    async function content_e$Animation() { content_FORCE_Y = content_FLOATING_UPDATE.update() }
+    async function gravityarea_e$Animation() { gravityarea_ANIMATION_Y = gravityarea_FLOATING.update() }
 
     // --CONTROLS
-    function content_start() { prop_$ANIMATION.push(content_e$Animation) }
+    function gravityarea_start() { prop_$ANIMATION.push(gravityarea_e$Animation) }
 
-    function content_stop() { prop_$ANIMATION.splice(content_e$Animation) }
+    function gravityarea_stop() { prop_$ANIMATION.splice(gravityarea_e$Animation) }
 
 // #CYCLES
 
@@ -242,12 +286,15 @@ onDestroy(gravityarea_destroy)
 class="gravityarea"
 class:focus={prop_FOCUS}
 style:--default-size="{prop_RADIUS}px"
+style:--force-x="{slot_FORCE_X}px"
+style:--force-y="{slot_FORCE_Y}px"
 style:z-index={prop_Z}
 style:transform="
-perspective({prop_ORBIT_RADIUS ? '1200px' : 'none'})
+perspective({prop_ORBIT_RADIUS ? GRAVITYAREA_PERSPECTIVE + 'px' : 'none'})
+
 translate3d(
 {gravityarea_TRANSLATE_X}px,
-{gravityarea_TRANSLATE_Y}px,
+{gravityarea_TRANSLATE_Y + gravityarea_ANIMATION_Y}px,
 {gravityarea_TRANSLATE_Z}px)"
 style:transition="transform {gravityarea_TRANSITION_DELAY}ms ease-out"
 type="button"
@@ -259,15 +306,10 @@ on:mousemove={gravityarea_eMouseMove}
 on:mousedown={gravityarea_eMouseDown}
 on:mouseleave={gravityarea_eMouseLeave}
 >
-    <div
-    class="content"
-    style:transform="rotate({-prop_ROTATE}rad) translate3d({content_FORCE_X}px, {content_FORCE_Y}px, 0)"
-    >
-        <slot
-        rotation={SLOT_$ROTATION}
-        grabbing={slot_GRABBING}
-        />
-    </div>
+    <slot
+    rotation={SLOT_$ROTATION}
+    grabbing={slot_GRABBING}
+    />
 </div>
 
 <div
@@ -283,6 +325,7 @@ lang="scss"
 >
 /* #USES */
 
+@use '../../assets/scss/styles/utils';
 @use '../../assets/scss/styles/position';
 @use '../../assets/scss/styles/display';
 @use '../../assets/scss/styles/size';
@@ -294,11 +337,12 @@ lang="scss"
 
 .gravityarea
 {
-    --content-ratio: .4;
-    --content-size: calc(var(--default-size, '100px') * var(--content-ratio, 1));
+    --cube-ratio: .4;
+    --cube-size: calc(var(--default-size, '100px') * var(--cube-ratio, 1));
 
-    $size: var(--content-size, '100px');
+    $size: var(--cube-size, '100px');
 
+    @extend %strict;
     @extend %f-center;
 
     position: absolute;
@@ -314,21 +358,9 @@ lang="scss"
 
     &.focus { will-change: transform; }
 
-    .content
-    {
-        transform-style: preserve-3d;
-
-        width: $size;
-        height: $size;
-
-        pointer-events: none;
-
-        transition: transform .6s;
-    }
-
-    @include media.min($ms4, $ms3) { --content-ratio: .5; }
-    @include media.min($ms5, $ms4) { --content-ratio: .75; }
-    @include media.min($ms6, $ms4) { --content-ratio: 1; }
+    @include media.min($ms4, $ms3) { --cube-ratio: .5; }
+    @include media.min($ms5, $ms4) { --cube-ratio: .75; }
+    @include media.min($ms6, $ms4) { --cube-ratio: 1; }
 }
 
 .mask

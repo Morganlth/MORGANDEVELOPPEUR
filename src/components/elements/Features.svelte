@@ -1,5 +1,6 @@
 <!-- #MAP
 
+-APP
 -EVENT
     FEATURES
         TRACK * 2
@@ -25,8 +26,8 @@
 
 // #IMPORTS
 
-    // --CONTEXT
-    import { EVENT } from '../../App.svelte'
+    // --CONTEXTS
+    import { APP, EVENT } from '../../App.svelte'
 
     // --SVELTE
     import { onMount, onDestroy } from 'svelte'
@@ -68,14 +69,9 @@
 
     function features_setEvents() { EVENT.event_add(FEATURES_EVENTS) }
 
-    function track_setVars() { track_ROTATE = Math.atan(window.innerHeight / window.innerWidth) }
+    function track_setVars() { track_ROTATE = Math.atan(APP.app_HEIGHT / APP.app_WIDTH) }
 
-    function topic_setVars()
-    {
-        const [WIDTH, HEIGHT] = [window.innerWidth, window.innerHeight]
-    
-        topic_WIDTH = Math.sqrt(WIDTH * WIDTH + HEIGHT * HEIGHT)
-    }
+    function topic_setVars() { topic_WIDTH = Math.sqrt(APP.app_WIDTH * APP.app_WIDTH + APP.app_HEIGHT * APP.app_HEIGHT) }
 
     // --DESTROY
     function features_destroy() { features_destroyEvents() }
@@ -174,7 +170,7 @@ lang="scss"
 
     opacity: 0;
 
-    perspective: 200px;
+    perspective: 180px;
 
     margin-left: 5%;
 
@@ -184,13 +180,11 @@ lang="scss"
     {
         opacity: 1;
 
-        .track { will-change: transform; }
+        .track:not(:nth-child(3)) { will-change: transform; }
     }
 
     .track
     {
-        @include utils.solid-border(1px, $intermediate, $right: false, $left: false);
-    
         display: flex;
 
         transform-style: preserve-3d;
@@ -198,7 +192,7 @@ lang="scss"
         width: fit-content;
         height: fit-content;
 
-        transition: transform .5s ease-out;
+        transition: transform .4s ease-out;
 
         &:nth-child(1)
         {
@@ -206,7 +200,7 @@ lang="scss"
 
             transform-origin: bottom left;
 
-            height: 20%;
+            height: 28%;
 
             color: rgba($light, .2);
         }
@@ -216,7 +210,7 @@ lang="scss"
 
             transform-origin: top right;
 
-            height: 18%;
+            height: 26%;
 
             color: $primary;
         }
@@ -232,7 +226,11 @@ lang="scss"
 
         .topic
         {
+            @include utils.solid-border(1px, $intermediate, $right: false, $left: false);
+        
             @extend %f-center;
+
+            height: 100%;
     
             p
             {

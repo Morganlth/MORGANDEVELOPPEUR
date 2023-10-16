@@ -2,6 +2,7 @@
 
 <!-- #MAP
 
+-APP
 -EVENT
     CARD
         DECOR
@@ -46,8 +47,8 @@
     // --LIB
     import COLORS from '$lib/colors'
 
-    // --CONTEXT
-    import { EVENT } from '../../App.svelte'
+    // --CONTEXTS
+    import { APP, EVENT } from '../../App.svelte'
 
     // --SVELTE
     import { onMount, onDestroy } from 'svelte'
@@ -106,6 +107,9 @@
     card_X = 0,
     card_Y = 0,
 
+    card_T1 = 0,
+    card_T2 = 0,
+
     card_U,
     card_X_I,
     card_Y_I,
@@ -113,7 +117,9 @@
     card_Y_A,
 
     card_LAST,
-    card_TIMEOUT
+    card_TIMEOUT,
+
+    card_cancel = () => {}
 
     // --ELEMENT-DECOR
     let
@@ -146,7 +152,7 @@
     function card_setVars()
     {
         card_TRANSLATE_X = card_getTranslateX()
-        card_TRANSLATE_Y = card_getTranslateY() + (card_ON ? 0 : window.innerHeight)
+        card_TRANSLATE_Y = card_getTranslateY() + (card_ON ? 0 : APP.app_HEIGHT)
 
         card_ROTATE_X = (card_ROTATE_Y = 0)
         card_ROTATE_Z = card_getRZ()
@@ -179,9 +185,9 @@
     function card_destroyEvents2() { EVENT.event_remove(CARD_EVENTS_2) }
 
     // --GET
-    function card_getTranslateX() { return window.innerWidth * .5 - window.innerWidth * .05 * prop_ID }
+    function card_getTranslateX() { return APP.app_WIDTH * .5 - APP.app_WIDTH * .05 * prop_ID }
 
-    function card_getTranslateY() { return window.innerHeight * .8 - card.offsetHeight - window.innerHeight * .08 * prop_ID }
+    function card_getTranslateY() { return APP.app_HEIGHT * .8 - card.offsetHeight - APP.app_HEIGHT * .08 * prop_ID }
 
     function card_getRZ() { return 10 - 10 * prop_ID }
 
@@ -237,7 +243,7 @@
     {
         clearTimeout(card_TIMEOUT)
 
-        cancelAnimationFrame(card.animation_FRAMEID)
+        card_cancel()
     }
 
     // --EVENTS
@@ -333,20 +339,32 @@
         {
             card_OPACITY = 1
 
-            await animation.call(
-            card,
-            (t) =>
+            let {cancel, promise} = animation((t) =>
             {
-                const EASING_T = cubicOut(t)
+                card_T1 = t
 
-                card_TRANSLATE_Y = START_Y + DIF_Y * EASING_T
-                decor_TRANSLATE_Z = -1000 * (1 - EASING_T)
+                if (t < .33)
+                {
+                    const T = cubicOut(t / .33)
+
+                    card_TRANSLATE_Y = START_Y + DIF_Y * T
+                    decor_TRANSLATE_Z = -1000 * (1 - T)
+                }
+                else if (t > .4)
+                {
+                    const U = 1 - cubicInOut((t - .4) / .6)
+            
+                    decor_ROTATE_Y = 180 * U
+                }
             },
-            200.04)
+            600.12, card_T1)
 
             card_START = false
+            card_cancel = cancel
+
+            promise.then(() => card_setTransition(400))
         
-            card_aIn2()
+            // card_aIn2()
         },
         card_START ? CARD_DELAY : 0)
     }
@@ -373,20 +391,20 @@
 
         card_setTransition(0)
     
-        await animation.call(
-        card,
+        let {cancel, promise} = animation(
         (t) =>
         {
-            const
-            EASING_T = cubicIn(t),
-            U = (1 - EASING_T)
+            card_T2 = t
+    
+            const T = cubicIn(t)
         
-            card_TRANSLATE_Y = TRANSLATE_Y + window.innerHeight * EASING_T
-            card_ROTATE_Z = ROTATE_Z * U
+            card_TRANSLATE_Y = TRANSLATE_Y + APP.app_HEIGHT * T
+            card_ROTATE_Z = ROTATE_Z * (1 - T)
         },
-        400.08)
+        400.08, card_T2)
 
-        card_OPACITY = 0
+        card_cancel = cancel
+        promise.then(() => card_OPACITY = 0)
     }
 
     // --INTRO
@@ -430,6 +448,7 @@ onDestroy(card_destroy)
 
 <button
 class="card"
+class:focus={card_ON}
 data-id={prop_ID}
 style:--card-x="{card_X}px"
 style:--card-y="{card_Y}px"
@@ -510,6 +529,7 @@ lang="scss"
 
 @use 'sass:math';
 
+@use '../../assets/scss/styles/utils';
 @use '../../assets/scss/styles/elements';
 @use '../../assets/scss/styles/position';
 @use '../../assets/scss/styles/display';
@@ -524,6 +544,7 @@ lang="scss"
 
     &, .decor, .texture, :global .tag { transform-style: preserve-3d; }
 
+    @extend %strict;
     @extend %button-reset;
 
     position: absolute;
@@ -536,6 +557,8 @@ lang="scss"
     pointer-events: auto;
 
     transition: transform ease-out, opacity .2s;
+
+    &.focus { will-change: transform; }
 
     .decor
     {

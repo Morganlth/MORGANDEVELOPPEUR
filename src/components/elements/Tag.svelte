@@ -12,18 +12,17 @@
 
     // --PROPS
     export let
+    prop_FOCUS = false,
+
     prop_CONTENT = '',
     prop_DURATION = 0,
 
-    prop_INTRO = () => {},
-    prop_OUTRO = () => {},
+    prop_IN = () => {},
+    prop_OUT = () => {},
 
     prop_STYLE = { tag_style: () => '', fragments_style: () => '' }
 
-// #IMPORTS
-
-    // --JS
-    import { transition_wait } from '../../assets/js/utils/transition'
+// #IMPORT
 
     // --COMPONENT-ELEMENT
     import Fragments from './Fragments.svelte'
@@ -33,29 +32,54 @@
     // --ELEMENT-TAG
     const TAG_FRAGS = []
 
-// #VARIABLE
+// #VARIABLES
 
     // --ELEMENT-TAG
-    let tag
+    let
+    tag,
+
+    tag_ON = false,
+
+    tag_TIMEOUT
+
+// #REACTIVE
+
+    // --ELEMENT-TAG
+    $: tag ? tag_update(prop_FOCUS) : void 0
 
 // #FUNCTIONS
 
-    // --INTRO
-    function tag_intro() { prop_INTRO(tag, TAG_FRAGS) }
+    // --UPDATE
+    function tag_update(focus)
+    {
+        clearTimeout(tag_TIMEOUT)
 
-    // --OUTRO
-    function tag_outro() { prop_OUTRO(tag, TAG_FRAGS) }
+        focus ? tag_aIn() : tag_aOut()
+    }
+
+    // --ANIMATIONS
+    function tag_aIn()
+    {
+        tag_ON = true
+
+        prop_IN(tag, TAG_FRAGS)
+    }
+
+    function tag_aOut()
+    {
+        tag_TIMEOUT = setTimeout(() => tag_ON = false, prop_DURATION)
+
+        prop_OUT(tag, TAG_FRAGS)
+    }
 </script>
 
 <!-- #HTML -->
 
 <h3
 class="tag"
+class:focus={tag_ON}
 style={prop_STYLE.tag_style()}
 bind:this={tag}
-transition:transition_wait|global={{ duration: prop_DURATION }}
-on:introend={tag_intro}
-on:outrostart={tag_outro}
 >
     <Fragments
     prop_FRAGS={{ children: TAG_FRAGS, value: prop_CONTENT }}
@@ -82,7 +106,13 @@ lang="scss"
 
     @extend %m-h-3;
 
+    opacity: 0;
+
     width: fit-content;
     height: fit-content;
+
+    transition: opacity var(--frag-duration, .4s);
+
+    &.focus { opacity: 1; }
 }
 </style>

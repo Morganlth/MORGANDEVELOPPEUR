@@ -1,31 +1,50 @@
 // #EXPORTS
 
     // --ANIMATIONS
-    export function animation(callback = () => {}, duration)
+    export function animation(callback, duration = 0, t = 0, invert = false)
     {
+        let
+        cancel,
+        frameId
+    
         const
+        RATIO = invert ? t : 1 - t,
+        DURATION = duration * RATIO,
         START = +new Date(),
-        CONTEXT = this ?? {}
-       
-        return new Promise(resolve =>
+        PROMISE = new Promise((resolve, reject) =>
         {
-            (function frame()
+            cancel = () =>
+            {
+                cancelAnimationFrame(frameId)
+    
+                reject()
+            }
+
+            if (!DURATION) return resolve()
+    
+            ;(function frame()
             {
                 const TIME = +new Date() - START
 
-                if (TIME > duration)
+                if (TIME >= DURATION)
                 {
-                    callback(1)
+                    callback(invert ? 0 : 1)
                     resolve()
 
                     return
                 }
-        
-                callback(TIME / duration)
 
-                CONTEXT.animation_FRAMEID = requestAnimationFrame(frame)
+                const T = TIME / duration
+        
+                callback(invert ? t - T : t + T)
+
+                frameId = requestAnimationFrame(frame)
             })()
         })
+
+        PROMISE.catch(() => void null)
+
+        return { cancel, promise: PROMISE }
     }
 
     export function animation_writing(children = [], callback = () => {})

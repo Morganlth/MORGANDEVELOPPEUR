@@ -52,7 +52,8 @@
                 prop_RATIO: 0
             }
         }
-, /////////////////////////////////////////////PRESENTATION////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////PRESENTATION////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ,
         {
             name: 'presentation',
             component: Presentation,
@@ -124,13 +125,14 @@
                 prop_DIF: void 0
             }
         }
-, /////////////////////////////////////////////SKILLS////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////SKILLS////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ,
         {
             name: 'skills',
             component: Skills,
             tags: ['competences'],
             overflow: true,
-            h: 7
+            h: 6
         ,
             route:
             {
@@ -158,22 +160,26 @@
                 {
                     id: 0,
                     title: 'HTML et CSS',
-                    value: 'HTML & CSS'
+                    value: 'HTML & CSS',
+                    component: Html
                 },
                 {
                     id: 1,
                     title: 'Javascript',
-                    value: 'JS'
+                    value: 'JS',
+                    component: Javascript
                 },
                 {
                     id: 2,
                     title: 'Node JS',
-                    value: 'NODE JS'
+                    value: 'NODE JS',
+                    component: NodeJs
                 },
                 {
                     id: 3,
                     title: 'Gestion, Outils et Adaptabilité',
-                    value: 'AUTRES'
+                    value: 'AUTRES',
+                    component: Github
                 }
             ]
         ,
@@ -189,7 +195,8 @@
                 prop_DIF: void 0
             }
         }
-, /////////////////////////////////////////////PROJECTS////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////PROJECTS////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    , 
         {
             name: 'projects',
             component: Projects,
@@ -293,6 +300,10 @@
     import Arroba from '../../components/icons/Arroba.svelte'
     import Game from '../../components/icons/Game.svelte'
     import Snake2 from '../../components/icons/Snake2.svelte'
+    import Html from '../../components/icons/Html.svelte'
+    import Javascript from '../../components/icons/Javascript.svelte'
+    import NodeJs from '../../components/icons/NodeJs.svelte'
+    import Github from '../../components/icons/Github.svelte'
 
 // #FUNCTIONS
 

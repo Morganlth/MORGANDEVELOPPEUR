@@ -15,9 +15,9 @@
     export let
     prop_$ROTATION = {},
 
+    prop_FOCUS = false,
     prop_GRABBING = false,
     prop_DESTROY = false,
-    prop_FOCUS = false,
 
     prop_ROTATE = 0,
     prop_ROTATE_Y = 0,
@@ -88,9 +88,15 @@ class="cube {prop_DESTROY ? 'destroy' : 'build'}"
 class:focus={prop_FOCUS}
 class:grabbing={prop_GRABBING}
 style:--cube-color={prop_COLOR ?? COLORS.primary}
-style:transform="rotate({cube_ROTATE}rad) rotate3d(0, 1, 0, {cube_ROTATE_Y}rad)"
+style:transform="
+translate(var(--force-x, 0), var(--force-y, 0))
+
+rotateY({cube_ROTATE_Y}rad)
+rotateZ({cube_ROTATE}rad)
+
+translateZ(calc(var(--cube-size, '100px') / 2))"
 >
-    {#each [0, 1, 2, 3, 4, 5] as id}
+    {#each [1, 2, 3, 4, 5, 6] as id}
         <div
         class="side"
         data-side-id={id}
@@ -133,14 +139,15 @@ lang="scss"
 
 .cube
 {
-    $size: var(--content-size, '100px');
-
-    &, .side { @extend %any; }
+    $size: var(--cube-size, '100px');
 
     transform-style: preserve-3d;
     transform-origin: center;
 
-    transition: transform .35s ease-out;
+    width: 50%;
+    height: 50%;
+
+    transition: transform .6s ease-out;
 
     &.build
     {
@@ -166,6 +173,9 @@ lang="scss"
     .side
     {
         @extend %f-center;
+        @extend %any;
+
+        position: absolute;
     
         backface-visibility: hidden;
 
@@ -177,12 +187,37 @@ lang="scss"
 
         transition: border .7s ease-in, opacity .7s ease-in;
     }
-    .side:nth-child(1) { transform: translate3d(0, 0, calc($size / 2))        rotate3d(0, 0, 0, 0); }
-    .side:nth-child(2) { transform: translate3d(0, -150%, 0)                  rotate3d(1, 0, 0, 90deg); }
-    .side:nth-child(3) { transform: translate3d(-50%, -200%, 0)               rotate3d(0, -1, 0, 90deg); }
-    .side:nth-child(4) { transform: translate3d(0, -250%, 0)                  rotate3d(-1, 0, 0, 90deg); }
-    .side:nth-child(5) { transform: translate3d(50%, -400%, 0)                rotate3d(0, 1, 0, 90deg); }
-    .side:nth-child(6) { transform: translate3d(0, -500%, calc($size / -2))   rotate3d(0, 1, 0, 180deg); }
+    .side:nth-child(1), .side:nth-child(2), .side:nth-child(3), .side:nth-child(4) { top: 0; }
+    .side:nth-child(1), .side:nth-child(4), .side:nth-child(5), .side:nth-child(6) { left: 0; }
+    .side:nth-child(2)
+    {
+        left: 100%;
+
+        transform-origin: left;
+        transform: rotate3d(0, 1, 0, 90deg);
+    }
+    .side:nth-child(3)
+    {
+        left: -100%;
+
+        transform-origin: right;
+        transform: rotate3d(0, -1, 0, 90deg);
+    }
+    .side:nth-child(4) { transform: translateZ(calc($size * -1)) rotate3d(0, 1, 0, 180deg); }
+    .side:nth-child(5)
+    {
+        top: -100%;
+
+        transform-origin: bottom;
+        transform: rotate3d(1, 0, 0, 90deg);
+    }
+    .side:nth-child(6)
+    {
+        top: 100%;
+
+        transform-origin: top;
+        transform: rotate3d(-1, 0, 0, 90deg);
+    }
 
     @keyframes aBuild
     {

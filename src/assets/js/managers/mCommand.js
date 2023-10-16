@@ -73,7 +73,28 @@ constructor ()
         }
     }
 
-    command_c$Fps() { if (this.command_testCommand('log')) fps_get().then(fps => this.#command_COMMANDS.log(fps + ' fps')) }
+    async command_c$Fps()
+    {
+        if (this.command_testCommand('log'))
+        {
+            const START = performance.now()
+
+            let count = 0
+
+            await new Promise(resolve =>
+            {
+                requestAnimationFrame(async function frame()
+                {
+                    count++
+
+                    performance.now() - START >= 500
+                    ? resolve(count * 2)
+                    : requestAnimationFrame(frame)
+                })
+            })
+            .then(fps => this.#command_COMMANDS.log(fps + ' fps'))
+        }
+    }
 
     // --TESTS
     command_test(toTest, type, callback, name, value)
@@ -173,10 +194,7 @@ export class CommandSuccess extends Error
     }
 }
 
-// #IMPORTS
-
-    // --JS
-    import fps_get from '../utils/fps'
+// #IMPORT
 
     // --CONTEXT
     import APP from './mApp'

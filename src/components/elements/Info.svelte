@@ -18,6 +18,14 @@
 
     prop_FOCUS = false 
 
+// #IMPORTS
+
+    // --JS
+    import { animation } from '../../assets/js/utils/animation'
+
+    // --SVELTE
+    import { onMount } from 'svelte'
+
 // #CONSTANTE
 
     // --ELEMENT-INFO
@@ -25,51 +33,72 @@
 
 // #VARIABLES
 
-     // --ELEMENT-INFO
-     let info_OPACITY = 0
+    // --ELEMENT-INFO
+    let
+    info_CHARGED = false,
+
+    info_OPACITY = 0,
+
+    info_T = 0,
+
+    info_TIMEOUT,
+
+    info_cancel = () => {}
+
+    // --ELEMENT-CONTENT
+    let content_CLIP = 0
 
     // --ELEMENT-CLOSURE
-    let closure_TIMEOUT
+    let closure_TRANSLATE_X = 0
+
+// #REACTIVE
+
+    // --ELEMENT-INFO
+    $: info_CHARGED ? info_update(prop_FOCUS) : void 0
 
 // #FUNCTIONS
 
-    // --UPDATE
-    function info_updateOpacity(opacity) { info_OPACITY = opacity }
+    // --SET
+    function info_set() { info_CHARGED = true }
 
-    // --INTRO
-    function closure_intro() { closure_TIMEOUT = setTimeout(() => info_updateOpacity(1), INFO_D) }
-
-    // --OUTROS
-    function closure_outro()
+    // --UPDATES
+    function info_update(focus)
     {
-        clearTimeout(closure_TIMEOUT)
-    
-        info_updateOpacity(0)
+        info_clear()
+
+        info_a(!focus)
     }
 
-    // --TRANSITIONS
-    function content_t(node, { delay = 0 })
+    // --CLEAR
+    function info_clear()
     {
-        return {
-            delay,
-            duration: INFO_D,
-            css: (t) =>
+        clearTimeout(info_TIMEOUT)
+
+        info_cancel()
+    }
+
+    // --ANIMATION
+    function info_a(invert = false)
+    {
+        info_TIMEOUT = setTimeout(async () =>
+        {
+            let {cancel, promise} = animation((t) =>
             {
-                const T = t * 100 + '%'
+                info_T = t
 
-                return `clip-path: polygon(0 0, ${T} 0, ${T} 100%, 0% 100%);`
-            }
-        }
+                closure_TRANSLATE_X = -100 + (content_CLIP = t * 100)
+            }, INFO_D, info_T, invert)
+
+            info_cancel = cancel
+
+            try { info_OPACITY = invert ? (await promise, 0) : 1 } catch {}
+        },
+        !invert && info_T === 0 ? INFO_D : 0)
     }
 
-    function closure_t(node, { delay = 0 })
-    {
-        return {
-            delay,
-            duration: INFO_D,
-            css: (t, u) => `transform: translateX(-${u * 100}%);`
-        }
-    }
+// #CYCLE
+
+onMount(info_set)
 </script>
 
 <!-- #HTML -->
@@ -78,31 +107,25 @@
 class="info"
 style:opacity={info_OPACITY}
 >
-    {#if prop_FOCUS}
-        <span
-        class="opening"
-        >
-            {'['}
-        </span>
+    <span
+    class="opening"
+    >
+        {'['}
+    </span>
 
-        <p
-        class="content"
-        in:content_t={{ delay: INFO_D }}
-        out:content_t
-        >
-            {prop_CONTENT}
-        </p>
+    <p
+    class="content"
+    style:clip-path="polygon(0 0, {content_CLIP}% 0, {content_CLIP}% 100%, 0% 100%)"
+    >
+        {prop_CONTENT}
+    </p>
 
-        <span
-        class="closure"
-        in:closure_t={{ delay: INFO_D }}
-        out:closure_t
-        on:introstart={closure_intro}
-        on:outroend={closure_outro}
-        >
-            {']'}
-        </span>
-    {/if}
+    <span
+    class="closure"
+    style:transform="translateX({closure_TRANSLATE_X}%)"
+    >
+        {']'}
+    </span>
 </div>
 
 <!-- #STYLE -->

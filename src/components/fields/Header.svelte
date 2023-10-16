@@ -1,6 +1,9 @@
 <!-- #MAP
 
+-EVENT
     HEADER
+        ICON
+            LOGO
 
 -->
 
@@ -9,15 +12,14 @@
 <script>
 // #IMPORTS
 
-    // --JS
-    import fps_get from '../../assets/js/utils/fps'
-
     // --LIB
     import COLORS from '$lib/colors'
 
+    // --CONTEXT
+    import { EVENT } from '../../App.svelte'
+
     // --SVELTE
     import { page } from '$app/stores'
-    import { onMount, onDestroy } from 'svelte'
 
     // --COMPONENT-COVER
     import Icon from '../covers/Icon.svelte'
@@ -25,41 +27,10 @@
     // --COMPONENT-ICON
     import Logo from '../icons/Logo.svelte'
 
-// #VARIABLES
+// #VARIABLE
 
-    // --ELEMENT-HEADER
-    let
-    header_FPS = 0,
-    header_LOOP
-
-// #FUNCTIONS
-
-    // --SET
-    function header_set()
-    {
-        header_setVars()
-        header_setAnimations()
-    }
-
-    function header_setVars() { header_LOOP = true }
-
-    function header_setAnimations() { header_loop() }
-
-    // --DESTROY
-    function header_destroy() { header_LOOP = false }
-
-    // --LOOP
-    async function header_loop()
-    {
-       header_FPS = await fps_get()
-
-       if (header_LOOP) header_loop()
-    }
-
-// #CYCLES
-
-onMount(header_set)
-onDestroy(header_destroy)
+    // --EVENT
+    let event_$FPS = EVENT.event_$FPS
 </script>
 
 <!-- #HTML -->
@@ -82,7 +53,7 @@ onDestroy(header_destroy)
     </strong>
 
     <span>
-        {header_FPS}
+        {$event_$FPS}
     </span>
 </header>
 

@@ -16,7 +16,7 @@
                 {
                     prop_ROTATE: MATH.toRad(150),
                     prop_SRC: 'html-5.png',
-                    prop_ALT: 'HTML Logo : https://www.flaticon.com/fr/icone-gratuite/html-5_174854?term=html&page=1&position=2&origin=search&related_id=174854',
+                    prop_ALT: 'HTML Logo: https://www.flaticon.com/fr/icone-gratuite/html-5_174854?term=html&page=1&position=2&origin=search&related_id=174854',
                     prop_COLOR: '#FC490B'
                 },
                 skills:
@@ -49,7 +49,7 @@
                 {
                     prop_ROTATE: MATH.toRad(30),
                     prop_SRC: 'js.png',
-                    prop_ALT: 'JavaScript Logo : https://www.flaticon.com/fr/icone-gratuite/js_5968292?term=javascript&page=1&position=7&origin=search&related_id=5968292',
+                    prop_ALT: 'JavaScript Logo: https://www.flaticon.com/fr/icone-gratuite/js_5968292?term=javascript&page=1&position=7&origin=search&related_id=5968292',
                     prop_COLOR: '#FFDF00'
                 },
                 skills:
@@ -100,7 +100,7 @@
                 {
                     prop_ROTATE: MATH.toRad(60),
                     prop_SRC: 'node-js.png',
-                    prop_ALT: 'Node Js Logo : https://www.pngwing.com/en/free-png-yghmf',
+                    prop_ALT: 'Node Js Logo: https://www.pngwing.com/en/free-png-yghmf',
                     prop_COLOR: '#88C043'
                 },
                 skills:
@@ -122,7 +122,7 @@
                 {
                     prop_ROTATE: MATH.toRad(90),
                     prop_SRC: 'github-mark-white.png',
-                    prop_ALT: 'Github Logo : https://github.com/logos',
+                    prop_ALT: 'Github Logo: https://github.com/logos',
                     prop_COLOR: '#FFFFFF'
                 },
                 skills:
@@ -150,13 +150,9 @@
             }
         ].map((item, i, array) =>
         {
-            const
-            LENGTH = array.length,
-            FRACTION = MATH.PI.x2 / LENGTH
-    
             item.id = i
             item.props.prop_TITLE = item.tag
-            item.props.prop_OFFSET = FRACTION * (LENGTH - i) + FRACTION / 2
+            item.props.prop_OFFSET = 1 / (array.length + 1) * (i + 1)
     
             return item
         })

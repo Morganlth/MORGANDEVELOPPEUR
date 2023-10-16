@@ -66,7 +66,7 @@ style:opacity={opti_OPACITY}
             </section>
     
             <section>
-                <h6>- LA CONSOLE</h6>
+                <h6>- TERMINAL</h6>
     
                 <p>
                     Si vous souhaitez redéfinir les paramètres par défaut, vous pouvez passer par la commande
@@ -78,9 +78,16 @@ style:opacity={opti_OPACITY}
                         <span>reset</span>
                     </span>
                     
-                    dans la <span>Console</span> (selon les dimensions des écrans la <span>Console</span> n'est pas toujours affichée).
+                    dans le <span>Terminal</span> (selon les dimensions des écrans le <span>Terminal</span> n'est pas toujours affichée).
                     <br>
-                    Vous retrouvez la liste des commandes dans la section <span>commande</span> de la <span>Console</span>.
+                    Vous retrouvez la liste des commandes en utilisant
+
+                    <span
+                    class="command"
+                    >
+                        <span>app</span>
+                        <span>commands</span>
+                    </span>
                 </p>
             </section>
 

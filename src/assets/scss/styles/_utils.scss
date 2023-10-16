@@ -61,3 +61,10 @@
         -webkit-user-drag: none;
         -webkit-app-region: no-drag;
     }
+
+    // --STRICT
+    %strict
+    {
+        contain: strict;
+        isolation: isolate;
+    }

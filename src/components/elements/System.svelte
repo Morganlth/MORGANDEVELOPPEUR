@@ -35,8 +35,8 @@
 // #IMPORTS
 
     // --JS
-    import { wait_throttle } from '../../assets/js/utils/wait'
     import MATH from '../../assets/js/utils/math'
+    import { wait_throttle } from '../../assets/js/utils/wait'
 
     // --CONTEXTS
     import { APP, COMMAND, EVENT } from '../../App.svelte'
@@ -46,7 +46,6 @@
 
     // --COMPONENT-COVERS
     import Group from '../covers/Group.svelte'
-    import Orbit from '../covers/Orbit.svelte'
     import GravityArea from '../covers/GravityArea.svelte'
     import Cell from '../covers/Cell.svelte'
 
@@ -72,22 +71,19 @@
             tests: { testBoolean: true },
             storage: true
         }
-    ]
+    ],
+    SYSTEM_EVENTS = { mouseMove: wait_throttle(system_e$MouseMove, 50) }
 
     // --ELEMENT-GROUP
     const
     GROUP_Z_POSITIONS = new Float64Array(prop_SYSTEM.length),
-    GROUP_EVENTS =
-    {
-        scroll: wait_throttle(group_e$Scroll, 200),
-        mouseMove: wait_throttle(group_e$MouseMove, 50)
-    }
+    GROUP_EVENTS = { scroll: wait_throttle(group_e$Scroll, 200.04) }
 
     // --ELEMENT-ORBIT
     const ORBIT_EVENTS = { resize: orbit_e$Resize }
 
     // --ELEMENT-GRAVITYAREA
-    const GRAVITYAREA_EVENTS = { scroll: wait_throttle(gravityarea_e$Scroll, 50.01) }
+    const GRAVITYAREA_EVENTS = { scroll: wait_throttle(gravityarea_e$Scroll, 33.34) }
 
     // --ELEMENT-TAG
     const TAG_DURATION = 400
@@ -97,13 +93,15 @@
     // --ELEMENT-SYSTEM
     let
     system_CHARGED = false,
-    system_OPTIMISED = false
+    system_OPTIMISED = false,
+
+    system_ROTATE_X = 0,
+    system_ROTATE_Y = 0
 
     // --ELEMENT-GROUP
     let
-    group_ROTATE_X = 0,
-    group_ROTATE_Y = 0,
     group_TIMEOUT,
+
     group_start,
     group_stop
 
@@ -113,6 +111,7 @@
     // --ELEMENT-GRAVITYAREA
     let
     gravityarea_RATIO = 0,
+
     gravityarea_TIMEOUT
 
 // #REACTIVE
@@ -139,14 +138,17 @@
 
     function system_setCommands() { COMMAND.command_setBasicCommands(SYSTEM_COMMANDS) }
 
-    function group_setEvents()
+    function system_setEvents()
     {
-        EVENT.event_add(GROUP_EVENTS)
+        EVENT.event_add(SYSTEM_EVENTS)
 
+        group_setEvents()
         gravityarea_setEvents()
     }
 
-    function orbit_setVars() { orbit_RADIUS = Math.min(window.innerWidth * .6, window.innerHeight * .6) }
+    function group_setEvents() { EVENT.event_add(GROUP_EVENTS) }
+
+    function orbit_setVars() { orbit_RADIUS = Math.min(APP.app_WIDTH * .6, APP.app_HEIGHT * .6) }
 
     function orbit_setEvents() { EVENT.event_add(ORBIT_EVENTS) }
 
@@ -155,16 +157,21 @@
     // --DESTROY
     function system_destroy()
     {
-        group_destroyEvents()
+        gravityarea_clear()
+
+        system_destroyEvents()
         orbit_destroyEvents()
     }
 
-    function group_destroyEvents()
+    function system_destroyEvents()
     {
-        EVENT.event_remove(GROUP_EVENTS)
+        EVENT.event_remove(SYSTEM_EVENTS)
 
+        group_destroyEvents()
         gravityarea_destroyEvents()
     }
+
+    function group_destroyEvents() { EVENT.event_remove(GROUP_EVENTS) }
 
     function orbit_destroyEvents() { EVENT.event_remove(ORBIT_EVENTS) }
     
@@ -182,7 +189,7 @@
         return index
     }
 
-    function tag_getY() { return 1000 * Math.random() + '%' }
+    function tag_getY() { return 400 * Math.random() + 100 + '%' }
 
     // --UPDATES
     function system_update(optimised) { system_OPTIMISED = optimised }
@@ -201,7 +208,7 @@
         for (let i = 0; i < GROUP_Z_POSITIONS.length; i++) prop_SYSTEM[i] = { ...prop_SYSTEM[i], focus: i === INDEX }
     }
 
-    function gravityarea_update() { gravityarea_RATIO = prop_RATIO }
+    function gravityarea_update(ratio) { gravityarea_RATIO = ratio ?? prop_RATIO }
 
     function tag_update(tag, fragments, y, scale)
     {
@@ -209,6 +216,9 @@
 
         tag.style.setProperty('--frag-scale', scale)
     }
+
+    // --CLEAR
+    function gravityarea_clear() { clearTimeout(gravityarea_TIMEOUT) }
 
     // --COMMAND
     function system_c$Optimise(optimised) { COMMAND.command_test(optimised, 'boolean', system_update, SYSTEM_OPTIMISE_NAME, system_OPTIMISED) }
@@ -223,19 +233,20 @@
         group_TIMEOUT = setTimeout(group_updateFocus, 300)
     }
 
-    async function group_e$MouseMove(clientX, clientY)
+    async function system_e$MouseMove(clientX, clientY)
     {
-        const [VW50, VH50] = [window.innerWidth * .5, window.innerHeight * .5]
+        const [VW50, VH50] = [APP.app_WIDTH * .5, APP.app_HEIGHT * .5]
         
-        group_ROTATE_X = (clientY - VH50) / VH50
-        group_ROTATE_Y = (clientX - VW50) / VW50
+        system_ROTATE_X = (clientY - VH50) / VH50
+        system_ROTATE_Y = (clientX - VW50) / VW50
     }
 
     async function orbit_e$Resize() { orbit_setVars() }
 
     async function gravityarea_e$Scroll()
     {
-        clearTimeout(gravityarea_TIMEOUT)
+        gravityarea_clear()
+    
         gravityarea_TIMEOUT = setTimeout(gravityarea_update, 66.68)
 
         gravityarea_update()
@@ -248,21 +259,21 @@
     // --CONTROLS
     function system_start()
     {
-        group_setEvents()
+        system_setEvents()
 
         group_start()
     }
 
     function system_stop()
     {
-        group_destroyEvents()
+        system_destroyEvents()
+
         group_updateFocus()
-        
         group_stop()
     }
 
-    // --INTRO
-    function tag_intro(tag, fragments)
+    // --ANIMATIONS
+    function tag_aIn(tag, fragments)
     {
         const Y = MATH.headsOrTails() * 2 + '%'
     
@@ -270,7 +281,7 @@
     }
 
     // --OUTRO
-    function tag_outro(tag, fragments) { tag_update(tag, fragments, tag_getY(), 0) }
+    function tag_aOut(tag, fragments) { tag_update(tag, fragments, tag_getY(), 0) }
 
     // --STYLES
     function tag_style()
@@ -285,7 +296,7 @@
         return `
         --frag-y: ${tag_getY()};
         --frag-sign: ${MATH.headsOrTails() ? 1 : -1};
-        transform: translateY(calc(var(--frag-y, 0) * var(--frag-sign, 1))) scaleX(var(--frag-scale, 1));
+        transform: translateY(calc(var(--frag-y, 0) * var(--frag-sign, 1))) scale(var(--frag-scale, 1));
         transition: transform var(--frag-duration, ${TAG_DURATION}ms) ease-out;
         `
     }
@@ -302,8 +313,8 @@ onDestroy(system_destroy)
 class="system"
 class:zoom1={prop_FOCUS}
 class:zoom2={prop_RATIO >= 1}
-style:--system-rotate-x={group_ROTATE_X}
-style:--system-rotate-y={group_ROTATE_Y}
+style:--system-r-x={system_ROTATE_X}
+style:--system-r-y={system_ROTATE_Y}
 >
     <Group
     let:resize
@@ -314,58 +325,52 @@ style:--system-rotate-y={group_ROTATE_Y}
         <Moon />
 
         {#if !system_OPTIMISED}
-            {#each prop_SYSTEM as orbit}
-                <Orbit
-                prop_ROTATE={orbit.props.prop_ROTATE}
+            {#each prop_SYSTEM as cube}
+                <GravityArea
+                let:rotation
+                let:grabbing
+                prop_$RESIZE={resize}
+                prop_$ANIMATION={animation}
+                prop_RATIO={gravityarea_RATIO}
+                prop_GRABBING={false}
+                prop_TITLE={cube.props.prop_TITLE}
+                prop_ORBIT_RADIUS={orbit_RADIUS}
+                prop_ROTATE={cube.props.prop_ROTATE}
+                prop_OFFSET={cube.props.prop_OFFSET}
+                {prop_FOCUS}
+                bind:gravityarea_TRANSLATE_Z={GROUP_Z_POSITIONS[cube.id]}
+                on:click={gravityarea_eClick.bind(cube)}
                 >
-                    <GravityArea
-                    let:rotation
-                    let:grabbing
-                    prop_$RESIZE={resize}
-                    prop_$ANIMATION={animation}
-                    prop_FOCUS={orbit.focus ?? false}
-                    prop_RATIO={gravityarea_RATIO}
-                    prop_GRABBING={false}
-                    prop_TITLE={orbit.props.prop_TITLE}
-                    prop_ORBIT_RADIUS={orbit_RADIUS}
-                    prop_ROTATE={orbit.props.prop_ROTATE}
-                    prop_OFFSET={orbit.props.prop_OFFSET}
-                    bind:gravityarea_TRANSLATE_Z={GROUP_Z_POSITIONS[orbit.id]}
-                    on:click={gravityarea_eClick.bind(orbit)}
-                    >
-                        <Cube
-                        prop_$ROTATION={rotation}
-                        prop_GRABBING={grabbing}
-                        prop_DESTROY={!prop_FOCUS || system_TARGET}
-                        prop_FOCUS={orbit.focus ?? false}
-                        prop_ROTATE={orbit.props.prop_ROTATE}
-                        prop_SRC={orbit.props.prop_SRC}
-                        prop_ALT={orbit.props.prop_ALT}
-                        prop_COLOR={orbit.props.prop_COLOR}
-                        />
-                    </GravityArea>
-                </Orbit>
+                    <Cube
+                    prop_$ROTATION={rotation}
+                    prop_GRABBING={grabbing}
+                    prop_DESTROY={!prop_FOCUS || system_TARGET}
+                    prop_FOCUS={cube.focus ?? false}
+                    prop_ROTATE={cube.props.prop_ROTATE}
+                    prop_SRC={cube.props.prop_SRC}
+                    prop_ALT={cube.props.prop_ALT}
+                    prop_COLOR={cube.props.prop_COLOR}
+                    />
+                </GravityArea>
             {/each}
         {/if}
     </Group>
 
-    {#if prop_START && !system_TARGET}
-        {#each prop_SYSTEM as data}
-            {#if data.focus}
-                <Cell
-                on:click={tag_eClick.bind(data)}
-                >
-                    <Tag
-                    prop_CONTENT={data.tag}
-                    prop_DURATION={TAG_DURATION}
-                    prop_INTRO={tag_intro}
-                    prop_OUTRO={tag_outro}
-                    prop_STYLE={{ tag_style, fragments_style }}
-                    />
-                </Cell>
-            {/if}
-        {/each}
-    {/if}
+    {#each prop_SYSTEM as cube}
+        <Cell
+        prop_FOCUS={cube.focus ?? false}
+        on:click={tag_eClick.bind(cube)}
+        >
+            <Tag
+            prop_FOCUS={cube.focus ?? false}
+            prop_CONTENT={cube.tag}
+            prop_DURATION={TAG_DURATION}
+            prop_IN={tag_aIn}
+            prop_OUT={tag_aOut}
+            prop_STYLE={{ tag_style, fragments_style }}
+            />
+        </Cell>
+    {/each}
 </div>
 
 <!-- #STYLE -->
@@ -385,27 +390,26 @@ lang="scss"
 {
     @include position.placement(absolute, $top: 0, $left: 50%);
 
-    transform: translate(30%, -30%) scale(.2);
-
-    opacity: 1;
+    transform: translateX(-50%);
 
     width: 50vw;
     height: 100%;
 
-    transition: transform 1s ease-in-out, opacity 1s;
+    &.zoom1 :global .moon { transform: translate(0, 0) scale(1); }
 
-    &.zoom1 { transform: translate(-50%, 0) scale(1); }
-    &.zoom2
+    &.zoom2 :global .moon
     {
-        transform: translate(-230%, 60%) scale(5);
+        transform: translate(calc(-50vw + 50%), calc(50vh - 50%)) scale(5);
 
         opacity: 0;
     }
 
     :global
     {
-        $rotate-x: var(--system-rotate-x, 0);
-        $rotate-y: var(--system-rotate-y, 0);
+        $rotate-x: var(--system-r-x, 0);
+        $rotate-y: var(--system-r-y, 0);
+
+        .group, .cell { transition: transform .4s; }
     
         .group
         {
@@ -416,8 +420,15 @@ lang="scss"
     
             transform-style: preserve-3d;
             transform: rotate3d($rotate-x, $rotate-y, 0, .02rad);
+        }
 
-            transition: transform .3s;
+        .moon
+        {
+            transform: translate(calc(50vw - 50%), calc(-50vh + 50%)) scale(.3);
+
+            opacity: 1;
+
+            transition: transform .8s ease-out, opacity .8s;
         }
 
         .cell
@@ -426,15 +437,13 @@ lang="scss"
     
             transform: translate(calc($rotate-x * 6px), calc($rotate-y * 6px - 50%));
 
-            transition: transform .4s;
-
             .tag
             {
                 &::before
                 {
                     @include position.placement(absolute, $right: -8rem, $bottom: 0, $pseudo-element: true);
 
-                    transform: translateX(0) scale(1);
+                    transform: translateX(100%) scaleX(0);
                 
                     width: 150%;
                     height: 0;
@@ -443,14 +452,12 @@ lang="scss"
 
                     border-bottom: solid $intermediate 1px;
 
-                    animation: a .6s ease-out;
-
                     transition: transform 1s ease-out, border .6s ease-out;
-
-                    @keyframes a { from { transform: translateX(100%) scaleX(0); } }
                 }
 
                 padding: 2rem;
+
+                &.focus::before { transform: translateX(0) scale(1); }
 
                 &:hover::before
                 {

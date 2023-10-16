@@ -18,6 +18,8 @@ class App
     #app_COMMANDS = []
     #app_TIMEOUT
 
+    app_WIDTH = 0
+    app_HEIGHT = 0
     app_SCROLLTOP = 0
 
 // #CONSTRUCTOR
@@ -131,6 +133,8 @@ constructor ()
     }
 
     // --UPDATES
+    app_updateSize() { [this.app_WIDTH, this.app_HEIGHT] = [window.innerWidth, window.innerHeight] }
+
     app_updateSmallScreen() { this.#app_SMALL_SCREEN = this.app_testScreen(null, BREAKPOINTS.ms3) }
 
     app_updateMode(optimise)
@@ -149,7 +153,7 @@ constructor ()
     app_c$Optimise(on) { COMMAND.command_test(on, 'boolean', this.app_updateMode, App.__app_OPTIMISE_NAME, this.#app_$OPTIMISE.value) }
 
     // --TEST
-    app_testScreen(width, height) { return window.innerWidth < (width ?? -Infinity) || window.innerHeight < (height ?? -Infinity) }
+    app_testScreen(width, height) { return this.app_WIDTH < (width ?? -Infinity) || this.app_HEIGHT < (height ?? -Infinity) }
 
     // --GETTER
     get app() { return this.#app }

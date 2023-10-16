@@ -50,7 +50,7 @@ context="module"
 // #IMPORTS
 
     // --SVELTE
-    import { onMount, afterUpdate } from 'svelte'
+    import { onMount, onDestroy, afterUpdate } from 'svelte'
 
     // --COMPONENT-FIELDS
     import Header from './components/fields/Header.svelte'
@@ -87,6 +87,8 @@ context="module"
     // --SET
     function app_set()
     {
+        APP.app_updateSize()
+
         opti_setVars()
 
         app_setCommands()
@@ -112,6 +114,9 @@ context="module"
     }
 
     function opti_setVars() { opti_ON = (performance.now() - APP_PERFORMANCE) > 7 && localStorage.getItem('optimise') !== 'true' }
+
+    // --DESTROY
+    function app_destroy() { EVENT.event_destroy() }
 
     // --UPDATE
     function app_update()
@@ -139,6 +144,7 @@ context="module"
 // #CYCLES
 
 onMount(app_set)
+onDestroy(app_destroy)
 
 afterUpdate(() => app_update())
 </script>

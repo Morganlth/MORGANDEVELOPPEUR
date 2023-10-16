@@ -2,6 +2,7 @@
 
 -SPRING
     NAV
+        ITEMS
 
 -->
 
@@ -12,6 +13,7 @@
 
     // --PROPS
     export let
+    prop_FOCUS = false,
     prop_INTRO = false,
 
     prop_TRANSLATE_Y = 0,
@@ -20,6 +22,9 @@
 
 // #IMPORTS
 
+    // --JS
+    import { animation } from '../../assets/js/utils/animation'
+
     // --LIB
     import COLORS from '$lib/colors'
 
@@ -27,30 +32,77 @@
     import { SPRING } from '../../App.svelte'
 
     // --SVELTE
-    import { onDestroy, createEventDispatcher } from 'svelte'
+    import { onMount, onDestroy, createEventDispatcher } from 'svelte'
 
     // --COMPONENT-COVER
     import Icon from '../covers/Icon.svelte'
 
     // --COMPONENT-ICON
     import Logo from '../icons/Logo.svelte'
+    import { cubicInOut } from 'svelte/easing';
 
 // #CONSTANTE
 
     // --SVELTE
     const SVELTE_DISPATCH = createEventDispatcher()
 
+// #VARIABLES
+
+    // --ELEMENT-NAV
+    let
+    nav_CHARGED = false,
+
+    nav_TRANSLATE_X = 0,
+    nav_ROTATE = 90,
+
+    nav_BORDER_COLOR = COLORS.intermediate,
+
+    nav_T = 0,
+
+    nav_cancel = () => {}
+
+    // --ITEMS
+    let
+    items_TRANSLATE_X = 0,
+    items_OPACITY = 0
+
+// #REACTIVE
+
+    $: nav_CHARGED ? nav_update(prop_FOCUS) : void 0
+
 // #FUNCTIONS
 
-    // --DESTROY
-    function nav_destroy() { nav_eMouseLeave() }
+    // --SET
+    function nav_set()
+    {
+        for (const ITEM of prop_ITEMS) if (ITEM.update instanceof Function) ITEM.update()
 
-    // --UPDATE
+        nav_CHARGED = true
+    }
+
+    // --DESTROY
+    function nav_destroy()
+    {
+        nav_clear()
+        nav_eMouseLeave()
+    }
+
+    // --UPDATES
     function spring_update(state, size)
     {
         SPRING.spring_$STATE = state
         SPRING.spring_$SIZE = size
     }
+
+    function nav_update(focus)
+    {
+        nav_clear()
+
+        nav_a(!focus)
+    }
+
+    // --CLEAR
+    function nav_clear() { nav_cancel() }
 
     // --EVENTS
     function nav_eMouseEnter() { spring_update(1, SPRING.spring_D_SIZE * 3) }
@@ -59,23 +111,57 @@
 
     async function nav_eClick(id) { SVELTE_DISPATCH('click', { id: id, item: prop_ITEMS[id] }) }
 
-// #CYCLE
+    // --ANIMATIONS
+    async function nav_a(invert = false)
+    {
+        nav_cancel = animation((t) =>
+        {
+            nav_T = t
+        
+            if (t < .7)
+            {
+                const T = cubicInOut(t / .7)
+        
+                nav_TRANSLATE_X = -100 * T
+                nav_ROTATE = 90 * (1 - T)
 
+                nav_BORDER_COLOR = COLORS[t > .3 ? 'light' : 'intermediate']
+            }
+            else
+            {
+                const T = cubicInOut((t - .7) / .3)
+            
+                items_TRANSLATE_X = (nav_TRANSLATE_X = -100 * (1 - T))
+                items_OPACITY = T
+
+                nav_BORDER_COLOR = COLORS.intermediate
+            }
+        },
+        1400, nav_T, invert).cancel
+    }
+
+// #CYCLES
+
+onMount(nav_set)
 onDestroy(nav_destroy)
-
-// #CODE
-
-for (const ITEM of prop_ITEMS) if (ITEM.update instanceof Function) ITEM.update()
 </script>
 
 <!-- #HTML -->
 
 <nav
 class="nav"
-class:top={!prop_INTRO}
-style:--nav-translate-y="-{prop_TRANSLATE_Y}px"
+class:focus={prop_FOCUS}
+class:top={prop_FOCUS && !prop_INTRO}
+style:--nav-t-x="{nav_TRANSLATE_X}%"
+style:--nav-t-y="-{prop_TRANSLATE_Y}px"
+style:--nav-rotate="{nav_ROTATE}deg"
+style:--nav-border-color={nav_BORDER_COLOR}
 >
-    <ul>
+    <ul
+    class="items"
+    style:transform="translateX({items_TRANSLATE_X}%)"
+    style:opacity={items_OPACITY}
+    >
         {#each prop_ITEMS as item}
             <li>
                 <button
@@ -120,50 +206,47 @@ lang="scss"
 
 .nav
 {
-    $animation-duration: 1.4;
+    $before-transition: border .6s;
     
     &::before
     {
         @include position.placement(absolute, $top: -1.4rem, $right: 0, $left: 0, $pseudo-element: true);
 
-        transform: translateX(0) rotate(90deg);
+        transform: translateX(var(--nav-t-x, 0)) rotate(var(--nav-rotate, 0));
+
+        opacity: 0;
 
         width: 100%;
         height: 0;
 
-        border-top: solid $intermediate 1px;
+        border-top: solid var(--nav-border-color, $intermediate) 1px;
 
-        transition: border .8s;
-
-        animation: aBeforeIntro #{$animation-duration}s ease-in-out forwards;
-
-        @keyframes aBeforeIntro
-        {
-            50% { border-top-color: $light; }
-            70% { transform: translateX(-90%) rotate(0); }  
-            100%
-            {
-                transform: translateX(0) rotate(0);
-
-                border-top-color: $intermediate;
-            }    
-        }
+        transition: $before-transition, opacity .4s 1.4s ease-out;
     }
 
     position: relative;
 
     z-index: 2;
 
+    width: 100%;
+
     transition: transform .4s ease-out;
+
+    &.focus::before
+    {
+        opacity: 1;
+
+        transition: $before-transition;
+    }
 
     &.top
     {
         &::before { border-top-color: transparent !important; }
 
-        transform: translateY(var(--nav-translate-y, -320%));
+        transform: translateY(var(--nav-t-y, -320%));
     }
 
-    ul
+    .items
     {
         --icon-size: 2.4rem;
 
@@ -174,23 +257,7 @@ lang="scss"
     
         gap: 1rem 3rem;
 
-        transform: translateX(-100%);
-
-        opacity: 0;
-
         width: 100%;
-
-        animation: aUlIntro  #{$animation-duration * .3}s  #{$animation-duration * .7}s ease-in-out forwards;
-
-        @keyframes aUlIntro
-        {
-            100%
-            {
-                transform: translateX(0);
-        
-                opacity: 1;
-            }
-        }
     }
 
     li button
