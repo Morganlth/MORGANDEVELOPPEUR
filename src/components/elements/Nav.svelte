@@ -33,13 +33,10 @@
 
     // --SVELTE
     import { onMount, onDestroy, createEventDispatcher } from 'svelte'
+    import { cubicInOut } from 'svelte/easing'
 
     // --COMPONENT-COVER
     import Icon from '../covers/Icon.svelte'
-
-    // --COMPONENT-ICON
-    import Logo from '../icons/Logo.svelte'
-    import { cubicInOut } from 'svelte/easing';
 
 // #CONSTANTE
 
@@ -172,14 +169,16 @@ style:--nav-border-color={nav_BORDER_COLOR}
                 on:mouseleave={nav_eMouseLeave}
                 on:click={nav_eClick.bind(null, item.id)}
                 >
-                    <Icon
-                    prop_COLOR="var(--item-color, {COLORS.light})"
-                    prop_SPRING={false}
-                    >
-                        <svelte:component
-                        this={item.component ?? Logo}
-                        />
-                    </Icon>
+                    {#if item.component}
+                        <Icon
+                        prop_COLOR="var(--item-color, {COLORS.light})"
+                        prop_SPRING={false}
+                        >
+                            <svelte:component
+                            this={item.component}
+                            />
+                        </Icon>
+                    {/if}
                     
                     {item.value ?? ''}
                 </button>

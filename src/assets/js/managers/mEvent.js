@@ -78,17 +78,15 @@ constructor ()
     event_destroy() { try { window.removeEventListener('resize', this.event_resize) } catch {} }
 
     // --EVENTS
-    event_scroll({target})
+    event_scroll({target: {scrollTop}})
     {
         if (this.#event_SCROLLFRAME) return
 
         this.#event_SCROLLFRAME = requestAnimationFrame(() =>
         {
-            const SCROLLTOP = target.scrollTop
+            APP.app_SCROLLTOP = scrollTop
 
-            APP.app_SCROLLTOP = SCROLLTOP
-
-            this.#event_run.call(this.#event_MANAGER.scroll, SCROLLTOP)
+            this.#event_run.call(this.#event_MANAGER.scroll, scrollTop)
 
             this.#event_SCROLLFRAME = false
         })

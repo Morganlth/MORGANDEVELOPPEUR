@@ -146,12 +146,12 @@ class="home"
             prop_$RESIZE={resize}
             prop_$ANIMATION={animation}
             prop_GRABBING={!prop_RATIO}
+            {prop_FOCUS}
             on:click={gravityarea_eClick.bind(null, cube.id)}
             >
                 <Cube
                 prop_$ROTATION={rotation}
                 prop_GRABBING={grabbing}
-                prop_DESTROY={!prop_FOCUS}
                 prop_ROTATE={Math.random() * MATH.PI.x2}
                 prop_ROTATE_Y={Math.random() * MATH.PI.x2}
                 prop_COMPONENT={cube.component}

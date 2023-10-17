@@ -61,7 +61,7 @@
     const
     TERMINAL = 'terminal',
 
-    TERMINAL_ROTATE_Y = MATH.toRad(5),
+    TERMINAL_ROTATE_Y = MATH.toRad(6),
 
     TERMINAL_HISTORY = ['app '],
 
@@ -574,12 +574,12 @@ lang="scss"
 
 .terminal
 {
-    $r-y: var(--r-y, 5deg);
+    $r-y: var(--r-y, 6deg);
 
     @include position.placement(absolute, $top: 44%, $right: app.$gap-inline);
 
     perspective-origin: left;
-    perspective: 1000px;
+    perspective: 2000px;
 
     overflow: visible;
 

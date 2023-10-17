@@ -109,12 +109,13 @@
 
     function page_setVars(page, i, h)
     {
+        page.end = (h + page.h + (page.endgap ?? 0)) * APP.app_HEIGHT
+
         page_updateProps(page, i,
         {
             prop_TOP: (page.top = h * APP.app_HEIGHT),
             prop_INTRO: (page.intro = page_getIntro(page.top, APP.app_SCROLLTOP ?? 0)),
             prop_START: (page.start = (h + (page.h > 1 ? 1 : 0)) * APP.app_HEIGHT),
-            prop_END: (page.end = (h + page.h) * APP.app_HEIGHT),
             prop_DIF: (page.dif = page.end - page.start)
         })
     }

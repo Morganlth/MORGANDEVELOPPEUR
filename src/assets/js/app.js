@@ -59,7 +59,8 @@
             component: Presentation,
             tags: ['caracteristique'],
             overflow: true,
-            h: 7
+            h: 7,
+            endgap: -2
         ,
             route:
             {
@@ -117,11 +118,9 @@
         ,
             props:
             {
-                prop_FOCUS: false,
                 prop_TOP: 0,
                 prop_RATIO: 0,
                 prop_START: void 0,
-                prop_END: void 0,
                 prop_DIF: void 0
             }
         }
@@ -160,26 +159,22 @@
                 {
                     id: 0,
                     title: 'HTML et CSS',
-                    value: 'HTML & CSS',
-                    component: Html
+                    value: 'HTML & CSS'
                 },
                 {
                     id: 1,
                     title: 'Javascript',
-                    value: 'JS',
-                    component: Javascript
+                    value: 'JS'
                 },
                 {
                     id: 2,
                     title: 'Node JS',
-                    value: 'NODE JS',
-                    component: NodeJs
+                    value: 'NODE JS'
                 },
                 {
                     id: 3,
                     title: 'Gestion, Outils et Adaptabilité',
-                    value: 'AUTRES',
-                    component: Github
+                    value: 'AUTRES'
                 }
             ]
         ,
@@ -300,10 +295,6 @@
     import Arroba from '../../components/icons/Arroba.svelte'
     import Game from '../../components/icons/Game.svelte'
     import Snake2 from '../../components/icons/Snake2.svelte'
-    import Html from '../../components/icons/Html.svelte'
-    import Javascript from '../../components/icons/Javascript.svelte'
-    import NodeJs from '../../components/icons/NodeJs.svelte'
-    import Github from '../../components/icons/Github.svelte'
 
 // #FUNCTIONS
 

@@ -43,6 +43,7 @@
     // --JS
     import MATH from '../../assets/js/utils/math'
     import { wait_throttle } from '../../assets/js/utils/wait'
+    import { animation } from '../../assets/js/utils/animation'
     import { update_floating } from '../../assets/js/utils/update'
 
     // --CONTEXTS
@@ -83,9 +84,13 @@
 
     gravityarea_FLOATING = update_floating(),
 
+    gravityarea_T = 0,
+
     gravityarea_LAST = +new Date(),
     gravityarea_LAST_2 = +new Date(),
-    gravityarea_TIMEOUT
+    gravityarea_TIMEOUT,
+
+    gravityarea_cancel = () => {}
 
     // --ELEMENT-SLOT
     let
@@ -99,7 +104,10 @@
 // #REACTIVES
 
     // --ELEMENT-GRAVITYAREA
-    $: prop_ORBIT_RADIUS ? gravityarea_update(prop_RATIO) : void 0
+    $: gravityarea ? gravityarea_update(prop_FOCUS) : void 0
+
+    $: prop_FOCUS && prop_ORBIT_RADIUS ? gravityarea_updateOrbit(prop_RATIO) : void 0
+
     $: slot_GRABBING && prop_GRABBING ? gravityarea_setEvents() : gravityarea_destroyEvents()
 
 // #FUNCTIONS
@@ -116,8 +124,11 @@
 
     function gravityarea_setVars()
     {
-        gravityarea_TRANSLATE_X = prop_X * APP.app_WIDTH - gravityarea.offsetWidth / 2
-        gravityarea_TRANSLATE_Y = prop_Y * APP.app_HEIGHT
+        const [X, Y, Z] = gravityarea_get3d()
+    
+        gravityarea_TRANSLATE_X = X
+        gravityarea_TRANSLATE_Y = Y
+        gravityarea_TRANSLATE_Z = Z
 
         gravityarea_RADIUS = gravityarea.offsetWidth / 2
 
@@ -131,6 +142,7 @@
     // --DESTROY
     function gravityarea_destroy()
     {
+        gravityarea_cancel()
         gravityarea_clear()
     
         gravityarea_destroyEvents()
@@ -146,29 +158,54 @@
     function gravityarea_destroyEvents2() { EVENT.event_remove(GRAVITYAREA_EVENTS_2) }
 
     // --GET
+    function gravityarea_get3d(ratio)
+    {
+        if (prop_ORBIT_RADIUS)
+        {
+            const
+            ANGLE = (ratio - prop_OFFSET) * MATH.PI.x2,
+            H = Math.sin(ANGLE) * prop_ORBIT_RADIUS
+
+            return [
+                Math.cos(prop_ROTATE) * H,              // x
+                Math.sin(prop_ROTATE) * H,              // y
+                Math.cos(ANGLE) * prop_ORBIT_RADIUS     // z
+            ]
+        }
+        else
+        {
+            return [
+                prop_X * APP.app_WIDTH - gravityarea.offsetWidth / 2,       // x
+                prop_Y * APP.app_HEIGHT,                                    // y
+                0                                                           // z
+            ]
+        }
+    }
+
     function slot_get3d()
     {
         // size / (perspective - z) * perspective * 2   ==detail==>   tan(ANGLE = atan(size / (D = perspective - z))) * perspective
     
         const D = GRAVITYAREA_PERSPECTIVE - gravityarea_TRANSLATE_Z
     
-        return ([
-        gravityarea_TRANSLATE_X / D * GRAVITYAREA_PERSPECTIVE + APP.app_WIDTH * .5,   // X
-        gravityarea_TRANSLATE_Y / D * GRAVITYAREA_PERSPECTIVE + APP.app_HEIGHT * .5,  // Y
-        gravityarea_RADIUS / D * GRAVITYAREA_PERSPECTIVE                                     // RADIUS
-        ])
+        return [
+        gravityarea_TRANSLATE_X / D * GRAVITYAREA_PERSPECTIVE + APP.app_WIDTH * .5,   // x
+        gravityarea_TRANSLATE_Y / D * GRAVITYAREA_PERSPECTIVE + APP.app_HEIGHT * .5,  // y
+        gravityarea_RADIUS / D * GRAVITYAREA_PERSPECTIVE                              // radius
+        ]
     }
 
     // --UPDATES
-    function gravityarea_update(ratio)
+    function gravityarea_update(focus)
     {
-        const
-        ANGLE = (ratio - prop_OFFSET) * MATH.PI.x2,
-        H = Math.sin(ANGLE) * prop_ORBIT_RADIUS
+        gravityarea_cancel()
+    
+        gravityarea_a(focus)
+    }
 
-        gravityarea_TRANSLATE_X = Math.cos(prop_ROTATE) * H
-        gravityarea_TRANSLATE_Y = Math.sin(prop_ROTATE) * H
-        gravityarea_TRANSLATE_Z = Math.cos(ANGLE) * prop_ORBIT_RADIUS
+    function gravityarea_updateOrbit(ratio)
+    {
+        [gravityarea_TRANSLATE_X, gravityarea_TRANSLATE_Y, gravityarea_TRANSLATE_Z] = gravityarea_get3d(ratio)
 
         SLOT_$ROTATION.set({ rX: null, rY: .025 })
     }
@@ -272,6 +309,22 @@
     function gravityarea_start() { prop_$ANIMATION.push(gravityarea_e$Animation) }
 
     function gravityarea_stop() { prop_$ANIMATION.splice(gravityarea_e$Animation) }
+
+    // --ANIMATION
+    function gravityarea_a(invert = false)
+    {
+        const [X, Y, Z] = gravityarea_get3d(prop_RATIO)
+
+        gravityarea_cancel = animation((t) =>
+        {
+            gravityarea_T = t
+    
+            gravityarea_TRANSLATE_X = X + APP.app_WIDTH * t
+            gravityarea_TRANSLATE_Y = Y - APP.app_HEIGHT * t
+            gravityarea_TRANSLATE_Z = Z + GRAVITYAREA_PERSPECTIVE * t
+        },
+        400, gravityarea_T, invert).cancel
+    }
 
 // #CYCLES
 

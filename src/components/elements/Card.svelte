@@ -1,5 +1,3 @@
-<!-- https://tekeye.uk/playing_cards/svg-playing-cards -->
-
 <!-- #MAP
 
 -APP
@@ -11,7 +9,7 @@
             ICON
                 LOGO
 
-        TAG
+    TAG
 
 -->
 
@@ -26,10 +24,11 @@
 
     prop_CARD_HOVER = void 0,   // hovering card id
 
-    prop_ID = void 0,
-
     prop_ON = false,
-    prop_TARGET = false,
+
+    prop_ID = void 0,
+    prop_TARGET = 0,            // -1 | 0 | 1
+    prop_SCROLLTOP = 0,
 
     prop_CONTENT = '',
     prop_COLOR = "#FFF",
@@ -73,8 +72,7 @@
     {
         mouseMove: wait_throttle(card_e$MouseMove, 50.01),
         mouseUp: card_e$MouseUp
-    },
-    CARD_EVENTS_2 = { animation: wait_throttle(card_e$Animation, 50.01) }
+    }
 
     // --ELEMENT-TAG
     const TAG_DURATION = 300
@@ -104,19 +102,11 @@
     card_HALF_WIDTH = 0,
     card_HALF_HEIGHT = 0,
 
-    card_X = 0,
-    card_Y = 0,
-
-    card_U,
-    card_X_I,
-    card_Y_I,
-    card_X_A,
-    card_Y_A,
-
     card_LAST,
     card_TIMEOUT,
 
-    card_cancel = () => {}
+    card_cancel = () => {},
+    card_cancel2 = () => {}
 
     // --ELEMENT-DECOR
     let
@@ -127,6 +117,10 @@
     // --ELEMENT-TAG
     let
     tag_FOCUS = false,
+
+    tag_TRANSLATE_X = 0,
+    tag_TRANSLATE_Y = 0,
+
     tag_DELAY
 
 // #REACTIVE
@@ -148,24 +142,27 @@
 
     function card_setVars()
     {
+        card_HALF_WIDTH = card.offsetWidth / 2
+        card_HALF_HEIGHT = card.offsetHeight / 2
+    
         card_TRANSLATE_X = card_getTranslateX()
-        card_TRANSLATE_Y = card_getTranslateY() + (card_ON ? 0 : APP.app_HEIGHT)
+        card_TRANSLATE_Y =  card_getTranslateY() + (card_ON ? 0 : APP.app_HEIGHT) + prop_SCROLLTOP
 
         card_ROTATE_X = (card_ROTATE_Y = 0)
         card_ROTATE_Z = card_getRZ()
     
-        card_HALF_WIDTH = card.offsetWidth / 2
-        card_HALF_HEIGHT = card.offsetHeight / 2
-    
-        card_X = card_HALF_WIDTH
-        card_Y = card_HALF_HEIGHT
+        tag_setVars()
     }
 
     function card_setEvents() { EVENT.event_add(CARD_EVENTS) }
 
-    function card_setEvents2() { EVENT.event_add(CARD_EVENTS_2) }
-
     function card_setTransition(value) { card_TRANSITION_DURATION = value }
+
+    function tag_setVars()
+    {
+        tag_TRANSLATE_X = card_TRANSLATE_X + card_HALF_WIDTH
+        tag_TRANSLATE_Y = card_getTranslateY() + card_HALF_HEIGHT + prop_SCROLLTOP
+    }
 
     // --DESTROY
     function card_destroy()
@@ -179,8 +176,6 @@
 
     function card_destroyEvents() { EVENT.event_remove(CARD_EVENTS) }
 
-    function card_destroyEvents2() { EVENT.event_remove(CARD_EVENTS_2) }
-
     // --GET
     function card_getTranslateX() { return APP.app_WIDTH * .5 - APP.app_WIDTH * .05 * prop_ID }
 
@@ -191,7 +186,7 @@
     function tag_getTransform(x, y, scale) { return `translate(${x}, ${y}) scale(${scale})` }
 
     // --UPDATES
-    function card_update(on, target)
+    function card_update(on, target /* -1 | 0 | 1 */)
     {
         const ON = ~target && on
 
@@ -199,9 +194,7 @@
         {
             card_clear()
 
-            ON ? card_aIn() : card_aOut()
-
-            card_ON = ON
+            card_ON = ON ? card_aIn() : card_aOut()
 
             if (!on) card_START = true
         }
@@ -210,13 +203,13 @@
     function card_updateTranslate(x, y)
     {
         card_TRANSLATE_X = x - card_HALF_WIDTH
-        card_TRANSLATE_Y = y - card_HALF_HEIGHT
+        card_TRANSLATE_Y = y - card_HALF_HEIGHT + prop_SCROLLTOP
     }
 
     function card_updateRotate(x, y)
     {
-        card_ROTATE_X = y / card_HALF_HEIGHT * .2
-        card_ROTATE_Y = x / -card_HALF_WIDTH * .2
+        card_ROTATE_X = y / card_HALF_HEIGHT * .3
+        card_ROTATE_Y = x / -card_HALF_WIDTH * .3
     }
 
     function tag_update(fragments, style)
@@ -241,31 +234,27 @@
         clearTimeout(card_TIMEOUT)
 
         card_cancel()
+        card_cancel2()
     }
 
     // --EVENTS
     async function card_e$MouseMove(clientX, clientY) { card_updateTranslate(clientX, clientY) }
 
-    const card_eMouseMove = wait_throttle(({ offsetX, offsetY }) =>
+    const card_eMouseMove = wait_throttle(({ clientX, clientY, offsetX, offsetY }) =>
     {
-        if (offsetX && offsetY)
-        {
-            const [X, Y] = [offsetX - card_HALF_WIDTH, offsetY - card_HALF_HEIGHT]
+        if (offsetX && offsetY) card_updateRotate(offsetX - card_HALF_WIDTH, offsetY - card_HALF_HEIGHT)
 
-            card_updateRotate(X, Y)
-
-            card_X = offsetX
-            card_Y = offsetY
-        }
+        tag_TRANSLATE_X = clientX
+        tag_TRANSLATE_Y = clientY + prop_SCROLLTOP
     }, 100.02)
 
     function card_eMouseEnter()
     {
+        card_cancel2()
+    
         prop_$MOUSEENTER(prop_ID)
 
         tag_FOCUS = true
-
-        card_destroyEvents2()
     }
 
     function card_eMouseLeave()
@@ -274,13 +263,7 @@
 
         tag_FOCUS = false
     
-        card_U = 1
-        card_X_I = card_ROTATE_X
-        card_Y_I = card_ROTATE_Y
-        card_X_A = card_X_I / 1.5
-        card_Y_A = card_Y_I / 1.5
-
-        card_setEvents2()
+        card_a()
     }
 
     function card_eMouseDown()
@@ -304,25 +287,8 @@
 
     async function card_e$Resize() { card_setVars() }
 
-    async function card_e$Animation()
-    {
-        if (card_U < 0)
-        {
-            card_destroyEvents2()
-        
-            card_updateRotate(0, 0)
-        }
-        else
-        {
-            card_ROTATE_X = card_X_I * card_U - card_X_A
-            card_ROTATE_Y = card_Y_I * card_U - card_Y_A
-        }
-
-        card_U -= .1
-    }
-
     // --ANIMATIONS
-    function card_aIn()
+    async function card_aIn()
     {
         const
         START_Y = card_TRANSLATE_Y,
@@ -357,7 +323,7 @@
             card_START = false
             card_cancel = cancel
 
-            promise.then(() => card_setTransition(400))
+            try { await promise, card_setTransition(400) } catch { card_setTransition(400) }
         },
         card_START ? CARD_DELAY : 0)
     }
@@ -381,7 +347,28 @@
         400.08)
 
         card_cancel = cancel
-        promise.then(() => card_OPACITY = 0)
+
+        try { await promise, card_OPACITY = 0 } catch {}
+    }
+
+    async function card_a()
+    {
+        const
+        [ROTATE_X, ROTATE_Y] = [card_ROTATE_X, card_ROTATE_Y],
+        [VEL_X, VEL_Y] = [ROTATE_X * .7, ROTATE_Y * .7]
+    
+        let {cancel, promise} = animation((t) =>
+        {
+            const U = 1 - t
+
+            card_ROTATE_X = ROTATE_X * U - VEL_X
+            card_ROTATE_Y = ROTATE_Y * U - VEL_Y
+        },
+        600)
+
+        card_cancel2 = cancel
+
+        try { await promise, card_ROTATE_X = (card_ROTATE_Y = 0) } catch {}
     }
 
     // --INTRO
@@ -389,7 +376,7 @@
     {
         tag_DELAY ??= TAG_DURATION / fragments.length
 
-        const STYLE = tag_getTransform('var(--card-x, 25%)', 'var(--card-y, 45%)', 1)
+        const STYLE = tag_getTransform('var(--tag-x, 25%)', 'var(--tag-y, 45%)', 1)
     
         tag_update(fragments, STYLE, 0)
     }
@@ -397,7 +384,7 @@
     // --OUTRO
     function tag_out(tag, fragments)
     {
-        const STYLE = tag_getTransform(`calc(var(--card-x, ${card_X}px) + 200%)`, `calc(var(--card-y, ${card_Y}px) + 100%)`, 0)
+        const STYLE = tag_getTransform(`calc(var(--tag-x, ${tag_TRANSLATE_X}px) + 200%)`, `calc(var(--tag-y, ${tag_TRANSLATE_Y}px) + 100%)`, 0)
 
         tag_update(fragments, STYLE)
     }
@@ -406,7 +393,7 @@
     function fragments_style()
     {
         const
-        STYLE = tag_getTransform(`calc(var(--card-x, ${card_X}px) - 200%)`, `calc(var(--card-y, ${card_Y}px) - 100%)`, 0),
+        STYLE = tag_getTransform(`calc(var(--tag-x, ${tag_TRANSLATE_X}px) - 200%)`, `calc(var(--tag-y, ${tag_TRANSLATE_Y}px) - 100%)`, 0),
         DURATION = Math.random() * TAG_DURATION + TAG_DURATION + 'ms'
     
         return `
@@ -427,9 +414,6 @@ onDestroy(card_destroy)
 class="card"
 class:focus={card_ON}
 data-id={prop_ID}
-style:--card-x="{card_X}px"
-style:--card-y="{card_Y}px"
-style:--tag-r="{-card_ROTATE_Z}deg"
 style:transform="
 translate3d(
 {card_TRANSLATE_X}px,
@@ -485,16 +469,18 @@ on:mousedown={card_eMouseDown}
             <Logo />
         </Icon>
     </div>
-
-    <Tag
-    prop_FOCUS={card_CHARGED && (tag_FOCUS || prop_TARGET === 1)}
-    prop_DURATION={TAG_DURATION}
-    prop_IN={tag_in}
-    prop_OUT={tag_out}
-    prop_STYLE={{ tag_style: () => '', fragments_style }}
-    {prop_CONTENT}
-    />
 </button>
+
+<Tag
+prop_FOCUS={card_CHARGED && (tag_FOCUS || prop_TARGET === 1)}
+prop_DURATION={TAG_DURATION}
+prop_IN={tag_in}
+prop_OUT={tag_out}
+prop_STYLE={{ tag_style: () => '', fragments_style }}
+{prop_CONTENT}
+--tag-x="{tag_TRANSLATE_X}px"
+--tag-y="{tag_TRANSLATE_Y}px"
+/>
 
 <!-- #STYLE -->
 
@@ -559,22 +545,13 @@ lang="scss"
 
     :global
     {
-        .decor .icon, .tag { backface-visibility: hidden; }
+        .decor .icon { backface-visibility: hidden; }
     
         .decor .icon
         {
             position: absolute;
 
             transform: rotateY(180deg);
-        }
-
-        .tag
-        {
-            @include position.placement(absolute, $top: 0, $left: 0);
-
-            transform: rotate(var(--tag-r, 0));
-
-            pointer-events: none;
         }
     }
 }

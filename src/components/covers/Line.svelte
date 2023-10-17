@@ -46,7 +46,7 @@ lang="scss"
 {
     $line-h: 5rem;
 
-    @include font.content($regular: false, $font-size: map.get(font.$font-sizes, s3));
+    @include font.content($regular: true, $font-size: map.get(font.$font-sizes, s3));
 
     display: flex;
 
@@ -79,7 +79,7 @@ lang="scss"
 
         width: 100%;
 
-        padding-inline: 2rem;
+        padding-left: 2rem;
 
         box-sizing: border-box;
 

@@ -34,6 +34,9 @@
 
 // #IMPORTS
 
+    // --JS
+    import { wait_throttle } from '../../assets/js/utils/wait'
+
     // --CONTEXTS
     import { APP, EVENT } from '../../App.svelte'
 
@@ -60,13 +63,25 @@
 
 // #VARIABLES
 
+    // --APP
+    let app_$FREEZE = APP.app_$FREEZE
+
     // --ELEMENT-PROJECTS
     let projects_TARGET
+
+    // --ELEMENT-CONTAINER
+    let
+    container,
+    
+    container_SCROLLTOP = 0
 
     // --ELEMENT-CARD
     let card_HOVER
 
-// #REACTIVE
+// #REACTIVES
+
+    // --APP
+    $: !$app_$FREEZE ? projects_TARGET = null : void 0
 
     // --ELEMENT-CARD
     $: card_ON = prop_FOCUS && !prop_INTRO
@@ -79,14 +94,20 @@
     // --UPDATES
     function projects_updateTarget(id)
     {
-        projects_TARGET = id == null ? null : { id: id, component: Booki }
+        const NULL = id == null
+    
+        projects_TARGET = NULL ? null : { id: id, component: Booki }
 
-        APP.app_$FREEZE = { value: id != null, target: PROJECTS }
+        APP.app_$FREEZE = { value: !NULL, target: PROJECTS }
+
+        if (NULL) container.scrollTo({ top: container_SCROLLTOP = 0 })
     }
 
     function card_updateCardHover(id) { card_HOVER = id }
 
     // --EVENTS
+    const container_e$Scroll = wait_throttle(async ({target: {scrollTop}}) => { container_SCROLLTOP = scrollTop }, 200.04)
+
     function card_e$MouseEnter(id) { card_updateCardHover(id) }
 
     function card_e$MouseLeave() { card_updateCardHover(null) }
@@ -128,6 +149,8 @@ class="projects"
     <div
     class="container"
     class:scroller={projects_TARGET}
+    bind:this={container}
+    on:scroll={container_e$Scroll}
     >
         <Group
         let:resize
@@ -136,9 +159,10 @@ class="projects"
                 <Card
                 prop_$RESIZE={resize}
                 prop_CARD_HOVER={card_HOVER}
-                prop_ID={card.id}
                 prop_ON={card_ON}
+                prop_ID={card.id}
                 prop_TARGET={projects_TARGET == null ? 0 : projects_TARGET.id === card.id ? 1 : -1}
+                prop_SCROLLTOP={container_SCROLLTOP}
                 prop_CONTENT={card.value}
                 prop_COLOR={card.color}
                 prop_$MOUSEENTER={card_e$MouseEnter}
@@ -219,6 +243,17 @@ lang="scss"
                 @include position.placement(fixed, 0, 0, 0, 0);
     
                 @extend %any;
+            }
+
+            .tag
+            {
+                @include position.placement(absolute, $top: 0, $left: 0);
+
+                z-index: 1;
+
+                transform: translate(-50%, -100%);
+
+                pointer-events: none;
             }
         }
     }

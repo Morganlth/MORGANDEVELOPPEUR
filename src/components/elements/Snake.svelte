@@ -652,21 +652,11 @@ lang="scss"
 {
     $blocksize: var(--snake-blocksize, '40px');
 
-    &, .gameover
-    {
-        @include position.placement(absolute, $top: 0, $left: 0);
-    
-        width: 100vw;
-        height: 100vh;
-    }
-
-    @include position.placement(absolute, 0, 0, 0, 0);
+    &, .gameover { @extend %any; }
 
     @extend %f-center;
 
-    z-index: 1;
-
-    pointer-events: none;
+    position: absolute;
 
     &.game
     {
@@ -689,6 +679,8 @@ lang="scss"
 
     .gameover
     {
+        @include position.placement(absolute, 0, 0, 0, 0);
+
         @extend %button-reset;
         @extend %f-center;
 
@@ -698,7 +690,7 @@ lang="scss"
 
         pre
         {
-            @include font.h-(1);
+            @include font.h-custom($light);
             
             @extend %m-h-1;
 

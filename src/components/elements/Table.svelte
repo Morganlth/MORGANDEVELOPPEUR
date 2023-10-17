@@ -152,7 +152,7 @@ lang="scss"
         #{--cell-size}: calc(var(--title-size) * font.$line-height-title-min);
     
         @extend %f-a-center;
-        @extend %m-h-3;
+        @extend %m-h-4;
     
         position: absolute;
 

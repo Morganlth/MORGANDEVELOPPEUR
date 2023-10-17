@@ -344,7 +344,6 @@ style:--system-r-y={system_ROTATE_Y}
                     <Cube
                     prop_$ROTATION={rotation}
                     prop_GRABBING={grabbing}
-                    prop_DESTROY={!prop_FOCUS || system_TARGET}
                     prop_FOCUS={cube.focus ?? false}
                     prop_ROTATE={cube.props.prop_ROTATE}
                     prop_SRC={cube.props.prop_SRC}
@@ -454,6 +453,8 @@ lang="scss"
 
                     transition: transform 1s ease-out, border .6s ease-out;
                 }
+
+                transform: rotateY(20deg);
 
                 padding: 2rem;
 

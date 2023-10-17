@@ -17,15 +17,12 @@
 
     // --PROPS
     export let
-    prop_FOCUS = false,
-
     prop_FEATURES = [],
 
     prop_TOP = 0,
     prop_RATIO = 0,
 
     prop_START = void 0,
-    prop_END = void 0,
     prop_DIF = void 0
 
     // --BINDS
@@ -46,7 +43,6 @@
     // --COMPONENT-ELEMENTS
     import Snake from '../elements/Snake.svelte'
     import Features from '../elements/Features.svelte'
-    import Mask from '../elements/Mask.svelte'
 
 // #CONSTANTES
 
@@ -64,6 +60,9 @@
         }
     ]
 
+    // --ELEMENT-FEATURES
+    const FEATURES_FRACTION = 1 / prop_FEATURES.length
+
 // #VARIABLES
 
     // --ELEMENT-SNAKE
@@ -71,23 +70,10 @@
     snake_ON = true,
     snake_GAME = false
 
-    // --ELEMENT-FEATURES
-    let features_LENGTH // LENGTH of FEATURES_DATAS + 1 (padding-right in track)
-
-    // --ELEMENT-MASK
-    let mask_RATIO = 0
-
-// #REACTIVES
+// #REACTIVE
     
     // --ELEMENT-SNAKE
     $: snake_update(snake_ON)
-
-    // --ELEMENT-MASK
-    $:
-    prop_START != null &&
-    prop_END != null &&
-    prop_DIF != null
-    ? mask_setVars() : void 0
 
 // #FUNCTIONS
 
@@ -100,8 +86,6 @@
     }
 
     function snake_setCommands() { COMMAND.command_setBasicCommands(SNAKE_COMMANDS) }
-
-    function mask_setVars() { mask_RATIO = prop_DIF / prop_START }
 
     // --GET
     function features_getTarget(target) { return prop_FEATURES.find(feature => feature.tags.includes(target)) }
@@ -164,7 +148,7 @@
 
     function presentation_goTo(id = 0)
     {
-        const TOP = prop_END - prop_DIF / features_LENGTH * (prop_FEATURES.length - id)
+        const TOP = prop_START + id * FEATURES_FRACTION * prop_DIF
 
         EVENT.event_scrollTo(TOP, ROUTER.router_getInstant(TOP))
     }
@@ -179,21 +163,34 @@ onMount(presentation_set)
 <div
 class="presentation"
 >
-    <Features
-    {prop_FOCUS}
-    {prop_FEATURES}
-    {prop_RATIO}
-    bind:features_LENGTH
-    />
-
-    <Mask
-    prop_SHADOW={true}
-    prop_GRADIENT={[50, 100]}
-    prop_RATIO={prop_RATIO * mask_RATIO + 1}
-    />
-
     <Snake
     prop_ON={snake_ON && prop_RATIO < 1}
     bind:snake_GAME
     />
+
+    <Features
+    prop_FRACTION={FEATURES_FRACTION}
+    {prop_RATIO}
+    {prop_FEATURES}
+    />
 </div>
+
+<style
+lang="scss"
+>
+/* #USES */
+
+@use '../../assets/scss/styles/position';
+@use '../../assets/scss/styles/size';
+
+/* #PRESENTATION */
+
+.presentation
+{
+    @include position.placement(absolute, 0, 0, 0, 0);
+
+    @extend %any;
+
+    z-index: 1;
+}
+</style>

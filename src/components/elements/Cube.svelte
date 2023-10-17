@@ -17,7 +17,6 @@
 
     prop_FOCUS = false,
     prop_GRABBING = false,
-    prop_DESTROY = false,
 
     prop_ROTATE = 0,
     prop_ROTATE_Y = 0,
@@ -48,6 +47,7 @@
     // --ELEMENT-CUBE
     let
     cube_CHARGED = false,
+
     cube_ROTATE = prop_ROTATE,
     cube_ROTATE_Y = prop_ROTATE_Y
 
@@ -69,7 +69,7 @@
         setTimeout(() => icon_OPACITY = 1, 1200)
     }
 
-    // --UPDATES
+    // --UPDATE
     function cube_updatePosition({ rX, rY })
     {
         cube_ROTATE += rX ?? 0
@@ -84,7 +84,7 @@ onMount(cube_set)
 <!-- #HTML -->
 
 <div
-class="cube {prop_DESTROY ? 'destroy' : 'build'}"
+class="cube"
 class:focus={prop_FOCUS}
 class:grabbing={prop_GRABBING}
 style:--cube-color={prop_COLOR ?? COLORS.primary}
@@ -102,9 +102,9 @@ translateZ(calc(var(--cube-size, '100px') / 2))"
         data-side-id={id}
         >
             <Icon
-            prop_OPACITY={prop_DESTROY ? 0 : icon_OPACITY}
+            prop_OPACITY={icon_OPACITY}
             prop_SIZE="30%"
-            prop_COLOR={COLORS[prop_FOCUS && !prop_DESTROY ? 'light' : 'intermediate']}
+            prop_COLOR={COLORS[prop_FOCUS ? 'light' : 'intermediate']}
             prop_SPRING={false}
             >
                 {#if prop_COMPONENT}
@@ -151,24 +151,6 @@ lang="scss"
 
     transition: transform .6s ease-out;
 
-    &.build
-    {
-        .side
-        {
-            opacity: 1;
-
-            animation: aBuild 1s ease-in;
-        }
-    }
-    &.destroy
-    {
-        .side
-        {
-            opacity: 0;
-
-            animation: aDestroy 1s ease-in forwards;
-        }
-    }
     &.focus .side  { border-color: var(--cube-color, $primary); }
     &.grabbing .side { border-color: $indicator !important; }
 
@@ -219,25 +201,6 @@ lang="scss"
 
         transform-origin: top;
         transform: rotate3d(-1, 0, 0, 90deg);
-    }
-
-    @keyframes aBuild
-    {
-        from
-        {
-            transform: translate3d(0, 0, 0) rotate3d(0, 0, 0, 0);
-            
-            border-color: $dark;
-        }
-    }
-    @keyframes aDestroy
-    {
-        to
-        {
-            transform: translate3d(0, 0, 0) rotate3d(0, 0, 0, 0);
-            
-            border-color: $dark;
-        }
     }
 }
 </style>

@@ -1,146 +1,153 @@
 <!-- #MAP
 
--APP
--EVENT
     FEATURES
-        TRACK * 2
-            TOPIC * n
-        TRACK
-            
+        LINE * n
+
 -->
 
 <!-- #SCRIPT -->
 
 <script>
-// #EXPORT
+// #EXPORTS
 
-    // --PROP
+    // --PROPS
     export let
-    prop_FOCUS = false,
+    prop_RATIO = 0,
+    prop_FRACTION = 0,
 
-    prop_FEATURES = [],
-    prop_RATIO = 0
+    prop_FEATURES
 
-    // --BIND
-    export let features_LENGTH = prop_FEATURES.length + 1
+    // --BINDS
 
 // #IMPORTS
 
+    // --JS
+
+    // --LIB
+
     // --CONTEXTS
-    import { APP, EVENT } from '../../App.svelte'
 
     // --SVELTE
-    import { onMount, onDestroy } from 'svelte'
+
+    // --COMPONENT-COVER
+    import Line from '../covers/Line.svelte'
 
 // #CONSTANTES
 
-    // --ELEMENT-FEATURES
-    const
-    FEATURES_PHASE = Math.PI * features_LENGTH,
-    FEATURES_EVENTS = { resize: features_e$Resize }
-
 // #VARIABLES
 
-    // --ELEMENT-TRACK
-    let track_ROTATE = 0
+let features_TRANSLATE_Y = 0
 
-    // --ELEMENT-TOPIC
-    let topic_WIDTH = 0
+// #REACTIVES
 
-// #REACTIVE
-
-    // --ELEMENT-FEATURES
-    $: features_SIN = Math.abs(Math.sin(prop_RATIO * FEATURES_PHASE)) // 0 - 100
+$: features_update(prop_RATIO)
 
 // #FUNCTIONS
 
     // --SET
-    function features_set()
+
+    // --GET
+
+    // --UPDATES
+    function features_update(ratio)
     {
-        features_setVars()
-        features_setEvents()
+        let last_SHOW = false
+    
+        features_TRANSLATE_Y = 100 * (1 - ratio)
+
+        for (let i = prop_FEATURES.length - 1; i >= 0; i--)
+        {
+            const
+            FEATURE = prop_FEATURES[i],
+            RATIO = ratio >= FEATURE.id * prop_FRACTION
+        
+            prop_FEATURES[i] = { ...FEATURE, show: RATIO, focus: !last_SHOW && RATIO }
+
+            if (RATIO) last_SHOW = true
+        }
     }
 
-    function features_setVars()
-    {
-        track_setVars()
-        topic_setVars()
-    }
-
-    function features_setEvents() { EVENT.event_add(FEATURES_EVENTS) }
-
-    function track_setVars() { track_ROTATE = Math.atan(APP.app_HEIGHT / APP.app_WIDTH) }
-
-    function topic_setVars() { topic_WIDTH = Math.sqrt(APP.app_WIDTH * APP.app_WIDTH + APP.app_HEIGHT * APP.app_HEIGHT) }
+    // --CLEAR
 
     // --DESTROY
-    function features_destroy() { features_destroyEvents() }
 
-    function features_destroyEvents() { EVENT.event_remove(FEATURES_EVENTS) }
+        // !======IN-OUT=======!
 
-    // --EVENT
-    async function features_e$Resize() { features_setVars() }
+    // --INTROS
 
-// #CYCLES
+    // --OUTROS
 
-onMount(features_set)
-onDestroy(features_destroy)
+        // !======CONTEXT======!
+
+    // --COMMANDS
+
+    // --EVENTS
+
+        // !======T-A==========!
+
+    // --TRANSITIONS
+
+    // --ANIMATIONS
+
+        // !======CONTROL======!
+
+    // --START
+
+    // --END
+
+        // !======TEST=========!
+
+	// --TESTS
+
+        // !======CANVAS=======!
+
+	// --DRAW
+
+// #LIFECYCLES
+
 </script>
 
 <!-- #HTML -->
 
 <div
 class="features"
-class:focus={prop_FOCUS}
-style:--features-sin={features_SIN}
+style:transform="translateY({features_TRANSLATE_Y}%)"
 >
-    {#each [0, 1] as i}
+    {#each prop_FEATURES as feature}
         <div
-        class="track"
-        style:--track-sign={i ? 1 : -1}
-        style:transform={
-            (i
-            ? `rotate(${-track_ROTATE}rad) translate3d(calc(100% * ${1 - prop_RATIO}), -50%`
-            : `rotate(${-track_ROTATE + Math.PI}rad) translate3d(calc(-100% * ${prop_RATIO}), 50%`)
-
-            + `, ${features_SIN * 100}px)`
-        }
-        style:padding-right="{topic_WIDTH}px"
+        class:focus={feature.focus}
+        class:show={feature.show}
         >
-            {#each prop_FEATURES as feature}
-                <div
-                class="topic"
-                style:width="{topic_WIDTH}px"
+            {#each feature.contents as content, j}
+                <section
+                style:--feature-direction={j % 2 ? -1 : 1}
+                style:--feature-duration="{.2 * j + 1}s"
                 >
-                    <p
-                    style:transform="translateX(40%) rotate({track_ROTATE + (i ? 0 : Math.PI)}rad)"
-                    data-topic={feature.topics[i ? 0 : feature.topics.length - 1]}
+                    <h3
+                    data-topic={content.topic}
                     >
-                        {feature.topics[i ? 0 : feature.topics.length - 1]}
-                    </p>
-                </div>
+                        {content.topic}
+                    </h3>
+
+                    <Line>
+                        <span
+                        slot="id"
+                        >
+                            {j}
+                        </span>
+
+                        <svelte:element
+                        this={content.html ?? 'p'}
+                        {...content.props}
+                        slot="content"
+                        >
+                            {content.data}
+                        </svelte:element>
+                    </Line>
+                </section>
             {/each}
         </div>
     {/each}
-
-    <div
-    class="track"
-    style:transform="translate(calc(-100% * {prop_RATIO}), -50%)"
-    >
-        {#each prop_FEATURES as feature}
-            <ul>
-                {#each feature.contents as content}
-                    <li>
-                        <svelte:element
-                        this={content.htmlElement}
-                        >
-                            {content.data}.
-                        </svelte:element>
-                    </li>
-                {/each}
-            </ul>
-        {/each}
-    </div>
 </div>
 
 <!-- #STYLE -->
@@ -150,11 +157,8 @@ lang="scss"
 >
 /* #USES */
 
-@use 'sass:map';
-
 @use '../../assets/scss/app';
 
-@use '../../assets/scss/styles/utils';
 @use '../../assets/scss/styles/position';
 @use '../../assets/scss/styles/display';
 @use '../../assets/scss/styles/size';
@@ -164,141 +168,115 @@ lang="scss"
 
 .features
 {
-    @include position.placement(absolute, 0, 0, 0, 0);
+    $duration: 1s;
 
-    @extend %any;
+    @include position.placement(absolute, $bottom: 50%, $right: 0, $left: 0);
 
-    opacity: 0;
+    width: 100%;
+    height: fit-content;
 
-    perspective: 180px;
+    pointer-events: auto;
 
-    margin-left: 5%;
+    transition: transform .4s ease-out;
 
-    transition: opacity .4s;
-
-    &.focus
+    &>div
     {
-        opacity: 1;
+        position: relative;
 
-        .track:not(:nth-child(3)) { will-change: transform; }
-    }
-
-    .track
-    {
-        display: flex;
-
-        transform-style: preserve-3d;
-
-        width: fit-content;
+        width: 100%;
         height: fit-content;
 
-        transition: transform .4s ease-out;
-
-        &:nth-child(1)
+        &.focus::after { border-top-color: $light; }
+    
+        &.show
         {
-            @include position.placement(absolute, $bottom: 0, $left: 0);
-
-            transform-origin: bottom left;
-
-            height: 28%;
-
-            color: rgba($light, .2);
+            &::after { opacity: 1; }
+    
+            section { transform: translate(0, 0); }
         }
-        &:nth-child(2)
+
+        &::after
         {
-            @include position.placement(absolute, $top: 0, $right: 0);
+            @include position.placement(absolute, $top: 0, $left: 0, $pseudo-element: true);
 
-            transform-origin: top right;
+            display: inline-block;
+        
+            opacity: 0;
 
-            height: 26%;
+            width: 30%;
+            height: 0;
+    
+            border-top: solid $intermediate .2rem;
+
+            transition: opacity $duration ease-out, border-color $duration;
+        }
+    }
+
+    section
+    {
+        @extend %f-column;
+    
+        justify-content: center;
+
+        transform: translate(calc(100% * var(--feature-direction, 1)), 100%);
+
+        height: 20vh;
+
+        background-color: $dark;
+
+        border-block: solid $intermediate 1px;
+
+        transition: transform var(--feature-duration, $duration) .2s ease-out;
+    }
+
+    h3, :global .line .content
+    {
+        padding-left: 30%;
+
+        box-sizing: border-box;
+    }
+
+    h3
+    {
+        @include font.h-custom($intermediate, $line-height: 0, $italic: true);
+
+        @extend %m-h-3;
+
+        position: relative;
+
+        top: .4rem;
+    }
+
+    :global .line
+    {
+        padding-left: 2rem;
+
+        box-sizing: border-box;
+    }
+
+    strong { font-weight: bold; }
+
+    a
+    {
+        position: relative;
+
+        color: inherit;
+        text-decoration: none;
+
+        &:hover::after { clip-path: polygon(0 110%, 100% 110%, 100% 0, 0 0); }
+
+        &::after
+        {
+            @include position.placement(absolute, $top: 0, $left: 0, $pseudo-element: attr(data-content));
+
+            @extend %any;
+
+            clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
 
             color: $primary;
-        }
-        &:nth-child(3)
-        {
-            @include position.placement(absolute, $top: 50%, $left: 0);
+            font: inherit;
 
-            margin-left: 100vw;
-            padding-right: 100vw;
-        }
-
-        &>* { flex-shrink: 0; }
-
-        .topic
-        {
-            @include utils.solid-border(1px, $intermediate, $right: false, $left: false);
-        
-            @extend %f-center;
-
-            height: 100%;
-    
-            p
-            {
-                $x: .8rem;
-                $y: .4rem;
-        
-                @include font.h-custom($font-size: var(--title-size, map.get(font.$font-sizes, s7)), $italic: true);
-    
-                @extend %m-h-2;
-
-                position: relative;
-
-                pointer-events: auto;
-
-                text-align: center;
-
-                &::after
-                {
-                    #{--x}: calc($x * var(--track-sign, 1));
-                    #{--y}: calc($y * var(--track-sign, 1));
-                
-                    @include position.placement(absolute, $top: 0, $left: 0, $pseudo-element: attr(data-topic));
-
-                    transform: translate(calc(var(--x, $x) * var(--features-sin, 0)), calc(var(--y, $y) * var(--features-sin, 0)));
-            
-                    opacity: var(--features-sin, 0);
-            
-                    color: transparent;
-                    -webkit-text-stroke: 3px $intermediate;
-
-                    transition: transform .4s, opacity .4s;
-                }
-
-                &:hover::after
-                {
-                    transform: translate(var(--x, $x), var(--y, $y));
-
-                    opacity: 1;
-                }
-            }
-        }
-        
-        ul
-        {
-            @extend %f-j-center;
-    
-            min-width: max(100vw, 100vh);
-            height: fit-content;
-
-            pointer-events: auto;
-
-            li
-            {
-                @include font.content($light, $font-size: map.get(font.$font-sizes, s3), $line-height: 6);
-    
-                padding-left: app.$gap-inline;
-
-                user-select: auto;
-            }
-
-            a
-            {
-                @include font.simple-hover($primary);
-
-                font-family: font.$family-content-bold !important;
-        
-                cursor: pointer;
-            }
+            transition: clip-path .4s ease-out;
         }
     }
 }

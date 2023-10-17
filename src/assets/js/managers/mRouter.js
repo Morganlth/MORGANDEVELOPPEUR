@@ -82,6 +82,8 @@ constructor () { this.#router_setVars() }
 
     #router_updatePath(id, page)
     {
+        if (id === this.#router_$ID.value) return
+
         const PAGE = page ?? this.#router_PAGES[id]
 
         history.pushState({}, '', location.origin + '/' + PAGE.name + (PAGE.subPath ?? ''))
