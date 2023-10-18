@@ -17,6 +17,9 @@
 
 // #IMPORTS
 
+    // --JS
+    import { color_rgba } from '../../assets/js/utils/color'
+
     // --LIB
     import COLORS from '$lib/colors'
 
@@ -113,7 +116,7 @@
             vel_X: Math.random() + particles_ANGLE_X,
             vel_Y: -Math.random() - particles_ANGLE_Y,
             size: Math.random() * 10 + 10,
-            color: COLORS[Math.round(Math.random()) ? 'light' : 'primary']
+            color: color_rgba(COLORS[Math.round(Math.random()) ? 'light' : 'primary'], .5)
         })
     }
 

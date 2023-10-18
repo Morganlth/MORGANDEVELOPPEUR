@@ -19,8 +19,8 @@
     // --PROPS
     export let
     prop_TITLE = '',
-    prop_LINES = [],
-    prop_TRANSLATE_Y = 0
+
+    prop_LINES = []
 
     // --BIND
     export let head_HEIGHT = 0
@@ -34,7 +34,7 @@
     import COLORS from '$lib/colors'
 
     // --SVELTE
-    import { createEventDispatcher } from 'svelte'
+    import { onMount, onDestroy, createEventDispatcher } from 'svelte'
 
     // --COMPONENT-COVERS
     import Cell from '../covers/Cell.svelte'
@@ -48,31 +48,46 @@
     // --SVELTE
     const SVELTE_DISPATCH = createEventDispatcher()
 
-// #VARIABLE
+// #VARIABLES
 
     // --ELEMENT-TABLE
-    let table_DESTROY = false
+    let
+    table_CHARGED = false,
+    table_DESTROY = false,
+
+    table_TIMEOUT
 
 // #FUNCTIONS
+
+    // --SET
+    function table_set() { table_TIMEOUT = setTimeout(() => table_CHARGED = true, 200)}
+
+    // --DESTROY
+    function table_destroy() { clearTimeout(table_TIMEOUT) }
 
     // --EVENT
     function cell_eClick() { SVELTE_DISPATCH('click') }
 
     // --OUTRO
     function table_outro() { table_DESTROY = true }
+
+// #CYCLE
+
+onMount(table_set)
+onDestroy(table_destroy)
 </script>
 
 <!-- #HTML -->
 
 <section
 class="table"
+class:build={table_CHARGED}
 class:destroy={table_DESTROY}
 transition:transition_fade={{ duration: 600 }}
 on:outrostart={table_outro}
 >
     <div
     class="head"
-    style:transform="translateY(-{prop_TRANSLATE_Y}px)"
     bind:offsetHeight={head_HEIGHT}
     >
         <Cell
@@ -130,13 +145,32 @@ lang="scss"
 
 .table
 {
+    $a: polygon(0 0, 0 0, 0 100%, 0 100%);
+    $b: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+
     &, .lines { @extend %f-column; }
 
     gap: 1rem;
 
+    &.build
+    {
+        .head { opacity: 1; }
+    
+        h3
+        {
+            animation-name: aTitleIntro !important;
+
+            @keyframes aTitleIntro { from { clip-path: $a; } to { clip-path: $b; } }
+        }
+    }
     &.destroy
     {
-        h3 { animation-name: aOutro !important; }
+        h3
+        {
+            animation-name: aTitleOutro !important;
+
+            @keyframes aTitleOutro { from { clip-path: $b; } to { clip-path: $a; } }
+        }
 
         .line
         {
@@ -160,21 +194,17 @@ lang="scss"
 
         gap: 3rem;
 
+        opacity: 0;
+
         height: fit-content;
 
         padding-bottom: 2rem;
 
         h3
         {
-            $a: polygon(0 0, 0 0, 0 100%, 0 100%);
-            $b: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-        
             @include font.h-custom($light, $line-height: 1);
 
-            animation: aIntro .6s ease-out forwards;
-
-            @keyframes aIntro { from { clip-path: $a; } to { clip-path: $b; } }
-            @keyframes aOutro { from { clip-path: $b; } to { clip-path: $a; } }
+            animation: .6s ease-out forwards;
         }
     }
     .lines
@@ -220,8 +250,12 @@ lang="scss"
 
             min-height: 24%;
 
+            padding-inline: app.$gap-inline;
+
             text-align: right;
 
+            box-sizing: border-box;
+    
             transition: color .2s;
 
             &>* { animation-name: a0; }

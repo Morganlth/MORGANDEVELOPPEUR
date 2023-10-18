@@ -80,3 +80,21 @@
             }
         }
     }
+
+    export function animation_erase(children = [], callback = () => {})
+    {
+        children = [...children]
+    
+        return async function erase()
+        {
+            const LENGTH = children.length
+        
+            if (LENGTH <= 0) return callback()
+
+            const CHILD = children[LENGTH - 1]
+
+            CHILD.innerText = ''
+
+            children.pop()
+        }
+    }

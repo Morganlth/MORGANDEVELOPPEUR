@@ -119,16 +119,10 @@ style:transform="translateY({features_TRANSLATE_Y}%)"
         class:show={feature.show}
         >
             {#each feature.contents as content, j}
-                <section
+                <div
                 style:--feature-direction={j % 2 ? -1 : 1}
-                style:--feature-duration="{.2 * j + 1}s"
+                style:--feature-duration="{.2 * j + .8}s"
                 >
-                    <h3
-                    data-topic={content.topic}
-                    >
-                        {content.topic}
-                    </h3>
-
                     <Line>
                         <span
                         slot="id"
@@ -136,15 +130,24 @@ style:transform="translateY({features_TRANSLATE_Y}%)"
                             {j}
                         </span>
 
-                        <svelte:element
-                        this={content.html ?? 'p'}
-                        {...content.props}
+                        <section
                         slot="content"
                         >
-                            {content.data}
-                        </svelte:element>
+                            <h3
+                            data-topic={content.topic}
+                            >
+                                {content.topic}
+                            </h3>
+
+                            <svelte:element
+                            this={content.html ?? 'p'}
+                            {...content.props}
+                            >
+                                {content.data}
+                            </svelte:element>
+                        </section>
                     </Line>
-                </section>
+                </div>
             {/each}
         </div>
     {/each}
@@ -168,7 +171,7 @@ lang="scss"
 
 .features
 {
-    $duration: 1s;
+    $duration: .8s;
 
     @include position.placement(absolute, $bottom: 50%, $right: 0, $left: 0);
 
@@ -181,102 +184,93 @@ lang="scss"
 
     &>div
     {
-        position: relative;
-
         width: 100%;
         height: fit-content;
 
-        &.focus::after { border-top-color: $light; }
+        &.focus>div::after { border-top-color: $primary; }
     
-        &.show
+        &.show>div
         {
+            transform: translateX(0);
+
             &::after { opacity: 1; }
-    
-            section { transform: translate(0, 0); }
         }
 
-        &::after
+        &>div
         {
-            @include position.placement(absolute, $top: 0, $left: 0, $pseudo-element: true);
-
-            display: inline-block;
+            @extend %f-column;
         
-            opacity: 0;
+            justify-content: center;
 
-            width: 30%;
-            height: 0;
-    
-            border-top: solid $intermediate .2rem;
+            transform: translateX(calc(100% * var(--feature-direction, 1)));
 
-            transition: opacity $duration ease-out, border-color $duration;
+            height: 20vh;
+
+            background-color: $dark;
+
+            border-block: solid $intermediate 1px;
+
+            transition: transform var(--feature-duration, $duration) .2s ease-out;
+
+            &::after
+            {
+                @include position.placement(absolute, $bottom: 0, $right: 0, $pseudo-element: true);
+
+                display: inline-block;
+            
+                opacity: 0;
+
+                width: 4rem;
+                height: 0;
+        
+                border-top: solid $intermediate 2px;
+
+                transition: opacity $duration ease-out, border-color $duration;
+            }
         }
-    }
 
-    section
-    {
-        @extend %f-column;
-    
-        justify-content: center;
-
-        transform: translate(calc(100% * var(--feature-direction, 1)), 100%);
-
-        height: 20vh;
-
-        background-color: $dark;
-
-        border-block: solid $intermediate 1px;
-
-        transition: transform var(--feature-duration, $duration) .2s ease-out;
-    }
-
-    h3, :global .line .content
-    {
-        padding-left: 30%;
-
-        box-sizing: border-box;
-    }
-
-    h3
-    {
-        @include font.h-custom($intermediate, $line-height: 0, $italic: true);
-
-        @extend %m-h-3;
-
-        position: relative;
-
-        top: .4rem;
-    }
-
-    :global .line
-    {
-        padding-left: 2rem;
-
-        box-sizing: border-box;
-    }
-
-    strong { font-weight: bold; }
-
-    a
-    {
-        position: relative;
-
-        color: inherit;
-        text-decoration: none;
-
-        &:hover::after { clip-path: polygon(0 110%, 100% 110%, 100% 0, 0 0); }
-
-        &::after
+        :global .line
         {
-            @include position.placement(absolute, $top: 0, $left: 0, $pseudo-element: attr(data-content));
+            &, .content { box-sizing: border-box; }
 
-            @extend %any;
+            padding-left: 2rem;
 
-            clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
+            .content { padding-left: 30%; }
+        }
 
-            color: $primary;
-            font: inherit;
+        h3
+        {
+            @include font.h-custom($intermediate, $line-height: .4, $italic: true);
 
-            transition: clip-path .4s ease-out;
+            @extend %m-h-3;
+
+            transform: translateX(-10rem);
+        }
+
+        strong { font-weight: bold; }
+
+        a
+        {
+            position: relative;
+
+            color: inherit;
+            text-decoration: none;
+
+            &:hover::after { clip-path: polygon(0 110%, 100% 110%, 100% 0, 0 0); }
+
+            &::after
+            {
+                @include position.placement(absolute, $top: 0, $left: 0, $pseudo-element: attr(data-content));
+
+                @extend %any;
+
+                clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
+
+                color: $primary;
+                font: inherit;
+
+                transition: clip-path .4s ease-out;
+            }
         }
     }
 }

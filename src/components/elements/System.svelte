@@ -22,6 +22,8 @@
 
     // --PROPS
     export let
+    prop_ID = void 0,
+
     prop_FOCUS = false,
     prop_START = false,
 
@@ -60,7 +62,6 @@
 
     // --ELEMENT-SYSTEM
     const
-    SYSTEM = 'system',
     SYSTEM_OPTIMISE_NAME = 'system_optimise',
     SYSTEM_COMMANDS =
     [
@@ -198,7 +199,7 @@
     {
         system_TARGET = target
 
-        APP.app_$FREEZE = { value: true, target: SYSTEM }
+        APP.app_$FREEZE = { value: true, target: prop_ID }
     }
 
     function group_updateFocus()
@@ -311,8 +312,7 @@ onDestroy(system_destroy)
 
 <div
 class="system"
-class:zoom1={prop_FOCUS}
-class:zoom2={prop_RATIO >= 1}
+class:focus={prop_FOCUS}
 style:--system-r-x={system_ROTATE_X}
 style:--system-r-y={system_ROTATE_Y}
 >
@@ -394,14 +394,7 @@ lang="scss"
     width: 50vw;
     height: 100%;
 
-    &.zoom1 :global .moon { transform: translate(0, 0) scale(1); }
-
-    &.zoom2 :global .moon
-    {
-        transform: translate(calc(-50vw + 50%), calc(50vh - 50%)) scale(5);
-
-        opacity: 0;
-    }
+    &.focus :global .moon { transform: translate(0, 0) scale(1); }
 
     :global
     {
@@ -454,7 +447,7 @@ lang="scss"
                     transition: transform 1s ease-out, border .6s ease-out;
                 }
 
-                transform: rotateY(20deg);
+                transform: rotateY(16deg);
 
                 padding: 2rem;
 

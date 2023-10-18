@@ -25,7 +25,7 @@
 <!-- #SCRIPT -->
 
 <script>
-// #EXPORT
+// #EXPORTS
 
     // --BIND
     export let terminal_ON = false
@@ -61,7 +61,7 @@
     const
     TERMINAL = 'terminal',
 
-    TERMINAL_ROTATE_Y = MATH.toRad(6),
+    TERMINAL_ROTATE_Y = MATH.toRad(10),
 
     TERMINAL_HISTORY = ['app '],
 
@@ -180,7 +180,7 @@
     // --UPDATES
     function contexts_update()
     {
-        const UPDATE = { value: terminal_ON, target: TERMINAL }
+        const UPDATE = { value: terminal_ON, target: null }
 
         APP.app_$FREEZE = UPDATE
         ROUTER.router_$HIDE = UPDATE
@@ -574,7 +574,7 @@ lang="scss"
 
 .terminal
 {
-    $r-y: var(--r-y, 6deg);
+    $r-y: var(--r-y, 10deg);
 
     @include position.placement(absolute, $top: 44%, $right: app.$gap-inline);
 

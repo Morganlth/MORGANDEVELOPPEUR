@@ -17,6 +17,8 @@
 
     // --PROPS
     export let
+    prop_ID = void 0,
+
     prop_FEATURES = [],
 
     prop_TOP = 0,
@@ -148,7 +150,7 @@
 
     function presentation_goTo(id = 0)
     {
-        const TOP = prop_START + id * FEATURES_FRACTION * prop_DIF
+        const TOP = prop_START + id * FEATURES_FRACTION * prop_DIF + 1
 
         EVENT.event_scrollTo(TOP, ROUTER.router_getInstant(TOP))
     }
@@ -162,6 +164,7 @@ onMount(presentation_set)
 
 <div
 class="presentation"
+data-page-id={prop_ID}
 >
     <Snake
     prop_ON={snake_ON && prop_RATIO < 1}
@@ -180,10 +183,22 @@ lang="scss"
 >
 /* #USES */
 
+@use '../../assets/scss/app';
+
 @use '../../assets/scss/styles/position';
 @use '../../assets/scss/styles/size';
+@use '../../assets/scss/styles/media';
 
 /* #PRESENTATION */
+
+:global #presentation .title .fragments
+{
+    @include media.min($ms3)
+    {
+        /* & { padding-left: app.$gap-inline; } */
+        /* margin-left: app.$gap-inline; */
+    }
+}
 
 .presentation
 {

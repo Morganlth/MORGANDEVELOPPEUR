@@ -313,10 +313,10 @@
     // --ANIMATION
     function gravityarea_a(invert = false)
     {
-        const [X, Y, Z] = gravityarea_get3d(prop_RATIO)
-
         gravityarea_cancel = animation((t) =>
         {
+            const [X, Y, Z] = gravityarea_get3d(prop_RATIO)
+
             gravityarea_T = t
     
             gravityarea_TRANSLATE_X = X + APP.app_WIDTH * t

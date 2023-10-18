@@ -81,7 +81,7 @@
 
             &, body, body>div
             {
-                overflow: hidden;
+                overflow: clip;
 
                 width: 100vw;
                 height: 100vh;

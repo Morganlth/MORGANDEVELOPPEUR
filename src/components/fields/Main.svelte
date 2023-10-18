@@ -115,7 +115,7 @@
         {
             prop_TOP: (page.top = h * APP.app_HEIGHT),
             prop_INTRO: (page.intro = page_getIntro(page.top, APP.app_SCROLLTOP ?? 0)),
-            prop_START: (page.start = (h + (page.h > 1 ? 1 : 0)) * APP.app_HEIGHT),
+            prop_START: (page.start = (h + (page.h > 1 ? 1 : 0) + (page.startgap ?? 0)) * APP.app_HEIGHT),
             prop_DIF: (page.dif = page.end - page.start)
         })
     }
@@ -233,6 +233,7 @@ style:height="{MAIN_HEIGHT}vh"
     >
         {#each PAGES_DATAS as page (page.id)}
             <Page
+            prop_ID={page.id}
             prop_NAME={page.name}
             prop_FOCUS={page.focus}
             prop_INTRO={page.intro}

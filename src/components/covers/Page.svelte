@@ -1,5 +1,6 @@
 <!-- #MAP
 
+-APP
 -EVENT
 -PROCESS
     PAGE
@@ -22,6 +23,8 @@
 
     // --PROPS
     export let
+    prop_ID = void 0,
+
     prop_NAME = '',
 
     prop_FOCUS = false,
@@ -37,10 +40,10 @@
 // #IMPORTS
 
     // --JS
-    import { animation_writing } from '../../assets/js/utils/animation'
+    import { animation_writing, animation_erase } from '../../assets/js/utils/animation'
 
     // --CONTEXTS
-    import { EVENT, PROCESS } from '../../App.svelte'
+    import { APP, EVENT, PROCESS } from '../../App.svelte'
 
     // --SVELTE
     import { onMount, onDestroy } from 'svelte'
@@ -63,9 +66,13 @@
 
 // #VARIABLES
 
+    // --APP
+    let app_$FREEZE = APP.app_$FREEZE
+
     // --ELEMENT-PAGE
     let
     page_CHARGED = false,
+    page_HIDE = false,
 
     page_NAV,
 
@@ -77,7 +84,10 @@
     // --ELEMENT-FRAGMENTS
     let fragments_TIMEOUT
 
-// #REACTIVE
+// #REACTIVES
+
+    // --ELEMENT-PAGE
+    $: page_update($app_$FREEZE)
 
     // --ELEMENT-TITLE
     $: page_CHARGED ? title_update(prop_INTRO) : void 0
@@ -120,6 +130,19 @@
     }
 
     // --UPDATE
+    function page_update(freeze)
+    {
+        if (freeze)
+        {
+            const TARGET = app_$FREEZE.target
+
+            page_HIDE = TARGET != null && TARGET != prop_ID ? true : false
+
+            console.log(TARGET)
+        }
+        else page_HIDE = false
+    }
+
     async function title_update(intro) { intro ? title_intro() : title_outro() }
 
     // --EVENT
@@ -149,14 +172,30 @@
 
             FRAGMENTS_EVENTS.animation = animation_writing(FRAGMENTS_TAGS, fragments_destroyEvents)
 
-            fragments_TIMEOUT = setTimeout(fragments_setEvents, 1100)
+            fragments_TIMEOUT = setTimeout(fragments_setEvents, 1000)
         }
     }
 
     // --OUTROS
-    function title_outro() { fragments_outroFrags() }
+    function title_outro()
+    {
+        fragments_outroFrags()
+        fragments_outroTags()
+    }
 
     function fragments_outroFrags() { for (const FRAG of FRAGMENTS_FRAGS) FRAG.style.transform = fragments_getTranslate3d() }
+
+    function fragments_outroTags()
+    {
+        if (FRAGMENTS_TAGS.length)
+        {
+            fragments_destroy()
+    
+            FRAGMENTS_EVENTS.animation = animation_erase(FRAGMENTS_TAGS, fragments_destroyEvents)
+
+            fragments_setEvents()
+        }
+    }
 
 // #CYCLES
 
@@ -169,6 +208,7 @@ onDestroy(page_destroy)
 <div
 id={prop_NAME}
 class="page"
+class:hide={page_HIDE}
 style:z-index={prop_FOCUS ? 1 : 0}
 >
     <Wrapper>
@@ -187,7 +227,7 @@ style:z-index={prop_FOCUS ? 1 : 0}
         >
             {#each prop_TITLE.fragments as fragments}
                 <Fragments
-                prop_FRAGS={{ children: FRAGMENTS_FRAGS, value: fragments.frags ?? '-' }}
+                prop_FRAGS={{ children: FRAGMENTS_FRAGS, value: fragments.frags ?? '' }}
                 prop_TAGS={{ children: FRAGMENTS_TAGS, value: fragments.tags }}
                 prop_STYLE={fragments_getStyle}
                 />
@@ -219,7 +259,7 @@ style:z-index={prop_FOCUS ? 1 : 0}
         >
             {#if page_NAV}
                 <Nav
-                prop_TRANSLATE_Y={title_HEIGHT - (page_NAV.offset ?? 0)}
+                prop_TRANSLATE_Y={-title_HEIGHT + (page_NAV.offset ?? 0)}
                 prop_ITEMS={prop_NAV}
                 {prop_FOCUS}
                 {prop_INTRO}
@@ -231,6 +271,7 @@ style:z-index={prop_FOCUS ? 1 : 0}
         <svelte:component
         this={prop_COMPONENT}
         {...prop_PROPS}
+        {prop_ID}
         bind:page_CHARGED
         bind:PAGE_NAV={page_NAV}
         bind:page_process
@@ -244,8 +285,6 @@ style:z-index={prop_FOCUS ? 1 : 0}
 lang="scss"
 >
 /* #USES */
-
-@use 'sass:map';
 
 @use '../../assets/scss/app';
 
@@ -262,6 +301,15 @@ lang="scss"
 
     @extend %any;
 
+    visibility: visible;
+
+    &.hide
+    {
+        visibility: hidden;
+
+        pointer-events: none !important;
+    }
+
     .title
     {
         @include font.h-(1);
@@ -275,7 +323,7 @@ lang="scss"
         width: fit-content;
         height: fit-content;
 
-        padding-bottom: 5rem;
+        padding-bottom: 3rem;
 
         transition: opacity .8s ease-in;
 
@@ -284,27 +332,6 @@ lang="scss"
         :global
         {
             &>* { padding-top: 2rem; }
-
-            @include media.min($ms3)
-            {
-                .fragments
-                {
-                    &::before
-                    {
-                        @include position.placement(absolute, $top: 1rem, $left: 0, $pseudo-element: true);
-
-                        width: 2.4rem;
-                        height: 2.4rem;
-
-                        background-color: $primary;
-                    }
-
-                    position: relative;
-
-                    padding-left: app.$gap-inline;
-                }
-                .fragments:nth-child(1) { margin-left: app.$gap-inline; } 
-            }
         }
     }
 }

@@ -122,7 +122,7 @@
                 nav_TRANSLATE_X = -100 * T
                 nav_ROTATE = 90 * (1 - T)
 
-                nav_BORDER_COLOR = COLORS[t > .3 ? 'light' : 'intermediate']
+                nav_BORDER_COLOR = prop_INTRO ? COLORS[t > .2 ? 'light' : 'intermediate'] : 'transparent'
             }
             else
             {
@@ -150,7 +150,7 @@ class="nav"
 class:focus={prop_FOCUS}
 class:top={prop_FOCUS && !prop_INTRO}
 style:--nav-t-x="{nav_TRANSLATE_X}%"
-style:--nav-t-y="-{prop_TRANSLATE_Y}px"
+style:--nav-t-y="{prop_TRANSLATE_Y}px"
 style:--nav-rotate="{nav_ROTATE}deg"
 style:--nav-border-color={nav_BORDER_COLOR}
 >
@@ -209,7 +209,7 @@ lang="scss"
     
     &::before
     {
-        @include position.placement(absolute, $top: -1.4rem, $right: 0, $left: 0, $pseudo-element: true);
+        @include position.placement(absolute, $top: 0, $right: 0, $left: 0, $pseudo-element: true);
 
         transform: translateX(var(--nav-t-x, 0)) rotate(var(--nav-rotate, 0));
 
@@ -220,7 +220,7 @@ lang="scss"
 
         border-top: solid var(--nav-border-color, $intermediate) 1px;
 
-        transition: $before-transition, opacity .4s 1.4s ease-out;
+        transition: $before-transition, opacity 1s;
     }
 
     position: relative;
@@ -229,7 +229,7 @@ lang="scss"
 
     width: 100%;
 
-    transition: transform .4s ease-out;
+    transition: transform .4s .2s ease-out;
 
     &.focus::before
     {
@@ -242,7 +242,7 @@ lang="scss"
     {
         &::before { border-top-color: transparent !important; }
 
-        transform: translateY(var(--nav-t-y, -320%));
+        transform: translateY(var(--nav-t-y, -300%));
     }
 
     .items
@@ -269,7 +269,7 @@ lang="scss"
 
         gap: .8rem;
 
-        padding-block: .6rem;
+        padding-block: 2rem;
 
         pointer-events: auto;
     }

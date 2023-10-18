@@ -59,8 +59,9 @@
             component: Presentation,
             tags: ['caracteristique'],
             overflow: true,
-            h: 7,
-            endgap: -2
+            h: 8,
+            startgap: .4,
+            endgap: -1.6
         ,
             route:
             {
@@ -75,11 +76,8 @@
             {
                 fragments:
                 [
-                    {
-                        frags: 'MA',
-                        tags: ['IDENTITÉ', 'LOCALITÉ', 'ÉTUDES', 'PRO', 'CONTACT']
-                    },
-                    { frags: 'PRESENTATION' }
+                    { tags: ['IDENTITÉ', 'LOCALITÉ', 'ÉTUDES', 'PRO', 'CONTACT'] },
+                    { frags: 'PRESENTATION', }
                 ]
             }
         ,
@@ -146,10 +144,7 @@
             {
                 fragments:
                 [
-                    {
-                        frags: 'MES',
-                        tags: ['HTML', 'CSS', 'JS', 'NODE JS', 'GESTION', 'ADAPTABILITÉ']
-                    },
+                    { tags: ['HTML', 'CSS', 'JS', 'NODE JS', 'GESTION', 'ADAPTABILITÉ'] },
                     { frags: 'COMPETENCES' }
                 ]
             }
@@ -212,10 +207,7 @@
             {
                 fragments:
                 [
-                    {
-                        frags: 'MES',
-                        tags: ['BOOKI', 'SOPHIE BLUEL', 'NINA CARDUCCI']
-                    },
+                    { tags: ['BOOKI', 'SOPHIE BLUEL', 'NINA CARDUCCI'] },
                     { frags: 'PROJETS' }
                 ]
             }

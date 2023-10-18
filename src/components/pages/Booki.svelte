@@ -200,7 +200,7 @@ id="booki"
                 <ul
                 class="flex any-h"
                 >
-                    {#each BOOKI_NAV as a}
+                    {#each BOOKI_NAV as a, i}
                         <li
                         class="any-h"
                         >

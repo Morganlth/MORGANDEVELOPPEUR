@@ -16,6 +16,8 @@
 
     // --PROPS
     export let
+    prop_ID = void 0,
+
     prop_FOCUS = false,
     prop_INTRO = false,
 
@@ -92,7 +94,7 @@
     // --EVENTS
     export function nav_e$Click({id}) { skills_goTo(id) }
 
-    function table_eClick() { APP.app_$FREEZE = { value: false, target: APP.app_$FREEZE.target } } // call skills_reset with reactive app_$FREEZE
+    function table_eClick() { APP.app_$FREEZE = { value: false, target: prop_ID } } // call skills_reset with reactive app_$FREEZE
 
     // --UTILS
     export function page_process(str, target)
@@ -127,20 +129,21 @@ onMount(skills_set)
 
 <div
 class="skills"
+data-page-id={prop_ID}
 >
     <System
     prop_START={prop_FOCUS && !prop_INTRO}
+    {prop_ID}
     {prop_FOCUS}
     {prop_SYSTEM}
     {prop_RATIO}
     bind:system_TARGET
     />
 
-    {#if system_TARGET} <!-- title_HEIGHT ?-->
+    {#if system_TARGET}
         <Table
         prop_TITLE={system_TARGET.tag}
         prop_LINES={system_TARGET.skills}
-        prop_TRANSLATE_Y={0}
         bind:head_HEIGHT={PAGE_NAV.offset}
         on:click={table_eClick}
         />

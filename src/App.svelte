@@ -203,10 +203,10 @@ lang="scss"
     @extend %any;
     @extend %scroll-bar;
 
-    overflow: hidden scroll;
+    overflow: clip scroll;
 
     background-color: $dark;
 
-    &.freeze { overflow: hidden !important; }
+    &.freeze { overflow: clip !important; }
 }
 </style>

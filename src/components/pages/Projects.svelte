@@ -17,6 +17,8 @@
 
     // --PROPS
     export let
+    prop_ID = void 0,
+
     prop_FOCUS = false,
     prop_INTRO = false,
 
@@ -56,11 +58,6 @@
     // --COMPONENT-DECOR
     import Particles from '../decors/Particles.svelte'
 
-// #CONSTANTE
-
-    // --ELEMENT-PROJECTS
-    const PROJECTS = 'projects'
-
 // #VARIABLES
 
     // --APP
@@ -98,7 +95,7 @@
     
         projects_TARGET = NULL ? null : { id: id, component: Booki }
 
-        APP.app_$FREEZE = { value: !NULL, target: PROJECTS }
+        APP.app_$FREEZE = { value: !NULL, target: prop_ID }
 
         if (NULL) container.scrollTo({ top: container_SCROLLTOP = 0 })
     }
@@ -143,6 +140,7 @@ onMount(projects_set)
 
 <div
 class="projects"
+data-page-id={prop_ID}
 >
     <Particles />
 

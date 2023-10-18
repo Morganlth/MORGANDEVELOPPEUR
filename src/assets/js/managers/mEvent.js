@@ -131,6 +131,10 @@ constructor ()
         APP.app_updateSize()
         APP.app_updateSmallScreen()
 
+        // const [VALUE, TARGET] = [APP.app_$FREEZE.value, APP.app_$FREEZE.target]
+
+        // if (VALUE && TARGET instanceof HTMLElement) TARGET.focus(preve)
+
         this.#event_run.call(this.#event_MANAGER.resize)
     }
 

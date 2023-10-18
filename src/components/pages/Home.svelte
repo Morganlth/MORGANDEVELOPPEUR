@@ -17,6 +17,8 @@
 
     // --PROPS
     export let
+    prop_ID = void 0,
+
     prop_FOCUS = false,
 
     prop_SPACECUBE = new Float64Array([]),
@@ -50,8 +52,6 @@
     import Cube from '../elements/Cube.svelte'
     import TicTacToe from '../elements/TicTacToe.svelte'
     import Terminal from '../elements/Terminal.svelte'
-
-    import System from '../elements/System.svelte'
 
     // --COMPONENT-DECOR
     import SpaceCube from '../decors/SpaceCube.svelte'
@@ -117,6 +117,7 @@
 
 <div
 class="home"
+data-page-id={prop_ID}
 >
     <SpaceCube
     {prop_FOCUS}
@@ -143,10 +144,10 @@ class="home"
             let:rotation
             let:grabbing
             {...cube.props}
+            prop_FOCUS={prop_FOCUS && page_CHARGED}
             prop_$RESIZE={resize}
             prop_$ANIMATION={animation}
             prop_GRABBING={!prop_RATIO}
-            {prop_FOCUS}
             on:click={gravityarea_eClick.bind(null, cube.id)}
             >
                 <Cube
@@ -177,10 +178,22 @@ lang="scss"
 >
 /* #USES */
 
+@use '../../assets/scss/app';
+
 @use '../../assets/scss/styles/position';
 @use '../../assets/scss/styles/size';
+@use '../../assets/scss/styles/media';
 
 /* #HOME */
+
+:global #home .title .fragments
+{
+    @include media.min($ms3)
+    {
+        & { padding-left: app.$gap-inline; }
+        &:nth-child(1) { margin-left: app.$gap-inline; } 
+    }
+}
 
 .home
 {

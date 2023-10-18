@@ -87,7 +87,8 @@
     SPACECUBE_CAMERA_NEAR = .1,
     SPACECUBE_CAMERA_Z = 5,
 
-    SPACECUBE_RADIUS = 3,
+    SPACECUBE_LINES = new Group(),
+    SPACECUBE_LINE_POINTS_COUNT = 30,
 
     SPACECUBE_FORCE_POSITION = .05,
     SPACECUBE_FORCE_ROTATION = .01,
@@ -95,6 +96,7 @@
     SPACECUBE_ROTATION_X = -MATH.rad.r45 / 2,
     SPACECUBE_ROTATION_Y = MATH.rad.r45,
 
+    SPACECUBE_MOUSE_RADIUS = 3,                           // mouse radius ?
     SPACECUBE_MOUSE_INTENSITY = .5,
 
     SPACECUBE_CUBES = new Group(),
@@ -121,8 +123,8 @@
     },
     SPACECUBE_EVENTS_3 =
     {
-        mouseMove: wait_throttle(spacecube_e$MouseMove, 100.02),
-        animation: wait_throttle(spacecube_e$Animation2, 100.02)
+        mouseMove: wait_throttle(spacecube_e$MouseMove, 66.68),
+        animation: wait_throttle(spacecube_e$Animation2, 66.68)
     }
 
     // --ELEMENT-SPACECUBE~SHADERS
@@ -161,7 +163,7 @@
 
     spacecube_TEXTURE = null,
 
-    spacecube_RADIUS = SPACECUBE_RADIUS,
+    spacecube_MOUSE_RADIUS = SPACECUBE_MOUSE_RADIUS,
 
     spacecube_FORCE_POSITION = SPACECUBE_FORCE_POSITION,
     spacecube_FORCE_ROTATION = SPACECUBE_FORCE_ROTATION,
@@ -247,6 +249,7 @@
             shader_setUniforms()
             spacecube_setCubes()
 
+            spacecube_SCENE.add(SPACECUBE_LINES)
             spacecube_SCENE.add(SPACECUBE_CUBES)
             spacecube_RENDERER.render(spacecube_SCENE, spacecube_CAMERA)
 
@@ -330,17 +333,13 @@
     }
     function spacecube_setCubeLine([a, b, c, d, e])
     {
-        spacecube_SCENE.add(
-        new Line(
-            new BufferGeometry().setFromPoints(
-                new CubicBezierCurve(
-                    new Vector2(a.x, a.y),
-                    new Vector2(b.x, b.y),
-                    new Vector2(d.x, d.y),
-                    new Vector2(e.x, e.y)
-                ).getPoints(30)),
-            new LineBasicMaterial({ color: COLORS.light, transparent: true, opacity: .2 })
-        ))
+        const
+        CURVE = new CubicBezierCurve(new Vector2(a.x, a.y), new Vector2(b.x, b.y), new Vector2(d.x, d.y), new Vector2(e.x, e.y)),
+        GEOMETRY = new BufferGeometry().setFromPoints(CURVE.getPoints(SPACECUBE_LINE_POINTS_COUNT)),
+        MATERIAL = new LineBasicMaterial({ color: COLORS.light, transparent: true, opacity: .2 }),
+        LINE = new Line(GEOMETRY, MATERIAL)
+
+        SPACECUBE_LINES.add(LINE)
     }
     function spacecube_setFloatingCube(cube)
     {
@@ -375,7 +374,13 @@
     }
 
     // --DESTROY
-    function spacecube_destroy() { spacecube_destroyEvents() }
+    function spacecube_destroy()
+    {
+        spacecube_cancel()
+        spacecube_clear(spacecube_CAMERA)
+
+        spacecube_destroyEvents()
+    }
 
     function spacecube_destroyEvents()
     {
@@ -423,20 +428,20 @@
     {
         const
         ANGLE = Math.atan(dif_Y / dif_X),
-        [X0, Y0] = [(1 - dif_X_ABS / (Math.cos(ANGLE) * spacecube_RADIUS)) * dif_X, (1 - dif_Y_ABS / (Math.abs(Math.sin(ANGLE)) * spacecube_RADIUS)) * dif_Y]
+        X = (1 - dif_X_ABS / (Math.cos(ANGLE) * spacecube_MOUSE_RADIUS)) * dif_X,
+        Y = (1 - dif_Y_ABS / (Math.abs(Math.sin(ANGLE)) * spacecube_MOUSE_RADIUS)) * dif_Y
 
-        return (
-        {
+        return {
             cube,
             x: cube.position.x,
             y: cube.position.y,
             rX: cube.rotation.x,
             rY: cube.rotation.y,
-            step_P_X: cube.iPosition.x + X0 * spacecube_FORCE_POSITION - cube.position.x,
-            step_P_Y: cube.iPosition.y + Y0 * spacecube_FORCE_POSITION - cube.position.y,
-            step_R_X: SPACECUBE_ROTATION_X + X0 * spacecube_FORCE_ROTATION - cube.rotation.x,
-            step_R_Y: SPACECUBE_ROTATION_Y + Y0 * spacecube_FORCE_ROTATION - cube.rotation.y
-        })
+            step_P_X: cube.iPosition.x + X * spacecube_FORCE_POSITION - cube.position.x,
+            step_P_Y: cube.iPosition.y + Y * spacecube_FORCE_POSITION - cube.position.y,
+            step_R_X: SPACECUBE_ROTATION_X + X * spacecube_FORCE_ROTATION - cube.rotation.x,
+            step_R_Y: SPACECUBE_ROTATION_Y + Y * spacecube_FORCE_ROTATION - cube.rotation.y
+        }
     }
 
     // --UPDATES
@@ -451,8 +456,8 @@
         }
         else
         {
-            spacecube_setEvents3()
             spacecube_destroyEvents2()
+            spacecube_setEvents3()
 
             spacecube_updateCubesPosition(2)
         }
@@ -479,7 +484,7 @@
 
     function spacecube_updateSceneVars(radius, forcePosition, forceRotation, mouseIntensity)
     {
-        spacecube_RADIUS = radius
+        spacecube_MOUSE_RADIUS = radius
         spacecube_FORCE_POSITION = forcePosition
         spacecube_FORCE_ROTATION = forceRotation
         spacecube_MOUSELIGHT.intensity = mouseIntensity
@@ -516,10 +521,17 @@
             [DIF_X_ABS, DIF_Y_ABS] = [Math.abs(DIF_X), Math.abs(DIF_Y)],
             HYP = Math.sqrt(DIF_X_ABS * DIF_X_ABS + DIF_Y_ABS * DIF_Y_ABS)
 
-            if (HYP < spacecube_RADIUS) DATAS.push(spacecube_getCubeLayout(CUBE, DIF_X, DIF_Y, DIF_X_ABS, DIF_Y_ABS))
+            if (HYP < spacecube_MOUSE_RADIUS) DATAS.push(spacecube_getCubeLayout(CUBE, DIF_X, DIF_Y, DIF_X_ABS, DIF_Y_ABS))
         }
 
-        if (DATAS.length) spacecube_a(spacecube_aCubeLayout, DATAS, 200)
+        if (DATAS.length) spacecube_a(spacecube_updateCubeLayout, DATAS, 200)
+    }
+    function spacecube_updateCubeLayout(t, { cube, x, y, rX, rY, step_P_X, step_P_Y, step_R_X, step_R_Y })
+    {
+        cube.position.x = x + step_P_X * t
+        cube.position.y = y + step_P_Y * t
+        cube.rotation.x = rX + step_R_X * t
+        cube.rotation.y = rY + step_R_Y * t
     }
 
     function shader_updateProjectionMatrixCamera() { SHADER_UNIFORMS.projectionMatrixCamera.value.copy(spacecube_CAMERA.projectionMatrix) }
@@ -532,6 +544,9 @@
         SHADER_UNIFORMS.heightScaled.value = TEXTURE_HEIGHTSCALED
     }
 
+    // --CLEAR
+    function spacecube_clear(obj = {}) { if (obj.cancel instanceof Function) obj.cancel() }
+
     // --COMMAND
     function spacecube_c$(on) { COMMAND.command_test(on, 'boolean', spacecube_update, SPACECUBE, spacecube_ON) }
 
@@ -541,7 +556,9 @@
         clearTimeout(spacecube_TIMEOUT_2)
         spacecube_SCROLL_ANIMATION = true
 
-        spacecube_updateCubesPosition(scrollTop > 0 ? prop_RATIO : 0)
+        const RATIO = scrollTop > 0 ? prop_RATIO : 0
+
+        spacecube_updateCubesPosition(RATIO)
 
         spacecube_TIMEOUT_2 = setTimeout(() => spacecube_SCROLL_ANIMATION = false, 100)
     }
@@ -566,7 +583,7 @@
     {
         clearTimeout(spacecube_TIMEOUT)
 
-        spacecube_updateSceneVars(SPACECUBE_RADIUS, SPACECUBE_FORCE_POSITION, SPACECUBE_FORCE_ROTATION, SPACECUBE_MOUSE_INTENSITY)
+        spacecube_updateSceneVars(SPACECUBE_MOUSE_RADIUS, SPACECUBE_FORCE_POSITION, SPACECUBE_FORCE_ROTATION, SPACECUBE_MOUSE_INTENSITY)
     }
 
     async function spacecube_e$Resize()
@@ -644,7 +661,7 @@
         [P_X, P_Y] = [spacecube_CAMERA.position.x, spacecube_CAMERA.position.y],
         [STEP_X, STEP_Y] = [spacecube_MOUSE_X * .015 - P_X, spacecube_MOUSE_Y * .015 - P_Y]
 
-        if (spacecube_CAMERA.cancel instanceof Function) spacecube_CAMERA.cancel()
+        spacecube_clear(spacecube_CAMERA)
 
         spacecube_CAMERA.cancel = animation((t) =>
         {
@@ -653,14 +670,6 @@
         },
         300).cancel
     }
-
-    async function spacecube_aCubeLayout(t, { cube, x, y, rX, rY, step_P_X, step_P_Y, step_R_X, step_R_Y })
-    {
-        cube.position.x = x + step_P_X * t
-        cube.position.y = y + step_P_Y * t
-        cube.rotation.x = rX + step_R_X * t
-        cube.rotation.y = rY + step_R_Y * t
-    } 
 
     // --UTILS
     function spacecube_monkeyPatch(shader, _ref)
