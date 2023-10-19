@@ -471,6 +471,8 @@
 
     function snake_drawApple()
     {
+        if (!snake_GAME) return
+ 
         const [X, Y, SIZE] = [SNAKE_APPLE[0] * snake_BLOCKSIZE + 1, SNAKE_APPLE[1] * snake_BLOCKSIZE + 1, snake_BLOCKSIZE - 2]
     
         canvas_CONTEXT.fillStyle = snake_COLOR_APPLE
@@ -571,16 +573,16 @@ on:fullscreenchange={snake_eFullscreenChange}
     </canvas>
 
     {#if snake_GAME}
+        <Particles
+        prop_TEMP={true}
+        />
+
         <div
         class="grid"
         style:width="{snake_WIDTH}px"
         style:height="{snake_HEIGHT}px"
         >
         </div>
-
-        <Particles
-        prop_TEMP={true}
-        />
 
         {#if gameover_ON}
             <button
@@ -664,6 +666,8 @@ lang="scss"
 
         canvas { pointer-events: auto; }
     }
+
+    :global .particles { z-index: -1; }
 
     .grid
     {

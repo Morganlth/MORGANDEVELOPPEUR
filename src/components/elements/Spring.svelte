@@ -52,7 +52,7 @@ lang="scss"
 
 .spring
 {
-    @include position.placement(absolute, 0, 0, 0, 0);
+    @include position.placement(fixed, 0, 0, 0, 0);
 
     @extend %any;
 

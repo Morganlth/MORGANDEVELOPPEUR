@@ -45,18 +45,12 @@
     // --SVELTE
     import { onMount } from 'svelte'
 
-    // --COMPONENT-PAGE
-    import Booki from './Booki.svelte'
-
     // --COMPONENT-COVER
     import Group from '../covers/Group.svelte'
 
     // --COMPONENT-ELEMENTS
     import Card from '../elements/Card.svelte'
     import Mask2 from '../elements/Mask2.svelte'
-
-    // --COMPONENT-DECOR
-    import Particles from '../decors/Particles.svelte'
 
 // #VARIABLES
 
@@ -93,7 +87,7 @@
     {
         const NULL = id == null
     
-        projects_TARGET = NULL ? null : { id: id, component: Booki }
+        projects_TARGET = NULL ? null : prop_CARDS[id]
 
         APP.app_$FREEZE = { value: !NULL, target: prop_ID }
 
@@ -142,8 +136,6 @@ onMount(projects_set)
 class="projects"
 data-page-id={prop_ID}
 >
-    <Particles />
-
     <div
     class="container"
     class:scroller={projects_TARGET}
@@ -184,6 +176,7 @@ data-page-id={prop_ID}
             >
                 <svelte:component
                 this={projects_TARGET.component}
+                prop_DATAS={projects_TARGET.datas}
                 />
             </div>
         {/if}

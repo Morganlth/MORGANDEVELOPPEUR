@@ -87,7 +87,7 @@
     const GRAVITYAREA_EVENTS = { scroll: wait_throttle(gravityarea_e$Scroll, 33.34) }
 
     // --ELEMENT-TAG
-    const TAG_DURATION = 400
+    const TAG_DURATION = 600
 
 // #VARIABLES
 
@@ -474,7 +474,7 @@ lang="scss"
 
                 transform: rotate(calc(-90deg * var(--frag-sign, 1))) scaleX(var(--frag-y, 0));
 
-                transition: transform var(--frag-duration, .4s) ease-out;
+                transition: transform var(--frag-duration, .6s) ease-out;
             }
         }
     }

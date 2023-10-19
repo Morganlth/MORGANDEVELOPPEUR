@@ -137,8 +137,6 @@
             const TARGET = app_$FREEZE.target
 
             page_HIDE = TARGET != null && TARGET != prop_ID ? true : false
-
-            console.log(TARGET)
         }
         else page_HIDE = false
     }
@@ -316,6 +314,8 @@ lang="scss"
     
         @extend %m-h-1;
 
+        position: relative;
+
         z-index: 1;
 
         perspective: 800px;
@@ -329,10 +329,7 @@ lang="scss"
 
         .element { transition: transform .8s ease-out; }
 
-        :global
-        {
-            &>* { padding-top: 2rem; }
-        }
+        :global &>* { padding-top: 2rem; }
     }
 }
 </style>

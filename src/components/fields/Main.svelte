@@ -34,6 +34,9 @@
     import Router from '../elements/Router.svelte'
     import Spring from '../elements/Spring.svelte'
 
+    // --COMPONENT-DECOR
+    import Particles from '../decors/Particles.svelte'
+
 // #CONSTANTES
 
     // --ELEMENT-MAIN
@@ -227,6 +230,8 @@ onDestroy(main_destroy)
 class="main"
 style:height="{MAIN_HEIGHT}vh"
 >
+    <Particles />
+
     <div
     class="pages"
     class:hide={$app_$HIDE}
@@ -260,21 +265,24 @@ style:height="{MAIN_HEIGHT}vh"
 <style
 lang="scss"
 >
-/* #USE */
+/* #USES */
 
+@use '../../assets/scss/styles/position';
 @use '../../assets/scss/styles/size';
 
 /* #MAIN */
 
 .main
 {
+    position: relative;
+
     width: 100vw;
 
     .pages
     {
+        @include position.placement(absolute, 0, 0, 0, 0);
+    
         @extend %any;
-
-        position: relative;
 
         opacity: 1;
 

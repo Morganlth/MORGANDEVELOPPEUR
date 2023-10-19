@@ -124,11 +124,14 @@
 
     function gravityarea_setVars()
     {
-        const [X, Y, Z] = gravityarea_get3d()
+        if (prop_FOCUS)
+        {
+            const [X, Y, Z] = gravityarea_get3d()
     
-        gravityarea_TRANSLATE_X = X
-        gravityarea_TRANSLATE_Y = Y
-        gravityarea_TRANSLATE_Z = Z
+            gravityarea_TRANSLATE_X = X
+            gravityarea_TRANSLATE_Y = Y
+            gravityarea_TRANSLATE_Z = Z
+        }
 
         gravityarea_RADIUS = gravityarea.offsetWidth / 2
 

@@ -129,7 +129,7 @@ data-page-id={prop_ID}
     <Mask
     prop_BLUR={true}
     prop_COORDS={[68, 50]}
-    prop_GRADIENT={[0, 80]}
+    prop_GRADIENT={[0, 68]}
     prop_RATIO={1 - prop_RATIO}
     />
 
@@ -162,9 +162,9 @@ data-page-id={prop_ID}
         {/each}
     </Group>
 
-    <!-- <TicTacToe
+    <TicTacToe
     prop_ON={tictactoe_ON}
-    /> -->
+    />
 
     <Terminal
     bind:terminal_ON
@@ -190,8 +190,8 @@ lang="scss"
 {
     @include media.min($ms3)
     {
-        & { padding-left: app.$gap-inline; }
-        &:nth-child(1) { margin-left: app.$gap-inline; } 
+        &:nth-child(1) { margin-left: calc(app.$gap-inline * 2); }
+        &:nth-child(2) { margin-left: app.$gap-inline; }
     }
 }
 

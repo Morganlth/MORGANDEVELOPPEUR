@@ -87,9 +87,9 @@
                 height: 100vh;
             }
 
-            font-size: 31.25%;
+            &, body { background-color: $dark; }
 
-            body { background-color: $dark; }
+            font-size: 31.25%;
 
             @include media.min($ms4) { font-size: 46.875%; }
             @include media.min($ms6) { font-size: 62.5%; }

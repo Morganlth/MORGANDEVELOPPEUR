@@ -7,145 +7,15 @@
 <!-- #SCRIPT -->
 
 <script>
+// #EXPORT
+
+    // --PROP
+    export let prop_DATAS = {}
+
 // #IMPORT
 
     // --SVELTE
     import { page } from '$app/stores'
-
-// #CONSTANTES
-
-    // --ELEMENT-BOOKI
-    const
-    BOOKI_NAV =
-    [
-        {
-            href: 'hosting',
-            value: 'Hébergements'
-        },
-        {
-            href: 'activity',
-            value: 'Activités'
-        }
-    ]
-,
-    BOOKI_FILTERS =
-    [
-        {
-            icon: 'fa-money-bill-wave',
-            value: 'Économique'
-        },
-        {
-            icon: 'fa-person',
-            value: 'Familial'
-        },
-        {
-            icon: 'fa-heart',
-            value: 'Romantique'
-        },
-        {
-            icon: 'fa-dog',
-            value: 'Animaux autorisés'
-        }
-    ]
-,
-    BOOKI_ACCOMMODATION =
-    [
-        {
-            title: 'Auberge La Canebière',
-            desc: 'Nuit à partir de 25€',
-            src: 'marcus-loke-WQJvWU_HZFo-unsplash.jpg',
-            stars: [1, 1, 1, 1, 0]
-        },
-        {
-            title: 'Hôtel du port',
-            desc: 'Nuit à partir de 52€',
-            src: 'fred-kleber-gTbaxaVLvsg-unsplash.jpg',
-            stars: [1, 1, 1, 0, 0]
-        }
-        ,
-        {
-            title: 'Hôtel Les mouettes',
-            desc: 'Nuit à partir de 76€',
-            src: 'reisetopia-B8WIgxA_PFU-unsplash.jpg',
-            stars: [1, 1, 1, 1, 0]
-        },
-        {
-            title: 'Hôtel de la mer',
-            desc: 'Nuit à partir de 46€',
-            src: 'annie-spratt-Eg1qcIitAuA-unsplash.jpg',
-            stars: [1, 1, 1, 1, 1]
-        },
-        {
-            title: 'Auberge Le Panier',
-            desc: 'Nuit à partir de 23€',
-            src: 'nicate-lee-kT-ZyaiwBe0-unsplash.jpg',
-            stars: [1, 1, 1, 0, 0]
-        },
-        {
-            title: 'Hôtel Chez Amina',
-            desc: 'Nuit à partir de 96€',
-            src: 'febrian-zakaria-M6S1WvfW68A-unsplash.jpg',
-            stars: [1, 1, 1, 1, 0]
-        }
-    ]
-,
-    BOOKI_POPULAR =
-    [
-        {
-            title: 'Hôtel Le soleil du matin',
-            desc: 'Nuit à partir de 128€',
-            src: 'emile-guillemot-Bj_rcSC5XfE-unsplash.jpg',
-            stars: [1, 1, 1, 1, 1]
-        },
-        {
-            title: 'Chambres d’hôtes Au cœur de l’eau',
-            desc: 'Nuit à partir de 71€',
-            src: 'aw-creative-VGs8z60yT2c-unsplash.jpg',
-            stars: [1, 1, 1, 1, 1]
-        },
-        {
-            title: 'Hôtel Bleu et Blanc',
-            desc: 'Nuit à partir de 68€',
-            src: 'febrian-zakaria-sjvU0THccQA-unsplash.jpg',
-            stars: [1, 1, 1, 1, 0]
-        }
-    ]
-,
-    BOOKI_ACTIVITIES =
-    [
-        {
-            title: 'Vieux-Port',
-            src: 'reno-laithienne-QUgJhdY5Fyk-unsplash.jpg'
-        },
-        {
-            title: 'Fort de Pomègues',
-            src: 'paul-hermann-QFTrLdQIRhI-unsplash.jpg'
-        },
-        {
-            title: 'Parc national des Calanques',
-            src: 'kilyan-sockalingum-NR8-cBCN3aI-unsplash.jpg'
-        },
-        {
-            title: 'Notre-Dame-de-la-Garde',
-            src: 'florian-wehde-xW9e8gdotxI-unsplash.jpg'
-        }
-    ]
-,
-    BOOKI_FOOTER =
-    [
-        {
-            title: 'À propos',
-            values: ['Fonctionnement du site', 'Conditions générales', 'Données et confidentialité']
-        },
-        {
-            title: 'Nos hébergements',
-            values: ['Charte qualité', 'Proposer votre hôtel']
-        },
-        {
-            title: 'Assistance',
-            values: ['Centre d’aide', 'Nous contacter']
-        }
-    ]
 </script>
 
 <!-- #HTML -->
@@ -184,7 +54,7 @@ id="booki"
         class="flex"
         >
             <a
-            id="logo"
+            id="booki-logo"
             href="{$page.url.origin}/booki"
             data-sveltekit-reload
             >
@@ -200,13 +70,13 @@ id="booki"
                 <ul
                 class="flex any-h"
                 >
-                    {#each BOOKI_NAV as a, i}
+                    {#each prop_DATAS.nav ?? [] as a, i}
                         <li
                         class="any-h"
                         >
                             <a
                             class="flex any-h"
-                            href="#{a.href}"
+                            href="#booki-{a.href}"
                             >
                                 {a.value}
                             </a>
@@ -220,7 +90,7 @@ id="booki"
         class="flex"
         >
             <section
-            id="nav"
+            id="booki-nav"
             >
                 <h1>Trouvez votre hébergement pour des vacances de rêve</h1>
                 <p>En plein centre-ville ou en pleine nature</p>
@@ -230,6 +100,7 @@ id="booki"
                 method="get"
                 action="#"
                 onsubmit="return false"
+                rel="nofollow"
                 >
                     <button
                     class="bg pointer"
@@ -270,7 +141,7 @@ id="booki"
                         <h4>Filtres</h4>
                     </li>
 
-                    {#each BOOKI_FILTERS as filter}
+                    {#each prop_DATAS.filters ?? [] as filter}
                         <li>
                             <button
                             class="flex pointer hover"
@@ -299,7 +170,7 @@ id="booki"
             </section>
 
             <section
-            id="hosting"
+            id="booki-hosting"
             class="flex"
             >
                 <div
@@ -308,10 +179,10 @@ id="booki"
                     <h2>Hébergements à Marseille</h2>
 
                     <div
-                    id="article-container-1"
-                    class="flex article-container"
+                    id="booki-container-accommodation"
+                    class="flex container"
                     >
-                        {#each BOOKI_ACCOMMODATION as accommodation}
+                        {#each prop_DATAS.accommodation ?? [] as accommodation}
                             <article>
                                 <!-- svelte-ignore a11y-invalid-attribute -->
                                 <a
@@ -371,10 +242,10 @@ id="booki"
                     </div>
 
                     <div
-                    id="article-container-2"
-                    class="flex article-container"
+                    id="booki-container-popular"
+                    class="flex container"
                     >
-                        {#each BOOKI_POPULAR as popular}
+                        {#each prop_DATAS.popular ?? [] as popular}
                             <article
                             class="any-w"
                             >
@@ -417,15 +288,15 @@ id="booki"
             </section>
 
             <section
-            id="activity"
+            id="booki-activity"
             >
                 <h2>Activités à Marseille</h2>
 
                 <div
-                id="article-container-3"
-                class="flex article-container"
+                id="booki-container-activities"
+                class="flex container"
                 >
-                    {#each BOOKI_ACTIVITIES as activity}
+                    {#each prop_DATAS.activities ?? [] as activity}
                         <!-- svelte-ignore a11y-invalid-attribute -->
                         <a
                         href="#"
@@ -455,7 +326,7 @@ id="booki"
         <footer
         class="flex bg"
         >
-            {#each BOOKI_FOOTER as nav}
+            {#each prop_DATAS.footer ?? [] as nav}
                 <nav>
                     <h2>{nav.title}</h2>
 
@@ -521,10 +392,14 @@ a { color: black; text-decoration: none; }
 
     .pointer { cursor: pointer; }
 
-    .hover:hover { background-color: $primary-light-color !important; transition: background-color 0.4s; }
+    .hover:hover
+    {
+        background-color: $primary-light-color !important;
+        
+        transition: background-color .4s;
+    }
 
     .star-list i { color: $light-color; font-size: 12px; }
-
 
     .body
     {
@@ -547,7 +422,7 @@ header
 
     height: 70px;
 
-    #logo
+    #booki-logo
     {
         width: 61px;
         height: 19px;
@@ -587,7 +462,7 @@ main
 
     h2 { margin-bottom: 25px; }
 
-    #nav
+    #booki-nav
     {
         &>p { margin-top: 8px; }
 
@@ -698,7 +573,7 @@ main
         }
     }
 
-    article, #article-container-3>a
+    article, #booki-container-activities>a
     {
         overflow: hidden;
 
@@ -709,7 +584,7 @@ main
         box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
     }
 
-    #hosting
+    #booki-hosting
     {
         gap: 40px;
 
@@ -722,9 +597,9 @@ main
             box-sizing: border-box;
         }
     
-        & .article-container { gap: 25px 3.5%; }
+        & .container { gap: 25px 3.5%; }
 
-        #article-container-1
+        #booki-container-accommodation
         {
             flex-wrap: wrap;
 
@@ -761,7 +636,7 @@ main
                 &>i { font-size: 18px; }
             }
         
-            #article-container-2
+            #booki-container-popular
             {
                 flex-direction: column;
 
@@ -797,7 +672,7 @@ main
         }
     }
 
-    #article-container-3
+    #booki-container-activities
     {
         gap: 15px 40px;
 
@@ -846,9 +721,9 @@ footer
 
 @media screen and (max-width: 991px)
 {
-    #hosting { flex-wrap: wrap; }
+    #booki-hosting { flex-wrap: wrap; }
 
-    #article-container-2
+    #booki-container-popular
     {
         flex-direction: row;
 
@@ -857,7 +732,7 @@ footer
         div { padding: 10px 19px; }
     }
 
-    #article-container-3
+    #booki-container-activities
     {
         &>a { height: 267px; }
         
@@ -873,7 +748,7 @@ footer
 {
     .body { padding: 0; }
     
-    article, #article-container-3>a, #nav>ul>li:nth-child(1), #nav>ul button { width: 100% !important; }
+    article, #booki-container-activities>a, #booki-nav>ul>li:nth-child(1), #booki-nav>ul button { width: 100% !important; }
 
     header
     {
@@ -901,7 +776,7 @@ footer
     {
         padding: 30px 0 80px;
 
-        #nav
+        #booki-nav
         {
             padding: 0 20px;
 
@@ -939,9 +814,9 @@ footer
             }
         }
 
-        .article-container { flex-direction: column !important; }
+        .container { flex-direction: column !important; }
 
-        #hosting
+        #booki-hosting
         {
             flex-direction: column-reverse;
             gap: 0;
@@ -960,14 +835,14 @@ footer
                 &>a { display: none; }
             }
             
-            .article-container { gap: 15px; }
+            .container { gap: 15px; }
         }
 
-        #activity
+        #booki-activity
         {
             padding: 0 20px;
 
-            #article-container-3
+            #booki-container-activities
             {
                 &>a { height: 190px; }
             

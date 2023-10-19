@@ -11,6 +11,11 @@
 <!-- #SCRIPT -->
 
 <script>
+// #EXPORT
+
+    // --PROP
+    export let prop_ON = false
+
 // #IMPORTS
 
     // --LIB
@@ -190,31 +195,33 @@
 
 <!-- #HTML -->
 
-<!-- svelte-ignore a11y-no-static-element-interactions -->
-<div
-class="tictactoe"
-style:--border-color={tictactoe_BORDER_COLOR}
-on:mouseenter={SPRING.spring_e$Hide.bind(SPRING)}
-on:mouseleave={SPRING.spring_e$Show.bind(SPRING)}
->
-    {#each TICTACTOE_BOARD as cell, i (i)}
-        <Cell
-        on:click={cell_eClick.bind(i)}
-        >
-            <Icon
-            prop_OPACITY={icon_OPACITY}
-            prop_SPRING={false}
-            prop_COLOR={cell === TICTACTOE_AI ? COLORS.indicator : COLORS.primary}
+{#if prop_ON}
+    <!-- svelte-ignore a11y-no-static-element-interactions -->
+    <div
+    class="tictactoe"
+    style:--border-color={tictactoe_BORDER_COLOR}
+    on:mouseenter={SPRING.spring_e$Hide.bind(SPRING)}
+    on:mouseleave={SPRING.spring_e$Show.bind(SPRING)}
+    >
+        {#each TICTACTOE_BOARD as cell, i (i)}
+            <Cell
+            on:click={cell_eClick.bind(i)}
             >
-                {#if cell === TICTACTOE_PLAYER}
-                    <Circle />
-                {:else if cell === TICTACTOE_AI}
-                    <Cross />
-                {/if}
-            </Icon>
-        </Cell>
-    {/each}
-</div>
+                <Icon
+                prop_OPACITY={icon_OPACITY}
+                prop_SPRING={false}
+                prop_COLOR={cell === TICTACTOE_AI ? COLORS.indicator : COLORS.primary}
+                >
+                    {#if cell === TICTACTOE_PLAYER}
+                        <Circle />
+                    {:else if cell === TICTACTOE_AI}
+                        <Cross />
+                    {/if}
+                </Icon>
+            </Cell>
+        {/each}
+    </div>
+{/if}
 
 <!-- #STYLE -->
 

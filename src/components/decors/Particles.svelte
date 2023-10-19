@@ -35,8 +35,13 @@
     const
     PARTICLES = 'particles',
     PARTICLES_DELAY_NAME = 'particles_delay',
+
     PARTICLES_GAP = 100,
+
+    PARTICLES_BACKGROUND_COLOR = color_rgba(COLORS.dark, .28),
+
     PARTICLES_PARTICLES = [],
+
     PARTICLES_COMMANDS =
     [
         {
@@ -65,12 +70,17 @@
     // --ELEMENT-PARTICLES
     let
     particles,
+
     particles_ON = true,
+
     particles_WIDTH,
     particles_HEIGHT,
+
     particles_ANGLE_X = 0,
     particles_ANGLE_Y = 0,
+
     particles_CONTEXT,
+
     particles_COUNT = 0,
     particles_DELAY = 100,
     particles_MAX = 50
@@ -115,8 +125,9 @@
             y: -PARTICLES_GAP,
             vel_X: Math.random() + particles_ANGLE_X,
             vel_Y: -Math.random() - particles_ANGLE_Y,
-            size: Math.random() * 10 + 10,
-            color: color_rgba(COLORS[Math.round(Math.random()) ? 'light' : 'primary'], .5)
+            size_X: Math.random() * 14 + 6,
+            size_Y: Math.random() * 14 + 6,
+            color: color_rgba(COLORS[Math.round(Math.random()) ? 'light' : 'primary'], Math.random() * .6 + .4)
         })
     }
 
@@ -163,12 +174,19 @@
         for (const PARTICLE of PARTICLES_PARTICLES)
         {
             particles_CONTEXT.fillStyle = PARTICLE.color
-            particles_CONTEXT.fillRect(PARTICLE.x, PARTICLE.y, PARTICLE.size, PARTICLE.size)
+            // particles_CONTEXT.shadowColor = PARTICLE.color
+            particles_CONTEXT.fillRect(PARTICLE.x, PARTICLE.y, PARTICLE.size_X, PARTICLE.size_Y)
             particles_CONTEXT.fill()
 
             PARTICLE.x += PARTICLE.vel_X
             PARTICLE.y -= PARTICLE.vel_Y
         }
+    }
+
+    function particles_drawBackground()
+    {
+        particles_CONTEXT.fillStyle = PARTICLES_BACKGROUND_COLOR
+        particles_CONTEXT.fillRect(0, 0, particles_WIDTH, particles_HEIGHT)
     }
 
     // --CLEAR
@@ -187,7 +205,8 @@
 
     async function particles_e$Animation()
     {
-        particles_clear()
+        // particles_clear()
+        particles_drawBackground()
         particles_draw()
 
         if (++particles_COUNT > particles_DELAY)
@@ -218,18 +237,18 @@ bind:this={particles}
 <style
 lang="scss"
 >
-/* #USES */
+/* #USE */
 
 @use '../../assets/scss/styles/position';
-@use '../../assets/scss/styles/size';
 
 /* #PARTICLES */
 
 .particles
 {
-    @include position.placement(absolute, 0, 0, 0, 0);
+    @include position.placement(sticky, $top: 0, $right: 0, $left: 0);
 
-    @extend %any;
+    width: 100%;
+    height: 100vh;
 
     pointer-events: none;
 }

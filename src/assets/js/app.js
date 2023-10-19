@@ -116,6 +116,7 @@
         ,
             props:
             {
+                prop_FOCUS: false,
                 prop_TOP: 0,
                 prop_RATIO: 0,
                 prop_START: void 0,
@@ -329,11 +330,14 @@
             {
                 PROCESS[CHILD_NAME] = 'start'
 
-                for (const DATA of CHILD.datas)
+                if (CHILD.datas instanceof Array)
                 {
-                    const TAGS = DATA.tags
+                    for (const DATA of CHILD.datas)
+                    {
+                        const TAGS = DATA.tags
 
-                    for (const TAG of TAGS) if (TAG !== '') PROCESS[TAG] = CHILD_NAME
+                        for (const TAG of TAGS) if (TAG !== '') PROCESS[TAG] = CHILD_NAME
+                    }
                 }
             }
 

@@ -19,6 +19,8 @@
     export let
     prop_ID = void 0,
 
+    prop_FOCUS = false,
+
     prop_FEATURES = [],
 
     prop_TOP = 0,
@@ -167,7 +169,7 @@ class="presentation"
 data-page-id={prop_ID}
 >
     <Snake
-    prop_ON={snake_ON && prop_RATIO < 1}
+    prop_ON={snake_ON && (prop_FOCUS || prop_RATIO < 1)}
     bind:snake_GAME
     />
 
@@ -183,22 +185,10 @@ lang="scss"
 >
 /* #USES */
 
-@use '../../assets/scss/app';
-
 @use '../../assets/scss/styles/position';
 @use '../../assets/scss/styles/size';
-@use '../../assets/scss/styles/media';
 
 /* #PRESENTATION */
-
-:global #presentation .title .fragments
-{
-    @include media.min($ms3)
-    {
-        /* & { padding-left: app.$gap-inline; } */
-        /* margin-left: app.$gap-inline; */
-    }
-}
 
 .presentation
 {

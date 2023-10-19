@@ -89,7 +89,7 @@ onDestroy(icon_destroy)
 <!-- #HTML -->
 
 <svelte:element
-this={prop_LINK ? 'a' : 'div'}
+this={prop_LINK ? 'a' : 'i'}
 class="icon"
 style:--icon-color={prop_COLOR}
 style:opacity={prop_OPACITY}
