@@ -19,8 +19,7 @@
     prop_VALUE = '',
     prop_ATTRIBUTES = {},
 
-    prop_$MOUSEENTER = () => {},
-    prop_$CLICK = () => {}
+    prop_$MOUSEENTER = () => {}
 
 // #IMPORTS
 
@@ -32,11 +31,15 @@
 
     // --SVELTE
     import { onMount, onDestroy } from 'svelte'
+    import { createEventDispatcher } from 'svelte'
 
     // --COMPONENT-ELEMENT
     import Fragments from './Fragments.svelte'
 
 // #CONSTANTES
+
+    // --SVELTE
+    const SVELTE_DISPATCH = createEventDispatcher()
 
     // --ELEMENT-ROUTES
     const
@@ -58,7 +61,7 @@
     // --EVENTS
     function route_eMouseEnter() { prop_$MOUSEENTER(prop_ID) }
 
-    function route_eClick() { prop_$CLICK(prop_ID) }
+    function route_eClick() { SVELTE_DISPATCH('click', { id: prop_ID }) }
 
     // --INTRO
     async function route_intro()
@@ -104,6 +107,7 @@ lang="scss"
 @use 'sass:map';
 
 @use '../../assets/scss/styles/position';
+@use '../../assets/scss/styles/display';
 @use '../../assets/scss/styles/size';
 @use '../../assets/scss/styles/font';
 @use '../../assets/scss/styles/media';
@@ -112,32 +116,19 @@ lang="scss"
 
 .route
 {
-    &::before
-    {
-        @include position.placement(absolute, 50%, 0, 0, 0, true);
+    @include font.content($light, false);
 
-        transform: translateX(-50%) scaleX(.05);
-
-        width: 100%;
-        height: 0;
-        
-        border-top: solid $light 1px;
-    }
-
-    @include font.content($light, false, $line-height: 1.4);
-
+    @extend %f-a-center;
     @extend %any;
 
     position: relative;
-
-    display: inline-block;
 
     transform: rotate(-.8deg);
 
     opacity: .9;
 
     width: 100%;
-    height: fit-content;
+    height: 3.2rem;
     
     padding-inline: 1.1rem;
 
@@ -146,8 +137,6 @@ lang="scss"
     box-sizing: border-box;
 
     text-decoration: none;
-
-    transition: opacity .3s;
 
     &::after
     {
@@ -165,15 +154,6 @@ lang="scss"
 
     &.selected
     {
-        &::before
-        {
-            border-top-color: $primary;
-
-            animation: aSelected-before .3s ease-out;
-
-            @keyframes aSelected-before { 100% { transform: scaleX(1); } }
-        }
-
         opacity: 1;
 
         animation: aSelected .4s forwards;
@@ -192,6 +172,30 @@ lang="scss"
         }
     }
 
-    @include media.min(false, $ms3) { font-size: map.get(font.$font-sizes, s3); }
+    @include media.min(false, $ms3)
+    {
+        &::before
+        {
+            @include position.placement(absolute, 50%, 0, 0, 0, true);
+
+            transform: translateX(-50%) scaleX(.05);
+
+            width: 100%;
+            height: 0;
+            
+            border-top: solid $light 1px;
+        }
+
+        font-size: map.get(font.$font-sizes, s3);
+
+        &.selected::before
+        {
+            border-top-color: $primary;
+
+            animation: aSelected-before .3s ease-out;
+
+            @keyframes aSelected-before { 100% { width: 100%; } }
+        }
+    }
 }
 </style>

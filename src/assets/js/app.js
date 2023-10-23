@@ -76,8 +76,8 @@
             {
                 fragments:
                 [
-                    { tags: ['IDENTITÉ', 'LOCALITÉ', 'ÉTUDES', 'PRO', 'CONTACT'] },
-                    { frags: 'PRESENTATION', }
+                    { frags: 'PRESENTATION' },
+                    { tags: ['IDENTITÉ', 'LOCALITÉ', 'ÉTUDES', 'PRO', 'CONTACT'] }
                 ]
             }
         ,
@@ -145,8 +145,8 @@
             {
                 fragments:
                 [
-                    { tags: ['HTML', 'CSS', 'JS', 'NODE JS', 'GESTION', 'ADAPTABILITÉ'] },
-                    { frags: 'COMPETENCES' }
+                    { frags: 'COMPETENCES' },
+                    { tags: ['HTML', 'CSS', 'JS', 'NODE JS', 'GESTION', 'ADAPTABILITÉ'] }
                 ]
             }
         ,
@@ -155,22 +155,22 @@
                 {
                     id: 0,
                     title: 'HTML et CSS',
-                    value: 'HTML & CSS'
+                    value: 'Html & Css'
                 },
                 {
                     id: 1,
                     title: 'Javascript',
-                    value: 'JS'
+                    value: 'Javascript'
                 },
                 {
                     id: 2,
                     title: 'Node JS',
-                    value: 'NODE JS'
+                    value: 'Node JS'
                 },
                 {
                     id: 3,
                     title: 'Gestion, Outils et Adaptabilité',
-                    value: 'AUTRES'
+                    value: 'Autres...'
                 }
             ]
         ,
@@ -208,8 +208,8 @@
             {
                 fragments:
                 [
-                    { tags: ['BOOKI', 'SOPHIE BLUEL', 'NINA CARDUCCI'] },
-                    { frags: 'PROJETS' }
+                    { frags: 'PROJETS' },
+                    { tags: ['BOOKI', 'SOPHIE BLUEL', 'NINA CARDUCCI'] }
                 ]
             }
         ,
@@ -218,17 +218,17 @@
                 {
                     id: 0,
                     title: 'Booki',
-                    value: 'BOOKI'
+                    value: 'Booki'
                 },
                 {
                     id: 1,
                     title: 'Sophie Bluel',
-                    value: 'SOPHIE BLUEL'
+                    value: 'Sophie Bluel'
                 },
                 {
                     id: 2,
                     title: 'Nina Carducci',
-                    value: 'NINA CARDUCCI'
+                    value: 'Nina Carducci'
                 }
             ]
         ,

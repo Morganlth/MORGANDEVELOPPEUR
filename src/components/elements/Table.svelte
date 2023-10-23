@@ -148,6 +148,18 @@ lang="scss"
     $a: polygon(0 0, 0 0, 0 100%, 0 100%);
     $b: polygon(0 0, 100% 0, 100% 100%, 0 100%);
 
+    &::before
+    {
+        @include position.placement(absolute, 0, 0, 0, 0, true);
+
+        @extend %any;
+
+        z-index: 1;
+
+        background: url('/images/table_bg.jpg') center / cover no-repeat;
+        mix-blend-mode: color;
+    }
+
     &, .lines { @extend %f-column; }
 
     gap: 1rem;

@@ -73,6 +73,7 @@
 
     // --SVELTE
     import { onMount, onDestroy } from 'svelte'
+    import { cubicOut } from 'svelte/easing';
 
 // #CONSTANTES
 
@@ -242,7 +243,7 @@
         spacecube_setLight()
         spacecube_setFog()
 
-        new TextureLoader().load('./images/me.png', (texture) =>
+        new TextureLoader().load('/images/me.png', (texture) =>
         {
             spacecube_TEXTURE = texture
 
@@ -458,9 +459,9 @@
         {
             spacecube_destroyEvents2()
             spacecube_setEvents3()
-
-            spacecube_updateCubesPosition(2)
         }
+
+        spacecube_updateCubesPosition(focus ? prop_RATIO : 2)
     }
 
     const spacecube_updateFloatingCubes = wait_throttle(async () => { for (const UPDATE of SPACECUBE_FLOATING_UPDATE_CUBES) UPDATE() }, 100.02)
@@ -519,7 +520,7 @@
             CUBE = CUBES[i],
             [DIF_X, DIF_Y] = [CUBE.iPosition.x - spacecube_MOUSE_X, CUBE.iPosition.y - spacecube_MOUSE_Y],
             [DIF_X_ABS, DIF_Y_ABS] = [Math.abs(DIF_X), Math.abs(DIF_Y)],
-            HYP = Math.sqrt(DIF_X_ABS * DIF_X_ABS + DIF_Y_ABS * DIF_Y_ABS)
+            HYP = Math.sqrt(DIF_X_ABS ** 2 + DIF_Y_ABS ** 2)
 
             if (HYP < spacecube_MOUSE_RADIUS) DATAS.push(spacecube_getCubeLayout(CUBE, DIF_X, DIF_Y, DIF_X_ABS, DIF_Y_ABS))
         }
@@ -640,19 +641,24 @@
         {
             const
             [A, B, C] = [CUBE.checkPoints[0], CUBE.checkPoints[1], CUBE.checkPoints[2]],
-            [DURATION, DELAY] = [Math.random() * 700 + 500, Math.random() * 900]
+            [DURATION, DELAY] = [Math.random() * 1000 + 800, Math.random() * 1000]
 
             CUBE.position.set(A.x, A.y, Z)
 
             setTimeout(() =>
-            animation((t) => CUBE.position.set(spacecube_getBarycentre(A.x, B.x, C.x, t), spacecube_getBarycentre(A.y, B.y, C.y, t), Z * (1 - t)),
+            animation((t) =>
+            {
+                const T = cubicOut(t)
+
+                CUBE.position.set(spacecube_getBarycentre(A.x, B.x, C.x, T), spacecube_getBarycentre(A.y, B.y, C.y, T), Z * (1 - T))
+            },
             DURATION),
             DELAY)
     
             total_DURATION = Math.max(total_DURATION, DURATION)
         }
 
-        return total_DURATION
+        return total_DURATION * .5
     }
 
     async function spacecube_aMouseCamera()

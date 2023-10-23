@@ -10,7 +10,7 @@
         datas:
         [
             {
-                tags: ['booki'],
+                name: 'booki',
                 value: 'BOOKI',
                 component: Booki,
                 texture: ThreeDiamonds,
@@ -150,7 +150,7 @@
                 }
             },
             {
-                tags: ['sophiebluel'],
+                name: 'sophiebluel',
                 value: 'SOPHIE BLUEL',
                 component: SophieBluel,
                 texture: TwoHearts,
@@ -242,7 +242,7 @@
                 }
             },
             {
-                tags: ['ninacarducci'],
+                name: 'ninacarducci',
                 value: 'NINA CARDUCCI',
                 component: NinaCarducci,
                 texture: AceClubs,
@@ -362,11 +362,34 @@
                             alt: 'Mateus Campos Felipe'
                         }
                     ]
+                ,
+                    service:
+                    [
+                        {
+                            title: 'Shooting photo',
+                            desc: 'Pour capturer vos moments les plus précieux et garder un souvenir impérissable. Je me déplace en Île-de-France pour réaliser vos photos',
+                            price: '350€/demi journée',
+                            info: 'Matériel, déplacement inclus'
+                        },
+                        {
+                            title: 'Retouches',
+                            desc: 'Vous souhaitez retoucher vos photos pour un résultat professionnel ? Bénéficier d’un rendu optimal pour vos publications',
+                            price: '50€/photo',
+                            info: '2 AR par photo'
+                        },
+                        {
+                            title: 'Album photos',
+                            desc: 'Partagez avec vos proches et vos clients les photos des moments partagés ensemble à travers un album photo personnalisé',
+                            price: '400€ album A4',
+                            info: '30 pages recto/verso'
+                        }
+                    ]
                 }
             }
         ].map((card, i) =>
         {
             card.id = i
+            card.tags = [card.name]
 
             return card
         })

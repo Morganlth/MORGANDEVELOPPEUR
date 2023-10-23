@@ -126,10 +126,13 @@
     {
         return `
         transform: ${fragments_getTranslate3d()};
-        transition: transform .8s ${50 * i}ms ease-out;`
+        opacity: 0;
+        transition: transform ease-out, opacity;
+        transition-duration: .6s;
+        transition-delay: ${.05 * i}s;`
     }
 
-    // --UPDATE
+    // --UPDATES
     function page_update(freeze)
     {
         if (freeze)
@@ -142,6 +145,27 @@
     }
 
     async function title_update(intro) { intro ? title_intro() : title_outro() }
+
+    function fragments_update(opacity, transform)
+    {
+        for (const FRAG of FRAGMENTS_FRAGS)
+        {
+            FRAG.style.transform = transform ?? fragments_getTranslate3d()
+            FRAG.style.opacity = opacity
+        }
+    }
+
+    function fragments_updateTags(animation = () => {}, delay = 0)
+    {
+        if (FRAGMENTS_TAGS.length)
+        {
+            fragments_destroy()
+
+            FRAGMENTS_EVENTS.animation = animation(FRAGMENTS_TAGS, fragments_destroyEvents)
+
+            fragments_TIMEOUT = setTimeout(fragments_setEvents, delay)
+        }
+    }
 
     // --EVENT
     function nav_eClick({detail})
@@ -156,43 +180,17 @@
     // --INTROS
     function title_intro()
     {
-        fragments_introFrags()
-        fragments_introTags()
-    }
-
-    function fragments_introFrags() { for (const FRAG of FRAGMENTS_FRAGS) FRAG.style.transform = `translate3d(0, 0, 0)` }
-
-    function fragments_introTags()
-    {
-        if (FRAGMENTS_TAGS.length)
-        {
-            fragments_destroy()
-
-            FRAGMENTS_EVENTS.animation = animation_writing(FRAGMENTS_TAGS, fragments_destroyEvents)
-
-            fragments_TIMEOUT = setTimeout(fragments_setEvents, 1000)
-        }
+        const TRANSFORM = 'translate3d(0, 0, 0)'
+    
+        fragments_update(1, TRANSFORM)
+        fragments_updateTags(animation_writing, 1000)
     }
 
     // --OUTROS
     function title_outro()
     {
-        fragments_outroFrags()
-        fragments_outroTags()
-    }
-
-    function fragments_outroFrags() { for (const FRAG of FRAGMENTS_FRAGS) FRAG.style.transform = fragments_getTranslate3d() }
-
-    function fragments_outroTags()
-    {
-        if (FRAGMENTS_TAGS.length)
-        {
-            fragments_destroy()
-    
-            FRAGMENTS_EVENTS.animation = animation_erase(FRAGMENTS_TAGS, fragments_destroyEvents)
-
-            fragments_setEvents()
-        }
+        fragments_update(0)
+        fragments_updateTags(animation_erase)
     }
 
 // #CYCLES
@@ -215,11 +213,10 @@ style:z-index={prop_FOCUS ? 1 : 0}
         {prop_FOCUS}
         slot="info"
         />
-    
+
         <svelte:element
         this={prop_TITLE.html}
         class="title"
-        style:opacity={page_CHARGED && prop_INTRO ? 1 : 0}
         bind:offsetHeight={title_HEIGHT}
         slot="title"
         >
@@ -235,6 +232,7 @@ style:z-index={prop_FOCUS ? 1 : 0}
                 <div
                 class="element"
                 style:transform={fragments_getTranslate3d()}
+                style:opacity="0"
                 bind:this={FRAGMENTS_FRAGS[FRAGMENTS_FRAGS.length]}
                 >
                     <svelte:component
@@ -325,11 +323,23 @@ lang="scss"
 
         padding-bottom: 3rem;
 
-        transition: opacity .8s ease-in;
-
         .element { transition: transform .8s ease-out; }
 
-        :global &>* { padding-top: 2rem; }
+        :global
+        {
+            &>* { padding-top: 2rem; }
+
+            .fragments
+            {
+                min-height: 3rem;
+
+                @include media.min($ms3)
+                {
+                    &:nth-child(1) { margin-left: calc(app.$gap-inline * 2); }
+                    &:nth-child(2) { margin-left: app.$gap-inline; }
+                }
+            }
+        }
     }
 }
 </style>

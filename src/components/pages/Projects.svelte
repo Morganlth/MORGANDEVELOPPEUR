@@ -1,12 +1,14 @@
 <!-- #MAP
 
 -APP
+-ROUTER
 -EVENT
     PROJECTS
-        PARTICLES
-
         GROUP
             CARD * n
+        MASK2
+        PROJECT
+            BOOKI | SOPHIEBLUEL | NINACARDUCCI
 
 -->
 
@@ -36,11 +38,8 @@
 
 // #IMPORTS
 
-    // --JS
-    import { wait_throttle } from '../../assets/js/utils/wait'
-
     // --CONTEXTS
-    import { APP, EVENT } from '../../App.svelte'
+    import { APP, ROUTER, EVENT } from '../../App.svelte'
 
     // --SVELTE
     import { onMount } from 'svelte'
@@ -57,55 +56,78 @@
     // --APP
     let app_$FREEZE = APP.app_$FREEZE
 
-    // --ELEMENT-PROJECTS
-    let projects_TARGET
+    // --ROUTER
+    let router_$SUBPATH = ROUTER.router_$SUBPATH
 
-    // --ELEMENT-CONTAINER
-    let
-    container,
-    
-    container_SCROLLTOP = 0
+    // --ELEMENT-PROJECTS
+    let projects
 
     // --ELEMENT-CARD
     let card_HOVER
 
+    // --ELEMENT-PROJECT
+    let project_TIMEOUT
+
 // #REACTIVES
 
     // --APP
-    $: !$app_$FREEZE ? projects_TARGET = null : void 0
+    $: !$app_$FREEZE ? router_update(null) : void 0
 
     // --ELEMENT-CARD
-    $: card_ON = prop_FOCUS && !prop_INTRO
+    $: card$_ON = prop_FOCUS && !prop_INTRO
+
+    // --ELEMENT-PROJECT
+    $: project$_TARGET = prop_START !== 0 ? project_getTarget($router_$SUBPATH) : void {}
 
 // #FUNCTIONS
 
     // --SET
     function projects_set() { page_CHARGED = true }
 
-    // --UPDATES
-    function projects_updateTarget(id)
+    // --GET
+    function project_getTarget(subPath)
     {
-        const NULL = id == null
+        const CARD = prop_CARDS.find(card => card.name === subPath)
+
+        CARD
+        ? EVENT.event_scrollTo(prop_START, true, false)
+        : projects?.scrollTo({ top: 0 })
+
+        project_TIMEOUT = setTimeout(() =>
+        {
+            app_update(CARD)
+
+            project_TIMEOUT = null
+        },
+        400.08)
+
+        return CARD
+    }
+
+    // --UPDATES
+    function app_update(card) { APP.app_$FREEZE = { value: card ? true : false, target: prop_ID } }
+
+    function router_update(id)
+    {
+        if (!project_TIMEOUT && (id != null || project$_TARGET))
+        {
+            const VALUE = project$_TARGET?.id === id ? null : id
     
-        projects_TARGET = NULL ? null : prop_CARDS[id]
-
-        APP.app_$FREEZE = { value: !NULL, target: prop_ID }
-
-        if (NULL) container.scrollTo({ top: container_SCROLLTOP = 0 })
+            ROUTER.router_updateSubPath(prop_ID, VALUE == null ? null : prop_CARDS[id].name)
+            ROUTER.router_updatePath(prop_ID)
+        }
     }
 
     function card_updateCardHover(id) { card_HOVER = id }
 
     // --EVENTS
-    const container_e$Scroll = wait_throttle(async ({target: {scrollTop}}) => { container_SCROLLTOP = scrollTop }, 200.04)
-
     function card_e$MouseEnter(id) { card_updateCardHover(id) }
 
     function card_e$MouseLeave() { card_updateCardHover(null) }
 
-    function card_e$Click(id) { projects_updateTarget(id) }
+    function card_e$Click({ detail: {id} }) { router_update(id) }
 
-    export function nav_e$Click({id}) { projects_updateTarget(projects_TARGET === id ? null : id) }
+    export function nav_e$Click({id}) { router_update(id) }
 
     // --UTIL
     export function page_process(str, target)
@@ -134,53 +156,47 @@ onMount(projects_set)
 
 <div
 class="projects"
+class:scroller={project$_TARGET}
 data-page-id={prop_ID}
+bind:this={projects}
 >
-    <div
-    class="container"
-    class:scroller={projects_TARGET}
-    bind:this={container}
-    on:scroll={container_e$Scroll}
+    <Group
+    let:resize
     >
-        <Group
-        let:resize
-        >
-            {#each prop_CARDS as card}
-                <Card
-                prop_$RESIZE={resize}
-                prop_CARD_HOVER={card_HOVER}
-                prop_ON={card_ON}
-                prop_ID={card.id}
-                prop_TARGET={projects_TARGET == null ? 0 : projects_TARGET.id === card.id ? 1 : -1}
-                prop_SCROLLTOP={container_SCROLLTOP}
-                prop_CONTENT={card.value}
-                prop_COLOR={card.color}
-                prop_$MOUSEENTER={card_e$MouseEnter}
-                prop_$MOUSELEAVE={card_e$MouseLeave}
-                prop_$CLICK={card_e$Click}
-                >
-                    <svelte:component
-                    this={card.texture}
-                    />
-                </Card>
-            {/each}
-        </Group>
-    
-        {#if projects_TARGET}
-            <Mask2
-            prop_DURATION={1000}
-            />
-
-            <div
-            class="project"
+        {#each prop_CARDS as card}
+            <Card
+            prop_$RESIZE={resize}
+            prop_CARD_HOVER={card_HOVER}
+            prop_ON={card$_ON}
+            prop_ID={card.id}
+            prop_TARGET={project$_TARGET ? project$_TARGET.id === card.id ? 1 : -1 : 0}
+            prop_CONTENT={card.value}
+            prop_COLOR={card.color}
+            prop_$MOUSEENTER={card_e$MouseEnter}
+            prop_$MOUSELEAVE={card_e$MouseLeave}
+            on:click={card_e$Click}
             >
                 <svelte:component
-                this={projects_TARGET.component}
-                prop_DATAS={projects_TARGET.datas}
+                this={card.texture}
                 />
-            </div>
-        {/if}
-    </div>
+            </Card>
+        {/each}
+    </Group>
+
+    <Mask2
+    prop_DESTROY={!project$_TARGET}
+    />
+
+    {#if project$_TARGET}
+        <div
+        class="project"
+        >
+            <svelte:component
+            this={project$_TARGET.component}
+            prop_DATAS={project$_TARGET.datas}
+            />
+        </div>
+    {/if}
 </div>
 
 <!-- #STYLE -->
@@ -196,56 +212,53 @@ lang="scss"
 
 /* #PROJECTS */
 
+:global #projects .wrapper { transform: scale(1); } /* fixed children */
+
 .projects
 {
-    .container
+    @include position.placement(absolute, 0, 0, 0, 0);
+
+    @extend %any;
+
+    pointer-events: auto;
+
+    &.scroller
     {
-        @include position.placement(absolute, 0, 0, 0, 0);
-    
-        @extend %any;
+        @extend %scroll-bar;
 
-        transform: scale(1); /* fixed children */
+        z-index: 2;
 
-        pointer-events: auto;
+        overflow: hidden scroll;
+    }
 
-        &.scroller
+    .project
+    {
+        @include position.placement(relative, 100vh);
+
+        z-index: 1;
+
+        width: 100%;
+        height: fit-content;
+    }
+
+    :global
+    {
+        .group
         {
-            @extend %scroll-bar;
+            @include position.placement(fixed, 0, 0, 0, 0);
 
-            z-index: 2;
-
-            overflow: hidden scroll;
+            @extend %any;
         }
 
-        .project
+        .tag
         {
-            @include position.placement(relative, 100vh);
+            @include position.placement(absolute, $top: 0, $left: 0);
 
             z-index: 1;
 
-            width: 100%;
-            height: fit-content;
-        }
+            transform: translate(-50%, -100%);
 
-        :global
-        {
-            .group
-            {
-                @include position.placement(fixed, 0, 0, 0, 0);
-    
-                @extend %any;
-            }
-
-            .tag
-            {
-                @include position.placement(absolute, $top: 0, $left: 0);
-
-                z-index: 1;
-
-                transform: translate(-50%, -100%);
-
-                pointer-events: none;
-            }
+            pointer-events: none;
         }
     }
 }

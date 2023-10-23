@@ -17,35 +17,26 @@
 
 <svg
 class="arrow"
-class:focus={prop_FOCUS}
-viewBox="0 0 54 66"
+style:opacity={prop_FOCUS ? 1 : 0}
+viewBox="0 0 30 26"
 fill="none"
 xmlns="http://www.w3.org/2000/svg"
 >
     <path
-    d="M38 5L5 33L38 61"
-    stroke="var(--icon-color)"
-    stroke-width="9"
-    stroke-linecap="round"
-    stroke-linejoin="round"
+    d="M30 13L0 25.9904L3 13L0 0.00961304L30 13Z"
+    fill="var(--icon-color, #FFF)"
     />
 </svg>
-
+    
 <!-- #STYLE -->
 
-<style
-lang="scss"
->
+<style>
 /* #ARROW */
 
 .arrow
 {
     width: 100%;
 
-    pointer-events: none;
-
-    transition: transform .4s;
-
-    &.focus { transform: scaleX(-1); }
+    transition: opacity .2s;
 }
 </style>

@@ -20,14 +20,14 @@
     prop_$ANIMATION = {},
 
     prop_FOCUS = false,
+    prop_3D = false,
     prop_GRABBING = false,
 
     prop_RATIO = null,
-    
-    prop_ORBIT_RADIUS = null,
 
     prop_TITLE = '',
 
+    prop_ORBIT_RADIUS = 0,
     prop_Z = 0,
     prop_ROTATE = 0,
     prop_OFFSET = 0,
@@ -58,6 +58,7 @@
     // --ELEMENT-GRAVITYAREA
     const
     GRAVITYAREA_PERSPECTIVE = 1200,
+
     GRAVITYAREA_EVENTS = { mouseMove: wait_throttle(gravityarea_e$MouseMove, 50) },
     GRAVITYAREA_EVENTS_2 = { mouseUp: gravityarea_e$MouseUp }
 
@@ -80,7 +81,7 @@
     gravityarea_ANIMATION_Y = 0,
 
     gravityarea_RADIUS = prop_RADIUS,
-    gravityarea_RATIO = prop_RADIUS / Math.sqrt(prop_RADIUS * prop_RADIUS * 2),
+    gravityarea_RATIO = prop_RADIUS / Math.sqrt(prop_RADIUS ** 2 * 2),
 
     gravityarea_FLOATING = update_floating(),
 
@@ -99,14 +100,14 @@
     slot_FORCE_X = 0,
     slot_FORCE_Y = 0,
 
-    slot_update = prop_ORBIT_RADIUS == null ? slot_update2d : slot_update3d
+    slot_update = prop_3D ? slot_update3d : slot_update2d
 
 // #REACTIVES
 
     // --ELEMENT-GRAVITYAREA
     $: gravityarea ? gravityarea_update(prop_FOCUS) : void 0
 
-    $: prop_FOCUS && prop_ORBIT_RADIUS ? gravityarea_updateOrbit(prop_RATIO) : void 0
+    $: prop_3D && prop_FOCUS ? gravityarea_updateOrbit(prop_RATIO) : void 0
 
     $: slot_GRABBING && prop_GRABBING ? gravityarea_setEvents() : gravityarea_destroyEvents()
 
@@ -124,16 +125,9 @@
 
     function gravityarea_setVars()
     {
-        if (prop_FOCUS)
-        {
-            const [X, Y, Z] = gravityarea_get3d()
-    
-            gravityarea_TRANSLATE_X = X
-            gravityarea_TRANSLATE_Y = Y
-            gravityarea_TRANSLATE_Z = Z
-        }
-
         gravityarea_RADIUS = gravityarea.offsetWidth / 2
+    
+        if (prop_FOCUS && !prop_3D) [gravityarea_TRANSLATE_X, gravityarea_TRANSLATE_Y] = gravityarea_get2d()
 
         if (!gravityarea_TRANSITION_DELAY) setTimeout(() => { gravityarea_TRANSITION_DELAY = 400 }, 50.01)
     }
@@ -161,28 +155,25 @@
     function gravityarea_destroyEvents2() { EVENT.event_remove(GRAVITYAREA_EVENTS_2) }
 
     // --GET
-    function gravityarea_get3d(ratio)
+    function gravityarea_get2d()
     {
-        if (prop_ORBIT_RADIUS)
-        {
-            const
-            ANGLE = (ratio - prop_OFFSET) * MATH.PI.x2,
-            H = Math.sin(ANGLE) * prop_ORBIT_RADIUS
+        return [
+            prop_X * APP.app_WIDTH - gravityarea.offsetWidth / 2,   // x
+            prop_Y * APP.app_HEIGHT                                 // y
+        ]
+    }
 
-            return [
-                Math.cos(prop_ROTATE) * H,              // x
-                Math.sin(prop_ROTATE) * H,              // y
-                Math.cos(ANGLE) * prop_ORBIT_RADIUS     // z
-            ]
-        }
-        else
-        {
-            return [
-                prop_X * APP.app_WIDTH - gravityarea.offsetWidth / 2,       // x
-                prop_Y * APP.app_HEIGHT,                                    // y
-                0                                                           // z
-            ]
-        }
+    function gravityarea_get3d()
+    {
+        const
+        ANGLE = (prop_RATIO - prop_OFFSET) * MATH.PI.x2,
+        H = Math.sin(ANGLE) * prop_ORBIT_RADIUS
+
+        return [
+            Math.cos(prop_ROTATE) * H,              // x
+            Math.sin(prop_ROTATE) * H,              // y
+            Math.cos(ANGLE) * prop_ORBIT_RADIUS     // z
+        ]
     }
 
     function slot_get3d()
@@ -192,9 +183,9 @@
         const D = GRAVITYAREA_PERSPECTIVE - gravityarea_TRANSLATE_Z
     
         return [
-        gravityarea_TRANSLATE_X / D * GRAVITYAREA_PERSPECTIVE + APP.app_WIDTH * .5,   // x
-        gravityarea_TRANSLATE_Y / D * GRAVITYAREA_PERSPECTIVE + APP.app_HEIGHT * .5,  // y
-        gravityarea_RADIUS / D * GRAVITYAREA_PERSPECTIVE                              // radius
+            gravityarea_TRANSLATE_X / D * GRAVITYAREA_PERSPECTIVE + APP.app_WIDTH * .5,   // x
+            gravityarea_TRANSLATE_Y / D * GRAVITYAREA_PERSPECTIVE + APP.app_HEIGHT * .5,  // y
+            gravityarea_RADIUS / D * GRAVITYAREA_PERSPECTIVE                              // radius
         ]
     }
 
@@ -206,10 +197,10 @@
         gravityarea_a(focus)
     }
 
-    function gravityarea_updateOrbit(ratio)
+    function gravityarea_updateOrbit()
     {
-        [gravityarea_TRANSLATE_X, gravityarea_TRANSLATE_Y, gravityarea_TRANSLATE_Z] = gravityarea_get3d(ratio)
-
+        [gravityarea_TRANSLATE_X, gravityarea_TRANSLATE_Y, gravityarea_TRANSLATE_Z] = gravityarea_get3d()
+        
         SLOT_$ROTATION.set({ rX: null, rY: .025 })
     }
 
@@ -224,9 +215,9 @@
 
     function slot_update3d(clientX, clientY)
     {
-        const [X, Y, R] = slot_get3d()
+        const [X, Y, RADIUS] = slot_get3d()
 
-        slot_updateForces(clientX, clientY, X, Y, R)
+        slot_updateForces(clientX, clientY, X, Y, RADIUS)
     }
 
     function slot_updateForces(clientX, clientY, x, y, r)
@@ -318,13 +309,13 @@
     {
         gravityarea_cancel = animation((t) =>
         {
-            const [X, Y, Z] = gravityarea_get3d(prop_RATIO)
+            const [X, Y, Z] = prop_3D ? gravityarea_get3d() : gravityarea_get2d()
 
             gravityarea_T = t
     
             gravityarea_TRANSLATE_X = X + APP.app_WIDTH * t
             gravityarea_TRANSLATE_Y = Y - APP.app_HEIGHT * t
-            gravityarea_TRANSLATE_Z = Z + GRAVITYAREA_PERSPECTIVE * t
+            gravityarea_TRANSLATE_Z = prop_3D ? Z + GRAVITYAREA_PERSPECTIVE * t : 0
         },
         400, gravityarea_T, invert).cancel
     }
@@ -346,7 +337,7 @@ style:--force-x="{slot_FORCE_X}px"
 style:--force-y="{slot_FORCE_Y}px"
 style:z-index={prop_Z}
 style:transform="
-perspective({prop_ORBIT_RADIUS ? GRAVITYAREA_PERSPECTIVE + 'px' : 'none'})
+perspective({prop_3D ? GRAVITYAREA_PERSPECTIVE + 'px' : 'none'})
 
 translate3d(
 {gravityarea_TRANSLATE_X}px,

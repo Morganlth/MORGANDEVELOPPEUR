@@ -143,7 +143,6 @@ class Process
     async process_spellChecker(str)
     {
         const
-        START = performance.now(),
         ARRAY = this.#process_getArrayFrom(str),
         FINDS = []
 
@@ -162,8 +161,6 @@ class Process
                 if (this.#process_FIND) FINDS.push(this.#process_FIND)
             }
         }
-
-        console.log(performance.now() - START)
     
         return FINDS
     }

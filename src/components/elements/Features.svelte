@@ -166,6 +166,7 @@ lang="scss"
 @use '../../assets/scss/styles/display';
 @use '../../assets/scss/styles/size';
 @use '../../assets/scss/styles/font';
+@use '../../assets/scss/styles/media';
 
 /* #FEATURES */
 
@@ -198,6 +199,20 @@ lang="scss"
 
         &>div
         {
+            &::before
+            {
+                @include position.placement(absolute, 0, 0, 0, 0, true);
+
+                @extend %any;
+
+                z-index: -1;
+
+                opacity: .6;
+
+                background: url('/images/feature_bg.jpg') center / cover no-repeat;
+                mix-blend-mode: darken;
+            }
+        
             @extend %f-column;
         
             justify-content: center;
@@ -220,10 +235,10 @@ lang="scss"
             
                 opacity: 0;
 
-                width: 4rem;
+                width: 3rem;
                 height: 0;
         
-                border-top: solid $intermediate 2px;
+                border-top: solid $intermediate 4px;
 
                 transition: opacity $duration ease-out, border-color $duration;
             }
@@ -235,7 +250,7 @@ lang="scss"
 
             padding-left: 2rem;
 
-            .content { padding-left: 30%; }
+            .content { padding-inline: 6% app.$gap-inline; }
         }
 
         h3
@@ -244,7 +259,7 @@ lang="scss"
 
             @extend %m-h-3;
 
-            transform: translateX(-10rem);
+            transform: translateX(-3rem);
         }
 
         strong { font-weight: bold; }
@@ -271,6 +286,13 @@ lang="scss"
 
                 transition: clip-path .4s ease-out;
             }
+        }
+
+        @include media.min($ms3)
+        {
+            :global .line .content { padding-left: 30%; }
+
+            h3 { transform: translateX(-10rem); }
         }
     }
 }

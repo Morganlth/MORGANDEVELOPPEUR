@@ -39,14 +39,16 @@ lang="scss"
 
 @use '../../assets/scss/styles/display';
 @use '../../assets/scss/styles/font';
+@use '../../assets/scss/styles/media';
 
 /* #LINE */
 
 .line
 {
     $line-h: 5rem;
+    $font-size: map.get(font.$font-sizes, s3);
 
-    @include font.content($regular: true, $font-size: map.get(font.$font-sizes, s3));
+    @include font.content($regular: true, $font-size: inherit);
 
     display: flex;
 
@@ -71,6 +73,7 @@ lang="scss"
         width: $line-h;
     
         color: $primary;
+        font-size: $font-size;
     }
 
     .content
@@ -85,7 +88,10 @@ lang="scss"
 
         user-select: auto;
 
-        color: $light
+        color: $light;
+        font-size: map.get(font.$font-sizes, s2);
+
+        @include media.min($ms3) { font-size: $font-size; }
     }
 }
 </style>

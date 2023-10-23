@@ -42,10 +42,12 @@ context="module"
 </script>
 
 <script>
-// #EXPORT
+// #EXPORTS
 
-    // --PROP
-    export let prop_PAGE_ID = 0
+    // --PROPS
+    export let
+    prop_PAGE_ID = 0,
+    prop_SUBPATH = void ''
 
 // #IMPORTS
 
@@ -99,7 +101,7 @@ context="module"
     {
         SPRING.spring_set() // set command
         APP.app_set()
-        ROUTER.router_set(prop_PAGE_ID)
+        ROUTER.router_set(prop_PAGE_ID, prop_SUBPATH)
         EVENT.event_set()
         PROCESS.process_set()
     }

@@ -118,7 +118,7 @@ id="sophiebluel"
                         <li>
                             <!-- svelte-ignore a11y-invalid-attribute -->
                             <a
-                            href="#sophiebluel-{a.href}"
+                            href="#{a.href ? 'sophiebluel-' + a.href : ''}"
                             alt={a.value}
                             rel="nofollow"
                             >

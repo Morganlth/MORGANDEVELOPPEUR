@@ -63,6 +63,7 @@
     // --ELEMENT-SYSTEM
     const
     SYSTEM_OPTIMISE_NAME = 'system_optimise',
+
     SYSTEM_COMMANDS =
     [
         {
@@ -77,14 +78,14 @@
 
     // --ELEMENT-GROUP
     const
+    GROUP_DELAY = 400.08,
+
     GROUP_Z_POSITIONS = new Float64Array(prop_SYSTEM.length),
+
     GROUP_EVENTS = { scroll: wait_throttle(group_e$Scroll, 200.04) }
 
     // --ELEMENT-ORBIT
     const ORBIT_EVENTS = { resize: orbit_e$Resize }
-
-    // --ELEMENT-GRAVITYAREA
-    const GRAVITYAREA_EVENTS = { scroll: wait_throttle(gravityarea_e$Scroll, 33.34) }
 
     // --ELEMENT-TAG
     const TAG_DURATION = 600
@@ -110,12 +111,9 @@
     let orbit_RADIUS = 0
 
     // --ELEMENT-GRAVITYAREA
-    let
-    gravityarea_RATIO = 0,
+    let gravityarea_RATIO = prop_RATIO
 
-    gravityarea_TIMEOUT
-
-// #REACTIVE
+// #REACTIVES
 
     // --ELEMENT-GROUP
     $: system_CHARGED
@@ -123,6 +121,9 @@
             ? system_start()
             : system_stop()
         : void 0
+
+    // --ELEMENT-GRAVITYAREA
+    $: prop_FOCUS ? gravityarea_update(prop_RATIO) : void 0
 
 // #FUNCTIONS
 
@@ -139,13 +140,7 @@
 
     function system_setCommands() { COMMAND.command_setBasicCommands(SYSTEM_COMMANDS) }
 
-    function system_setEvents()
-    {
-        EVENT.event_add(SYSTEM_EVENTS)
-
-        group_setEvents()
-        gravityarea_setEvents()
-    }
+    function system_setEvents() { EVENT.event_add(SYSTEM_EVENTS) }
 
     function group_setEvents() { EVENT.event_add(GROUP_EVENTS) }
 
@@ -153,44 +148,37 @@
 
     function orbit_setEvents() { EVENT.event_add(ORBIT_EVENTS) }
 
-    function gravityarea_setEvents() { EVENT.event_add(GRAVITYAREA_EVENTS) }
-
     // --DESTROY
     function system_destroy()
     {
-        gravityarea_clear()
-
         system_destroyEvents()
+        group_destroy()
         orbit_destroyEvents()
     }
 
-    function system_destroyEvents()
-    {
-        EVENT.event_remove(SYSTEM_EVENTS)
+    function system_destroyEvents() { EVENT.event_remove(SYSTEM_EVENTS) }
 
+    function group_destroy()
+    {
         group_destroyEvents()
-        gravityarea_destroyEvents()
+        group_clear()
     }
 
     function group_destroyEvents() { EVENT.event_remove(GROUP_EVENTS) }
 
     function orbit_destroyEvents() { EVENT.event_remove(ORBIT_EVENTS) }
-    
-    function gravityarea_destroyEvents() { EVENT.event_remove(GRAVITYAREA_EVENTS) }
 
     // --GET
     function group_getIndexFocus()
     {
-        let index = system_OPTIMISED
+        const INDEX = system_OPTIMISED
         ? Math.floor(prop_SYSTEM.length * prop_RATIO)
         : GROUP_Z_POSITIONS.indexOf(Math.max(...GROUP_Z_POSITIONS))
 
-        if (!~index) index = 0
-
-        return index
+        return ~INDEX ? INDEX : 0
     }
 
-    function tag_getY() { return 400 * Math.random() + 100 + '%' }
+    function tag_getY() { return Math.random() * 600 + 100 + '%' }
 
     // --UPDATES
     function system_update(optimised) { system_OPTIMISED = optimised }
@@ -209,17 +197,23 @@
         for (let i = 0; i < GROUP_Z_POSITIONS.length; i++) prop_SYSTEM[i] = { ...prop_SYSTEM[i], focus: i === INDEX }
     }
 
-    function gravityarea_update(ratio) { gravityarea_RATIO = ratio ?? prop_RATIO }
+    const gravityarea_update = wait_throttle(async (ratio) => { gravityarea_RATIO = ratio }, 33.34)
 
-    function tag_update(tag, fragments, y, scale)
+    function tag_update(tag, fragments, y, n)
     {
-        for (let i = 0; i < fragments.length; i++) fragments[i].style.setProperty('--frag-y', y)
+        for (let i = 0; i < fragments.length; i++)
+        {
+            const FRAG = fragments[i]
+    
+            FRAG.style.setProperty('--frag-y', y)
+            FRAG.style.setProperty('opacity', n)
+        }
 
-        tag.style.setProperty('--frag-scale', scale)
+        tag.style.setProperty('--frag-scale', n)
     }
 
     // --CLEAR
-    function gravityarea_clear() { clearTimeout(gravityarea_TIMEOUT) }
+    function group_clear() { clearTimeout(group_TIMEOUT) }
 
     // --COMMAND
     function system_c$Optimise(optimised) { COMMAND.command_test(optimised, 'boolean', system_update, SYSTEM_OPTIMISE_NAME, system_OPTIMISED) }
@@ -227,11 +221,10 @@
     // --EVENTS
     async function group_e$Scroll()
     {
-        clearTimeout(group_TIMEOUT)
-
+        group_clear()
         group_updateFocus()
 
-        group_TIMEOUT = setTimeout(group_updateFocus, 300)
+        group_TIMEOUT = setTimeout(group_updateFocus, GROUP_DELAY)
     }
 
     async function system_e$MouseMove(clientX, clientY)
@@ -244,15 +237,6 @@
 
     async function orbit_e$Resize() { orbit_setVars() }
 
-    async function gravityarea_e$Scroll()
-    {
-        gravityarea_clear()
-    
-        gravityarea_TIMEOUT = setTimeout(gravityarea_update, 66.68)
-
-        gravityarea_update()
-    }
-
     function gravityarea_eClick() { if (this.focus) system_updateTarget(this) }
 
     function tag_eClick() { system_updateTarget(this) }
@@ -263,12 +247,20 @@
         system_setEvents()
 
         group_start()
+
+        group_TIMEOUT = setTimeout(() =>
+        {
+            group_e$Scroll()
+            group_setEvents()
+        },
+        GROUP_DELAY)
     }
 
     function system_stop()
     {
         system_destroyEvents()
-
+    
+        group_destroy()
         group_updateFocus()
         group_stop()
     }
@@ -276,7 +268,7 @@
     // --INTRO
     function tag_in(tag, fragments)
     {
-        const Y = MATH.headsOrTails() * 2 + '%'
+        const Y = MATH.headsOrTails() * 4 + '%'
     
         tag_update(tag, fragments, Y, 1)
     }
@@ -298,7 +290,8 @@
         --frag-y: ${tag_getY()};
         --frag-sign: ${MATH.headsOrTails() ? 1 : -1};
         transform: translateY(calc(var(--frag-y, 0) * var(--frag-sign, 1))) scale(var(--frag-scale, 1));
-        transition: transform var(--frag-duration, ${TAG_DURATION}ms) ease-out;
+        transition: transform ease-out, opacity;
+        transition-duration: var(--frag-duration, ${TAG_DURATION}ms);
         `
     }
 
@@ -331,6 +324,7 @@ style:--system-r-y={system_ROTATE_Y}
                 let:grabbing
                 prop_$RESIZE={resize}
                 prop_$ANIMATION={animation}
+                prop_3D={true}
                 prop_RATIO={gravityarea_RATIO}
                 prop_GRABBING={false}
                 prop_TITLE={cube.props.prop_TITLE}

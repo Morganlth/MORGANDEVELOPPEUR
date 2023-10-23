@@ -4,6 +4,7 @@
 -ROUTER
 -EVENT
     MAIN
+        PARTICLES
         PAGES
             PAGE * 4
                 HOME | PRESENTATION | SKILLS | PROJECTS
@@ -141,6 +142,13 @@
         return DIF >= 0 && DIF < APP.app_HEIGHT
     }
 
+    function page_getRatio(start, dif, overflow, scrollTop)
+    {
+        const RATIO = ((scrollTop ?? APP.app_SCROLLTOP) - start) / dif
+
+        return overflow ? RATIO : RATIO < 0 ? 0 : RATIO > 1 ? 1 : RATIO
+    }
+
     function router_getRoute(page) { return { id: page.id, ...page.route } }
 
     // --UPDATES
@@ -155,14 +163,12 @@
     {
         for (let i = 0; i < PAGES_DATAS.length; i++)
         {
-            const
-            PAGE = PAGES_DATAS[i],
-            RATIO = (scrollTop - PAGE.start) / PAGE.dif
+            const PAGE = PAGES_DATAS[i]
 
             page_updateProps(PAGE, i,
             {
                 prop_INTRO: (PAGE.intro = page_getIntro(PAGE.top, scrollTop)),
-                prop_RATIO: PAGE.overflow ? RATIO : RATIO < 0 ? 0 : RATIO > 1 ? 1 : RATIO
+                prop_RATIO: page_getRatio(PAGE.start, PAGE.dif, PAGE.overflow, scrollTop)
             })
 
             if (PAGE.focus) router_update(!PAGE.intro)

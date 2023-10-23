@@ -18,6 +18,8 @@
 // #IMPORTS
 
     // --JS
+    import MATH from '../../assets/js/utils/math'
+    import { animation } from '../../assets/js/utils/animation'
     import { color_rgba } from '../../assets/js/utils/color'
 
     // --LIB
@@ -28,6 +30,7 @@
 
     // --SVELTE
     import { onMount, onDestroy } from 'svelte'
+    import { cubicOut } from 'svelte/easing'
 
 // #CONSTANTES
 
@@ -37,8 +40,9 @@
     PARTICLES_DELAY_NAME = 'particles_delay',
 
     PARTICLES_GAP = 100,
+    PARTICLES_D_MOUSE_RADIUS = 100,
 
-    PARTICLES_BACKGROUND_COLOR = color_rgba(COLORS.dark, .28),
+    PARTICLES_BACKGROUND_COLOR = color_rgba(COLORS.dark, .2),
 
     PARTICLES_PARTICLES = [],
 
@@ -61,6 +65,8 @@
     ],
     PARTICLES_EVENTS =
     {
+        mouseDown: particles_e$MouseDown,
+        mouseUp: particles_e$MouseUp,
         resize: particles_e$Resize,
         animation: particles_e$Animation
     }
@@ -83,7 +89,11 @@
 
     particles_COUNT = 0,
     particles_DELAY = 100,
-    particles_MAX = 50
+    particles_MAX = 50,
+
+    particles_MOUSE_RADIUS = PARTICLES_D_MOUSE_RADIUS,
+
+    particles_cancel = () => {}
 
 // #FUNCTIONS
 
@@ -119,22 +129,39 @@
 
     function particles_setParticle()
     {
+        const [COLOR, EDIBLE] = particles_getColor()
+    
         PARTICLES_PARTICLES.push(
         {
+            t: .1,
             x: -PARTICLES_GAP,
             y: -PARTICLES_GAP,
             vel_X: Math.random() + particles_ANGLE_X,
             vel_Y: -Math.random() - particles_ANGLE_Y,
-            size_X: Math.random() * 14 + 6,
-            size_Y: Math.random() * 14 + 6,
-            color: color_rgba(COLORS[Math.round(Math.random()) ? 'light' : 'primary'], Math.random() * .6 + .4)
+            size_X: Math.random() * 3 + 5,
+            size_Y: Math.random() * 3 + 5,
+            color: COLOR,
+            edible: EDIBLE
         })
     }
 
     // --DESTROY
-    function particles_destroy() { particles_destroyEvents() }
+    function particles_destroy()
+    {
+        particles_cancel()
+
+        particles_destroyEvents()
+    }
 
     function particles_destroyEvents() { EVENT.event_remove(PARTICLES_EVENTS) }
+
+    // --GET
+    function particles_getColor()
+    {
+        const [COLOR, EDIBLE] = Math.random() < .1 ? [COLORS.indicator, true] : [COLORS[MATH.headsOrTails() ? 'primary' : 'light'], false]
+    
+        return [color_rgba(COLOR, Math.random() * .3 + .3), EDIBLE]
+    }
 
     // --RESTORE
     function particles_restore()
@@ -164,22 +191,48 @@
         particles_DELAY = delay
 
         delay < 100
-        ? particles_MAX = 3 * (100 - delay)
-        : particles_MAX = 50
+        ? particles_MAX = 230 - delay
+        : particles_MAX = 30
+    }
+
+    function particles_updateXY(particle)
+    {
+        const
+        [CLIENT_X, CLIENT_Y] = EVENT.event_CLIENT_XY,
+        [DISTANCE_X, DISTANCE_Y] = [particle.x - CLIENT_X, particle.y - CLIENT_Y],
+        DISTANCE = Math.sqrt(DISTANCE_X ** 2 + DISTANCE_Y ** 2)
+
+        if (particle.edible)
+        {
+            if (DISTANCE < 24) PARTICLES_PARTICLES.splice(PARTICLES_PARTICLES.indexOf(particle), 1)
+        }
+        else if (DISTANCE < particles_MOUSE_RADIUS)
+        {
+            const ANGLE = Math.atan2(DISTANCE_Y, DISTANCE_X)
+
+            particle.x = CLIENT_X + Math.cos(ANGLE) * particles_MOUSE_RADIUS
+            particle.y = CLIENT_Y + Math.sin(ANGLE) * particles_MOUSE_RADIUS
+        }
     }
 
     // --DRAW
     function particles_draw()
     {
-        for (const PARTICLE of PARTICLES_PARTICLES)
+        const PARTICLES = [...PARTICLES_PARTICLES]
+    
+        for (const PARTICLE of PARTICLES)
         {
+            const [T, SIZE_X, SIZE_Y] = [PARTICLE.t, PARTICLE.size_X, PARTICLE.size_Y]
+
+            particles_updateXY(PARTICLE)
+    
             particles_CONTEXT.fillStyle = PARTICLE.color
-            // particles_CONTEXT.shadowColor = PARTICLE.color
-            particles_CONTEXT.fillRect(PARTICLE.x, PARTICLE.y, PARTICLE.size_X, PARTICLE.size_Y)
+            particles_CONTEXT.fillRect(PARTICLE.x, PARTICLE.y, SIZE_X * T, SIZE_Y * T)
             particles_CONTEXT.fill()
 
-            PARTICLE.x += PARTICLE.vel_X
-            PARTICLE.y -= PARTICLE.vel_Y
+            PARTICLE.t += .0015
+            PARTICLE.x += PARTICLE.vel_X * PARTICLE.t
+            PARTICLE.y -= PARTICLE.vel_Y * PARTICLE.t
         }
     }
 
@@ -201,11 +254,19 @@
     function particles_c$Delay(delay) { COMMAND.command_test(delay, 'number', particles_updateDelay, PARTICLES_DELAY_NAME, particles_DELAY) }
 
     // --EVENTS
+    function particles_e$MouseDown() { particles_a() }
+
+    function particles_e$MouseUp()
+    {
+        particles_cancel()
+
+        particles_MOUSE_RADIUS = PARTICLES_D_MOUSE_RADIUS
+    }
+
     async function particles_e$Resize() { if (particles instanceof HTMLElement) particles_setVars() }
 
     async function particles_e$Animation()
     {
-        // particles_clear()
         particles_drawBackground()
         particles_draw()
 
@@ -217,6 +278,9 @@
             particles_testMax()
         }
     }
+
+    // --ANIMATION
+    async function particles_a() { particles_cancel = animation((t) => particles_MOUSE_RADIUS = PARTICLES_D_MOUSE_RADIUS + 200 * cubicOut(t), 600).cancel }
 
 // #CYCLES
 

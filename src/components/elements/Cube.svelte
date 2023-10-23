@@ -169,7 +169,7 @@ lang="scss"
 
         box-sizing: border-box;
 
-        transition: border .7s ease-in, opacity .7s ease-in;
+        transition: border .4s ease-in, opacity .4s ease-in;
     }
     .side:nth-child(1), .side:nth-child(2), .side:nth-child(3), .side:nth-child(4) { top: 0; }
     .side:nth-child(1), .side:nth-child(4), .side:nth-child(5), .side:nth-child(6) { left: 0; }

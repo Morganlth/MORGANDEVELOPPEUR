@@ -8,6 +8,9 @@
     export let prop_DATAS = {}
 
 // #IMPORTS
+
+    // --LIB
+    import BREAKPOINTS from '$lib/breakpoints'
     
     // --SVELTE
     import { onMount } from 'svelte'
@@ -22,29 +25,6 @@
     // --ELEMENT-GALLERY
     const GALLERY_FILTERS = gallery_getFilters()
 
-    // --ELEMENT-SERVICE
-    const SERVICES =
-    [
-        {
-            title: 'Shooting photo',
-            desc: 'Pour capturer vos moments les plus précieux et garder un souvenir impérissable. Je me déplace en Île-de-France pour réaliser vos photos',
-            price: '350€/demi journée',
-            info: 'Matériel, déplacement inclus'
-        },
-        {
-            title: 'Retouches',
-            desc: 'Vous souhaitez retoucher vos photos pour un résultat professionnel ? Bénéficier d’un rendu optimal pour vos publications',
-            price: '50€/photo',
-            info: '2 AR par photo'
-        },
-        {
-            title: 'Album photos',
-            desc: 'Partagez avec vos proches et vos clients les photos des moments partagés ensemble à travers un album photo personnalisé',
-            price: '400€ album A4',
-            info: '30 pages recto/verso'
-        }
-    ]
-
 // #VARIABLES
 
     // --ELEMENT-SLIDER
@@ -58,27 +38,18 @@
     let
     gallery_GALLERY = prop_DATAS.gallery ?? [],
 
-    gallery_CONTAINER,
-    gallery_TAG_TARGET = 0,
-    gallery_ELEMENT_TARGET,
-    gallery_COLUMNS = 3,
-    gallery_COUNT = gallery_GALLERY.length
+    gallery_TARGET = null
 
 // #FUNCTIONS
 
     // --SET
-    function ninacarducci_set() { slider_set() }
-
-    function slider_set() { slider_INTERVAL = setInterval(slider_update.bind(null, 2), 6000 + SLIDER_DURATION) }
-
-    function modal_set(id)
+    function ninacarducci_set()
     {
-        gallery_COUNT = prop_DATAS.gallery?.reduce((a, item) => item.on ? ++a : a, 0) ?? 0
-        gallery_ELEMENT_TARGET = id
+        slider_setVars()
+        slider_update(0)
     }
 
-    // --DESTROY
-    function modal_destroy() { gallery_ELEMENT_TARGET = null }
+    function slider_setVars() { slider_INTERVAL = setInterval(slider_update.bind(null, 1), 6000 + SLIDER_DURATION) }
 
     // --GET
     function gallery_getFilters()
@@ -107,32 +78,45 @@
     }
 
     // --UPDATES
-    function slider_update(n /* 1: prev | 2: next */)
+    function slider_update(n /* -1: prev | 1: next */)
     {
         const LENGTH = prop_DATAS.slider?.length ?? 0
 
         for (let i = 0; i < LENGTH; i++)
         {
-            const 
+            const
             SLIDE = prop_DATAS.slider[i],
-            TRANSLATE_X = (SLIDE.translateX + 100 * n) % (LENGTH * 100),
-            DURATION = (n === 1 && TRANSLATE_X === 0) || (n === 2 && TRANSLATE_X === (LENGTH - 1) * 100) ? 0 : SLIDER_DURATION
+            MAX = LENGTH - 1
+            
+            let
+            position = (SLIDE.position ?? i) - n,
+            duration = SLIDER_DURATION
 
-            if (TRANSLATE_X === 100) slider_TARGET = i
+            const ABS_P = Math.abs(position)
 
-            prop_DATAS.slider[i] = { ...SLIDE, translateX: TRANSLATE_X, duration: DURATION }
+            if (ABS_P >= MAX)
+            {
+                position = (ABS_P - LENGTH) * Math.sign(position)
+                duration = 0
+            }
+
+            if (position === 0) slider_TARGET = i
+
+            prop_DATAS.slider[i] = { ...SLIDE, translateX: i * -100 + position * 100, position, duration }
         }
     }
-    
-    function slider_updateTo(id)
-    {
-        const DIF = id - slider_TARGET
 
-        DIF === -1 || DIF === 2
-        ? slider_update(1)              // prev
-        : DIF === -2 || DIF === 1
-            ? slider_update(2)          // next
-            : void 0
+    function slider_updateTo(n)
+    {
+        const NOW = +new Date()
+        
+        if (NOW - slider_LAST < SLIDER_DURATION) return
+
+        slider_LAST = NOW
+
+        slider_clear()
+        slider_update(n)
+        slider_setVars()
     }
 
     function gallery_update(id)
@@ -151,47 +135,32 @@
         
             GALLERY_FILTERS[i] = { ...FILTER, on: FILTER.id === id }
         }
-
-        /*
-        
-            NINACARDUCCI GALLERY
-                UPDATE GALLERY (gallery_GALLERY)
-                UPDATE FILTRES (GALLERY_FILTERS)
-                    UTILISER SVELTE POUR CHECK LES ELEMENT SUPPRIMER, LES ELEMENT A CONSERVER ET AJOUTER DANS LA GALLERY
-                    
-        */
     }
 
-    function modal_update(a)
+    function modal_update(n /* -1: prev | 1: next */)
     {
-        const
-        children = [...gallery_CONTAINER.children],
-        length = children.length
+        const LENGTH = gallery_GALLERY.length
 
         let i = -1
 
-        while (++i < length)
-            if (children[i].dataset.id == gallery_ELEMENT_TARGET) { i += a; break }
+        while (++i < LENGTH)
+            if (gallery_GALLERY[i].id == gallery_TARGET)
+            {
+                i += n
 
-        gallery_ELEMENT_TARGET = parseInt(children[i < 0 ? length - 1 : i >= length ? 0 : i].dataset.id, 10)
+                gallery_TARGET = gallery_GALLERY[i < 0 ? LENGTH - 1 : i >= LENGTH ? 0 : i].id
+        
+                break
+            }
     }
 
     // --CLEAR
     function slider_clear() { clearInterval(slider_INTERVAL) }
 
     // --EVENTS
-    function slider_eClick(d)
-    {
-        const NOW = +new Date()
-        
-        if (NOW - slider_LAST < SLIDER_DURATION) return
+    function slider_eClick(d) { slider_updateTo(d) }
 
-        slider_LAST = NOW
-
-        slider_clear()
-        slider_switcher(d)
-        slider_set()
-    }
+    function slider_eClick2(id = 0) { slider_updateTo((prop_DATAS.slider ?? [])[id].position ?? 0 * -1) }
 
     function gallery_eClick(id)
     {
@@ -199,63 +168,11 @@
         gallery_updateFilter(id)
     }
 
-    function gallery_eClick2(id) { modal_set(id) }
+    function gallery_eClick2(id) { gallery_TARGET = id }
 
-    function modal_click() { modal_referral.call(this) }
+    function modal_eClick() { gallery_TARGET = null }
 
-    // --REFERRALS
-    function modal_referral()
-    {
-        switch (this)
-        {
-            case 'c':
-                modal_destroy()
-                break
-            case 'p':
-                modal_update(-1)
-                break
-            case 'n':
-                modal_update(+1)
-                break
-            default:
-                break
-        }
-    }
-
-    // --TRANSITION
-    function scale() { return { duration: 200, css: (t) => `transform: scale(${t})` } }
-
-    // --AUTO-CALL
-    ;(function gallery_autoCompletionTags()
-    {
-        for (const item of prop_DATAS.gallery ?? [])
-            if (!GALLERY_TAGS.find(tag => tag === item.tag)) GALLERY_TAGS.push(item.tag)
-    })()
-
-    // --UTILS
-    function slider_switcher(d)
-    {
-        switch (d)
-        {
-            case 'prev':
-                slider_update(1)
-                break
-            case 'next':
-                slider_update(2)
-                break
-            default:
-                if (typeof d === 'number') slider_updateTo(d)
-                break
-        }
-    }
-
-    function gallery_map(filter, value)
-    {
-        if (filter === 'Tous') value = true
-
-        for (let i = 0; i < prop_DATAS.gallery?.length ?? 0; i++)
-        prop_DATAS.gallery[i] = { ...prop_DATAS.gallery[i], on: value ?? (prop_DATAS.gallery[i].tag === tag ? true : false) }
-    }
+    function modal_eClick2(n) { modal_update(n) }
 
 // #CYCLE
 
@@ -386,17 +303,6 @@ id="ninacarducci"
             <div
             class="slider"
             >
-                <nav>
-                    {#each Array(prop_DATAS.slider?.length ?? 0) as _, id}
-                        <button
-                        type="button"
-                        class:active={slider_TARGET === id}
-                        on:click={slider_eClick.bind(null, id)}
-                        >
-                        </button>
-                    {/each}
-                </nav>
-
                 <div
                 itemscope
                 itemtype="https://schema.org/ImageGallery"
@@ -408,38 +314,73 @@ id="ninacarducci"
                         style:transition-duration="{item.duration}ms"
                         style:transform="translateX({item.translateX - 100}%)"
                         >
-                            <img
-                            srcset="
-                            {$page.url.origin}/images/ninacarducci/slider/{item.src}-1920.jpg 1920w,
-                            {$page.url.origin}/images/ninacarducci/slider/{item.src}-1440.jpg 1440w,
-                            {$page.url.origin}/images/ninacarducci/slider/{item.src}-1024.jpg 1024w,
-                            {$page.url.origin}/images/ninacarducci/slider/{item.src}-768.jpg 768w,
-                            {$page.url.origin}/images/ninacarducci/slider/{item.src}-425.jpg 425w"
-                            sizes="(min-width: 1441px) 1920px, (min-width: 1025px) 1440px, (min-width: 769px) 1024px, (min-width: 426px) 768px, 425px"
-                            src="{$page.url.origin}/images/ninacarducci/slider/{item.src}-1920.jpg"
-                            alt={item.alt}
-                            width="1920"
-                            height="888"
-                            itemprop="image"
-                            >
+                            <picture>
+                                <source
+                                media="(min-width: {BREAKPOINTS.ms6}px)"
+                                srcset="{$page.url.origin}/images/ninacarducci/slider/{item.src}-1920.jpg 1920w"
+                                sizes="1920px"
+                                >
+            
+                                {#each [6, 5, 4] as bp}
+                                    <source
+                                    media="(min-width: {BREAKPOINTS['ms' + (bp - 1)]}px)"
+                                    srcset="{$page.url.origin}/images/ninacarducci/slider/{item.src}-{BREAKPOINTS['ms' + bp]}.jpg {BREAKPOINTS['ms' + bp]}w"
+                                    sizes="{BREAKPOINTS['ms' + bp]}px"
+                                    >
+                                {/each}
+                
+                                <source
+                                srcset="{$page.url.origin}/images/ninacarducci/slider/{item.src}-{BREAKPOINTS.ms3}.jpg {BREAKPOINTS.ms3}w"
+                                sizes="{BREAKPOINTS.ms3}px"
+                                >
+                                <img
+                                srcset="
+                                {$page.url.origin}/images/ninacarducci/slider/{item.src}-1920.jpg 1920w,
+                                {$page.url.origin}/images/ninacarducci/slider/{item.src}-1440.jpg {BREAKPOINTS.ms6}w,
+                                {$page.url.origin}/images/ninacarducci/slider/{item.src}-1024.jpg {BREAKPOINTS.ms5}w,
+                                {$page.url.origin}/images/ninacarducci/slider/{item.src}-768.jpg {BREAKPOINTS.ms4}w,
+                                {$page.url.origin}/images/ninacarducci/slider/{item.src}-425.jpg {BREAKPOINTS.ms3}w"
+                                sizes="
+                                (min-width: {BREAKPOINTS.ms6 + 1}px) 1920px,
+                                (min-width: {BREAKPOINTS.ms5 + 1}px) {BREAKPOINTS.ms6}px,
+                                (min-width: {BREAKPOINTS.ms4 + 1}px) {BREAKPOINTS.ms5}px,
+                                (min-width: {BREAKPOINTS.ms3 + 1}px) {BREAKPOINTS.ms4}px,
+                                425px"
+                                src="{$page.url.origin}/images/ninacarducci/slider/{item.src}-1920.jpg"
+                                alt={item.alt}
+                                decoding="sync"
+                                itemprop="image"
+                                >
+                            </picture>
                         </div>
                     {/each}
+                </div>
 
-                    {#each ['prev', 'next'] as btn}
-                        <button
-                        class={btn}
-                        type="button"
-                        on:click={slider_eClick.bind(null, btn)}
+                {#each ['prev', 'next'] as btn}
+                    <button
+                    class={btn}
+                    type="button"
+                    on:click={slider_eClick.bind(null, btn === 'prev' ? -1 : 1)}
+                    >
+                        <img
+                        src="{$page.url.origin}/images/ninacarducci/icons/carousel-control-{btn}-icon.svg"
+                        alt="{btn} button pour le slider"
+                        width="16"
+                        height="27"
                         >
-                            <img
-                            src="{$page.url.origin}/images/ninacarducci/icons/carousel-control-{btn}-icon.svg"
-                            alt="{btn} button pour le slider"
-                            width="16"
-                            height="27"
-                            >
+                    </button>
+                {/each}
+
+                <nav>
+                    {#each Array(prop_DATAS.slider?.length ?? 0) as _, id}
+                        <button
+                        type="button"
+                        class:active={slider_TARGET === id}
+                        on:click={slider_eClick2.bind(null, id)}
+                        >
                         </button>
                     {/each}
-                </div>
+                </nav>
             </div>
         
             <div
@@ -447,17 +388,16 @@ id="ninacarducci"
             >
                 <picture>
                     <source
-                    media="(min-width: 1180px)"
+                    media="(min-width: {BREAKPOINTS.ms5}px)"
                     srcset="{$page.url.origin}/images/ninacarducci/nina.png 560w"
                     sizes="560px"
                     >
                     <source
-                    media="(min-width: 650px)"
+                    media="(min-width: {BREAKPOINTS.ms4}px)"
                     srcset="{$page.url.origin}/images/ninacarducci/nina-420.png 420w"
                     sizes="420px"
                     >
                     <source
-                    media="(max-width: 650px)"
                     srcset="{$page.url.origin}/images/ninacarducci/nina-224.png 224w"
                     sizes="224px"
                     >
@@ -466,11 +406,10 @@ id="ninacarducci"
                     {$page.url.origin}/images/ninacarducci/nina.png 560w,
                     {$page.url.origin}/images/ninacarducci/nina-420.png 420w,
                     {$page.url.origin}/images/ninacarducci/nina-224.png 224w"
-                    sizes="(min-width: 1180px) 559px, (min-width: 650px) 419px, 223px"
-                    src="{$page.url.origin}/images/ninacarducci/nina.png"
+                    sizes="(min-width: {BREAKPOINTS.ms5}px) 560px, (min-width: {BREAKPOINTS.ms4}px) 420px, 224px"
+                    src="{$page.url.origin}/images/ninacarducci/nina-224.png"
                     alt="moi - Nina Carducci"
-                    width="560"
-                    height="558"
+                    decoding="async"
                     itemprop="image"
                     >
                 </picture>
@@ -525,70 +464,87 @@ id="ninacarducci"
                 <div
                 class="container"
                 >
-                    <div
-                    style:--columns={gallery_COLUMNS}
-                    bind:this={gallery_CONTAINER}
-                    >
-                        {#each prop_DATAS.gallery ?? [] as img}
-                            {#if img.on}
-                                <button
-                                data-id={img.id}
-                                type="button"
-                                on:click={gallery_eClick2.bind(null, img.id)}
-                                transition:scale
-                                >
+                    <div>
+                        {#each gallery_GALLERY as img (img.id)}
+                            <button
+                            type="button"
+                            on:click={gallery_eClick2.bind(null, img.id)}
+                            >
+                                <picture>
+                                    <source
+                                    media="(min-width: {BREAKPOINTS.ms6}px)"
+                                    srcset="{$page.url.origin}/images/ninacarducci/gallery/{img.src}-424.jpg 424w"
+                                    sizes="424px"
+                                    >
+                                    <source
+                                    media="(min-width: {BREAKPOINTS.ms5}px)"
+                                    srcset="{$page.url.origin}/images/ninacarducci/gallery/{img.src}-304.jpg 304w"
+                                    sizes="304px"
+                                    >
+                                    <source
+                                    media="(min-width: {BREAKPOINTS.ms4}px)"
+                                    srcset="{$page.url.origin}/images/ninacarducci/gallery/{img.src}-224.jpg 224w"
+                                    sizes="224px"
+                                    >
+                                    <source
+                                    media="(min-width: {BREAKPOINTS.ms3}px)"
+                                    srcset="{$page.url.origin}/images/ninacarducci/gallery/{img.src}-194.jpg 194w"
+                                    sizes="194px"
+                                    >
+                                    <source
+                                    srcset="{$page.url.origin}/images/ninacarducci/gallery/{img.src}-254.jpg 254w"
+                                    sizes="254px"
+                                    >
                                     <img
                                     srcset="
                                     {$page.url.origin}/images/ninacarducci/gallery/{img.src}-424.jpg 424w,
-                                    {$page.url.origin}/images/ninacarducci/gallery/{img.src}-364.jpg 364w,
                                     {$page.url.origin}/images/ninacarducci/gallery/{img.src}-304.jpg 304w,
+                                    {$page.url.origin}/images/ninacarducci/gallery/{img.src}-254.jpg 254w,
                                     {$page.url.origin}/images/ninacarducci/gallery/{img.src}-224.jpg 224w,
-                                    {$page.url.origin}/images/ninacarducci/gallery/{img.src}-254.jpg 254w"
-                                    sizes="(min-width: 1400px) 423px, (min-width: 1200px) 363px, (min-width: 992px) 303px, (min-width: 768px) 223px, (min-width: 576px) 253px, 423px"
+                                    {$page.url.origin}/images/ninacarducci/gallery/{img.src}-194.jpg 194w"
+                                    sizes="
+                                    (min-width: {BREAKPOINTS.ms6}px) 424px,
+                                    (min-width: {BREAKPOINTS.ms5}px) 304px,
+                                    (min-width: {BREAKPOINTS.ms4}px) 224px,
+                                    (min-width: {BREAKPOINTS.ms3}px) 194px,
+                                    254px"
                                     src="{$page.url.origin}/images/ninacarducci/gallery/{img.src}.jpg"
                                     alt={img.filter + ' ' + img.alt}
                                     width="424"
                                     height="424"
+                                    decoding="async"
                                     itemprop="image"
                                     >
-                                </button>
-                            {/if}
+                                </picture>
+                            </button>
                         {/each}
                     </div>
                 </div>
 
-                {#if gallery_ELEMENT_TARGET != null}
+                {#if gallery_TARGET != null}
                     <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
                     <div
                     class="modal"
                     transition:fade={{ duration: 200 }}
-                    on:click={modal_click.bind('c')}
+                    on:click={modal_eClick}
                     >
-                        <div
-                        transition:scale
-                        >
+                        <div>
                             <img
-                            src="{$page.url.origin}/images/ninacarducci/gallery/{(prop_DATAS.gallery ?? [])[gallery_ELEMENT_TARGET]?.src}.jpg"
-                            alt={(prop_DATAS.gallery ?? [])[gallery_ELEMENT_TARGET]?.alt}
+                            src="{$page.url.origin}/images/ninacarducci/gallery/{(prop_DATAS.gallery ?? [])[gallery_TARGET]?.src}.jpg"
+                            alt={(prop_DATAS.gallery ?? [])[gallery_TARGET]?.alt}
                             width="498"
                             />
 
-                            {#if gallery_COUNT > 1}
-                                <button
-                                class="prev"
-                                type="button"
-                                on:click|stopPropagation={modal_click.bind('p')}
-                                >
-                                    &#x3C;
-                                </button>
-
-                                <button
-                                class="next"
-                                type="button"
-                                on:click|stopPropagation={modal_click.bind('n')}
-                                >
-                                    &#x3E;
-                                </button>
+                            {#if gallery_GALLERY.length > 1}
+                                {#each ['prev', 'next'] as btn}
+                                    <button
+                                    class={btn}
+                                    type="button"
+                                    on:click|stopPropagation={modal_eClick2.bind(null, btn === 'prev' ? -1 : 1)}
+                                    >
+                                        {btn === 'prev' ? '<' : '>'}
+                                    </button>
+                                {/each}
                             {/if}
                         </div>
                     </div>
@@ -626,7 +582,7 @@ id="ninacarducci"
                 <h2>Mes services</h2>
 
                 <div>
-                    {#each SERVICES as service}
+                    {#each prop_DATAS.service ?? [] as service}
                         <article
                         itemscope
                         itemtype="https://schema.org/Offer"
@@ -705,6 +661,7 @@ id="ninacarducci"
                     <form
                     action="#"
                     method="post"
+                    onsubmit="return false"
                     >
                         <label>
                             Nom
@@ -743,16 +700,16 @@ id="ninacarducci"
 
                 <picture>
                     <source
-                    media="(min-width: 1180px)"
+                    media="(min-width: {BREAKPOINTS.ms5}px)"
                     srcset="{$page.url.origin}/images/ninacarducci/camera.png 419w"
                     sizes="419px"
                     >
-                    <source media="(min-width: 650px)"
+                    <source
+                    media="(min-width: {BREAKPOINTS.ms4}px)"
                     srcset="{$page.url.origin}/images/ninacarducci/camera-279.png 279w"
                     sizes="279px"
                     >
                     <source
-                    media="(max-width: 650px)"
                     srcset="{$page.url.origin}/images/ninacarducci/camera-159.png 159w"
                     sizes="159px"
                     >
@@ -761,11 +718,12 @@ id="ninacarducci"
                     {$page.url.origin}/images/ninacarducci/camera.png 419w,
                     {$page.url.origin}/images/ninacarducci/camera-279.png 279w,
                     {$page.url.origin}/images/ninacarducci/camera-159.png 159w"
-                    sizes="(min-width: 1180px) 418px, (min-width: 650px) 279px, 158px"
+                    sizes="(min-width: {BREAKPOINTS.ms5}px) 418px, (min-width: {BREAKPOINTS.ms4}px) 279px, 158px"
                     src="{$page.url.origin}/images/ninacarducci/camera.png"
-                    alt="Caméra"
+                    alt="Caméra vidéo"
                     width="419"
                     height="418"
+                    decoding="async"
                     >
                 </picture>
             </div>
@@ -851,14 +809,22 @@ id="ninacarducci"
 <style
 lang="scss"
 >
+/* #USES */
+
+@use '../../assets/scss/styles/position';
+@use '../../assets/scss/styles/display';
+@use '../../assets/scss/styles/size';
+@use '../../assets/scss/styles/media';
+
 /* #NINACARDUCCI */
 
 #ninacarducci
 {
-    width: 100vw;
+    $light-color: #FFF;
 
-    background-color: white;
-}
+    width: 100%;
+
+    background-color: $light-color;
 
     .body
     {
@@ -875,6 +841,7 @@ lang="scss"
         font-weight: 500;
         line-height: 1.2;
     }
+    h2 { font-size: 3.2rem; }
 
     a { color: #000; }
 
@@ -888,25 +855,24 @@ lang="scss"
 
     header
     {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-
-        position: sticky;
-        top: 0;
-        left: 0;
+        @include position.placement(sticky, $top: 0, $right: 0, $left: 0);
+    
+        @extend %f-column;
 
         z-index: 2;
 
+        align-items: center;
+        justify-content: space-between;
+
         width: 100%;
 
-        padding: 30px 100px;
+        padding-block: 3rem;
 
-        background-color: #fff;
+        background-color: $light-color;
 
         box-sizing: border-box;
 
-        h1 { font-size: 1.6em; }
+        h1 { font-size: 2.5rem; }
 
         a { text-decoration: none; }
 
@@ -917,24 +883,99 @@ lang="scss"
 
             width: 100%;
 
-            font-size: 14px;
+            font-size: 1.4rem;
 
-            li { padding-inline: 10px; }
+            li
+            {
+                flex: 1;
+    
+                padding: 1.6rem 1rem;
+
+                text-align: center;
+                white-space: nowrap;
+            }
+
+            img
+            {
+                width: 2rem;
+                height: 2rem;
+            }
         }
     }
 
     .slider
     {
+        &, &>div, .slider-item { height: fit-content; }
+
         position: relative;
 
         width: 100%;
-        height: 888px;
+        max-height: 888px;
+
+        &>div
+        {
+            &, .slider-item
+            {
+                width: 100%;
+                height: fit-content;
+            }
         
+            display: flex;
+
+            transform: translateX(100%);
+
+            .slider-item
+            {
+                @extend %f-j-center;
+
+                flex-shrink: 0;
+            
+                overflow: clip;
+    
+                transition: transform ease-in-out;
+
+                img
+                {
+                    display: block;
+    
+                    width: auto;
+                    height: auto;
+                }
+            }
+        }
+
+        &>button
+        {
+            @include position.placement(absolute, $top: 0);
+    
+            @extend %f-center;
+
+            z-index: 1;
+
+            opacity: .5;
+
+            width: 15%;
+            height: 100%;
+
+            background-color: transparent;
+
+            &.prev { left: 0; }
+            &.next { right: 0; }
+
+            &:hover { opacity: 1; }
+    
+            img
+            {
+                vertical-align: middle;
+
+                width: 1.6rem;
+                height: 2.7rem;
+            }
+        }
+
         nav
         {
-            position: absolute;
-            bottom: 16px;
-            left: 50%;
+            @include position.placement(absolute, $bottom: 16px, $left: 50%);
 
             z-index: 1;
 
@@ -942,122 +983,87 @@ lang="scss"
 
             button
             {
+                $border: solid transparent 1rem;
+            
                 opacity: .5;
     
-                width: 30px;
+                width: 3rem;
                 height: 3px;
 
-                margin: 0 3px;
+                margin-inline: 3px;
 
-                background-color: #fff;
+                background-color: $light-color;
                 background-clip: padding-box;
 
-                border-top: solid transparent 10px;
-                border-bottom: solid transparent 10px;
+                border-top: $border;
+                border-bottom: $border;
 
                 box-sizing: content-box;
 
                 transition: opacity .6s ease;
+
+                &.active { opacity: 1; }
             }
-            button.active { opacity: 1; }
         }
+    }
 
-        &>div
-        {
-            position: relative;
+    #ninacarducci-about, #ninacarducci-contact
+    {
+        padding: 10rem;
 
-            width: 100%;
-            height: 100%;
+        picture::before { height: 150px; }
+    }
 
-            .slider-item
-            {
-                position: absolute;
-                top: 0;
-                left: 0;
+    #ninacarducci-about, #ninacarducci-service>div, #ninacarducci-contact>div
+    {
+        @extend %f-column;
         
-                width: 100%;
-                height: 100%;
-
-                transition: transform ease-in-out;
-            }
-    
-            button
-            {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-    
-                position: absolute;
-                top: 0;
-
-                z-index: 1;
-
-                opacity: .5;
-
-                width: 15%;
-                height: 100%;
-
-                background-color: transparent;
-
-                &:hover { opacity: 1; }
-        
-                img
-                {
-                    vertical-align: middle;
-    
-                    width: 16px;
-                    height: 27px;
-                }
-            }
-            .prev { left: 0; }
-            .next { right: 0; }
-        }
+        align-items: center;
     }
 
     #ninacarducci-about
     {
-        display: flex;
-
+        $primary-color: #f6d2b8;
+        $secondary-color: #e5975f;
+    
         position: relative;
 
         width: 100%;
 
-        padding: 100px;
-
-        background-color: #f6d2b8;
+        background-color: $primary-color;
 
         box-sizing: border-box;
 
+        picture, article h2 { margin-top: 1.6rem; }
+
         picture
         {
-            z-index: 0;
-        
-            width: 560px;
-            height: 558px;
-
-            margin: 0 20px;
-
             &::before
             {
-                content: '';
-
-                position: absolute;
-
-                bottom: 0;
-                left: 0;
+                @include position.placement(absolute, $top: 0, $left: 0, $pseudo-element: true);
 
                 z-index: -1;
-    
-                width: 374px;
-                height: 329px;
 
-                background-color: #e5975f;
+                width: 100%;
+                height: 30%;
+
+                background-color: $secondary-color;
             }
+
+            z-index: 0;
+        
+            width: 224px;
+            height: 223px;
         }
 
         article
         {
-            h2 { margin: 1em 0 60px; }
+            h2
+            {
+                margin-bottom: 1.6rem;
+
+                text-align: center;
+            }
 
             em
             {
@@ -1065,10 +1071,10 @@ lang="scss"
     
                 width: 60%;
 
-                margin-bottom: 0.5rem;
+                margin-bottom: .8rem;
         
                 font-family: Spectral, sans-serif;
-                font-size: 1rem;
+                font-size: 1.6rem;
                 font-weight: 800;
                 font-style: italic;
                 line-height: 1.2;
@@ -1078,7 +1084,7 @@ lang="scss"
             {
                 width: 80%;
 
-                font-size: 14px;
+                font-size: 1.6rem;
             }
         }
     }
@@ -1089,114 +1095,122 @@ lang="scss"
 
         h2
         {
-            padding-block: 2em;
+            padding-block: 6.4rem;
 
             text-align: center;
         }
 
         button { background-color: transparent; }
 
+        ul, .container { @extend %f-j-center; }
+
         ul
         {
-            display: flex;
-            justify-content: center;
             flex-wrap: wrap;
 
-            gap: 10px;
+            gap: 1rem;
 
-            margin-block: 1.5em;
+            margin-block: 2.4rem;
 
             button
             {
-                padding: 0.5rem 1rem;
+                padding: .8rem 1.6rem;
 
                 color: #000;
-                font-size: 1em;
+                font-size: 1.6rem;
                 line-height: 1.5;
 
                 transition: color .15s ease-in-out, background-color .15s ease-in-out;
+
+                &.active { background-color: #beb45a; }
             }
-            button.active { background-color: #beb45a; }
         }
 
-        .container
+        .container>div
         {
-            display: flex;
-            justify-content: center;
+            display: grid;
+            grid-template-columns: 1fr;
 
-            &>div
+            gap: 1.6rem;
+
+            width: fit-content;
+            max-width: 100%;
+
+            button
             {
-                display: grid;
-                grid-template-columns: repeat(var(--columns), auto);
+                width: 254px;
+                height: 254px;
+            }
 
-                gap: 1em;
+            img
+            {
+                aspect-ratio: 1 / 1;
 
-                img { user-select: none; }
+                width: auto;
+                height: auto;
+        
+                user-select: none;
             }
         }
 
         .modal
         {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-
-            position: fixed;
-            top: 0;
-            left: 0;
-
+            @include position.placement(fixed, 0, 0, 0, 0);
+        
+            @extend %f-j-center;
+            @extend %any;
+        
             z-index: 3;
 
-            width: 100vw;
-            height: 100vh;
+            background-color: rgba(0, 0, 0, .5);
 
-            background-color: rgba(0,0,0,.5);
-
-            &
-            >div
+            &>div
             {
-                position: relative;
+                $border-size: 1rem;
+        
+                @extend %f-a-center;
 
-                transition: transform .3s ease-out;
+                height: 100%;
 
                 img
                 {
-                    max-width: 498px;
+                    order: 2;
+    
+                    width: auto;
+                    max-width: min(90vw, 498px);
+                    max-height: 90vh;
+
+                    object-fit: contain;
             
-                    border: solid #fff 1rem;
-                    border-radius: 5px;
+                    border: solid $light-color $border-size;
+                    border-radius: .5rem;
 
                     box-sizing: border-box;
                 }
 
                 button
                 {
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-            
-                    position: absolute;
-                    top: 50%;
-            
+                    @extend %f-center;
+        
                     &.prev
                     {
-                        left: 0;
-
-                        transform: translate(-50%, -50%);
+                        order: 1;
+            
+                        transform: translateX($border-size);
                     }
                     &.next
                     {
-                        right: 0;
-
-                        transform: translate(50%, -50%);
+                        order: 3;
+    
+                        transform: translateX(-$border-size);
                     }
 
-                    width: 30px;
-                    height: 30px;
+                    width: 3rem;
+                    height: 3rem;
 
-                    background-color: #fff;
+                    background-color: $light-color;
 
-                    font-size: 24px;
+                    font-size: 2.4rem;
                 }
             }
         }
@@ -1207,7 +1221,7 @@ lang="scss"
         width: 70%;
 
         margin: auto;
-        padding-block: 3em;
+        padding-block: 4.8rem;
 
         font-family: Spectral;
 
@@ -1217,117 +1231,119 @@ lang="scss"
 
         h2
         {
-            font-size: 2.5rem !important;
+            font-size: 4rem !important;
             font-style: italic;
             font-weight: 300;
         }
 
         figcaption
         {
-            font-size: 22px;
+            font-size: 2.2rem;
             font-weight: 800;
         }
     }
 
     #ninacarducci-service
     {
+        $primary-color: #a8d5d8;
+        $secondary-color: #1c6474;
+    
         position: relative;
     
         width: 100%;
 
-        background-color: #a8d5d8;
+        background-color: $primary-color;
 
         h2
         {
-            padding-block: 2em;
+            padding-block: 6.4rem;
 
             text-align: center;
         }
 
-        &
-        >div
+        &>div, article
         {
-            display: flex;
             justify-content: space-between;
 
-            margin: auto;
-            padding: 2em 0;
-
             box-sizing: border-box;
+        }
 
+        &>div
+        {
             &::before
             {
-                content: '';
+                @include position.placement(absolute, $right: 0, $bottom: 0, $pseudo-element: true);
+    
+                background-color: $secondary-color;
 
-                position: absolute;
-                bottom: 0;
-                left: 0;
-    
-                background-color: #1c6474;
-    
-                width: 100%;
-                height: 30%;
+                width: 30%;
+                height: 100%;
             }
+
+            width: 94%;
+
+            margin: auto;
+            padding-block: 3.2rem;
         }
 
         article
         {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-
+            @extend %f-column;
+    
             z-index: 1;
 
-            max-width: 390px;
-            width: 30%;
-            height: 337px;
+            width: 100%;
+            max-width: 100%;
+            height: auto;
     
-            padding: 1em;
+            margin-block: 3.2rem;
+            padding: 1.6rem;
 
-            background-color: #fff;
+            background-color: $light-color;
 
-            box-sizing: border-box;
+            font-size: 1.6rem;
 
-            h3, h4 { margin-bottom: 0.5rem; }
-            h3 { font-size: 1.75rem; }
-            h4 { font-size: 1.5rem; }
-            p { margin-bottom: 1rem; }
+            &>div:nth-child(1) { margin-bottom: 1.6rem; }
+
+            h3, h4 { margin-bottom: .8rem; }
+            h3 { font-size: 2.8rem; }
+            h4 { font-size: 2.4rem; }
+    
+            p { margin-bottom: 1.6rem; }
         }
     }
 
     #ninacarducci-contact
     {
+        $primary-color: #d8d3a8;
+        $secondary-color: #beb45a;
+
         position: relative;
 
-        padding: 100px;
-
-        background-color: #d8d3a8;
+        background-color: $primary-color;
 
         &>div
         {
-            display: flex;
-
             margin: auto;
 
-            font-size: 1rem;
+            font-size: 1.6rem;
             line-height: 1.5;
 
             &>* { z-index: 1; }
 
-            h2 { margin-bottom: 0.5rem; }
+            h2 { margin-bottom: .8rem; }
         }
         &>div:nth-child(1)
         {
             section { flex: 2; }
 
-            p { margin-bottom: 1rem; }
+            p { margin-bottom: 1.6rem; }
 
             form
             {
-                display: flex;
-                flex-direction: column;
+                @extend %f-column;
 
-                width: 70%;
+                width: 100%;
 
                 label
                 {
@@ -1335,12 +1351,12 @@ lang="scss"
                     line-height: inherit;
                 }
 
-                input,
-                textarea
+                input, textarea
                 {
                     width: 100%;
     
-                    margin-bottom: 20px;
+                    margin-bottom: 2rem;
+                    padding: .8rem 1.6rem;
     
                     background-color: transparent;
     
@@ -1351,19 +1367,20 @@ lang="scss"
 
                     box-sizing: border-box;
                 }
-                input { height: 2.5em; }
-                input[type="text"], input[type="email"] { padding: 1px 2px; }
-                input[type=submit]
-                {
-                    padding: 0.5em 1em;
     
-                    background-color: #beb45a;
+                input { height: 4rem; }
+    
+                input[type="submit"]
+                {
+                    background-color: $secondary-color;
 
                     cursor: pointer;
                 }
+
                 textarea 
                 {
-                    height: 5em;
+                    max-width: 100%;
+                    height: 9.6rem;
     
                     font-size: 1.2em;
                     line-height: 2.5em;
@@ -1372,22 +1389,25 @@ lang="scss"
 
             picture
             {
-                margin-inline: 20px;
-
                 &::before
                 {
-                    content: '';
-        
-                    position: absolute;
-                    right: 0;
-                    bottom: 0;
+                    @include position.placement(absolute, $bottom: 0, $right: 0, $pseudo-element: true);
 
                     z-index: -1;
 
-                    width: 374px;
-                    height: 329px;
+                    width: 100%;
+                    height: 150px;
                 
-                    background-color: #beb45a;
+                    background-color: $secondary-color;
+                }
+
+                margin-top: 1.6rem;
+                margin-inline: 2rem;
+
+                img
+                {
+                    width: auto;
+                    height: auto;
                 }
             }
         }
@@ -1395,9 +1415,16 @@ lang="scss"
         {
             justify-content: space-between;
 
-            margin-top: 60px;
+            margin-top: 6rem;
 
-            section { text-align: center; }
+            section
+            {
+                flex: 1;
+
+                margin-top: 1rem;
+
+                text-align: center;
+            }
 
             p
             {
@@ -1407,182 +1434,143 @@ lang="scss"
         }
     }
 
-    @media (min-width: 576px)
+    @include media.min($ms3)
     {
-        #ninacarducci-service>div,
-        #ninacarducci-contact>div { max-width: 540px; }
-    }
+        #ninacarducci-gallery .container>div
+        {
+            grid-template-columns: repeat(2, 1fr);
 
-    @media all and (max-width: 650px)
+            button
+            {
+                width: 194px;
+                height: 194px;
+            }
+        }
+    }
+    @include media.min($ms4)
     {
         header
         {
-            flex-direction: column;
-    
-            padding-inline: 0;
+            flex-direction: row;
 
-            nav
-            {
-                width: 100%;
+            padding-inline: 10rem;
 
-                li
-                {
-                    flex: 1;
-
-                    padding-block: 1em;
-
-                    text-align: center;
-                }
-            }
+            nav li { flex: auto !important; }
         }
     
-        #ninacarducci-about,
-        #ninacarducci-contact { padding: 2em; }
+        #ninacarducci-about, #ninacarducci-contact
+        {
+            padding: 10rem;
 
-        #ninacarducci-about picture::before,
-        #ninacarducci-contact picture::before { height: 150px; }
+            picture::before { height: 329px; }
+        }
 
         #ninacarducci-about picture
         {
-            width: 224px;
-            height: 223px;
+            width: 420px;
+            height: 419px;
+        }
+
+        #ninacarducci-gallery .container>div
+        {
+            grid-template-columns: repeat(3, 1fr);
+
+            button
+            {
+                width: 224px;
+                height: 224px;
+            }
+        }
+
+        #ninacarducci-contact>div:nth-child(1)
+        {
+            form { width: 70%; }
+
+            picture::before { height: 40%; }
+        }
+    }
+
+    @include media.min($ms5)
+    {
+        #ninacarducci-about, #ninacarducci-service>div, #ninacarducci-contact>div
+        {
+            flex-direction: row;
+            align-items: start;
+        }
+    
+        #ninacarducci-about
+        {
+            picture
+            {
+                &::before
+                {
+                    top: auto;
+                    bottom: 0;
+    
+                    width: 374px;
+                }
+
+                width: 560px;
+                height: 558px;
+
+                margin: 0 2rem;
+            }
+
+            article h2
+            {
+                margin-block: 3rem 6rem;
+
+                text-align: left;
+            }
+        }
+
+        #ninacarducci-gallery .container>div button
+        {
+            width: 304px;
+            height: 304px;
         }
 
         #ninacarducci-service>div
         {
-            align-items: center;
-
-            article { max-width: 90%; }
-        }
-
-        #ninacarducci-contact form { width: 100%; }
-    }
-
-    @media (min-width: 768px)
-    {
-        #ninacarducci-service>div,
-        #ninacarducci-contact>div { max-width: 720px; }
-    }
-
-    @media (min-width: 992px)
-    {
-        #ninacarducci-service>div,
-        #ninacarducci-contact>div { max-width: 960px; }
-    }
-
-    @media all and (max-width: 1000px)
-    {
-        #ninacarducci-about
-        {
-            flex-direction: column;
-
-            picture,
-            h2
+            &::before
             {
-                margin-top: 1em;
+                left: 0;
 
-                text-align: center;
-            }
-    
-            picture
-            {
-                &::before
-                {
-                    position: absolute;
-
-                    top: 0;
-                    bottom: auto;
-                    left: 0;
-                
-                    width: 100%;
-                    height: 30%;
-                }
+                width: 100%;
+                height: 30%;
             }
 
-            /* article { width: 100%; } */
-        }
-
-        #ninacarducci-service
-        {
-            &
-            >div
-            {
-                flex-direction: column;
-
-                &::before
-                {
-                    right: 0;
-                    left: auto;
-
-                    width: 30%;
-                    height: 100%;
-                }
-            }
-    
             article
             {
-                width: 100%;
-                max-width: 100%;
-                height: auto;
-
-                margin: 2em 0;
-
-                &
-                >div:nth-child(1) { margin-bottom: 1em; }
+                width: 30%;
+                max-width: 390px;
+                height: 337px;
             }
         }
 
-
-        #ninacarducci-contact
+        #ninacarducci-contact>div:nth-child(1) picture
         {
-            &>div { flex-direction: column; }
-    
-            picture
+            &::before
             {
-                margin-top: 1em;
-
-                &::before
-                {
-                    width: 100%;
-                    height: 40%;
-                }
+                width: 374px;
+                height: 329px;
             }
+    
+            flex: 1;
+
+            margin-top: 0;
         }
     }
 
-     @media all and (max-width: 1180px)
+    @include media.min($ms6)
     {
-        #ninacarducci-about
+        #ninacarducci-gallery .container>div button
         {
-            align-items: center;
-    
-            picture
-            {
-                width: 420px;
-                height: 419px;
-            }
-
-            h2
-            {
-                margin-top: 0;
-                margin-bottom: 1em;
-            }
+            width: 424px;
+            height: 424px;
         }
 
-        #ninacarducci-contact>div { align-items: center; }
+        #ninacarducci-service>div, #ninacarducci-contact>div { max-width: 1320px; }
     }
-
-    @media (min-width: 1200px)
-    {
-        h2 { font-size: 2rem; }
-
-        #ninacarducci-service>div,
-        #ninacarducci-contact>div { max-width: 1140px; }
-    }
-
-    @media (min-width: 1400px)
-    {
-        #ninacarducci-service>div,
-        #ninacarducci-contact>div { max-width: 1320px; }
-    }
+}
 </style>

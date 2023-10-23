@@ -28,14 +28,12 @@
 
     prop_ID = void 0,
     prop_TARGET = 0,            // -1 | 0 | 1
-    prop_SCROLLTOP = 0,
 
     prop_CONTENT = '',
     prop_COLOR = "#FFF",
 
     prop_$MOUSEENTER = () => {},
-    prop_$MOUSELEAVE = () => {},
-    prop_$CLICK = () => {}
+    prop_$MOUSELEAVE = () => {}
 
 // #IMPORTS
 
@@ -51,6 +49,7 @@
 
     // --SVELTE
     import { onMount, onDestroy } from 'svelte'
+    import { createEventDispatcher } from 'svelte'
     import { cubicIn, cubicOut, cubicInOut } from 'svelte/easing'
 
     // --COMPONENT-COVER
@@ -63,6 +62,9 @@
     import Logo from '../icons/Logo.svelte'
 
 // #CONSTANTES
+
+    // --SVELTE
+    const SVELTE_DISPATCH = createEventDispatcher()
 
     // --ELEMENT-CARD
     const
@@ -146,7 +148,7 @@
         card_HALF_HEIGHT = card.offsetHeight / 2
     
         card_TRANSLATE_X = card_getTranslateX()
-        card_TRANSLATE_Y =  card_getTranslateY() + (card_ON ? 0 : APP.app_HEIGHT) + prop_SCROLLTOP
+        card_TRANSLATE_Y =  card_getTranslateY() + (card_ON ? 0 : APP.app_HEIGHT)
 
         card_ROTATE_X = (card_ROTATE_Y = 0)
         card_ROTATE_Z = card_getRZ()
@@ -161,7 +163,7 @@
     function tag_setVars()
     {
         tag_TRANSLATE_X = card_TRANSLATE_X + card_HALF_WIDTH
-        tag_TRANSLATE_Y = card_getTranslateY() + card_HALF_HEIGHT + prop_SCROLLTOP
+        tag_TRANSLATE_Y = card_getTranslateY() + card_HALF_HEIGHT
     }
 
     // --DESTROY
@@ -194,7 +196,7 @@
         {
             card_clear()
 
-            card_ON = ON ? card_aIn() : card_aOut()
+            ;(card_ON = ON) ? card_aIn() : card_aOut()
 
             if (!on) card_START = true
         }
@@ -203,7 +205,7 @@
     function card_updateTranslate(x, y)
     {
         card_TRANSLATE_X = x - card_HALF_WIDTH
-        card_TRANSLATE_Y = y - card_HALF_HEIGHT + prop_SCROLLTOP
+        card_TRANSLATE_Y = y - card_HALF_HEIGHT
     }
 
     function card_updateRotate(x, y)
@@ -245,7 +247,7 @@
         if (offsetX && offsetY) card_updateRotate(offsetX - card_HALF_WIDTH, offsetY - card_HALF_HEIGHT)
 
         tag_TRANSLATE_X = clientX
-        tag_TRANSLATE_Y = clientY + prop_SCROLLTOP
+        tag_TRANSLATE_Y = clientY
     }, 100.02)
 
     function card_eMouseEnter()
@@ -283,7 +285,7 @@
         card_GRABBING = false
     }
 
-    function card_eClick() { prop_$CLICK(prop_TARGET ? null : prop_ID) }
+    function card_eClick() { SVELTE_DISPATCH('click', { id: prop_ID }) }
 
     async function card_e$Resize() { card_setVars() }
 

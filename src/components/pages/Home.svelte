@@ -178,22 +178,10 @@ lang="scss"
 >
 /* #USES */
 
-@use '../../assets/scss/app';
-
 @use '../../assets/scss/styles/position';
 @use '../../assets/scss/styles/size';
-@use '../../assets/scss/styles/media';
 
 /* #HOME */
-
-:global #home .title .fragments
-{
-    @include media.min($ms3)
-    {
-        &:nth-child(1) { margin-left: calc(app.$gap-inline * 2); }
-        &:nth-child(2) { margin-left: app.$gap-inline; }
-    }
-}
 
 .home
 {

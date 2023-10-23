@@ -1,17 +1,17 @@
 // #POSITION
 
     // --POSITION-FIXED
-    @mixin placement($position: relative, $top: auto, $right: auto, $bottom: auto, $left: auto, $pseudo-element: false)
+    @mixin placement($position: relative, $top: false, $right: false, $bottom: false, $left: false, $pseudo-element: false)
     {
         @if $pseudo-element
         {
-            @if type-of($pseudo-element) == 'string' { content: $pseudo-element; }
-            @else { content: ''; }
+            @if type-of($pseudo-element) == 'string' { content: $pseudo-element; } @else { content: ''; }
         }
 
         position: $position;
-        top: $top;
-        right: $right;
-        bottom: $bottom;
-        left: $left;
+        
+        @if $top { top: $top; }
+        @if $right { right: $right; }
+        @if $bottom { bottom: $bottom; }
+        @if $left { left: $left; }
     }

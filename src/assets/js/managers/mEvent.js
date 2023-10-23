@@ -131,10 +131,6 @@ constructor ()
         APP.app_updateSize()
         APP.app_updateSmallScreen()
 
-        // const [VALUE, TARGET] = [APP.app_$FREEZE.value, APP.app_$FREEZE.target]
-
-        // if (VALUE && TARGET instanceof HTMLElement) TARGET.focus(preve)
-
         this.#event_run.call(this.#event_MANAGER.resize)
     }
 
@@ -182,12 +178,17 @@ constructor ()
 
     #event_run() { for (const FUNC of this) FUNC(...arguments) }
 
-    event_scrollTo(top, instant)
+    async event_scrollTo(top, instant, hide = true)
     {
         const APP_$FREEZE = APP.app_$FREEZE
     
-        if (APP_$FREEZE.value) APP.app_$FREEZE = { value: false, target: APP_$FREEZE.target }
-        if (instant) APP.app_$HIDE = true
+        if (APP_$FREEZE.value)
+        {
+            APP.app_$FREEZE = { value: false, target: APP_$FREEZE.target }
+
+            await tick() // app freeze overflow clip
+        }
+        if (instant && hide) APP.app_$HIDE = true
 
         ;(APP.app ?? document.getElementById('app')).scrollTo({ top: top, behavior: instant ? 'instant' : 'smooth' })
     }
@@ -205,7 +206,8 @@ constructor ()
     import APP from './mApp'
 
     // --SVELTE
-    import { writable } from "svelte/store"
+    import { tick } from 'svelte'
+    import { writable } from 'svelte/store'
 
 // #EXPORT
 

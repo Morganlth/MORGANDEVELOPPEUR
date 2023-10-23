@@ -10,31 +10,49 @@
 // #EXPORT
 
     // --PROP
-    export let prop_DURATION = 0
+    export let prop_DESTROY = false
 
 // #IMPORT
 
-    // --JS
-    import { transition_wait } from '../../assets/js/utils/transition'
+    // --LIB
+    import COLORS from '$lib/colors'
 
-// #VARIABLE
+// #VARIABLES
 
     // --ELEMENT-MASK2
-    let mask2_DESTROY = false
+    let
+    mask2_OPACITY = 0,
+
+    mask2_BACKGROUND_COLOR = COLORS.primary,
+
+    mask2_PE_BEFORE_CLIP_POINTS = 'none',
+    mask2_PE_AFTER_CLIP_POINTS = 'none'
+
+// #REACTIVE
+
+    // --ELEMENT-MASK2
+    $: mask2_update(prop_DESTROY)
 
 // #FUNCTION
 
-    // --OUTRO
-    function mask2_outro() { mask2_DESTROY = true }
+    // --UPDATE
+    function mask2_update(destroy)
+    {
+        [mask2_OPACITY, mask2_BACKGROUND_COLOR, mask2_PE_BEFORE_CLIP_POINTS, mask2_PE_AFTER_CLIP_POINTS] =
+        destroy
+        ? [0, COLORS.primary, '0 0, 0 0, 0 100%, 0% 100%', '100% 0, 100% 0, 100% 100%, 100% 100%']
+        : [1, COLORS.dark, '100% 0, 50% 0, 50% 100%, 100% 100%', '0 0, 50% 0, 50% 100%, 0 100%']
+    }
 </script>
 
 <!-- #HTML -->
 
 <div
 class="mask2"
-class:destroy={mask2_DESTROY}
-out:transition_wait={{ duration: prop_DURATION }}
-on:outrostart={mask2_outro}
+style:opacity={mask2_OPACITY}
+style:--pe-bg-color={mask2_BACKGROUND_COLOR}
+style:--pe-before-clip="polygon({mask2_PE_BEFORE_CLIP_POINTS})"
+style:--pe-after-clip="polygon({mask2_PE_AFTER_CLIP_POINTS})"
 >
 </div>
 
@@ -52,25 +70,21 @@ lang="scss"
 
 .mask2
 {
-    $clip-left-0: polygon(0 0, 0 0, 0 100%, 0% 100%);
-    $clip-right-0: polygon(100% 0, 100% 0, 100% 100%, 100% 100%);
-    $clip-left-50: polygon(0 0, 50% 0, 50% 100%, 0 100%);
-    $clip-right-50: polygon(100% 0, 50% 0, 50% 100%, 100% 100%);
-
     &::before, &::after
     {
         @include position.placement(absolute, 0, 0, 0, 0, true);
 
         @extend %any;
 
-        animation: a0 ease-in-out forwards;
+        background-color: var(--pe-bg-color, '$dark');
+
+        transition: clip-path ease-in-out, background 1s;
     }
     &::before
     {
-        #{--clip-0}: $clip-left-0;
-        #{--clip-1}: $clip-right-50;
+        clip-path: var(--pe-before-clip, 'none');
 
-        animation-duration: .8s;
+        transition-duration: .8s;
     }
 
     @include position.placement(fixed, 0, 0, 0, 0);
@@ -81,59 +95,13 @@ lang="scss"
 
     mix-blend-mode: hue;
 
-    &.destroy
-    {
-        &::before, &::after { animation-name: a1 !important; }
-        &::before
-        {
-            #{--clip-0}: $clip-right-50;
-            #{--clip-1}: $clip-left-0;
-        }
-        &::after
-        {
-            #{--clip-0}: $clip-left-50;
-            #{--clip-1}: $clip-right-0;
-        }
-    }
-
-    @keyframes a0
-    {
-        from
-        {
-            clip-path: var(--clip-0);
-
-            background-color: $primary;
-        }
-        to
-        {
-            clip-path: var(--clip-1);
-
-            background-color: $dark;
-        }
-    }
-
-    @keyframes a1
-    {
-        from
-        {
-            clip-path: var(--clip-0);
-
-            background-color: $dark;
-        }
-        to
-        {
-            clip-path: var(--clip-1);
-
-            background-color: $indicator;
-        }
-    }
+    transition: opacity 1s;
 
     &::after
     {
-        #{--clip-0}: $clip-right-0;
-        #{--clip-1}: $clip-left-50;
+        clip-path: var(--pe-after-clip, 'none');
 
-        animation-duration: 1s;
+        transition-duration: 1s;
     }
 }
 </style>

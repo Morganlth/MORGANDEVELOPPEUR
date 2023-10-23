@@ -3,6 +3,8 @@
 -ROUTER
 -SPRING
     ROUTER
+        ICON * n
+            ARROW
         ROUTE * n
 
 -->
@@ -20,11 +22,20 @@
 
 // #IMPORTS
 
+    // --LIB
+    import COLORS from '$lib/colors'
+
     // --CONTEXTS
     import { ROUTER, SPRING } from '../../App.svelte'
 
+    // --COMPONENT-COVER
+    import Icon from '../covers/Icon.svelte'
+
     // --COMPONENT-ELEMENT
     import Route from './Route.svelte'
+
+     // --COMPONENT-ICON
+     import Arrow from '../icons/Arrow.svelte'
 
 // #VARIABLE
 
@@ -60,7 +71,7 @@
 
     function router_eMouseLeave() { spring_update(0, SPRING.spring_D_SIZE) }
 
-    async function router_eClick(id)
+    async function route_eClick({ detail: {id} })
     {
         router_update(id)
 
@@ -81,13 +92,23 @@ on:mouseleave={router_eMouseLeave}
                 <li
                 style:--route-t-delay="{i * 100}ms"
                 >
+                    <Icon
+                    prop_SIZE="1rem"
+                    prop_COLOR={COLORS.intermediate}
+                    prop_SPRING={false}
+                    >
+                        <Arrow
+                        prop_FOCUS={route.on}
+                        />
+                    </Icon>
+            
                     <Route
                     prop_ON={route.on}
                     prop_ID={route.id}
                     prop_VALUE={route.value ?? ''}
                     prop_ATTRIBUTES={route.attributes}
                     prop_$MOUSEENTER={router_eMouseEnter}
-                    prop_$CLICK={router_eClick}
+                    on:click={route_eClick}
                     />
                 </li>
             {/if}
@@ -114,7 +135,7 @@ lang="scss"
     $t-duration: .4s;
     $li-d-clip: polygon(-10% -10%, 110% -10%, 110% 110%, -10% 110%);
 
-    @include position.placement(fixed, app.$gap-block, calc(app.$gap-inline * 3));
+    @include position.placement(fixed, $top: app.$gap-block, $left: 50%);
 
     z-index: 1;
 
@@ -125,9 +146,9 @@ lang="scss"
 
     &.hide
     {
-        &:hover li { clip-path: $li-d-clip !important; }
+        &:hover ul :global .route { clip-path: $li-d-clip !important; }
 
-        li { clip-path: polygon(0 0, 0 0, 0 100%, 0% 100%); }
+        ul :global .route { clip-path: polygon(0 0, 0 0, 0 100%, 0% 100%); }
     }
 
     ul
@@ -143,12 +164,31 @@ lang="scss"
 
         li
         {
+            position: relative;
+
+            flex: 1;
+
             width: 100%;
             height: fit-content;
+        }
 
-            clip-path: $li-d-clip;
+        :global
+        {
+            .icon
+            {
+                @include position.placement(absolute, $top: 50%, $left: 0);
 
-            transition: clip-path $t-duration var(--route-t-delay, 0s) ease-out;
+                display: none;
+
+                transform: translate(-250%, -50%);
+            }
+
+            .route
+            {
+                clip-path: $li-d-clip;
+
+                transition: clip-path $t-duration var(--route-t-delay, 0s) ease-out;
+            }
         }
     }
 
@@ -164,7 +204,6 @@ lang="scss"
         }
 
         top: max(36%, 48rem);
-        right: auto;
         left: app.$gap-inline;
 
         ul
@@ -173,6 +212,8 @@ lang="scss"
             align-items: flex-start;
 
             gap: 0;
+
+            :global .icon { display: inline-block; }
         }
     }
     @include media.min($ms4, $ms4) { top: 54%; }
