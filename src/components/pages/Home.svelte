@@ -1,11 +1,16 @@
 <!-- #MAP
 
+-COMMAND
 -EVENT
     HOME
+        PARTICLES
+        SNAKE
         SPACECUBE
+        MASK
         GROUP
             GRAVITYAREA * 3
                 CUBE
+        TICTACTOE
         TERMINAL
 
 -->
@@ -24,8 +29,7 @@
     prop_SPACECUBE = new Float64Array([]),
     prop_CUBES = [],
 
-    prop_TOP = 0,
-    prop_RATIO = 0
+    prop_TOP = 0
 
     // --BINDS
     export let page_CHARGED = false
@@ -37,17 +41,18 @@
     // --JS
     import MATH from '../../assets/js/utils/math'
 
-    // --CONTEXT
-    import { EVENT } from '../../App.svelte'
+    // --CONTEXTS
+    import { COMMAND, EVENT } from '../../App.svelte'
 
     // --SVELTE
-    import { tick } from 'svelte'
+    import { onMount, tick } from 'svelte'
 
     // --COMPONENT-COVERS
     import GravityArea from '../covers/GravityArea.svelte'
     import Group from '../covers/Group.svelte'
 
     // --COMPONENT-ELEMENTS
+    import Snake from '../elements/Snake.svelte'
     import Mask from '../elements/Mask.svelte'
     import Cube from '../elements/Cube.svelte'
     import TicTacToe from '../elements/TicTacToe.svelte'
@@ -56,7 +61,29 @@
     // --COMPONENT-DECOR
     import SpaceCube from '../decors/SpaceCube.svelte'
 
+// #CONSTANTES
+
+    // --ELEMENT-SNAKE
+    const
+    SNAKE = 'snake',
+
+    SNAKE_COMMANDS =
+    [
+        {
+            name: SNAKE,
+            callback: snake_c$,
+            params: { defaultValue: true },
+            tests: { testBoolean: true },
+            storage: true
+        }
+    ]
+
 // #VARIABLES
+
+    // --ELEMENT-SNAKE
+    let
+    snake_ON = true,
+    snake_GAME = false
 
     // --ELEMENT-GROUP
     let
@@ -73,23 +100,36 @@
 
     // --ELEMENT-GROUP
     $: group_start instanceof Function && group_stop instanceof Function
-    ? prop_FOCUS
-        ? group_start()
-        : group_stop()
+    ? prop_FOCUS && !snake_GAME ? group_start() : group_stop()
     : void 0
 
 // #FUNCTIONS
 
-    // --UPDATES
-    function tictactoe_update(on) { tictactoe_ON = on }
+    // --SET
+    function home_set() { snake_setCommands() }
 
-    function terminal_update(on) { terminal_ON = on }
+    function snake_setCommands() { COMMAND.command_setBasicCommands(SNAKE_COMMANDS) }
+
+    // --UPDATES
+    function snake_update(on) { snake_ON = on }
+
+    function snake_update2(value) { snake_GAME = value }
+
+    function tictactoe_update(value) { tictactoe_ON = value }
+
+    function terminal_update(value) { terminal_ON = value }
+
+    // --COMMAND
+    function snake_c$(on) { COMMAND.command_test(on, 'boolean', snake_update, SNAKE, snake_ON) }
 
     // --EVENT
     async function gravityarea_eClick(id)
     {
         switch (id)
         {
+            case 0:
+                snake_update2(!snake_GAME)
+                break
             case 1:
                 tictactoe_update(!tictactoe_ON)
                 break
@@ -108,9 +148,14 @@
 
         await tick()
 
+        snake_update2(str === 'snake')
         tictactoe_update(str === 'tictactoe')
         terminal_update(str === 'terminal')
     }
+
+// #LIFECYCLE
+
+onMount(home_set)
 </script>
 
 <!-- #HTML -->
@@ -119,18 +164,23 @@
 class="home"
 data-page-id={prop_ID}
 >
+    <Snake
+    prop_ON={snake_ON && prop_FOCUS}
+    bind:snake_GAME
+    />
+
     <SpaceCube
+    prop_ON={!snake_GAME}
     {prop_FOCUS}
     {prop_SPACECUBE}
-    {prop_RATIO}
     bind:spacecube_CHARGED={page_CHARGED}
     />
 
     <Mask
     prop_BLUR={true}
-    prop_COORDS={[68, 50]}
-    prop_GRADIENT={[0, 68]}
-    prop_RATIO={1 - prop_RATIO}
+    prop_COORDS={[70, 50]}
+    prop_GRADIENT={[10, 60]}
+    prop_OPACITY={prop_FOCUS ? 1 : 0}
     />
 
     <Group
@@ -147,7 +197,7 @@ data-page-id={prop_ID}
             prop_FOCUS={prop_FOCUS && page_CHARGED}
             prop_$RESIZE={resize}
             prop_$ANIMATION={animation}
-            prop_GRABBING={!prop_RATIO}
+            prop_GRABBING={prop_FOCUS}
             on:click={gravityarea_eClick.bind(null, cube.id)}
             >
                 <Cube

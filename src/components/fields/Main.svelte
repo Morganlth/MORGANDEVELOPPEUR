@@ -43,12 +43,17 @@
     // --ELEMENT-MAIN
     const
     MAIN = 'main',
+
     MAIN_HEIGHT = PAGES_DATAS.reduce((accumulator, page) => accumulator + page.h, 0) * 100,
+
     MAIN_EVENTS =
     {
         scroll: wait_throttle(main_e$Scroll, 16.67),
         resize: main_e$Resize
     }
+
+    // --ELEMENT-PAGE
+    const PAGE_Z = PAGES_DATAS.length
 
     // --ELEMENT-ROUTER
     const ROUTER_LINKS = PAGES_DATAS.map(page => router_getRoute(page))
@@ -95,32 +100,37 @@
 
     function pages_setPages()
     {
-        let h = 0
+        let top = 0
 
         for (let i = 0; i < PAGES_DATAS.length; i++)
         {
             const PAGE = PAGES_DATAS[i]
     
-            page_setVars(PAGE, i, h)
+            page_setVars(PAGE, i, top)
     
             ROUTER.router_add(PAGE)
 
-            h += PAGE.h
+            top = PAGE.end
         }
 
         pages_update(APP.app_SCROLLTOP ?? 0)
     }
 
-    function page_setVars(page, i, h)
+    function page_setVars(page, i, top)
     {
-        page.end = (h + page.h + (page.endgap ?? 0)) * APP.app_HEIGHT
+        [page.end, page.start] = page.h
+        ?   [
+                (page.h + (0)) * APP.app_HEIGHT + top,
+                top + APP.app_HEIGHT
+            ]
+        :   [1, 1]
 
         page_updateProps(page, i,
         {
-            prop_TOP: (page.top = h * APP.app_HEIGHT),
-            prop_INTRO: (page.intro = page_getIntro(page.top, APP.app_SCROLLTOP ?? 0)),
-            prop_START: (page.start = (h + (page.h > 1 ? 1 : 0) + (page.startgap ?? 0)) * APP.app_HEIGHT),
-            prop_DIF: (page.dif = page.end - page.start)
+            prop_TOP: (page.top = top),
+            prop_INTRO: (page.intro = page_getIntro(page.top, page.start, APP.app_SCROLLTOP ?? 0)),
+            prop_START: page.start,
+            prop_DIF: (page.dif = page.end - page.start + (page.gap ?? 0) * APP.app_HEIGHT)
         })
     }
 
@@ -135,12 +145,7 @@
     function main_destroyEvents() { EVENT.event_remove(MAIN_EVENTS) }
 
     // --GET
-    function page_getIntro(start, scrollTop)
-    {
-        const DIF = scrollTop - start
-
-        return DIF >= 0 && DIF < APP.app_HEIGHT
-    }
+    function page_getIntro(top, start, scrollTop) { return scrollTop >= top && scrollTop < start }
 
     function page_getRatio(start, dif, overflow, scrollTop)
     {
@@ -167,7 +172,7 @@
 
             page_updateProps(PAGE, i,
             {
-                prop_INTRO: (PAGE.intro = page_getIntro(PAGE.top, scrollTop)),
+                prop_INTRO: (PAGE.intro = page_getIntro(PAGE.top, PAGE.start, scrollTop)),
                 prop_RATIO: page_getRatio(PAGE.start, PAGE.dif, PAGE.overflow, scrollTop)
             })
 
@@ -248,6 +253,7 @@ style:height="{MAIN_HEIGHT}vh"
             prop_NAME={page.name}
             prop_FOCUS={page.focus}
             prop_INTRO={page.intro}
+            prop_Z={page.focus ? PAGE_Z : PAGE_Z - page.id - 1}
             prop_COMPONENT={page.component}
             prop_INFO={page.info}
             prop_TITLE={page.title}
@@ -289,6 +295,8 @@ lang="scss"
         @include position.placement(absolute, 0, 0, 0, 0);
     
         @extend %any;
+
+        transform: scale(1); /* fixed and z-index */
 
         opacity: 1;
 

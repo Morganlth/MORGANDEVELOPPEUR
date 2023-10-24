@@ -93,6 +93,8 @@ header
 
     pointer-events: none;
 
+    mix-blend-mode: lighten;
+
     box-sizing: border-box;
 
     &>strong

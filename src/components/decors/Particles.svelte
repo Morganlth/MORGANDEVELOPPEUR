@@ -3,6 +3,7 @@
 -APP
 -COMMAND
 -EVENT
+-SNAKE
     PARTICLES
 
 -->
@@ -10,11 +11,6 @@
 <!-- #SCRIPT -->
 
 <script>
-// #EXPORT
-
-    // --PROP
-    export let prop_TEMP = false
-
 // #IMPORTS
 
     // --JS
@@ -27,6 +23,7 @@
 
     // --CONTEXTS
     import { APP, COMMAND, EVENT } from '../../App.svelte'
+    import { SNAKE_$ON, SNAKE_$BLOCKSIZE, GAMEOVER_$ON } from '../elements/Snake.svelte'
 
     // --SVELTE
     import { onMount, onDestroy } from 'svelte'
@@ -95,6 +92,15 @@
 
     particles_cancel = () => {}
 
+// #REACTIVES
+
+    // --ELEMENT-SNAKE
+    $: snake$_ON = $SNAKE_$ON
+    $: snake$_BLOCKSIZE = $SNAKE_$BLOCKSIZE
+    
+    // --ELEMENT-GAMEOVER
+    $: gameover$_ON = $GAMEOVER_$ON
+
 // #FUNCTIONS
 
     // --SET
@@ -104,7 +110,7 @@
         particles_setCommands()
         particles_setEvents()
 
-        if (prop_TEMP) particles_restore()
+        particles.firstParent = particles.parentElement
     }
 
     function particles_setVars()
@@ -118,12 +124,7 @@
         particles_CONTEXT = particles_CONTEXT ?? particles.getContext('2d')
     }
 
-    function particles_setCommands()
-    {
-        if (prop_TEMP) return
-
-        COMMAND.command_setBasicCommands(PARTICLES_COMMANDS)
-    }
+    function particles_setCommands() { COMMAND.command_setBasicCommands(PARTICLES_COMMANDS) }
 
     function particles_setEvents() { EVENT.event_add(PARTICLES_EVENTS) }
 
@@ -163,17 +164,6 @@
         return [color_rgba(COLOR, Math.random() * .3 + .3), EDIBLE]
     }
 
-    // --RESTORE
-    function particles_restore()
-    {
-        for (let { name, callback, params, tests } of PARTICLES_COMMANDS)
-        {
-            const VALUE = COMMAND.command_testValue(localStorage.getItem(name), params, tests)
-
-            callback(VALUE)
-        }
-    }
-
     // --UPDATES
     function particles_update(on)
     {
@@ -202,9 +192,9 @@
         [DISTANCE_X, DISTANCE_Y] = [particle.x - CLIENT_X, particle.y - CLIENT_Y],
         DISTANCE = Math.sqrt(DISTANCE_X ** 2 + DISTANCE_Y ** 2)
 
-        if (particle.edible)
+        if (snake$_ON && !gameover$_ON && particle.edible)
         {
-            if (DISTANCE < 24) PARTICLES_PARTICLES.splice(PARTICLES_PARTICLES.indexOf(particle), 1)
+            if (DISTANCE < snake$_BLOCKSIZE) PARTICLES_PARTICLES.splice(PARTICLES_PARTICLES.indexOf(particle), 1)
         }
         else if (DISTANCE < particles_MOUSE_RADIUS)
         {

@@ -128,8 +128,6 @@
 
     function terminal_setEvents() { EVENT.event_add(TERMINAL_EVENTS) }
 
-    function input_setEvents() { EVENT.event_add(INPUT_EVENTS) }
-
     function input_setVars()
     {
         const VALUE = input_FIELD.value // save value
@@ -144,13 +142,14 @@
         input_eInput() // set mirror
     }
 
+    function input_setEvents() { EVENT.event_add(INPUT_EVENTS) }
+
     // --DESTROY
     function terminal_destroy()
     {
         terminal_clear()
     
         terminal_destroyEvents()
-
         input_destroyEvents()
     }
 
@@ -281,8 +280,6 @@
 
     function cell_eClick2() { input_fieldFocus() }
 
-    async function input_e$Resize() { input_setVars() }
-
     async function input_eKeyup({key})
     {
         switch (key)
@@ -315,6 +312,8 @@
             mirror_update()
         }
     }
+
+    async function input_e$Resize() { input_setVars() }
 
     // --CLEAR
     function terminal_clear() { clearTimeout(terminal_TIMEOUT) }
@@ -576,7 +575,9 @@ lang="scss"
 {
     $r-y: var(--r-y, 10deg);
 
-    @include position.placement(absolute, $top: 44%, $right: app.$gap-inline);
+    $icon-size: 2.4rem;
+
+    @include position.placement(absolute, $right: app.$gap-inline, $bottom: 20%);
 
     perspective-origin: left;
     perspective: 2000px;
@@ -595,7 +596,7 @@ lang="scss"
 
     .container
     {
-        #{--cell-size}: var(--icon-size, 2.4rem);
+        #{--cell-size}: calc(var(--icon-size, $icon-size) * .6);
 
         transform-origin: right;
         transform-style: preserve-3d;
@@ -632,7 +633,14 @@ lang="scss"
             {
                 @include font.content($light, $font-size: map.get(font.$font-sizes, s3));
 
-                margin-top: 2rem;
+                overflow: clip auto;
+
+                height: auto;
+                max-height: calc(100% - var(--cell-size));
+
+                padding-top: 2rem;
+
+                box-sizing: border-box;
 
                 &>span
                 {
@@ -649,8 +657,8 @@ lang="scss"
 
         .face
         {
-            #{--icon-size}: 2.4rem;
-
+            #{--icon-size}: $icon-size;
+    
             @extend %f-column;
 
             box-shadow: 0 0 .6rem $primary;
@@ -707,7 +715,7 @@ lang="scss"
 
         justify-content: space-between;
     
-        border-bottom: solid $primary 2px;
+        border-bottom: solid $primary .2rem;
 
         box-sizing: border-box;
 
@@ -781,16 +789,21 @@ lang="scss"
 
     @include media.min($ms3)
     {
+        top: 44%;
+        bottom: auto;
+
         width: 56vw;
         height: 46vh;
 
         .container
         {
+            #{--cell-size}: var(--icon-size, $icon-size);
+        
             .infos p { font-size: map.get(font.$font-sizes, s2); }
     
             h3 { font-size: map.get(font.$font-sizes, s7); }
         }
     }
-    @include media.min($height: $ms4) { top: 33%; }
+    @include media.min($ms4, $ms4) { top: 33%; }
 }
 </style>

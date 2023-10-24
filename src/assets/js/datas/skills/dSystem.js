@@ -11,7 +11,7 @@
         [
             {
                 tags: ['html', 'css'],
-                tag: 'HTML - CSS',
+                tag: '.html .css',
                 props:
                 {
                     prop_ROTATE: MATH.toRad(150),
@@ -44,7 +44,7 @@
             },
             {
                 tags: ['javascript'],
-                tag: 'JAVASCRIPT',
+                tag: '.javaScript',
                 props:
                 {
                     prop_ROTATE: MATH.toRad(30),
@@ -95,7 +95,7 @@
             },
             {
                 tags: ['node', 'nodejs'],
-                tag: 'NODE JS',
+                tag: '.nodeJS',
                 props:
                 {
                     prop_ROTATE: MATH.toRad(60),
@@ -117,7 +117,7 @@
             },
             {
                 tags: ['gestion', 'outils', 'adaptabilite'],
-                tag: 'AUTRES',
+                tag: 'Autres...',
                 props:
                 {
                     prop_ROTATE: MATH.toRad(90),

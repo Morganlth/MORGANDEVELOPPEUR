@@ -474,7 +474,7 @@ on:mousedown={card_eMouseDown}
 </button>
 
 <Tag
-prop_FOCUS={card_CHARGED && (tag_FOCUS || prop_TARGET === 1)}
+prop_FOCUS={card_CHARGED && prop_ON && (tag_FOCUS || prop_TARGET === 1)}
 prop_DURATION={TAG_DURATION}
 prop_IN={tag_in}
 prop_OUT={tag_out}

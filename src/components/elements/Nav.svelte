@@ -70,12 +70,7 @@
 // #FUNCTIONS
 
     // --SET
-    function nav_set()
-    {
-        for (const ITEM of prop_ITEMS) if (ITEM.update instanceof Function) ITEM.update()
-
-        nav_CHARGED = true
-    }
+    function nav_set() { nav_CHARGED = true }
 
     // --DESTROY
     function nav_destroy()

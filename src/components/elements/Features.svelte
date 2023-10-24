@@ -22,6 +22,7 @@
 // #IMPORTS
 
     // --JS
+    import { wait_throttle } from '../../assets/js/utils/wait'
 
     // --LIB
 
@@ -40,7 +41,7 @@ let features_TRANSLATE_Y = 0
 
 // #REACTIVES
 
-$: features_update(prop_RATIO)
+$: wait_throttle(features_update, 33.34)(prop_RATIO)
 
 // #FUNCTIONS
 
@@ -53,17 +54,17 @@ $: features_update(prop_RATIO)
     {
         let last_SHOW = false
     
-        features_TRANSLATE_Y = 100 * (1 - ratio)
+        features_TRANSLATE_Y = -100 * ratio
 
         for (let i = prop_FEATURES.length - 1; i >= 0; i--)
         {
             const
             FEATURE = prop_FEATURES[i],
-            RATIO = ratio >= FEATURE.id * prop_FRACTION
+            SHOW = ratio >= FEATURE.id * prop_FRACTION
         
-            prop_FEATURES[i] = { ...FEATURE, show: RATIO, focus: !last_SHOW && RATIO }
+            prop_FEATURES[i] = { ...FEATURE, show: SHOW, focus: !last_SHOW && SHOW }
 
-            if (RATIO) last_SHOW = true
+            if (SHOW) last_SHOW = true
         }
     }
 
@@ -174,7 +175,7 @@ lang="scss"
 {
     $duration: .8s;
 
-    @include position.placement(absolute, $bottom: 50%, $right: 0, $left: 0);
+    @include position.placement(absolute, $top: 50%, $right: 0, $left: 0);
 
     width: 100%;
     height: fit-content;
@@ -207,7 +208,7 @@ lang="scss"
 
                 z-index: -1;
 
-                opacity: .6;
+                opacity: .4;
 
                 background: url('/images/feature_bg.jpg') center / cover no-repeat;
                 mix-blend-mode: darken;

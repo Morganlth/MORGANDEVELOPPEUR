@@ -23,12 +23,13 @@ context="module"
 // #EXPORTS
 
     // --CONTEXTS
-    export const APP = a
-    export const ROUTER = r
-    export const COMMAND = c
-    export const EVENT = e
-    export const PROCESS = p
-    export const SPRING = s
+    export const
+    APP = a,
+    ROUTER = r,
+    COMMAND = c,
+    EVENT = e,
+    PROCESS = p,
+    SPRING = s
 
 // #IMPORTS
 

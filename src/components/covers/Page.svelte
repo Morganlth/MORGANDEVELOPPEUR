@@ -30,6 +30,8 @@
     prop_FOCUS = false,
     prop_INTRO = false,
 
+    prop_Z = 0,
+
     prop_COMPONENT = {},
     prop_INFO = '',
     prop_TITLE = {},
@@ -205,7 +207,7 @@ onDestroy(page_destroy)
 id={prop_NAME}
 class="page"
 class:hide={page_HIDE}
-style:z-index={prop_FOCUS ? 1 : 0}
+style:z-index={prop_Z}
 >
     <Wrapper>
         <Info

@@ -17,7 +17,7 @@
     prop_COORDS = [50, 50],
     prop_GRADIENT = [0, 100],
 
-    prop_RATIO = 1
+    prop_OPACITY = 1
 </script>
 
 <!-- #HTML -->
@@ -30,7 +30,7 @@ style:--mask-x="{prop_COORDS[0]}%"
 style:--mask-y="{prop_COORDS[1]}%"
 style:--mask-transparent="{prop_GRADIENT[0]}%"
 style:--mask-dark="{prop_GRADIENT[1]}%"
-style:opacity={prop_RATIO}
+style:opacity={prop_OPACITY}
 >
 </div>
 
@@ -56,7 +56,7 @@ lang="scss"
 
     pointer-events: none;
 
-    transition: opacity .4s;
+    transition: opacity 1s;
 
     &.blur
     {

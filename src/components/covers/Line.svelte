@@ -70,7 +70,7 @@ lang="scss"
     {
         flex-shrink: 0;
 
-        width: $line-h;
+        width: 4rem;
     
         color: $primary;
         font-size: $font-size;

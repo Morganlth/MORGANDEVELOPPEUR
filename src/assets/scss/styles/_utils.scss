@@ -7,7 +7,7 @@
 // #VARIABLE
 
     // --SCROLL-BAR
-    $scroll-bar-width: 10px;
+    $scroll-bar-width: 1rem;
 
 // #UTILS
 
@@ -41,8 +41,6 @@
         &::-webkit-scrollbar
         {
             width: $scroll-bar-width;
-
-            // background-color: $dark;
 
             pointer-events: auto;
         }

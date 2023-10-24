@@ -4,22 +4,40 @@
 -COMMAND
 -EVENT
     SNAKE
+        ?PARTICLES
         CANVAS
-
-        #if
-            GRID
-            PARTICLES
-            #if GAMEOVER
-            FRAME
-                SCRORE
-                FPS
-                CELL
-                    ICON
-                        CROSS
+        ?GRID
+        ?GAMEOVER
+        ?FRAME
+            SCRORE
+            FPS
+            CELL
+                ICON
+                    CROSS
 
 -->
 
 <!-- #SCRIPT -->
+
+<script
+context="module"
+>
+// #EXPORTS
+
+    // --ELEMENT-SNAKE
+    export const
+    SNAKE_$ON = writable(true),
+
+    SNAKE_$BLOCKSIZE = writable(40)
+
+    // --ELEMENT-GAMEOVER
+    export const GAMEOVER_$ON = writable(false)
+
+// #IMPORT
+
+    // --SVELTE
+    import { writable } from 'svelte/store'
+</script>
 
 <script>
 // #EXPORTS
@@ -52,17 +70,17 @@
     // --COMPONENT-ICON
     import Cross from '../icons/Cross.svelte'
 
-    // --COMPONENT-DECOR
-    import Particles from '../decors/Particles.svelte'
-
 // #CONSTANTES
 
     // --ELEMENT-SNAKE
     const
     SNAKE_SIZE_NAME = 'snake_size',
+
     SNAKE_BLOCKSIZE = 40,
+
     SNAKE_SNAKE = [],
     SNAKE_APPLE = [],
+
     SNAKE_COMMANDS =
     [
         {
@@ -73,12 +91,9 @@
             storage: true
         }
     ],
+
     SNAKE_EVENTS = { resize: snake_e$Resize },
-    SNAKE_EVENTS_2 =
-    {
-        scroll: snake_e$Scroll,
-        mouseMove: snake_e$MouseMove
-    }
+    SNAKE_EVENTS_2 = { mouseMove: snake_e$MouseMove }
 
 // #VARIABLES
 
@@ -89,9 +104,14 @@
     event_CLIENT_X = 0,
     event_CLIENT_Y = 0
 
+    // --ELEMENT-PARTICLES
+    let particles
+
     // --ELEMENT-SNAKE
     let
     snake,
+
+    snake_CHARGED = false,
 
     snake_WIDTH = 0,
     snake_HEIGHT = 0,
@@ -105,7 +125,6 @@
     snake_X = -1,
     snake_Y = -1,
 
-    snake_BLOCKSIZE,
     snake_CUSTOM_BLOCKSIZE,
 
     snake_INVINCIBLE = true,
@@ -123,14 +142,14 @@
     canvas_ROWS,
     canvas_CLIENTRECT
 
-    // --ELEMENT-GAMEOVER
-    let gameover_ON = false
-
 // #REACTIVES
 
     // --ELEMENT-SNAKE
-    $: prop_ON ? snake_start() : snake_stop()
+    $: snake_CHARGED ? snake_update(prop_ON) : void 0
     $: snake_GAME ? snake_startGame() : void 0
+
+    $: snake$_BLOCKSIZE = $SNAKE_$BLOCKSIZE
+    $: gameover$_ON = $GAMEOVER_$ON
 
 // #FUNCTIONS
 
@@ -143,6 +162,8 @@
 
         snake_setSnake()
         snake_setApple()
+
+        snake_CHARGED = true
     }
 
     function snake_setVars()
@@ -152,7 +173,7 @@
         SIZE = snake_CUSTOM_BLOCKSIZE ?? (APP.app_testScreen(BREAKPOINTS.ms4, BREAKPOINTS.ms4) ? SNAKE_BLOCKSIZE - 10 : SNAKE_BLOCKSIZE),
         OVERFLOW =  snake_GAME ? -SIZE : SIZE
 
-        snake_BLOCKSIZE = SIZE
+        SNAKE_$BLOCKSIZE.set(SIZE)
 
         snake_WIDTH = WIDTH - WIDTH % SIZE + OVERFLOW
         snake_HEIGHT = HEIGHT - HEIGHT % SIZE + OVERFLOW
@@ -160,7 +181,7 @@
         snake_OFFSET_TOP = (HEIGHT - snake_HEIGHT) / 2
         snake_OFFSET_LEFT = (WIDTH - snake_WIDTH) / 2
 
-        canvas_setVars()
+        canvas_setVars(SIZE)
     }
 
     function snake_setCommands() { COMMAND.command_setBasicCommands(SNAKE_COMMANDS) }
@@ -188,19 +209,18 @@
 
     function snake_setScore() { snake_SCORE = SNAKE_SNAKE.length }
 
-    function canvas_setVars()
+    function canvas_setVars(size)
     {
         canvas.width = snake_WIDTH
         canvas.height = snake_HEIGHT
 
-        canvas_COLUMNS = snake_WIDTH / snake_BLOCKSIZE
-        canvas_ROWS = snake_HEIGHT / snake_BLOCKSIZE
+        canvas_COLUMNS = snake_WIDTH / size
+        canvas_ROWS = snake_HEIGHT / size
 
         canvas_CONTEXT = canvas_CONTEXT ?? canvas.getContext('2d')
 
-        canvas_setClientRect()
+        canvas_CLIENTRECT = canvas.getBoundingClientRect()
     }
-    function canvas_setClientRect() { canvas_CLIENTRECT = canvas.getBoundingClientRect() }
 
     // --DESTROY
     function snake_destroy() { snake_destroyEvents() }
@@ -256,8 +276,15 @@
         return [offset_X, offset_Y]
     }
 
-    // --UPDATE
-    function snake_update()
+    // --UPDATES
+    function snake_update(on)
+    {
+        SNAKE_$ON.set(on)
+
+        on ? snake_start() : snake_stop()
+    }
+
+    function snake_update2()
     {
         snake_setApple()
 
@@ -271,8 +298,8 @@
 
     function snake_updateCoords()
     {
-        snake_X = Math.floor((event_CLIENT_X - snake_OFFSET_LEFT) / snake_BLOCKSIZE)
-        snake_Y = Math.floor((event_CLIENT_Y - snake_OFFSET_TOP) / snake_BLOCKSIZE)
+        snake_X = Math.floor((event_CLIENT_X - snake_OFFSET_LEFT) / snake$_BLOCKSIZE)
+        snake_Y = Math.floor((event_CLIENT_Y - snake_OFFSET_TOP) / snake$_BLOCKSIZE)
     }
 
     function snake_updateSize(size)
@@ -284,7 +311,7 @@
 
     function snake_updateApple(tool)
     {
-        canvas_CONTEXT.clearRect(SNAKE_APPLE[0] * snake_BLOCKSIZE, SNAKE_APPLE[1] * snake_BLOCKSIZE, snake_BLOCKSIZE, snake_BLOCKSIZE)
+        canvas_CONTEXT.clearRect(SNAKE_APPLE[0] * snake$_BLOCKSIZE, SNAKE_APPLE[1] * snake$_BLOCKSIZE, snake$_BLOCKSIZE, snake$_BLOCKSIZE)
 
         if (tool === 'fillRect')
         {
@@ -295,7 +322,7 @@
 
     function gameover_update(on)
     {
-        gameover_ON = on
+        GAMEOVER_$ON.set(on)
 
         if (on)
         {
@@ -319,16 +346,16 @@
     }
 
     // --COMMAND
-    function snake_c$Size(size) { COMMAND.command_test(size, 'number', snake_updateSize, SNAKE_SIZE_NAME, snake_BLOCKSIZE) }
+    function snake_c$Size(size) { COMMAND.command_test(size, 'number', snake_updateSize, SNAKE_SIZE_NAME, snake$_BLOCKSIZE) }
 
     // --EVENTS
-    async function snake_e$Scroll() { snake_move() }
-
     async function snake_e$MouseMove(clientX, clientY)
     {
         [event_CLIENT_X, event_CLIENT_Y] = [clientX, clientY]
 
-        snake_move()
+        snake_updateCoords()
+
+        if (snake_testMove()) snake_draw()
     }
 
     async function snake_e$Resize()
@@ -348,12 +375,7 @@
         if (!TARGET || TARGET.classList.contains('snake')) gameover_update(true)
     }
 
-    function cell_eClick()
-    {
-        document.exitFullscreen()
-    
-        snake_stopGame()
-    }
+    function cell_eClick() { document.exitFullscreen() }
 
     function gameover_eClick()
     {
@@ -383,7 +405,7 @@
     
                 last = NOW
         
-                canvas_CONTEXT[tool](BODY[0] * snake_BLOCKSIZE, BODY[1] * snake_BLOCKSIZE, snake_BLOCKSIZE, snake_BLOCKSIZE)
+                canvas_CONTEXT[tool](BODY[0] * snake$_BLOCKSIZE, BODY[1] * snake$_BLOCKSIZE, snake$_BLOCKSIZE, snake$_BLOCKSIZE)
             
                 if (--i < 0) return snake_updateApple(tool)
                 else if (i === 0) canvas_CONTEXT.fillStyle = COLORS.primary
@@ -414,25 +436,32 @@
         snake_a('clearRect')
     }
 
-    function snake_startGame()
+    async function snake_startGame()
     {
         try
         {
-            snake.requestFullscreen().then(snake_notInvincible)
+            await snake.requestFullscreen()
 
             if (!prop_ON) snake_start()
+
+            snake_notInvincible()
+
+            if (particles ??= document.querySelector('.particles')) snake?.insertBefore(particles, snake.children[0])
         }
-        catch (e) { snake_stopGame() }
+        catch { snake_stopGame() }
     }
 
     function snake_stopGame()
     {
+        const PARTCILES_PARENT = particles?.firstParent
+    
         if (!prop_ON) snake_stop()
+        if (PARTCILES_PARENT) PARTCILES_PARENT.insertBefore(particles, PARTCILES_PARENT.children[0])
 
         snake_GAME = false
         snake_INVINCIBLE = true
 
-        gameover_ON
+        gameover$_ON
         ? gameover_update(false)
         : prop_ON
             ? snake_moveTo()
@@ -442,7 +471,7 @@
     // --TESTS
     function snake_testMove() { return SNAKE_SNAKE[0][0] !== snake_X || SNAKE_SNAKE[0][1] !== snake_Y }
 
-    function snake_testEatenApple(x, y) { if (x === SNAKE_APPLE[0] && y === SNAKE_APPLE[1]) snake_update() }
+    function snake_testEatenApple(x, y) { if (x === SNAKE_APPLE[0] && y === SNAKE_APPLE[1]) snake_update2() }
 
     function snake_testOverlay([x, y]) { if (!snake_INVINCIBLE && x === snake_X && y === snake_Y) gameover_update(true) }
 
@@ -473,7 +502,7 @@
     {
         if (!snake_GAME) return
  
-        const [X, Y, SIZE] = [SNAKE_APPLE[0] * snake_BLOCKSIZE + 1, SNAKE_APPLE[1] * snake_BLOCKSIZE + 1, snake_BLOCKSIZE - 2]
+        const [X, Y, SIZE] = [SNAKE_APPLE[0] * snake$_BLOCKSIZE + 1, SNAKE_APPLE[1] * snake$_BLOCKSIZE + 1, snake$_BLOCKSIZE - 2]
     
         canvas_CONTEXT.fillStyle = snake_COLOR_APPLE
         canvas_CONTEXT.fillRect(X, Y, SIZE, SIZE)
@@ -500,9 +529,9 @@
         const
         MODEL = snake_getModel(SNAKE_SNAKE[i + 1], body, SNAKE_SNAKE[i - 2] ?? [x, y]),
         [OFFSET_X, OFFSET_Y] = snake_getDimensions(MODEL),
-        [X, Y] = [body[0] * snake_BLOCKSIZE + OFFSET_X, body[1] * snake_BLOCKSIZE + OFFSET_Y]
+        [X, Y] = [body[0] * snake$_BLOCKSIZE + OFFSET_X, body[1] * snake$_BLOCKSIZE + OFFSET_Y]
 
-        canvas_CONTEXT.fillRect(X, Y, snake_BLOCKSIZE - OFFSET_X, snake_BLOCKSIZE - OFFSET_Y)
+        canvas_CONTEXT.fillRect(X, Y, snake$_BLOCKSIZE - OFFSET_X, snake$_BLOCKSIZE - OFFSET_Y)
     }
     function snake_drawHead(x, y)
     {
@@ -511,20 +540,13 @@
         SNAKE_SNAKE[0] = [x, y]
     
         canvas_CONTEXT.fillStyle = COLORS.primary
-        canvas_CONTEXT.fillRect(x * snake_BLOCKSIZE, y * snake_BLOCKSIZE, snake_BLOCKSIZE, snake_BLOCKSIZE)
+        canvas_CONTEXT.fillRect(x * snake$_BLOCKSIZE, y * snake$_BLOCKSIZE, snake$_BLOCKSIZE, snake$_BLOCKSIZE)
     }
 
     // --CLEAR
     function snake_clear() { canvas_CONTEXT.clearRect(0, 0, snake_WIDTH, snake_HEIGHT) }
 
     // --UTILS
-    function snake_move()
-    {
-        snake_updateCoords()
-
-        if (snake_testMove()) snake_draw()
-    }
-
     function snake_moveTo()
     {
         if (!SNAKE_SNAKE.length) return
@@ -560,7 +582,7 @@ onDestroy(snake_destroy)
 <div
 class="snake"
 class:game={snake_GAME}
-style:--snake-blocksize="{snake_BLOCKSIZE}px"
+style:--snake-blocksize="{snake$_BLOCKSIZE}px"
 bind:this={snake}
 on:fullscreenchange={snake_eFullscreenChange}
 >
@@ -573,10 +595,6 @@ on:fullscreenchange={snake_eFullscreenChange}
     </canvas>
 
     {#if snake_GAME}
-        <Particles
-        prop_TEMP={true}
-        />
-
         <div
         class="grid"
         style:width="{snake_WIDTH}px"
@@ -584,7 +602,7 @@ on:fullscreenchange={snake_eFullscreenChange}
         >
         </div>
 
-        {#if gameover_ON}
+        {#if gameover$_ON}
             <button
             class="gameover"
             type="button"
@@ -658,16 +676,14 @@ lang="scss"
 
     @extend %f-center;
 
-    position: absolute;
+    &, canvas { position: absolute; }
 
     &.game
     {
         background-color: $dark;
 
-        canvas { pointer-events: auto; }
+        canvas, .gameover { pointer-events: auto; }
     }
-
-    :global .particles { z-index: -1; }
 
     .grid
     {
@@ -689,8 +705,6 @@ lang="scss"
         @extend %f-center;
 
         flex-direction: column;
-    
-        pointer-events: auto;
 
         pre
         {

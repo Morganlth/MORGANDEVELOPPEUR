@@ -10,10 +10,10 @@
         datas:
         [
             {
-                component: Logo,
+                component: Snake2,
                 props:
                 {
-                    prop_TITLE: '',
+                    prop_TITLE: 'Snake',
                     prop_X: .85,
                     prop_Y: .03,
                     prop_RADIUS: 120
@@ -52,6 +52,6 @@
 // #IMPORTS
 
     // --COMPONENT-ICONS
-    import Logo from '../../../../components/icons/Logo.svelte'
+    import Snake2 from '../../../../components/icons/Snake2.svelte'
     import Grid from '../../../../components/icons/Grid.svelte'
     import CommandLine from '../../../../components/icons/CommandLine.svelte'

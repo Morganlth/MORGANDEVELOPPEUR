@@ -9,7 +9,7 @@
             component: Home,
             tags: ['landing', 'accueil'],
             overflow: false,
-            h: 1
+            h: 0
         ,
             route:
             {
@@ -48,8 +48,7 @@
             props:
             {
                 prop_FOCUS: false,
-                prop_TOP: 0,
-                prop_RATIO: 0
+                prop_TOP: 0
             }
         }
 /////////////////////////////////////////////PRESENTATION////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -59,9 +58,8 @@
             component: Presentation,
             tags: ['caracteristique'],
             overflow: true,
-            h: 8,
-            startgap: .4,
-            endgap: -1.6
+            h: 7,
+            gap: -1.4
         ,
             route:
             {
@@ -70,7 +68,7 @@
                 label: 'Page de ma présentation personnel'
             }
         ,
-            info: 'SNAKE'
+            info: 'PRO'
         ,
             title:
             {
@@ -88,27 +86,6 @@
                     title: 'Page de contact',
                     value: 'CONTACT',
                     component: Arroba
-                },
-                {
-                    id: 1,
-                    title: 'Jouer au jeu du serpent revisité',
-                    value: 'JOUER',
-                    component: Game
-                },
-                {
-                    id: 2,
-                    title: '',
-                    value: '',
-                    component: Snake2,
-                    color: COLORS.indicator,
-                    update: function (on)
-                    {
-                        on ??= !localStorage.getItem('snake')
-            
-                        this.title = `${on ? 'Masque' : 'Affiche'} le serpent`,
-                        this.value = on ? 'MASQUER' : 'AFFICHER'
-                        this.color = COLORS[on ? 'indicator' : 'primary']
-                    }
                 }
             ]
         ,
@@ -116,7 +93,6 @@
         ,
             props:
             {
-                prop_FOCUS: false,
                 prop_TOP: 0,
                 prop_RATIO: 0,
                 prop_START: void 0,
@@ -286,8 +262,6 @@
     // --COMPONENT-ICONS
     import Logo from '../../components/icons/Logo.svelte'
     import Arroba from '../../components/icons/Arroba.svelte'
-    import Game from '../../components/icons/Game.svelte'
-    import Snake2 from '../../components/icons/Snake2.svelte'
 
 // #FUNCTIONS
 
