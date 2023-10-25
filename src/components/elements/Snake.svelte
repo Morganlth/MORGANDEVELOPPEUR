@@ -446,17 +446,16 @@ context="module"
 
             snake_notInvincible()
 
-            if (particles ??= document.querySelector('.particles')) snake?.insertBefore(particles, snake.children[0])
+            ;(particles ??= document.querySelector('.particles')).moveTo(snake)
         }
         catch { snake_stopGame() }
     }
 
     function snake_stopGame()
     {
-        const PARTCILES_PARENT = particles?.firstParent
-    
         if (!prop_ON) snake_stop()
-        if (PARTCILES_PARENT) PARTCILES_PARENT.insertBefore(particles, PARTCILES_PARENT.children[0])
+        
+        particles?.moveTo()
 
         snake_GAME = false
         snake_INVINCIBLE = true

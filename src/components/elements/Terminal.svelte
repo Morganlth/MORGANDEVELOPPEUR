@@ -61,7 +61,7 @@
     const
     TERMINAL = 'terminal',
 
-    TERMINAL_ROTATE_Y = MATH.toRad(10),
+    TERMINAL_ROTATE_Y = MATH.toRad(18),
 
     TERMINAL_HISTORY = ['app '],
 
@@ -470,8 +470,6 @@ on:mouseleave={terminal_eMouseLeave}
                 </p>
             </div>
 
-            <h3>TERMINAL</h3>
-
             <Line>
                 <Cell
                 prop_FOCUS={terminal_ON}
@@ -581,7 +579,7 @@ lang="scss"
 
 .terminal
 {
-    $r-y: var(--r-y, 10deg);
+    $r-y: var(--r-y, 18deg);
 
     $icon-size: 2.4rem;
 
@@ -677,6 +675,8 @@ lang="scss"
             display: flex;
             justify-content: space-between;
 
+            margin-bottom: 2rem;
+
             p
             {
                 @include font.content($light, $font-size: map.get(font.$font-sizes, s1));
@@ -685,25 +685,6 @@ lang="scss"
                 
                 span { color: $primary; }
             }
-        }
-
-        h3
-        {
-            &::before
-            {
-                @include position.placement(absolute, $top: 4%, $left: -.5%, $pseudo-element: 'TERMINAL');
-
-                color: $dark;
-            }
-
-            position: relative;
-
-            margin-bottom: 2rem;
-
-            color: $light;
-            font-family: '8bitArcadeIn';
-            font-size: map.get(font.$font-sizes, s4);
-            line-height: .6;
         }
 
         &.manual
@@ -723,7 +704,7 @@ lang="scss"
 
         justify-content: space-between;
     
-        border-bottom: solid $primary .2rem;
+        border-bottom: solid $primary 1px;
 
         box-sizing: border-box;
 
@@ -808,8 +789,6 @@ lang="scss"
             #{--cell-size}: var(--icon-size, $icon-size);
         
             .infos p { font-size: map.get(font.$font-sizes, s2); }
-    
-            h3 { font-size: map.get(font.$font-sizes, s7); }
         }
     }
     @include media.min($ms4, $ms4) { top: 33%; }

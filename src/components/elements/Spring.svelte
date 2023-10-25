@@ -56,7 +56,7 @@ lang="scss"
 
     @extend %any;
 
-    z-index: 1;
+    z-index: 3; /* > header */
 
     mix-blend-mode: difference;
 

@@ -33,7 +33,7 @@
     {
         opti_OPACITY = 0
 
-        APP.app_OPTIMISE = on
+        APP.app_$OPTIMISE = on
 
         setTimeout(() => opti_ON = false, 500)
     }

@@ -2,6 +2,7 @@
 
     FEATURES
         LINE * n
+            FEATURE
 
 -->
 
@@ -124,7 +125,7 @@ style:transform="translateY({features_TRANSLATE_Y}%)"
             {#each feature.contents as content, j}
                 <div
                 style:--feature-direction={j % 2 ? -1 : 1}
-                style:--feature-duration="{.2 * j + .8}s"
+                style:--feature-delay="{.2 * j}s"
                 >
                     <Line>
                         <span
@@ -144,7 +145,9 @@ style:transform="translateY({features_TRANSLATE_Y}%)"
 
                             <svelte:element
                             this={content.html ?? 'p'}
+                            class="feature"
                             {...content.props}
+                            data-content={content.data}
                             tabindex={content.html === 'a' && prop_FOCUS ? 0 : -1}
                             >
                                 {content.data}
@@ -192,13 +195,13 @@ lang="scss"
         width: 100%;
         height: fit-content;
 
-        &.focus>div::after { border-top-color: $primary; }
+        &.focus>div { opacity: 1; }
     
         &.show>div
         {
-            transform: translateX(0);
+            transform: translate(0, 0);
 
-            &::after { opacity: 1; }
+            &::after { transform: scaleY(1.4); }
         }
 
         &>div
@@ -221,7 +224,9 @@ lang="scss"
         
             justify-content: center;
 
-            transform: translateX(calc(100% * var(--feature-direction, 1)));
+            transform: translate(calc(100% * var(--feature-direction, 1)), 100%);
+
+            opacity: .9;
 
             height: 20vh;
 
@@ -229,22 +234,19 @@ lang="scss"
 
             border-block: solid $intermediate 1px;
 
-            transition: transform var(--feature-duration, $duration) .2s ease-out;
+            transition: transform $duration var(--feature-delay, 0) ease-in-out, opacity $duration;
 
             &::after
             {
-                @include position.placement(absolute, $bottom: 0, $right: 0, $pseudo-element: true);
+                @include position.placement(absolute, $top: 0, $left: 15%, $pseudo-element: true);
 
-                display: inline-block;
-            
-                opacity: 0;
+                height: 100%;
 
-                width: 3rem;
-                height: 0;
-        
-                border-top: solid $intermediate 4px;
+                mix-blend-mode: soft-light;
 
-                transition: opacity $duration ease-out, border-color $duration;
+                border-left: solid $light 1px;
+
+                transition: transform .6s calc($duration + var(--feature-delay, 0));
             }
         }
 
@@ -264,6 +266,23 @@ lang="scss"
             @extend %m-h-3;
 
             transform: translateX(-3rem);
+        }
+
+        .feature
+        {
+            &::before
+            {
+                @include position.placement(absolute, $top: 60%, $left: app.$gap-inline, $pseudo-element: attr(data-content));
+
+                @extend %any;
+
+                padding-inline: .8rem;
+            
+                background-color: $dark;
+                mix-blend-mode: overlay;
+            }
+
+            position: relative;
         }
 
         strong { font-weight: bold; }
@@ -294,7 +313,7 @@ lang="scss"
 
         @include media.min($ms3)
         {
-            :global .line .content { padding-left: 30%; }
+            :global .line .content { padding-left: 26%; }
 
             h3 { transform: translateX(-10rem); }
         }

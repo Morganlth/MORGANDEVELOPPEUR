@@ -76,7 +76,7 @@ lang="scss"
 
         @extend %any;
 
-        background-color: var(--pe-bg-color, '$dark');
+        background-color: var(--pe-bg-color, $dark);
 
         transition: clip-path ease-in-out, background 1s;
     }
@@ -93,7 +93,7 @@ lang="scss"
 
     pointer-events: none;
 
-    mix-blend-mode: hue;
+    mix-blend-mode: color-dodge;
 
     transition: opacity 1s;
 

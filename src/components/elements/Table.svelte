@@ -50,6 +50,9 @@
 
 // #VARIABLES
 
+    // --ELEMENT-PARTICLES
+    let particles
+
     // --ELEMENT-TABLE
     let
     table_CHARGED = false,
@@ -57,13 +60,29 @@
 
     table_TIMEOUT
 
+    // --ELEMENT-BACKGROUND
+    let background
+
 // #FUNCTIONS
 
     // --SET
-    function table_set() { table_TIMEOUT = setTimeout(() => table_CHARGED = true, 200)}
+    function table_set()
+    {
+        table_setVars()
+        table_setParticles()
+    }
+
+    function table_setVars() { table_TIMEOUT = setTimeout(() => table_CHARGED = true, 200) }
+
+    function table_setParticles() { (particles ??= document.querySelector('.particles')).moveTo(background) }
 
     // --DESTROY
-    function table_destroy() { clearTimeout(table_TIMEOUT) }
+    function table_destroy()
+    {
+        clearTimeout(table_TIMEOUT)
+
+        particles?.moveTo()
+    }
 
     // --EVENT
     function cell_eClick() { SVELTE_DISPATCH('click') }
@@ -86,6 +105,12 @@ class:destroy={table_DESTROY}
 transition:transition_fade={{ duration: 600 }}
 on:outrostart={table_outro}
 >
+    <div
+    class="background"
+    bind:this={background}
+    >
+    </div>
+
     <div
     class="head"
     bind:offsetHeight={head_HEIGHT}
@@ -150,18 +175,6 @@ lang="scss"
     $a: polygon(0 0, 0 0, 0 100%, 0 100%);
     $b: polygon(0 0, 100% 0, 100% 100%, 0 100%);
 
-    &::before
-    {
-        @include position.placement(absolute, 0, 0, 0, 0, true);
-
-        @extend %any;
-
-        z-index: 1;
-
-        background: url('/images/table_bg.jpg') center / cover no-repeat;
-        mix-blend-mode: color;
-    }
-
     &, .lines { @extend %f-column; }
 
     gap: 1rem;
@@ -194,7 +207,15 @@ lang="scss"
         }
     }
 
+    .background, .lines
+    {
+        @include position.placement(absolute, 0, 0, 0, 0);
+    
+        @extend %any;
+    }
+
     .head, .line { width: 100%; }
+
     .head
     {
         #{--cell-size}: calc(var(--title-size) * font.$line-height-title-min);
@@ -224,19 +245,14 @@ lang="scss"
     .lines
     {
         &, .line { box-sizing: border-box; }
-
-        @include position.placement(absolute, 0, 0, 0, 0);
     
         @extend %scroll-bar;
-        @extend %any;
 
         overflow: hidden scroll;
 
         pointer-events: auto;
 
         padding-inline: app.$gap-inline;
-
-        background-color: $dark;
 
         .line
         {

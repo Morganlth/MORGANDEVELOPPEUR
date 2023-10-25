@@ -58,7 +58,7 @@
             component: Presentation,
             tags: ['caracteristique'],
             overflow: true,
-            h: 7,
+            h: 6,
             gap: -1.4
         ,
             route:
@@ -84,8 +84,7 @@
                 {
                     id: 0,
                     title: 'Page de contact',
-                    value: 'CONTACT',
-                    component: Arroba
+                    value: 'CONTACT'
                 }
             ]
         ,
@@ -270,9 +269,8 @@
     // --COMPONENT-COVER
     import Icon from '../../components/covers/Icon.svelte'
 
-    // --COMPONENT-ICONS
+    // --COMPONENT-ICON
     import Logo from '../../components/icons/Logo.svelte'
-    import Arroba from '../../components/icons/Arroba.svelte'
 
 // #FUNCTIONS
 

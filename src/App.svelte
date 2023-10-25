@@ -127,10 +127,6 @@ context="module"
         {
             app_setContexts()
 
-            setTimeout(() => {
-                console.log(document.querySelectorAll('input'))
-            }, 3000)
-
             app_update = () => {} // destroy func
         }
     }

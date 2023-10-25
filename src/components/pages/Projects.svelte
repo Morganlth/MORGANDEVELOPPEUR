@@ -59,6 +59,9 @@
     // --ROUTER
     let router_$SUBPATH = ROUTER.router_$SUBPATH
 
+    // --ELEMENT-PARTICLES
+    let particles
+
     // --ELEMENT-PROJECTS
     let projects
 
@@ -66,7 +69,10 @@
     let card_HOVER
 
     // --ELEMENT-PROJECT
-    let project_TIMEOUT
+    let
+    project_TARGET,
+    
+    project_TIMEOUT
 
 // #REACTIVES
 
@@ -77,16 +83,31 @@
     $: card$_ON = prop_FOCUS && !prop_INTRO
 
     // --ELEMENT-PROJECT
-    $: project$_TARGET = prop_START !== 0 ? project_getTarget($router_$SUBPATH) : void {}
+    $: prop_START !== 0 ? projects_updateTarget($router_$SUBPATH) : void {}
 
 // #FUNCTIONS
 
     // --SET
     function projects_set() { page_CHARGED = true }
 
-    // --GET
-    function project_getTarget(subPath)
+    // --UPDATES
+    function app_update(card) { APP.app_$FREEZE = { value: card ? true : false, target: prop_ID } }
+
+    function router_update(id)
     {
+        if (!project_TIMEOUT && (id != null || project_TARGET))
+        {
+            const VALUE = project_TARGET?.id === id ? null : id
+    
+            ROUTER.router_updateSubPath(prop_ID, VALUE == null ? null : prop_CARDS[id].name)
+            ROUTER.router_updatePath(prop_ID)
+        }
+    }
+
+    function projects_updateTarget(subPath)
+    {
+        if (project_TIMEOUT) return
+    
         const CARD = prop_CARDS.find(card => card.name === subPath)
 
         CARD
@@ -101,22 +122,12 @@
         },
         400.08)
 
-        return CARD
+        projects_updateParticles(CARD)
+
+        project_TARGET = CARD
     }
 
-    // --UPDATES
-    function app_update(card) { APP.app_$FREEZE = { value: card ? true : false, target: prop_ID } }
-
-    function router_update(id)
-    {
-        if (!project_TIMEOUT && (id != null || project$_TARGET))
-        {
-            const VALUE = project$_TARGET?.id === id ? null : id
-    
-            ROUTER.router_updateSubPath(prop_ID, VALUE == null ? null : prop_CARDS[id].name)
-            ROUTER.router_updatePath(prop_ID)
-        }
-    }
+    function projects_updateParticles(card) { (particles ??= document.querySelector('.particles')).moveTo(card ? projects : null) }
 
     function card_updateCardHover(id) { card_HOVER = id }
 
@@ -156,7 +167,7 @@ onMount(projects_set)
 
 <div
 class="projects"
-class:scroller={project$_TARGET}
+class:scroller={project_TARGET}
 data-page-id={prop_ID}
 bind:this={projects}
 >
@@ -169,7 +180,7 @@ bind:this={projects}
             prop_CARD_HOVER={card_HOVER}
             prop_ON={card$_ON}
             prop_ID={card.id}
-            prop_TARGET={project$_TARGET ? project$_TARGET.id === card.id ? 1 : -1 : 0}
+            prop_TARGET={project_TARGET ? project_TARGET.id === card.id ? 1 : -1 : 0}
             prop_CONTENT={card.value}
             prop_COLOR={card.color}
             prop_$MOUSEENTER={card_e$MouseEnter}
@@ -184,16 +195,16 @@ bind:this={projects}
     </Group>
 
     <Mask2
-    prop_DESTROY={!project$_TARGET}
+    prop_DESTROY={!project_TARGET}
     />
 
-    {#if project$_TARGET}
+    {#if project_TARGET}
         <div
         class="project"
         >
             <svelte:component
-            this={project$_TARGET.component}
-            prop_DATAS={project$_TARGET.datas}
+            this={project_TARGET.component}
+            prop_DATAS={project_TARGET.datas}
             />
         </div>
     {/if}

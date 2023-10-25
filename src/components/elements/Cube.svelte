@@ -90,10 +90,8 @@ class:grabbing={prop_GRABBING}
 style:--cube-color={prop_COLOR ?? COLORS.primary}
 style:transform="
 translate(var(--force-x, 0), var(--force-y, 0))
-
 rotateY({cube_ROTATE_Y}rad)
 rotateZ({cube_ROTATE}rad)
-
 translateZ(calc(var(--cube-size, '100px') / 2))"
 >
     {#each [1, 2, 3, 4, 5, 6] as id}
@@ -151,7 +149,13 @@ lang="scss"
 
     transition: transform .6s ease-out;
 
-    &.focus .side  { border-color: var(--cube-color, $primary); }
+    &.focus .side
+    {
+        opacity: 1;
+
+        border-color: var(--cube-color, $primary);
+    }
+
     &.grabbing .side { border-color: $indicator !important; }
 
     .side
@@ -160,8 +164,8 @@ lang="scss"
         @extend %any;
 
         position: absolute;
-    
-        backface-visibility: hidden;
+
+        opacity: .3;
 
         background-color: $dark;
 
@@ -169,7 +173,7 @@ lang="scss"
 
         box-sizing: border-box;
 
-        transition: border .4s ease-in, opacity .4s ease-in;
+        transition: border .4s ease-in, opacity .4s;
     }
     .side:nth-child(1), .side:nth-child(2), .side:nth-child(3), .side:nth-child(4) { top: 0; }
     .side:nth-child(1), .side:nth-child(4), .side:nth-child(5), .side:nth-child(6) { left: 0; }

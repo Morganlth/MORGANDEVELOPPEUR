@@ -73,6 +73,7 @@
     // --ELEMENT-PARTICLES
     let
     particles,
+    particles_PARENT,
 
     particles_ON = true,
 
@@ -110,11 +111,13 @@
         particles_setCommands()
         particles_setEvents()
 
-        particles.firstParent = particles.parentElement
+        particles.moveTo = particles_moveTo
     }
 
     function particles_setVars()
     {
+        particles_PARENT ??= particles.parentElement
+    
         particles.width = (particles_WIDTH = APP.app_WIDTH)
         particles.height = (particles_HEIGHT = APP.app_HEIGHT)
 
@@ -271,6 +274,14 @@
 
     // --ANIMATION
     async function particles_a() { particles_cancel = animation((t) => particles_MOUSE_RADIUS = PARTICLES_D_MOUSE_RADIUS + 200 * cubicOut(t), 600).cancel }
+
+    // --UTIL
+    function particles_moveTo(parent)
+    {
+        const PARENT = parent instanceof HTMLElement ? parent : particles_PARENT
+    
+        PARENT.insertBefore(particles, PARENT.children[0])
+    }
 
 // #CYCLES
 

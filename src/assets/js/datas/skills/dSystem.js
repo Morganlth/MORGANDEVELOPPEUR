@@ -11,7 +11,7 @@
         [
             {
                 tags: ['html', 'css'],
-                tag: '.html .css',
+                tag: 'HTML CSS',
                 props:
                 {
                     prop_ROTATE: MATH.toRad(150),
@@ -44,7 +44,7 @@
             },
             {
                 tags: ['javascript'],
-                tag: '.javaScript',
+                tag: 'JavaScript',
                 props:
                 {
                     prop_ROTATE: MATH.toRad(30),
@@ -95,7 +95,7 @@
             },
             {
                 tags: ['node', 'nodejs'],
-                tag: '.nodeJS',
+                tag: 'Node JS',
                 props:
                 {
                     prop_ROTATE: MATH.toRad(60),

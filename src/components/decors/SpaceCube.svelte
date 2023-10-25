@@ -177,7 +177,7 @@
 // #REACTIVES
 
     // --ELEMENT-SPACECUBE
-    $: spacecube_ON ? spacecube_updateEvent(prop_ON) : void 0
+    $: spacecube_updateEvent(spacecube_ON && prop_ON)
     $: spacecube_ON ? spacecube_update2(prop_FOCUS) : void 0
 
 // #FUNCTIONS
@@ -449,14 +449,16 @@
     {
         const DURATION = spacecube_updateCubes(focus)
 
-        spacecube_updateEvent(prop_ON, focus ? 0 : DURATION)
+        spacecube_updateEvent(spacecube_ON && prop_ON, focus ? 0 : DURATION)
     }
 
     function spacecube_updateEvent(on, delay = 0)
     {
+        console.log(on, spacecube_ON)
         clearTimeout(spacecube_TIMEOUT_2)
 
-        spacecube_TIMEOUT_2 = setTimeout(() => {
+        spacecube_TIMEOUT_2 = setTimeout(() =>
+        {
             on && prop_FOCUS
             ? (spacecube_setEvents2(), spacecube_destroyEvents3())
             : (spacecube_destroyEvents2(), spacecube_setEvents3())
@@ -472,6 +474,8 @@
     
         for (const CUBE of SPACECUBE_CUBES.children)
         {
+            if (!intro) spacecube_clear(CUBE)
+
             const
             P0 = CUBE.checkPoints[0],
             DURATION = Math.random() * 1000 + 800,
@@ -621,8 +625,6 @@
     function spacecube_a(cube, intro, z, duration, t, invert = false)
     {
         const [P0, P1, P2] = cube.checkPoints.slice(...(intro ? [0, 3] : [2]))
-
-        if (!intro) spacecube_clear(cube)
     
         cube.cancel = animation((t) =>
         {
