@@ -701,16 +701,9 @@ onDestroy(spacecube_destroy)
 
 <div
 class="spacecube"
-style:--spacecube-rx="{SPACECUBE_ROTATION_X}rad"
-style:--spacecube-ty="{prop_FOCUS ? 0 : -100}%"
 style:opacity={spacecube_OPACITY}
 bind:this={spacecube}
 >
-    <p>
-        <span>SCROLL</span>
-
-        ACCUEIL PRÉSENTATION COMPÉTENCES PROJETS
-    </p>
 </div>
 
 <!-- #STYLE -->
@@ -718,15 +711,9 @@ bind:this={spacecube}
 <style
 lang="scss"
 >
-/* #USES */
+/* #USE */
 
-@use 'sass:map';
-
-@use '../../assets/scss/styles/utils';
 @use '../../assets/scss/styles/position';
-@use '../../assets/scss/styles/display';
-@use '../../assets/scss/styles/font';
-@use '../../assets/scss/styles/media';
 
 /* #SPACECUBE */
 
@@ -735,49 +722,5 @@ lang="scss"
     @include position.placement(absolute, $top: 0, $left: 0);
 
     transition: opacity .2s;
-
-    p
-    {
-        @include utils.solid-border(1px, $intermediate, $top: false, $bottom: false);
-        @include position.placement(absolute, $bottom: 0, $left: 62%);
-        @include font.content($intermediate, $font-size: map.get(font.$font-sizes, s1));
-
-        @extend %f-column;
-
-        justify-content: center;
-
-        transform-origin: bottom right;
-        transform: perspective(800px) rotateX(var(--spacecube-rx, 0)) rotateZ(-.04rad) translateY(var(--spacecube-ty, -100%));
-
-        min-width: 20vw;
-        width: fit-content;
-        height: 100vh;
-
-        padding-bottom: 30vh;
-        padding-left: 2rem;
-
-        text-align: right;
-        writing-mode: vertical-rl;
-
-        box-sizing: border-box;
-
-        transition: transform .8s 1.2s ease-in;
-
-        span
-        {
-            #{--title-size}: map.get(font.$font-sizes, s7);
-        
-            @include font.h-custom($line-height: 1.2, $italic: true);
-
-            @include media.min($ms4, $ms3) { #{--title-size}: 100px; }
-        }
-
-        @include media.min($ms3)
-        {
-            padding-bottom: 20vh;
-        
-            span { #{--title-size}: map.get(font.$font-sizes, s8); }
-        }
-    }
 }
 </style>

@@ -15,23 +15,16 @@
 <footer>
     <nav>
         <ul>
-            <li>
-                <a
-                href="./"
-                alt="LE THUAUT Morgan - LinkedIn"
-                >
-                    LinkedIn
-                </a>
-            </li>
-
-            <li>
-                <a
-                href="./"
-                alt="LE THUAUT Morgan - Github"
-                >
-                    Github
-                </a>
-            </li>
+            {#each ['LinkedIn', 'Github'] as a}
+                <li>
+                    <a
+                    href="./"
+                    alt="LE THUAUT Morgan - {a}"
+                    >
+                        {a}
+                    </a>
+                </li>
+            {/each}
         </ul>
     </nav>
 
@@ -99,6 +92,8 @@ footer
             pointer-events: auto;
     
             text-decoration: none;
+
+            &:focus { color: $primary; }
         }
 
         @include media.min($ms4)

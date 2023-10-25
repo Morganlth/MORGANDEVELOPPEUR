@@ -35,7 +35,7 @@
     import { onMount, onDestroy, createEventDispatcher } from 'svelte'
     import { cubicInOut } from 'svelte/easing'
 
-    // --COMPONENT-COVER
+    // --COMPONENT-COVERS
     import Icon from '../covers/Icon.svelte'
 
 // #CONSTANTE
@@ -160,6 +160,7 @@ style:--nav-border-color={nav_BORDER_COLOR}
                 style:--item-color={item.color ?? COLORS.light}
                 type="button"
                 title={item.title ?? (item.value ?? '')}
+                tabindex={prop_FOCUS ? 0 : -1}
                 on:mouseenter={nav_eMouseEnter}
                 on:mouseleave={nav_eMouseLeave}
                 on:click={nav_eClick.bind(null, item.id)}
@@ -252,6 +253,8 @@ lang="scss"
         gap: 1rem 3rem;
 
         width: 100%;
+        
+        padding-top: 1rem;
     }
 
     li button
@@ -264,7 +267,7 @@ lang="scss"
 
         gap: .8rem;
 
-        padding-block: 2rem;
+        padding-block: 1rem;
 
         pointer-events: auto;
     }

@@ -107,10 +107,17 @@ id="sophiebluel"
     class="body"
     >
         <header>
-            <h1>
-                Sophie Bluel
-                <span>Architecte d'inteérieur</span>
-            </h1>
+            <a
+            href="/projects/sophiebluel"
+            alt="projet Sophie Bluel par LE THUAUT Morgan"
+            data-sveltekit-reload
+            >
+                <h1>
+                    Sophie Bluel
+    
+                    <span>Architecte d'inteérieur</span>
+                </h1>
+            </a>
         
             <nav>
                 <ul>
@@ -260,8 +267,7 @@ id="sophiebluel"
                         name="message"
                         cols="30"
                         rows="10"
-                        >
-                        </textarea>
+                        ></textarea>
                     </label>
 
                     <input
@@ -321,6 +327,13 @@ lang="scss"
 
         margin-bottom: 50px;
 
+        a
+        {
+            text-decoration: none;
+    
+            cursor: pointer;
+        }
+
         h1
         {
             @extend %f-column;
@@ -352,9 +365,6 @@ lang="scss"
                 padding: 0 10px;
     
                 color: black;
-                text-decoration: none;
-
-                cursor: pointer;
 
                 &:hover { color: $primary-color; }
             }

@@ -89,10 +89,17 @@
                 }
             ]
         ,
+            quote:
+            {
+                value: 'L\'informatique est un domaine qui valorise la créativité et l\'innovation.',
+                author: 'Bill Gates'
+            }
+        ,
             children: [PRESENTATION_FEATURES]
         ,
             props:
             {
+                prop_FOCUS: false,
                 prop_TOP: 0,
                 prop_RATIO: 0,
                 prop_START: void 0,
@@ -149,6 +156,8 @@
                     value: 'Autres...'
                 }
             ]
+        ,
+            quote: { value: 'Le code est une forme d\'art qui permet de changer le monde.' }
         ,
             children: [SKILLS_SYSTEM]
         ,
@@ -207,6 +216,8 @@
                     value: 'Nina Carducci'
                 }
             ]
+        ,
+            quote: { value: 'Le code est un moyen de matérialiser nos idées créatives.' }
         ,
             children: [PROJECTS_CARDS]
         ,

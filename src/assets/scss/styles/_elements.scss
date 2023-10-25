@@ -3,7 +3,9 @@
     // --ELEMENTS-BUTTON
     %button-reset
     {
-        @extend %input-reset;
+        background-color: transparent;
+
+        border: none;
 
         cursor: pointer;
     }

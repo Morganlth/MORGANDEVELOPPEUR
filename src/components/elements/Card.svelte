@@ -421,14 +421,13 @@ translate3d(
 {card_TRANSLATE_X}px,
 {card_TRANSLATE_Y}px,
 {(prop_ID - (prop_CARD_HOVER ?? prop_ID)) * 50}px)
-
 perspective({CARD_PERSPECTIVE}px)
-
 rotateX({card_ROTATE_X}rad)
 rotateY({card_ROTATE_Y}rad)
 rotateZ({card_ROTATE_Z}deg)"
 style:opacity={card_OPACITY}
 style:transition-duration="{card_TRANSITION_DURATION}ms"
+tabindex={card_ON ? 0 : -1}
 bind:this={card}
 on:mousemove={card_eMouseMove}
 on:mouseenter={card_eMouseEnter}

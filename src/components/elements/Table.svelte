@@ -91,7 +91,9 @@ on:outrostart={table_outro}
     bind:offsetHeight={head_HEIGHT}
     >
         <Cell
+        prop_FOCUS={true}
         prop_CONTAINER={true}
+        prop_TITLE="fermer"
         on:click={cell_eClick}
         >
             <Icon

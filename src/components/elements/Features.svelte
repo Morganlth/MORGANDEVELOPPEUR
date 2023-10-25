@@ -12,6 +12,8 @@
 
     // --PROPS
     export let
+    prop_FOCUS = false,
+
     prop_RATIO = 0,
     prop_FRACTION = 0,
 
@@ -143,6 +145,7 @@ style:transform="translateY({features_TRANSLATE_Y}%)"
                             <svelte:element
                             this={content.html ?? 'p'}
                             {...content.props}
+                            tabindex={content.html === 'a' && prop_FOCUS ? 0 : -1}
                             >
                                 {content.data}
                             </svelte:element>

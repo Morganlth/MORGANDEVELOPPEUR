@@ -96,12 +96,15 @@
     // --ELEMENT-TERMINAL
     let terminal_ON = false
 
-// #REACTIVE
+// #REACTIVES
 
     // --ELEMENT-GROUP
     $: group_start instanceof Function && group_stop instanceof Function
     ? prop_FOCUS && !snake_GAME ? group_start() : group_stop()
     : void 0
+
+    // --ELEMENT-GRAVITYAREA
+    $: gravityarea$_FOCUS = prop_FOCUS && page_CHARGED
 
 // #FUNCTIONS
 
@@ -183,6 +186,14 @@ data-page-id={prop_ID}
     prop_OPACITY={prop_FOCUS ? 1 : 0}
     />
 
+    <p
+    style:transform="perspective(800px) rotateX(-.6rad)"
+    >
+        <span style:transform="translateY({prop_FOCUS ? 0 : -100}%)">SCROLL</span>
+
+        ACCUEIL PRÉSENTATION COMPÉTENCES PROJETS
+    </p>
+
     <Group
     let:resize
     let:animation
@@ -194,7 +205,8 @@ data-page-id={prop_ID}
             let:rotation
             let:grabbing
             {...cube.props}
-            prop_FOCUS={prop_FOCUS && page_CHARGED}
+            prop_FOCUS={gravityarea$_FOCUS}
+            prop_FOCUSABLE={gravityarea$_FOCUS}
             prop_$RESIZE={resize}
             prop_$ANIMATION={animation}
             prop_GRABBING={prop_FOCUS}
@@ -228,8 +240,13 @@ lang="scss"
 >
 /* #USES */
 
+@use 'sass:map';
+
 @use '../../assets/scss/styles/position';
+@use '../../assets/scss/styles/display';
 @use '../../assets/scss/styles/size';
+@use '../../assets/scss/styles/font';
+@use '../../assets/scss/styles/media';
 
 /* #HOME */
 
@@ -242,6 +259,51 @@ lang="scss"
     @extend %any;
 
     overflow: hidden;
+
+    p
+    {
+        @include position.placement(absolute, $bottom: 0, $left: 68%);
+        @include font.content($intermediate, $font-size: map.get(font.$font-sizes, s1));
+
+        @extend %f-column;
+
+        justify-content: center;
+
+        transform-origin: bottom right;
+
+        width: fit-content;
+        height: 100vh;
+
+        padding-bottom: 30vh;
+        padding-left: 2rem;
+
+        border-left: solid 1px $intermediate;
+
+        text-align: right;
+        writing-mode: vertical-rl;
+
+        box-sizing: border-box;
+
+        transition: transform .8s .8s ease-in-out;
+
+        span
+        {
+            #{--title-size}: map.get(font.$font-sizes, s7);
+
+            transition: transform .8s 1s ease-in;
+        
+            @include font.h-custom($line-height: 1.2, $italic: true);
+
+            @include media.min($ms4, $ms3) { #{--title-size}: 100px; }
+        }
+
+        @include media.min($ms3)
+        {
+            padding-bottom: 22vh;
+        
+            span { #{--title-size}: map.get(font.$font-sizes, s8); }
+        }
+    }
 
     :global .group
     {

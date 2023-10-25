@@ -6,6 +6,7 @@
         HEADER
             ~SLOT TITLE
             ~SLOT NAV
+            ~SLOT DESCRIPTION
         ~SLOT
 
 -->
@@ -28,6 +29,10 @@ class="wrapper"
 
         <slot
         name="nav"
+        />
+
+        <slot
+        name="quote"
         />
     </section>
 

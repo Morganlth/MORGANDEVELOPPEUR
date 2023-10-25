@@ -55,7 +55,8 @@ id="booki"
         >
             <a
             id="booki-logo"
-            href="{$page.url.origin}/booki"
+            href="{$page.url.origin}/projects/booki"
+            alt="projet Booki par LE THUAUT Morgan"
             data-sveltekit-reload
             >
                 <img

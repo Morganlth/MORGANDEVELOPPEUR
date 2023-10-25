@@ -178,7 +178,7 @@ lang="scss"
         {
             @include position.placement(absolute, 50%, 0, 0, 0, true);
 
-            transform: translateX(-50%) scaleX(.05);
+            transform: translateX(-50%) scaleX(.04);
 
             width: 100%;
             height: 0;

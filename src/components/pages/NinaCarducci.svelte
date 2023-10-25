@@ -259,7 +259,9 @@ id="ninacarducci"
     >
         <header>
             <a
-            href="./project/ninacarducci"
+            href="/projects/ninacarducci"
+            alt="projet Nina Carducci par LE THUAUT Morgan"
+            data-sveltekit-reload
             >
                 <h1
                 itemprop="name"

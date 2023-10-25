@@ -324,6 +324,7 @@ style:--system-r-y={system_ROTATE_Y}
                 let:grabbing
                 prop_$RESIZE={resize}
                 prop_$ANIMATION={animation}
+                prop_FOCUSABLE={(cube.focus ?? false) && !system_TARGET}
                 prop_3D={true}
                 prop_RATIO={gravityarea_RATIO}
                 prop_GRABBING={false}
@@ -351,7 +352,8 @@ style:--system-r-y={system_ROTATE_Y}
 
     {#each prop_SYSTEM as cube}
         <Cell
-        prop_FOCUS={cube.focus ?? false}
+        prop_FOCUS={(cube.focus ?? false) && !system_TARGET}
+        prop_TITLE={cube.tag}
         on:click={tag_eClick.bind(cube)}
         >
             <Tag

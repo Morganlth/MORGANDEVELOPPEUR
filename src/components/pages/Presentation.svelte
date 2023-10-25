@@ -16,6 +16,8 @@
     export let
     prop_ID = void 0,
 
+    prop_FOCUS = false,
+
     prop_FEATURES = [],
 
     prop_TOP = 0,
@@ -106,6 +108,7 @@ data-page-id={prop_ID}
 >
     <Features
     prop_FRACTION={FEATURES_FRACTION}
+    {prop_FOCUS}
     {prop_RATIO}
     {prop_FEATURES}
     />

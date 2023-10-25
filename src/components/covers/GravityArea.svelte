@@ -20,6 +20,7 @@
     prop_$ANIMATION = {},
 
     prop_FOCUS = false,
+    prop_FOCUSABLE = true,
     prop_3D = false,
     prop_GRABBING = false,
 
@@ -329,6 +330,7 @@ onDestroy(gravityarea_destroy)
 <!-- #HTML -->
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
+<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 <div
 class="gravityarea"
 class:focus={prop_FOCUS}
@@ -338,7 +340,6 @@ style:--force-y="{slot_FORCE_Y}px"
 style:z-index={prop_Z}
 style:transform="
 perspective({prop_3D ? GRAVITYAREA_PERSPECTIVE + 'px' : 'none'})
-
 translate3d(
 {gravityarea_TRANSLATE_X}px,
 {gravityarea_TRANSLATE_Y + gravityarea_ANIMATION_Y}px,
@@ -346,6 +347,7 @@ translate3d(
 style:transition="transform {gravityarea_TRANSITION_DELAY}ms ease-out"
 type="button"
 title={prop_TITLE}
+tabindex={prop_FOCUSABLE ? 0 : -1}
 data-tag={prop_TITLE.toLowerCase()}
 bind:this={gravityarea}
 on:mouseenter={gravityarea_eMouseEnter}

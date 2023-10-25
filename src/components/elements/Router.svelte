@@ -148,7 +148,7 @@ lang="scss"
 
     &.hide
     {
-        &:hover ul :global .route { clip-path: $li-d-clip !important; }
+        &:hover :global .route, :global .route:focus { clip-path: $li-d-clip !important; }
 
         ul :global .route { clip-path: polygon(0 0, 0 0, 0 100%, 0% 100%); }
     }
@@ -157,10 +157,12 @@ lang="scss"
     {
         display: flex;
         align-items: flex-end;
+        flex-wrap: wrap;
 
         gap: 1rem;
 
         width: fit-content;
+        max-width: calc(50vw - app.$gap-inline * 2);
         height: fit-content;
         min-height: 2.4rem;
 
@@ -214,6 +216,8 @@ lang="scss"
             align-items: flex-start;
 
             gap: 0;
+
+            max-width: auto;
 
             :global .icon { display: inline-block; }
         }

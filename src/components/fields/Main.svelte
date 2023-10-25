@@ -258,6 +258,7 @@ style:height="{MAIN_HEIGHT}vh"
             prop_INFO={page.info}
             prop_TITLE={page.title}
             prop_NAV={page.nav}
+            prop_QUOTE={page.quote}
             prop_PROPS={page.props}
             prop_PROCESS={page.process}
             />

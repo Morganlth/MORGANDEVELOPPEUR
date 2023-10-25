@@ -25,7 +25,7 @@
 <!-- #SCRIPT -->
 
 <script>
-// #EXPORTS
+// #EXPORT
 
     // --BIND
     export let terminal_ON = false
@@ -396,7 +396,7 @@ onDestroy(terminal_destroy)
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
 class="terminal"
-class:on={terminal_ON}
+class:focus={terminal_ON}
 style:--r-y="{TERMINAL_ROTATE_Y}rad"
 style:--cos={Math.cos(TERMINAL_ROTATE_Y)}
 on:mouseenter={terminal_eMouseEnter}
@@ -410,7 +410,9 @@ on:mouseleave={terminal_eMouseLeave}
         class="back"
         >
             <Cell
+            prop_FOCUS={terminal_ON}
             prop_CONTAINER={true}
+            prop_TITLE="fermer"
             on:click={cell_eClick.bind(null, false)}
             >
                 <Icon
@@ -448,7 +450,9 @@ on:mouseleave={terminal_eMouseLeave}
             class="infos"
             >
                 <Cell
+                prop_FOCUS={terminal_ON}
                 prop_CONTAINER={true}
+                prop_TITLE="infos"
                 on:click={cell_eClick.bind(null, true)}
                 >
                     <Icon
@@ -470,6 +474,8 @@ on:mouseleave={terminal_eMouseLeave}
 
             <Line>
                 <Cell
+                prop_FOCUS={terminal_ON}
+                prop_TITLE="terminal input"
                 on:click={cell_eClick2}
                 slot="id"
                 >
@@ -487,6 +493,7 @@ on:mouseleave={terminal_eMouseLeave}
                     <input
                     type="text"
                     maxlength={input_LENGTH}
+                    tabindex={terminal_ON ? 0 : -1}
                     spellcheck="false"
                     bind:this={input_FIELD}
                     bind:value={input_CURRENT_VALUE}
@@ -533,12 +540,13 @@ on:mouseleave={terminal_eMouseLeave}
                             {/if}
 
                             {#if line.datas}
-                                <button
-                                title={line.datas.str ?? ''}
-                                on:click={terminal_goTo(line.datas)}
+                                <Cell
+                                prop_FOCUS={terminal_ON}
+                                prop_TITLE={line.datas.str}
+                                on:click={terminal_goTo.bind(null, line.datas)}
                                 >
                                     {line.message}
-                                </button>
+                                </Cell>
                             {:else}
                                 <pre>{line.message}</pre>
                             {/if}
@@ -587,7 +595,7 @@ lang="scss"
     width: calc((100vw - app.$gap-inline * 2) / var(--cos, 1));
     height: 26vh;
 
-    &.on .container
+    &.focus .container
     {
         transform: rotateY(calc($r-y * -1)) translateX(0);
 
@@ -773,7 +781,7 @@ lang="scss"
         .error { color: $indicator; }
         .success { color: $primary; }
 
-        button
+        :global .cell
         {
             padding: .2rem .6rem;
 

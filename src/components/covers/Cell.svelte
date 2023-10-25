@@ -13,7 +13,9 @@
     // --PROPS
     export let
     prop_FOCUS = true,
-    prop_CONTAINER = false
+    prop_CONTAINER = false,
+
+    prop_TITLE = ''
 
 // #IMPORT
 
@@ -38,6 +40,8 @@ class="cell"
 class:focus={prop_FOCUS}
 class:container={prop_CONTAINER}
 type="button"
+title={prop_TITLE}
+tabindex={prop_FOCUS ? 0 : -1}
 on:click={cell_eClick}
 >
     <slot />
