@@ -94,7 +94,6 @@
 
     // --ELEMENT-SYSTEM
     let
-    system_CHARGED = false,
     system_OPTIMISED = false,
 
     system_ROTATE_X = 0,
@@ -115,12 +114,8 @@
 
 // #REACTIVES
 
-    // --ELEMENT-GROUP
-    $: system_CHARGED
-        ? prop_FOCUS
-            ? system_start()
-            : system_stop()
-        : void 0
+    // --ELEMENT-SYSTEM
+    $: system_update2(prop_FOCUS)
 
     // --ELEMENT-GRAVITYAREA
     $: prop_FOCUS ? gravityarea_update(prop_RATIO) : void 0
@@ -134,8 +129,6 @@
 
         orbit_setVars()
         orbit_setEvents()
-
-        system_CHARGED = true
     }
 
     function system_setCommands() { COMMAND.command_setBasicCommands(SYSTEM_COMMANDS) }
@@ -182,6 +175,8 @@
 
     // --UPDATES
     function system_update(optimised) { system_OPTIMISED = optimised }
+
+    function system_update2(focus) { focus ? system_start() : system_stop() }
 
     function system_updateTarget(target)
     {
@@ -244,9 +239,12 @@
     // --CONTROLS
     function system_start()
     {
-        system_setEvents()
+        if (!system_OPTIMISED)
+        {
+            system_setEvents()
 
-        group_start()
+            group_start()
+        }
 
         group_TIMEOUT = setTimeout(() =>
         {
@@ -262,7 +260,8 @@
     
         group_destroy()
         group_updateFocus()
-        group_stop()
+        
+        if (group_stop instanceof Function) group_stop()
     }
 
     // --INTRO
@@ -320,7 +319,6 @@ style:--system-r-y={system_ROTATE_Y}
         {#if !system_OPTIMISED}
             {#each prop_SYSTEM as cube}
                 <GravityArea
-                let:rotation
                 let:grabbing
                 prop_$RESIZE={resize}
                 prop_$ANIMATION={animation}
@@ -330,17 +328,15 @@ style:--system-r-y={system_ROTATE_Y}
                 prop_GRABBING={false}
                 prop_TITLE={cube.props.prop_TITLE}
                 prop_ORBIT_RADIUS={orbit_RADIUS}
-                prop_ROTATE={cube.props.prop_ROTATE}
+                prop_ROTATE_Z={cube.props.prop_ROTATE}
                 prop_OFFSET={cube.props.prop_OFFSET}
                 {prop_FOCUS}
                 bind:gravityarea_TRANSLATE_Z={GROUP_Z_POSITIONS[cube.id]}
                 on:click={gravityarea_eClick.bind(cube)}
                 >
                     <Cube
-                    prop_$ROTATION={rotation}
                     prop_GRABBING={grabbing}
                     prop_FOCUS={cube.focus ?? false}
-                    prop_ROTATE={cube.props.prop_ROTATE}
                     prop_SRC={cube.props.prop_SRC}
                     prop_ALT={cube.props.prop_ALT}
                     prop_COLOR={cube.props.prop_COLOR}

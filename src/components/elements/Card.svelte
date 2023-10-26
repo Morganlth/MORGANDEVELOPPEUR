@@ -85,7 +85,6 @@
     let
     card,
 
-    card_CHARGED = false,
     card_ON = false,
     card_START = true,
     card_GRABBING = false,
@@ -128,7 +127,7 @@
 // #REACTIVE
 
     // --ELEMENT-CARD
-    $: card_CHARGED ? card_update(prop_ON, prop_TARGET) : void 0
+    $: card_update(prop_ON, prop_TARGET)
 
 // #FUNCTIONS
 
@@ -138,8 +137,6 @@
         card_setVars()
 
         prop_$RESIZE.push(card_e$Resize)
-
-        card_CHARGED = true
     }
 
     function card_setVars()
@@ -473,7 +470,7 @@ on:mousedown={card_eMouseDown}
 </button>
 
 <Tag
-prop_FOCUS={card_CHARGED && prop_ON && (tag_FOCUS || prop_TARGET === 1)}
+prop_FOCUS={prop_ON && (tag_FOCUS || prop_TARGET === 1)}
 prop_DURATION={TAG_DURATION}
 prop_IN={tag_in}
 prop_OUT={tag_out}

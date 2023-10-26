@@ -45,16 +45,19 @@
 // #REACTIVE
 
     // --ELEMENT-TAG
-    $: tag ? tag_update(prop_FOCUS) : void 0
+    $: tag_update(prop_FOCUS)
 
 // #FUNCTIONS
 
     // --UPDATE
     function tag_update(focus)
     {
-        clearTimeout(tag_TIMEOUT)
+        if (tag)
+        {
+            clearTimeout(tag_TIMEOUT)
 
-        focus ? tag_aIn() : tag_aOut()
+            focus ? tag_aIn() : tag_aOut()
+        }
     }
 
     // --ANIMATIONS

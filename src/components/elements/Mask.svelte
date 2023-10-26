@@ -56,7 +56,7 @@ lang="scss"
 
     pointer-events: none;
 
-    transition: opacity 1s;
+    transition: opacity 1.4s ease-in;
 
     &.blur
     {

@@ -23,9 +23,6 @@
     // --JS
     import { animation } from '../../assets/js/utils/animation'
 
-    // --SVELTE
-    import { onMount } from 'svelte'
-
 // #CONSTANTE
 
     // --ELEMENT-INFO
@@ -35,8 +32,6 @@
 
     // --ELEMENT-INFO
     let
-    info_CHARGED = false,
-
     info_OPACITY = 0,
 
     info_T = 0,
@@ -54,12 +49,9 @@
 // #REACTIVE
 
     // --ELEMENT-INFO
-    $: info_CHARGED ? info_update(prop_FOCUS) : void 0
+    $: info_update(prop_FOCUS)
 
 // #FUNCTIONS
-
-    // --SET
-    function info_set() { info_CHARGED = true }
 
     // --UPDATES
     function info_update(focus)
@@ -95,10 +87,6 @@
         },
         !invert && info_T === 0 ? INFO_D : 0)
     }
-
-// #CYCLE
-
-onMount(info_set)
 </script>
 
 <!-- #HTML -->

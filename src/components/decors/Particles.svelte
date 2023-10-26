@@ -60,11 +60,12 @@
             storage: true
         }
     ],
-    PARTICLES_EVENTS =
+
+    PARTICLES_EVENTS = { resize: particles_e$Resize },
+    PARTICLES_EVENTS_2 =
     {
         mouseDown: particles_e$MouseDown,
         mouseUp: particles_e$MouseUp,
-        resize: particles_e$Resize,
         animation: particles_e$Animation
     }
 
@@ -129,7 +130,14 @@
 
     function particles_setCommands() { COMMAND.command_setBasicCommands(PARTICLES_COMMANDS) }
 
-    function particles_setEvents() { EVENT.event_add(PARTICLES_EVENTS) }
+    function particles_setEvents()
+    {
+        EVENT.event_add(PARTICLES_EVENTS)
+
+        particles_setEvents2()
+    }
+
+    function particles_setEvents2() { EVENT.event_add(PARTICLES_EVENTS_2) }
 
     function particles_setParticle()
     {
@@ -157,7 +165,14 @@
         particles_destroyEvents()
     }
 
-    function particles_destroyEvents() { EVENT.event_remove(PARTICLES_EVENTS) }
+    function particles_destroyEvents()
+    {
+        EVENT.event_remove(PARTICLES_EVENTS)
+
+        particles_destroyEvents2()
+    }
+
+    function particles_destroyEvents2() { EVENT.event_remove(PARTICLES_EVENTS_2) }
 
     // --GET
     function particles_getColor()
@@ -172,7 +187,7 @@
     {
         if (particles_ON === on) return
 
-        EVENT['event_' + (on ? 'add' : 'remove')]({ animation: PARTICLES_EVENTS.animation })
+        on ? particles_setEvents2() : particles_destroyEvents2()
 
         if (!on) particles_clear()
 

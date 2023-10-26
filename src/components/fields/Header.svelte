@@ -37,15 +37,19 @@
 
 <header>
     <strong
-    data-sveltekit-reload
     >
-        <Icon
-        prop_SIZE="2.5rem"
-        prop_COLOR={COLORS.light}
-        prop_LINK={{ href: $page.url.origin, alt: 'home' }}
+        <a
+        href={$page.url.origin}
+        alt="Page d'accueil du site LE THUAUT Morgan Développeur Web"
+        data-sveltekit-reload
         >
-            <Logo />
-        </Icon>
+            <Icon
+            prop_SIZE="2.5rem"
+            prop_COLOR={COLORS.light}
+            >
+                <Logo />
+            </Icon>
+        </a>
             
         <span>DEV.</span>
 
@@ -101,6 +105,8 @@ header
     {
         display: flex;
         align-items: flex-end;
+
+        a { text-decoration: none; }
         
         p { @include font.content($light); }
 

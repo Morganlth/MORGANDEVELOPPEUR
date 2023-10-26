@@ -13,13 +13,8 @@
 
     // --PROPS
     export let
-    prop_$ROTATION = {},
-
     prop_FOCUS = false,
     prop_GRABBING = false,
-
-    prop_ROTATE = 0,
-    prop_ROTATE_Y = 0,
 
     prop_COMPONENT = void {},
     prop_SRC = void '',
@@ -41,40 +36,15 @@
     import Logo from '../icons/Logo.svelte'
     import Image from '../icons/Image.svelte'
 
-
-// #VARIABLES
-
-    // --ELEMENT-CUBE
-    let
-    cube_CHARGED = false,
-
-    cube_ROTATE = prop_ROTATE,
-    cube_ROTATE_Y = prop_ROTATE_Y
+// #VARIABLE
 
     // --ELEMENT-ICON
     let icon_OPACITY = 0
 
-// #REACTIVE
-
-    // --ELEMENT-CUBE
-    $: cube_CHARGED ? cube_updatePosition($prop_$ROTATION) : null
-
-// #FUNCTIONS
+// #FUNCTION
 
     // --SET
-    function cube_set()
-    {
-        cube_CHARGED = true
-
-        setTimeout(() => icon_OPACITY = 1, 1200)
-    }
-
-    // --UPDATE
-    function cube_updatePosition({ rX, rY })
-    {
-        cube_ROTATE += rX ?? 0
-        cube_ROTATE_Y += rY ?? 0
-    }
+    function cube_set() { setTimeout(() => icon_OPACITY = 1, 1200) }
 
 // #CYCLE
 
@@ -88,11 +58,6 @@ class="cube"
 class:focus={prop_FOCUS}
 class:grabbing={prop_GRABBING}
 style:--cube-color={prop_COLOR ?? COLORS.primary}
-style:transform="
-translate(var(--force-x, 0), var(--force-y, 0))
-rotateY({cube_ROTATE_Y}rad)
-rotateZ({cube_ROTATE}rad)
-translateZ(calc(var(--cube-size, '100px') / 2))"
 >
     {#each [1, 2, 3, 4, 5, 6] as id}
         <div
@@ -137,10 +102,15 @@ lang="scss"
 
 .cube
 {
-    $size: var(--cube-size, '100px');
+    $size: var(--slot-size, '100px');
 
     transform-style: preserve-3d;
     transform-origin: center;
+    transform:
+    translate(var(--slot-f-x, 0), var(--slot-f-y, 0))
+    rotateY(var(--slot-r-y, 0))
+    rotateZ(var(--slot-r-z, 0))
+    translateZ(calc(var(--slot-size, '100px') / 2));
 
     width: 50%;
     height: 50%;

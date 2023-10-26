@@ -14,9 +14,10 @@
     // --PROPS
     export let
     prop_OPACITY = 1,
+
     prop_SIZE = 'var(--icon-size, auto)',
-    prop_COLOR = null,
-    prop_LINK = null,
+    prop_COLOR = void '',
+
     prop_SPRING = true
 
 // #IMPORTS
@@ -88,19 +89,17 @@ onDestroy(icon_destroy)
 
 <!-- #HTML -->
 
-<svelte:element
-this={prop_LINK ? 'a' : 'i'}
+<i
 class="icon"
 style:--icon-color={prop_COLOR}
 style:opacity={prop_OPACITY}
 style:width={prop_SIZE}
 style:height={prop_SIZE}
 style:pointer-events={prop_SPRING ? 'auto' : 'none'}
-{...(prop_LINK ?? {})}
 bind:this={icon}
 >
     <slot />
-</svelte:element>
+</i>
 
 <!-- #STYLE -->
 

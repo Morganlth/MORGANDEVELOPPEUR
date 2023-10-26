@@ -5,7 +5,7 @@
     GRAVITYAREA
         ~SLOT
 
-    MASK
+    SHIELD
 
 -->
 
@@ -30,7 +30,8 @@
 
     prop_ORBIT_RADIUS = 0,
     prop_Z = 0,
-    prop_ROTATE = 0,
+    prop_ROTATE_Y = 0,
+    prop_ROTATE_Z = 0,
     prop_OFFSET = 0,
     prop_X = 0,
     prop_Y = 0,
@@ -52,7 +53,6 @@
 
     // --SVELTE
     import { onMount, onDestroy, createEventDispatcher } from 'svelte'
-    import { writable } from 'svelte/store'
 
 // #CONSTANTES
 
@@ -62,9 +62,6 @@
 
     GRAVITYAREA_EVENTS = { mouseMove: wait_throttle(gravityarea_e$MouseMove, 50) },
     GRAVITYAREA_EVENTS_2 = { mouseUp: gravityarea_e$MouseUp }
-
-    // --ELEMENT-SLOT
-    const SLOT_$ROTATION = writable({ rX: 0, rY: 0 })
 
 // #VARIABLES
 
@@ -101,16 +98,17 @@
     slot_FORCE_X = 0,
     slot_FORCE_Y = 0,
 
+    slot_ROTATE_Y = prop_ROTATE_Y,
+    slot_ROTATE_Z = prop_ROTATE_Z,
+
     slot_update = prop_3D ? slot_update3d : slot_update2d
 
 // #REACTIVES
 
     // --ELEMENT-GRAVITYAREA
-    $: gravityarea ? gravityarea_update(prop_FOCUS) : void 0
-
-    $: prop_3D && prop_FOCUS ? gravityarea_updateOrbit(prop_RATIO) : void 0
-
-    $: slot_GRABBING && prop_GRABBING ? gravityarea_setEvents() : gravityarea_destroyEvents()
+    $: gravityarea_update(prop_FOCUS)
+    $: gravityarea_updateEvent(slot_GRABBING)
+    $: gravityarea_updateOrbit(prop_RATIO)
 
 // #FUNCTIONS
 
@@ -159,8 +157,8 @@
     function gravityarea_get2d()
     {
         return [
-            prop_X * APP.app_WIDTH - gravityarea.offsetWidth / 2,   // x
-            prop_Y * APP.app_HEIGHT                                 // y
+            prop_X * APP.app_WIDTH - gravityarea_RADIUS / 2,    // x
+            prop_Y * APP.app_HEIGHT                             // y
         ]
     }
 
@@ -171,8 +169,8 @@
         H = Math.sin(ANGLE) * prop_ORBIT_RADIUS
 
         return [
-            Math.cos(prop_ROTATE) * H,              // x
-            Math.sin(prop_ROTATE) * H,              // y
+            Math.cos(prop_ROTATE_Z) * H,              // x
+            Math.sin(prop_ROTATE_Z) * H,              // y
             Math.cos(ANGLE) * prop_ORBIT_RADIUS     // z
         ]
     }
@@ -198,11 +196,16 @@
         gravityarea_a(focus)
     }
 
+    function gravityarea_updateEvent(grabbing) { if (prop_GRABBING) grabbing ? gravityarea_setEvents() : gravityarea_destroyEvents() }
+
     function gravityarea_updateOrbit()
     {
-        [gravityarea_TRANSLATE_X, gravityarea_TRANSLATE_Y, gravityarea_TRANSLATE_Z] = gravityarea_get3d()
+        if (prop_3D && prop_FOCUS)
+        {
+            [gravityarea_TRANSLATE_X, gravityarea_TRANSLATE_Y, gravityarea_TRANSLATE_Z] = gravityarea_get3d()
         
-        SLOT_$ROTATION.set({ rX: null, rY: .025 })
+            slot_updateRotate(.025)
+        }
     }
 
     function slot_update2d(clientX, clientY)
@@ -233,6 +236,12 @@
         slot_FORCE_Y = DIF_Y * .3 * (1 - Math.abs(DIF_Y) / Math.abs(Math.sin(ANGLE) * RADIUS))
     }
 
+    function slot_updateRotate(rY, rZ)
+    {
+        slot_ROTATE_Y += rY ?? 0
+        slot_ROTATE_Z += rZ ?? 0
+    }
+
     // --CLEAR
     function gravityarea_clear() { clearTimeout(gravityarea_TIMEOUT) }
 
@@ -241,7 +250,7 @@
     {
         const [X, Y] = [clientX - gravityarea_RADIUS, clientY - gravityarea_RADIUS]
 
-        SLOT_$ROTATION.set({ rX: (X - gravityarea_TRANSLATE_X) * .005, rY: (Y - gravityarea_TRANSLATE_Y) * .005 })
+        slot_updateRotate((Y - gravityarea_TRANSLATE_Y) * .005, (X - gravityarea_TRANSLATE_X) * .005)
 
         gravityarea_TRANSLATE_X = X
         gravityarea_TRANSLATE_Y = Y
@@ -334,9 +343,11 @@ onDestroy(gravityarea_destroy)
 <div
 class="gravityarea"
 class:focus={prop_FOCUS}
-style:--default-size="{prop_RADIUS}px"
-style:--force-x="{slot_FORCE_X}px"
-style:--force-y="{slot_FORCE_Y}px"
+style:--slot-default-size="{prop_RADIUS}px"
+style:--slot-f-x="{slot_FORCE_X}px"
+style:--slot-f-y="{slot_FORCE_Y}px"
+style:--slot-r-y="{slot_ROTATE_Y}rad"
+style:--slot-r-z="{slot_ROTATE_Z}rad"
 style:z-index={prop_Z}
 style:transform="
 perspective({prop_3D ? GRAVITYAREA_PERSPECTIVE + 'px' : 'none'})
@@ -356,13 +367,12 @@ on:mousedown={gravityarea_eMouseDown}
 on:mouseleave={gravityarea_eMouseLeave}
 >
     <slot
-    rotation={SLOT_$ROTATION}
     grabbing={slot_GRABBING}
     />
 </div>
 
 <div
-class="mask"
+class="shield"
 class:grabbing={slot_GRABBING}
 >
 </div>
@@ -381,14 +391,14 @@ lang="scss"
 
 /* #GRAVITYAREA */
 
-.gravityarea, .mask { pointer-events: auto; }
+.gravityarea, .shield { pointer-events: auto; }
 
 .gravityarea
 {
-    --cube-ratio: .4;
-    --cube-size: calc(var(--default-size, '100px') * var(--cube-ratio, 1));
+    --slot-ratio: .4;
+    --slot-size: calc(var(--slot-default-size, '100px') * var(--slot-ratio, 1));
 
-    $size: var(--cube-size, '100px');
+    $size: var(--slot-size, '100px');
 
     @extend %f-center;
 
@@ -408,12 +418,12 @@ lang="scss"
 
     &.focus { will-change: transform; }
 
-    @include media.min($ms4, $ms3) { --cube-ratio: .5; }
-    @include media.min($ms5, $ms4) { --cube-ratio: .75; }
-    @include media.min($ms6, $ms4) { --cube-ratio: 1; }
+    @include media.min($ms4, $ms3) { --slot-ratio: .5; }
+    @include media.min($ms5, $ms4) { --slot-ratio: .75; }
+    @include media.min($ms6, $ms4) { --slot-ratio: 1; }
 }
 
-.mask
+.shield
 {
     @include position.placement(fixed, 0, 0, 0, 0);
 

@@ -1,5 +1,6 @@
 <!-- #MAP
 
+-APP
 -COMMAND
 -EVENT
     HOME
@@ -42,7 +43,7 @@
     import MATH from '../../assets/js/utils/math'
 
     // --CONTEXTS
-    import { COMMAND, EVENT } from '../../App.svelte'
+    import { APP, COMMAND, EVENT } from '../../App.svelte'
 
     // --SVELTE
     import { onMount, tick } from 'svelte'
@@ -80,6 +81,9 @@
 
 // #VARIABLES
 
+    // --APP
+    let app_$OPTIMISE = APP.app_$OPTIMISE
+
     // --ELEMENT-SNAKE
     let
     snake_ON = true,
@@ -99,9 +103,7 @@
 // #REACTIVES
 
     // --ELEMENT-GROUP
-    $: group_start instanceof Function && group_stop instanceof Function
-    ? prop_FOCUS && !snake_GAME ? group_start() : group_stop()
-    : void 0
+    $: group_update(prop_FOCUS && !snake_GAME && !$app_$OPTIMISE)
 
     // --ELEMENT-GRAVITYAREA
     $: gravityarea$_FOCUS = prop_FOCUS && page_CHARGED
@@ -117,6 +119,8 @@
     function snake_update(on) { snake_ON = on }
 
     function snake_update2(value) { snake_GAME = value }
+
+    function group_update(value) { if (group_start instanceof Function && group_stop instanceof Function) value ? group_start() : group_stop() }
 
     function tictactoe_update(value) { tictactoe_ON = value }
 
@@ -202,7 +206,6 @@ data-page-id={prop_ID}
     >
         {#each prop_CUBES as cube}
             <GravityArea
-            let:rotation
             let:grabbing
             {...cube.props}
             prop_FOCUS={gravityarea$_FOCUS}
@@ -210,13 +213,12 @@ data-page-id={prop_ID}
             prop_$RESIZE={resize}
             prop_$ANIMATION={animation}
             prop_GRABBING={prop_FOCUS}
+            prop_ROTATE_Y={Math.random() * MATH.PI.x2}
+            prop_ROTATE_Z={Math.random() * MATH.PI.x2}
             on:click={gravityarea_eClick.bind(null, cube.id)}
             >
                 <Cube
-                prop_$ROTATION={rotation}
                 prop_GRABBING={grabbing}
-                prop_ROTATE={Math.random() * MATH.PI.x2}
-                prop_ROTATE_Y={Math.random() * MATH.PI.x2}
                 prop_COMPONENT={cube.component}
                 {prop_FOCUS}
                 />

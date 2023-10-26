@@ -177,9 +177,8 @@
 // #REACTIVES
 
     // --ELEMENT-SPACECUBE
+    $: spacecube_update2(prop_FOCUS)
     $: spacecube_updateEvent(spacecube_ON && prop_ON)
-    $: spacecube_ON ? spacecube_update2(prop_FOCUS) : void 0
-
 // #FUNCTIONS
 
     // --SET
@@ -447,14 +446,16 @@
 
     function spacecube_update2(focus)
     {
-        const DURATION = spacecube_updateCubes(focus)
+        if (spacecube_ON)
+        {
+            const DURATION = spacecube_updateCubes(focus)
 
-        spacecube_updateEvent(spacecube_ON && prop_ON, focus ? 0 : DURATION)
+            spacecube_updateEvent(spacecube_ON && prop_ON, focus ? 0 : DURATION)
+        }
     }
 
     function spacecube_updateEvent(on, delay = 0)
     {
-        console.log(on, spacecube_ON)
         clearTimeout(spacecube_TIMEOUT_2)
 
         spacecube_TIMEOUT_2 = setTimeout(() =>

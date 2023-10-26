@@ -111,8 +111,6 @@ context="module"
     let
     snake,
 
-    snake_CHARGED = false,
-
     snake_WIDTH = 0,
     snake_HEIGHT = 0,
 
@@ -137,16 +135,19 @@ context="module"
     // --ELEMENT-CANVAS
     let
     canvas,
+
     canvas_CONTEXT,
+
     canvas_COLUMNS,
     canvas_ROWS,
+
     canvas_CLIENTRECT
 
 // #REACTIVES
 
     // --ELEMENT-SNAKE
-    $: snake_CHARGED ? snake_update(prop_ON) : void 0
-    $: snake_GAME ? snake_startGame() : void 0
+    $: snake_update(prop_ON)
+    $: snake_updateGame(snake_GAME)
 
     $: snake$_BLOCKSIZE = $SNAKE_$BLOCKSIZE
     $: gameover$_ON = $GAMEOVER_$ON
@@ -162,8 +163,6 @@ context="module"
 
         snake_setSnake()
         snake_setApple()
-
-        snake_CHARGED = true
     }
 
     function snake_setVars()
@@ -296,6 +295,8 @@ context="module"
         }
     }
 
+    function snake_updateGame(game) { game ? snake_startGame() : snake_stopGame() }
+
     function snake_updateCoords()
     {
         snake_X = Math.floor((event_CLIENT_X - snake_OFFSET_LEFT) / snake$_BLOCKSIZE)
@@ -366,7 +367,7 @@ context="module"
         if (prop_ON || snake_GAME) snake_draw()
     }
 
-    function snake_eFullscreenChange() { if (!document.fullscreenElement) snake_stopGame() }
+    function snake_eFullscreenChange() { if (!document.fullscreenElement) snake_GAME = false }
 
     function canvas_eMouseLeave(e)
     {
@@ -388,6 +389,8 @@ context="module"
     function snake_a(tool)
     {
         cancelAnimationFrame(snake_FRAME_ID)
+
+        if (!canvas_CONTEXT) return
 
         let
         last = +new Date(),
@@ -448,7 +451,7 @@ context="module"
 
             ;(particles ??= document.querySelector('.particles')).moveTo(snake)
         }
-        catch { snake_stopGame() }
+        catch { snake_GAME = false }
     }
 
     function snake_stopGame()
@@ -457,7 +460,6 @@ context="module"
         
         particles?.moveTo()
 
-        snake_GAME = false
         snake_INVINCIBLE = true
 
         gameover$_ON
@@ -586,6 +588,7 @@ bind:this={snake}
 on:fullscreenchange={snake_eFullscreenChange}
 >
     <canvas
+    class="canvas"
     style:width="{snake_WIDTH}px"
     style:height="{snake_HEIGHT}px"
     bind:this={canvas}
@@ -675,13 +678,13 @@ lang="scss"
 
     @extend %f-center;
 
-    &, canvas { position: absolute; }
+    &, .canvas { position: absolute; }
 
     &.game
     {
         background-color: $dark;
 
-        canvas, .gameover { pointer-events: auto; }
+        .canvas, .gameover { pointer-events: auto; }
     }
 
     .grid

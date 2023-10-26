@@ -32,7 +32,7 @@
     import { SPRING } from '../../App.svelte'
 
     // --SVELTE
-    import { onMount, onDestroy, createEventDispatcher } from 'svelte'
+    import { onDestroy, createEventDispatcher } from 'svelte'
     import { cubicInOut } from 'svelte/easing'
 
     // --COMPONENT-COVERS
@@ -47,8 +47,6 @@
 
     // --ELEMENT-NAV
     let
-    nav_CHARGED = false,
-
     nav_TRANSLATE_X = 0,
     nav_ROTATE = 90,
 
@@ -65,12 +63,9 @@
 
 // #REACTIVE
 
-    $: nav_CHARGED ? nav_update(prop_FOCUS) : void 0
+    $: nav_update(prop_FOCUS)
 
 // #FUNCTIONS
-
-    // --SET
-    function nav_set() { nav_CHARGED = true }
 
     // --DESTROY
     function nav_destroy()
@@ -132,9 +127,8 @@
         1400, nav_T, invert).cancel
     }
 
-// #CYCLES
+// #CYCLE
 
-onMount(nav_set)
 onDestroy(nav_destroy)
 </script>
 

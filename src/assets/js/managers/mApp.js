@@ -9,8 +9,8 @@ class App
     static __app_OPTIMISE_NAME = 'optimise'
 
     #app
-    #app_$FREEZE = {}
-    #app_$OPTIMISE = {}
+    #app_$FREEZE = { init: false }
+    #app_$OPTIMISE = { init: false }
     #app_$HIDE = writable(false)
     #app_SMALL_SCREEN = false // use by presentation and skills for mask title with small height -> to modified
     #app_OPTIMISE_CONFIG = {}
@@ -28,8 +28,6 @@ constructor ()
 {
     this.#app_setVars2()
     this.#app_setVars3()
-
-    this.app_updateMode = this.app_updateMode.bind(this)
 
     this.#app_COMMANDS.push(
     {
@@ -61,11 +59,11 @@ constructor ()
 
     #app_setVars2()
     {
-        let { set, subscribe } = writable(false)
+        let { set, subscribe } = writable(this.#app_$FREEZE.init)
 
         this.#app_$FREEZE =
         {
-            value: false,
+            value: this.#app_$FREEZE.init,
             target: null,
             set: function (value, target)
             {
@@ -80,11 +78,11 @@ constructor ()
 
     #app_setVars3()
     {
-        let { set, subscribe } = writable(false)
+        let { set, subscribe } = writable(this.#app_$OPTIMISE.init)
 
         this.#app_$OPTIMISE =
         {
-            value: false,
+            value: this.#app_$OPTIMISE.init,
             set: function (value)
             {
                 this.value = value
@@ -97,19 +95,19 @@ constructor ()
 
     #app_setCommands() { COMMAND.command_setBasicCommands(this.#app_COMMANDS) }
 
-    #app_setStorage()
+    #app_setSaveStorage()
     {
         const
-        STORAGE = localStorage.getItem(App.__app_SAVE_NAME),
-        CONFIG = JSON.parse(STORAGE ?? '{}')
+        SAVE = localStorage.getItem(App.__app_SAVE_NAME),
+        CONFIG = JSON.parse(SAVE ?? '{}')
     
         for (const NAME in this.#app_OPTIMISE_CONFIG) this.#app_STORAGE[NAME] = CONFIG[NAME] ?? (localStorage.getItem(NAME) ?? 'd')
 
-        if (!STORAGE) localStorage.setItem(App.__app_SAVE_NAME, JSON.stringify(this.#app_STORAGE))
+        if (!SAVE) localStorage.setItem(App.__app_SAVE_NAME, JSON.stringify(this.#app_STORAGE))
     }
 
     // --DESTROY
-    #app_destroyStorage() { localStorage.removeItem(App.__app_SAVE_NAME) }
+    app_destroySaveStorage() { localStorage.removeItem(App.__app_SAVE_NAME) }
 
     // --RESTORE
     #app_restore()
@@ -137,20 +135,20 @@ constructor ()
 
     app_updateSmallScreen() { this.#app_SMALL_SCREEN = this.app_testScreen(null, BREAKPOINTS.ms3) }
 
-    app_updateMode(optimise)
+    #app_updateMode(optimise)
     {
-        optimise ? this.#app_setStorage() : this.#app_destroyStorage()
+        optimise ? this.#app_setSaveStorage() : this.app_destroySaveStorage()
 
         COMMAND.command_update(optimise
             ? this.#app_OPTIMISE_CONFIG
             : (this.#app_STORAGE ?? (JSON.parse(localStorage.getItem(App.__app_SAVE_NAME) ?? {})))
         )
 
-        this.app_$OPTIMISE = optimise
+        this.#app_$OPTIMISE.set(optimise)
     }
     
     // --COMMAND
-    app_c$Optimise(on) { COMMAND.command_test(on, 'boolean', this.app_updateMode, App.__app_OPTIMISE_NAME, this.#app_$OPTIMISE.value) }
+    app_c$Optimise(value) { COMMAND.command_test(value, 'boolean', this.#app_updateMode.bind(this), App.__app_OPTIMISE_NAME, this.#app_$OPTIMISE.value) }
 
     // --TEST
     app_testScreen(width, height) { return this.app_WIDTH < (width ?? -Infinity) || this.app_HEIGHT < (height ?? -Infinity) }

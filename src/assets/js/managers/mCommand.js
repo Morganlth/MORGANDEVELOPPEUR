@@ -56,6 +56,8 @@ constructor ()
     {
         for (const NAME of this.#command_KEYSTORAGE) this.#command_COMMANDS[NAME]('d')
 
+        APP.app_destroySaveStorage()
+
         if (!view && this.command_testCommand('clear')) this.#command_COMMANDS.clear()
     }
 
@@ -100,7 +102,7 @@ constructor ()
     command_test(toTest, type, callback, name, value)
     {
         typeof toTest === type
-        ?   toTest !== value
+        ? toTest !== value
             ? callback(toTest)
             : null
         : this.command_c$Success(value, name)
