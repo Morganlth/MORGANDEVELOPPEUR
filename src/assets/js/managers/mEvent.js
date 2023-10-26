@@ -181,6 +181,8 @@ constructor ()
     async event_scrollTo(top, instant, hide = true)
     {
         const APP_$FREEZE = APP.app_$FREEZE
+
+        await tick() // app freeze overflow clip
     
         if (APP_$FREEZE.value)
         {

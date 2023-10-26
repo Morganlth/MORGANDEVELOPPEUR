@@ -46,7 +46,7 @@
     import { APP, COMMAND, EVENT } from '../../App.svelte'
 
     // --SVELTE
-    import { onMount, tick } from 'svelte'
+    import { onMount } from 'svelte'
 
     // --COMPONENT-COVERS
     import GravityArea from '../covers/GravityArea.svelte'
@@ -149,11 +149,9 @@
     }
 
     // --UTIL
-    export async function page_process(str)
+    export function page_process(str)
     {
         EVENT.event_scrollTo(prop_TOP)
-
-        await tick()
 
         snake_update2(str === 'snake')
         tictactoe_update(str === 'tictactoe')
@@ -260,7 +258,7 @@ lang="scss"
 
     @extend %any;
 
-    overflow: hidden;
+    overflow: clip;
 
     p
     {
@@ -286,7 +284,7 @@ lang="scss"
 
         box-sizing: border-box;
 
-        transition: transform .8s .8s ease-in-out;
+        transition: transform .8s .6s ease-in-out;
 
         span
         {

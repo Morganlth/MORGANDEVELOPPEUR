@@ -379,7 +379,7 @@
         }
     }
 
-    function terminal_goTo(datas)
+    async function terminal_goTo(datas)
     {
         terminal_ON = false
 
@@ -638,6 +638,8 @@ lang="scss"
             p
             {
                 @include font.content($light, $font-size: map.get(font.$font-sizes, s3));
+
+                @extend %scroll-bar;
 
                 overflow: clip auto;
 

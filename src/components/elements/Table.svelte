@@ -214,6 +214,8 @@ lang="scss"
         @extend %any;
     }
 
+    .background { background-color: $dark; }
+
     .head, .line { width: 100%; }
 
     .head

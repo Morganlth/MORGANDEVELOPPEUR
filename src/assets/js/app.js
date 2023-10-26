@@ -218,7 +218,7 @@
         ,
             quote: { value: 'Le code est un moyen de matérialiser nos idées créatives.' }
         ,
-            children: [PROJECTS_CARDS]
+            children: [PROJECTS_ABOUT, PROJECTS_PROJECTS, PROJECTS_CARDS]
         ,
             props:
             {
@@ -255,6 +255,8 @@
 
     import SKILLS_SYSTEM from './datas/skills/dSystem'
 
+    import PROJECTS_ABOUT from './datas/projects/dAbout'
+    import PROJECTS_PROJECTS from './datas/projects/dProjects'
     import PROJECTS_CARDS from './datas/projects/dCards'
 
     // --LIB
@@ -317,7 +319,7 @@
                 {
                     for (const DATA of CHILD.datas)
                     {
-                        const TAGS = DATA.tags
+                        const TAGS = DATA.tags ?? []
 
                         for (const TAG of TAGS) if (TAG !== '') PROCESS[TAG] = CHILD_NAME
                     }

@@ -24,6 +24,8 @@
     prop_FOCUS = false,
     prop_INTRO = false,
 
+    prop_ABOUT = [],
+    prop_PROJECTS = [],
     prop_CARDS = [],
 
     prop_TOP = 0,
@@ -50,6 +52,7 @@
     // --COMPONENT-ELEMENTS
     import Card from '../elements/Card.svelte'
     import Mask2 from '../elements/Mask2.svelte'
+    import About from '../elements/About.svelte'
 
 // #VARIABLES
 
@@ -90,8 +93,11 @@
     // --SET
     function projects_set() { page_CHARGED = true }
 
+    // --GET
+    function card_get(name) { return prop_CARDS.find(card => card.name === name) ?? null }
+
     // --UPDATES
-    function app_update(card) { APP.app_$FREEZE = { value: card ? true : false, target: prop_ID } }
+    function app_update(value) { APP.app_$FREEZE = { value: value, target: prop_ID } }
 
     function router_update(id)
     {
@@ -108,7 +114,9 @@
     {
         if (project_TIMEOUT) return
     
-        const CARD = prop_CARDS.find(card => card.name === subPath)
+        const
+        CARD = card_get(subPath),
+        [PROJECT, VALUE] = CARD ? [prop_PROJECTS[CARD.id], true] : [null, false]
 
         CARD
         ? EVENT.event_scrollTo(prop_START, true, false)
@@ -116,18 +124,18 @@
 
         project_TIMEOUT = setTimeout(() =>
         {
-            app_update(CARD)
+            app_update(VALUE)
 
             project_TIMEOUT = null
         },
         400.08)
 
-        projects_updateParticles(CARD)
+        projects_updateParticles(VALUE)
 
-        project_TARGET = CARD
+        project_TARGET = PROJECT
     }
 
-    function projects_updateParticles(card) { (particles ??= document.querySelector('.particles')).moveTo(card ? projects : null) }
+    function projects_updateParticles(value) { (particles ??= document.querySelector('.particles')).moveTo(value ? projects : null) }
 
     function card_updateCardHover(id) { card_HOVER = id }
 
@@ -152,7 +160,8 @@
                 EVENT.event_scrollTo(prop_START, true)
                 break
             case 'cards':
-                EVENT.event_scrollTo(prop_START, true)
+                const CARD = card_get(str)
+                if (CARD) router_update(CARD.id)
             default:
                 break
         }
@@ -171,6 +180,21 @@ class:scroller={project_TARGET}
 data-page-id={prop_ID}
 bind:this={projects}
 >
+    {#if project_TARGET}
+        <About
+        prop_CONTENT={[prop_ABOUT, (project_TARGET.about ?? [])]}
+        />
+
+        <div
+        class="project"
+        >
+            <svelte:component
+            this={project_TARGET.component}
+            prop_DATAS={project_TARGET.datas}
+            />
+        </div>
+    {/if}
+
     <Group
     let:resize
     >
@@ -197,17 +221,6 @@ bind:this={projects}
     <Mask2
     prop_DESTROY={!project_TARGET}
     />
-
-    {#if project_TARGET}
-        <div
-        class="project"
-        >
-            <svelte:component
-            this={project_TARGET.component}
-            prop_DATAS={project_TARGET.datas}
-            />
-        </div>
-    {/if}
 </div>
 
 <!-- #STYLE -->
@@ -244,8 +257,8 @@ lang="scss"
 
     .project
     {
-        @include position.placement(relative, 100vh);
-
+        @include position.placement(absolute, $top: 100vh, $right: 0, $left: 0);
+    
         z-index: 1;
 
         width: 100%;
@@ -254,6 +267,8 @@ lang="scss"
 
     :global
     {
+        .particles { z-index: -1; }
+    
         .group
         {
             @include position.placement(fixed, 0, 0, 0, 0);

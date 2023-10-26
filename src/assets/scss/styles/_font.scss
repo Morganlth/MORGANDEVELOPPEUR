@@ -22,15 +22,13 @@
     $font-sizes: (s0: 0rem, s1: 1.2rem, s2: 1.8rem, s3: 2.4rem, s4: 3.6rem, s5: 4.8rem, s6: 6rem, s7: 7.2rem, s8: 8.8rem);
 
     // --LINE-HEIGHT
-    $line-height-title-min: .71;
+    $line-height-title-min: .76;
 
     // --FONT-TITLE
     $h-1: (color: $light, font-family: $family-title, font-size: var(--title-size, map.get($font-sizes, s6)), font-weight: 900, line-height: $line-height-title-min);
     $h-2: (color: $indicator, font-family: $family-title, font-size: var(--title-size, map.get($font-sizes, s5)), font-weight: 900, line-height: 1.2);
-    $h-3: (color: $indicator, font-family: $family-title, font-size: map.get($font-sizes, s4), font-weight: 900, line-height: 1.2);
-    $h-4: (color: $light, font-family: $family-title, font-size: map.get($font-sizes, s3), font-weight: 900, line-height: 1.2); 
 
-    $titles: ('h-1': $h-1, 'h-2': $h-2, 'h-3': $h-3, 'h-4': $h-4);
+    $titles: ('h-1': $h-1, 'h-2': $h-2);
 
 // #FONT
 
@@ -49,7 +47,7 @@
     // --FONT-TITLE
     @mixin h-($number: 1) { @each $key, $value in map.get($titles, 'h-#{$number}') { #{$key}: $value; } } // set title properties
 
-    @mixin h-custom($color: inherit, $font-size: var(--title-size, map.get($font-sizes, s3)), $line-height: .8, $italic: false)
+    @mixin h-custom($color: inherit, $font-size: var(--title-size, map.get($font-sizes, s3)), $line-height: $line-height-title-min, $italic: false)
     {
         @extend %default-settings;
 

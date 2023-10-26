@@ -23,7 +23,7 @@
                 component: Grid,
                 props:
                 {
-                    prop_TITLE: 'Morpion',
+                    prop_TITLE: 'Tictactoe',
                     prop_X: .34,
                     prop_Y: .6,
                     prop_RADIUS: 140

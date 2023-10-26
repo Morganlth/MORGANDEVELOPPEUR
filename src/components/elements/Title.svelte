@@ -176,9 +176,11 @@ onDestroy(title_destroy)
 <svelte:element
 this={prop_TITLE.html}
 class="title"
+class:focus={prop_INTRO}
+data-pe-content={prop_TITLE.fragments[0]?.frags?.substring(0, 3)}
 bind:offsetHeight={title_HEIGHT}
 >
-    {#each prop_TITLE.fragments as fragments}
+    {#each prop_TITLE.fragments ?? [] as fragments}
         <Fragments
         prop_FRAGS={{ children: FRAGMENTS_FRAGS, value: fragments.frags ?? '' }}
         prop_TAGS={{ children: FRAGMENTS_TAGS, value: fragments.tags }}
@@ -215,8 +217,11 @@ lang="scss"
 >
 /* #USES */
 
+@use 'sass:math';
+
 @use '../../assets/scss/app';
 
+@use '../../assets/scss/styles/position';
 @use '../../assets/scss/styles/font';
 @use '../../assets/scss/styles/media';
 
@@ -224,6 +229,21 @@ lang="scss"
 
 .title
 {
+    $padding-top: 2rem;
+
+    &::before
+    {
+        @include position.placement(absolute, $top: math.div($padding-top, 2), $left: 0, $pseudo-element: attr(data-pe-content));
+
+        clip-path: polygon(0 0, 0 0, 0 100%, 0% 100%);
+
+        color: $intermediate;
+        font-family: inherit;
+        font-size: 134%;
+
+        transition: clip-path .6s .4s ease-in;
+    }
+
     @include font.h-(1);
 
     @extend %m-h-1;
@@ -239,11 +259,13 @@ lang="scss"
 
     padding-bottom: 3rem;
 
+    &.focus::before { clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%); }
+
     .element { transition: transform .8s ease-out; }
 
     :global
     {
-        &>* { padding-top: 2rem; }
+        &>* { padding-top: $padding-top; }
 
         .fragments
         {

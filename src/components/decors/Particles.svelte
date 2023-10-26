@@ -295,7 +295,7 @@
     {
         const PARENT = parent instanceof HTMLElement ? parent : particles_PARENT
     
-        PARENT.insertBefore(particles, PARENT.children[0])
+        if (particles) PARENT.insertBefore(particles, PARENT.children[0])
     }
 
 // #CYCLES

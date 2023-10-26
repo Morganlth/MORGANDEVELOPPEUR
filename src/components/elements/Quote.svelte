@@ -134,7 +134,7 @@ lang="scss"
 
         text-align: right;
 
-        transition: clip-path .8s .8s ease-in-out;
+        transition: clip-path .8s .6s ease-in-out;
     }
 
     blockquote, q { background-color: $dark; }
