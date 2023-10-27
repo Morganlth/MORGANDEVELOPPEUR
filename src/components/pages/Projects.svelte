@@ -86,7 +86,7 @@
     $: card$_ON = prop_FOCUS && !prop_INTRO
 
     // --ELEMENT-PROJECT
-    $: prop_START !== 0 ? projects_updateTarget($router_$SUBPATH) : void {}
+    $: projects_updateTarget($router_$SUBPATH)
 
 // #FUNCTIONS
 
@@ -112,7 +112,7 @@
 
     function projects_updateTarget(subPath)
     {
-        if (project_TIMEOUT) return
+        if (project_TIMEOUT || prop_START === 0) return
     
         const
         CARD = card_get(subPath),

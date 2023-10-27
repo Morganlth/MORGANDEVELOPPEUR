@@ -43,16 +43,23 @@
     import { APP, EVENT } from '../../App.svelte'
 
     // --SVELTE
-    import { onMount, tick } from 'svelte'
+    import { onMount, onDestroy, tick } from 'svelte'
 
     // --COMPONENT-ELEMENTS
     import System from '../elements/System.svelte'
     import Table from '../elements/Table.svelte'
 
+// #CONSTANTE
+
+    // --ELEMENT-SYSTEM
+    const SYSTEM_EVENTS = { resize: system_e$Resize }
+
 // #VARIABLES
 
     // --APP
-    let app_$FREEZE = APP.app_$FREEZE
+    let
+    app_$CHARGED = APP.app_$CHARGED,
+    app_$FREEZE = APP.app_$FREEZE
 
     // --ELEMENT-SYSTEM
     let system_TARGET = null
@@ -63,12 +70,17 @@
     $: !$app_$FREEZE ? skills_reset() : void 0
 
     // --ELEMENT-NAV
-    $: prop_START != null && prop_DIF != null ? system_setVars() : void 0
+    $: $app_$CHARGED ? system_setVars() : void 0
 
 // #FUNCTIONS
 
     // --SET
-    function skills_set() { page_CHARGED = true }
+    function skills_set()
+    {
+        system_setEvents()
+    
+        page_CHARGED = true
+    }
 
     function system_setVars()
     {
@@ -79,6 +91,13 @@
             ITEM.top = prop_START + prop_DIF * ITEM.props.prop_OFFSET
         }
     }
+
+    function system_setEvents() { EVENT.event_add(SYSTEM_EVENTS) }
+
+    // --DESTROY
+    function skills_destroy() { system_destroyEvents() }
+
+    function system_destroyEvents() { EVENT.event_remove(SYSTEM_EVENTS) }
 
     // --GET
     function system_getTarget(target) { return prop_SYSTEM.find(orbit => orbit.tags.includes(target)) }
@@ -93,6 +112,8 @@
 
     // --EVENTS
     export function nav_e$Click({id}) { skills_goTo(id) }
+
+    async function system_e$Resize() { system_setVars() }
 
     function table_eClick() { APP.app_$FREEZE = { value: false, target: prop_ID } } // call skills_reset with reactive app_$FREEZE
 
@@ -120,9 +141,10 @@
 
     function skills_goTo(id) { EVENT.event_scrollTo(prop_SYSTEM[id].top) }
 
-// #CYCLE
+// #CYCLES
 
 onMount(skills_set)
+onDestroy(skills_destroy)
 </script>
 
 <!-- #HTML -->

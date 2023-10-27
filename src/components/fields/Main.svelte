@@ -16,6 +16,11 @@
 <!-- #SCRIPT -->
 
 <script>
+// #EXPORT
+
+    // --BIND
+    export let main_CHARGED = false
+
 // #IMPORTS
 
     // --JS
@@ -26,7 +31,7 @@
     import { APP, ROUTER, EVENT } from '../../App.svelte'
 
     // --SVELTE
-    import { onMount, onDestroy } from 'svelte'
+    import { onMount, onDestroy, tick } from 'svelte'
 
     // --COMPONENT-COVER
     import Page from '../covers/Page.svelte'
@@ -69,10 +74,7 @@
     router_$HIDE = ROUTER.router_$HIDE
 
     // --ELEMENT-MAIN
-    let
-    main_CHARGED = false,
-
-    main_TIMEOUT
+    let main_TIMEOUT
 
     // --ELEMENT-ROUTER
     let router_INTERVAL
@@ -85,13 +87,15 @@
 // #FUNCTIONS
 
     // --SET
-    function main_set()
+    async function main_set()
     {
         main_setEvents()
 
         pages_setPages()
     
         router_intro()
+
+        await tick()
 
         main_CHARGED = true
     }

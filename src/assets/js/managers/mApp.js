@@ -9,6 +9,7 @@ class App
     static __app_OPTIMISE_NAME = 'optimise'
 
     #app
+    #app_$CHARGED = writable(false)
     #app_$FREEZE = { init: false }
     #app_$OPTIMISE = { init: false }
     #app_$HIDE = writable(false)
@@ -53,6 +54,7 @@ constructor ()
     #app_setVars()
     {
         this.#app = document.getElementById('app')
+        this.#app_$CHARGED.set(true)
 
         this.app_updateSmallScreen()
     }
@@ -155,6 +157,8 @@ constructor ()
 
     // --GETTER
     get app() { return this.#app }
+
+    get app_$CHARGED() { return this.#app_$CHARGED }
 
     get app_$FREEZE() { return this.#app_$FREEZE }
 

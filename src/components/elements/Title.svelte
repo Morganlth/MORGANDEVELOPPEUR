@@ -233,15 +233,23 @@ lang="scss"
 
     &::before
     {
-        @include position.placement(absolute, $top: math.div($padding-top, 2), $left: 0, $pseudo-element: attr(data-pe-content));
+        @include position.placement(absolute, $top: math.div($padding-top, 2), $left: 2rem, $pseudo-element: attr(data-pe-content));
 
-        clip-path: polygon(0 0, 0 0, 0 100%, 0% 100%);
+        transform-origin: top;
+        transform: rotateX(.4rad);
+
+        padding-left: 2rem;
+
+        clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+
+        border-left: solid $intermediate 1px;
 
         color: $intermediate;
         font-family: inherit;
         font-size: 134%;
+        writing-mode: vertical-lr;
 
-        transition: clip-path .6s .4s ease-in;
+        transition: clip-path .4s ease-in-out;
     }
 
     @include font.h-(1);
@@ -252,14 +260,19 @@ lang="scss"
 
     z-index: 1;
 
-    perspective: 800px;
+    perspective: 1000px;
 
     width: fit-content;
     height: fit-content;
 
     padding-bottom: 3rem;
 
-    &.focus::before { clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%); }
+    &.focus::before
+    {
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+
+        transition-delay: .4s;
+    }
 
     .element { transition: transform .8s ease-out; }
 

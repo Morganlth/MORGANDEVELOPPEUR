@@ -36,12 +36,24 @@
     PARTICLES = 'particles',
     PARTICLES_DELAY_NAME = 'particles_delay',
 
+    PARTICLES_COLORS = [COLORS.indicator, COLORS.primary, COLORS.light],
+    PARTICLES_BACKGROUND_COLOR = color_rgba(COLORS.dark, .2),
+
+    PARTICLES_MAX = 20,
     PARTICLES_GAP = 100,
     PARTICLES_D_MOUSE_RADIUS = 100,
 
-    PARTICLES_BACKGROUND_COLOR = color_rgba(COLORS.dark, .2),
-
-    PARTICLES_PARTICLES = [],
+    PARTICLES_MODEL = 
+    [
+        () => .1,                                                   // t
+        () => -PARTICLES_GAP,                                       // x
+        () => -PARTICLES_GAP,                                        // y
+        () => Math.random() + particles_ANGLE_X,                    // vel_X
+        () => Math.random() + particles_ANGLE_Y,                    // vel_Y
+        () => Math.random() * 3 + 5,                                // size_X
+        () => Math.random() * 3 + 5,                                // size_Y
+        () => Math.random() < .1 ? 0 : MATH.headsOrTails() ? 1 : 2  // color
+    ],
 
     PARTICLES_COMMANDS =
     [
@@ -71,6 +83,11 @@
 
 // #VARIABLES
 
+    // --EVENT
+    let
+    event_CLIENT_X = 0,
+    event_CLIENT_Y = 0
+
     // --ELEMENT-PARTICLES
     let
     particles,
@@ -86,11 +103,15 @@
 
     particles_CONTEXT,
 
-    particles_COUNT = 0,
-    particles_DELAY = 100,
-    particles_MAX = 50,
+    particles_PARTICLES,
+
+    particles_I = 0,
+    particles_MAX = PARTICLES_MAX * PARTICLES_MODEL.length,
 
     particles_MOUSE_RADIUS = PARTICLES_D_MOUSE_RADIUS,
+
+    particles_COUNT = 0,
+    particles_DELAY = 100,
 
     particles_cancel = () => {}
 
@@ -108,6 +129,7 @@
     // --SET
     function particles_set()
     {
+        particles_updateArray()
         particles_setVars()
         particles_setCommands()
         particles_setEvents()
@@ -141,20 +163,11 @@
 
     function particles_setParticle()
     {
-        const [COLOR, EDIBLE] = particles_getColor()
+        const LENGTH = PARTICLES_MODEL.length
     
-        PARTICLES_PARTICLES.push(
-        {
-            t: .1,
-            x: -PARTICLES_GAP,
-            y: -PARTICLES_GAP,
-            vel_X: Math.random() + particles_ANGLE_X,
-            vel_Y: -Math.random() - particles_ANGLE_Y,
-            size_X: Math.random() * 3 + 5,
-            size_Y: Math.random() * 3 + 5,
-            color: COLOR,
-            edible: EDIBLE
-        })
+        for (let i = 0; i < LENGTH; i++) { particles_PARTICLES[particles_I + i] = PARTICLES_MODEL[i]() }
+
+        particles_I += LENGTH
     }
 
     // --DESTROY
@@ -175,11 +188,13 @@
     function particles_destroyEvents2() { EVENT.event_remove(PARTICLES_EVENTS_2) }
 
     // --GET
-    function particles_getColor()
+    function particles_getDistances(x, y)
     {
-        const [COLOR, EDIBLE] = Math.random() < .1 ? [COLORS.indicator, true] : [COLORS[MATH.headsOrTails() ? 'primary' : 'light'], false]
-    
-        return [color_rgba(COLOR, Math.random() * .3 + .3), EDIBLE]
+        const
+        [DISTANCE_X, DISTANCE_Y] = [x - event_CLIENT_X, y - event_CLIENT_Y],
+        DISTANCE = Math.sqrt(DISTANCE_X ** 2 + DISTANCE_Y ** 2)
+
+        return [DISTANCE, DISTANCE_X, DISTANCE_Y]
     }
 
     // --UPDATES
@@ -198,50 +213,78 @@
     {
         particles_DELAY = delay
 
-        delay < 100
-        ? particles_MAX = 230 - delay
-        : particles_MAX = 30
+        particles_MAX = (delay < 100 ? 160 - delay : PARTICLES_MAX) * PARTICLES_MODEL.length
+
+        particles_updateArray(particles_PARTICLES)
     }
 
-    function particles_updateXY(particle)
+    function particles_updateArray(array = new Float32Array())
+    {
+        const ARRAY = new Float32Array(particles_MAX)
+
+        ARRAY.set(array.subarray(0, particles_MAX))
+
+        if (particles_I > particles_MAX) particles_I = particles_MAX
+
+        particles_PARTICLES = ARRAY
+    }
+
+    function particles_updateParticle()
+    {
+        // i = current position in PARTICLES clone
+        // j = current position in particles_PARTICLES
+        // remove particles => j is not incremented
+
+        const
+        PARTICLES = new Float32Array(particles_PARTICLES),
+        LENGTH = PARTICLES_MODEL.length
+
+        let j = 0
+    
+        for (let i = 0; i < particles_I; i += LENGTH)
+        {
+            let [x, y] = [PARTICLES[i + 1], PARTICLES[i + 2]]
+
+            const
+            [DISTANCE, DISTANCE_X, DISTANCE_Y] = particles_getDistances(x, y),
+            T = PARTICLES[i]
+
+            if (particles_testOutside(x, y) || particles_testEdible(DISTANCE, PARTICLES[i + 7])) continue
+            else if (DISTANCE < particles_MOUSE_RADIUS) [x, y] = particles_updateXY(DISTANCE_X, DISTANCE_Y)
+
+            particles_draw(x, y, PARTICLES[i + 5] * T, PARTICLES[i + 6] * T, PARTICLES_COLORS[PARTICLES[i + 7]])
+
+            particles_PARTICLES[j] = T + .0015
+            particles_PARTICLES[j + 1] = x + PARTICLES[i + 3] * T
+            particles_PARTICLES[j + 2] = y + PARTICLES[i + 4] * T
+            particles_PARTICLES[j + 3] = PARTICLES[i + 3]
+            particles_PARTICLES[j + 4] = PARTICLES[i + 4]
+            particles_PARTICLES[j + 5] = PARTICLES[i + 5]
+            particles_PARTICLES[j + 6] = PARTICLES[i + 6]
+            particles_PARTICLES[j + 7] = PARTICLES[i + 7]
+
+            j += LENGTH
+        }
+
+        particles_I = j // new LENGTH
+    }
+
+    function particles_updateXY(distance_X, distance_Y)
     {
         const
-        [CLIENT_X, CLIENT_Y] = EVENT.event_CLIENT_XY,
-        [DISTANCE_X, DISTANCE_Y] = [particle.x - CLIENT_X, particle.y - CLIENT_Y],
-        DISTANCE = Math.sqrt(DISTANCE_X ** 2 + DISTANCE_Y ** 2)
+        ANGLE = Math.atan2(distance_Y, distance_X),
+        X = (event_CLIENT_X + Math.cos(ANGLE) * particles_MOUSE_RADIUS),
+        Y = (event_CLIENT_Y + Math.sin(ANGLE) * particles_MOUSE_RADIUS)
 
-        if (snake$_ON && !gameover$_ON && particle.edible)
-        {
-            if (DISTANCE < snake$_BLOCKSIZE) PARTICLES_PARTICLES.splice(PARTICLES_PARTICLES.indexOf(particle), 1)
-        }
-        else if (DISTANCE < particles_MOUSE_RADIUS)
-        {
-            const ANGLE = Math.atan2(DISTANCE_Y, DISTANCE_X)
-
-            particle.x = CLIENT_X + Math.cos(ANGLE) * particles_MOUSE_RADIUS
-            particle.y = CLIENT_Y + Math.sin(ANGLE) * particles_MOUSE_RADIUS
-        }
+        return [X, Y]
     }
 
     // --DRAW
-    function particles_draw()
+    function particles_draw(x, y, size_X, size_Y, color)
     {
-        const PARTICLES = [...PARTICLES_PARTICLES]
-    
-        for (const PARTICLE of PARTICLES)
-        {
-            const [T, SIZE_X, SIZE_Y] = [PARTICLE.t, PARTICLE.size_X, PARTICLE.size_Y]
-
-            particles_updateXY(PARTICLE)
-    
-            particles_CONTEXT.fillStyle = PARTICLE.color
-            particles_CONTEXT.fillRect(PARTICLE.x, PARTICLE.y, SIZE_X * T, SIZE_Y * T)
-            particles_CONTEXT.fill()
-
-            PARTICLE.t += .0015
-            PARTICLE.x += PARTICLE.vel_X * PARTICLE.t
-            PARTICLE.y -= PARTICLE.vel_Y * PARTICLE.t
-        }
+        particles_CONTEXT.fillStyle = color
+        particles_CONTEXT.fillRect(x, y, size_X, size_Y)
+        particles_CONTEXT.fill()
     }
 
     function particles_drawBackground()
@@ -253,8 +296,18 @@
     // --CLEAR
     function particles_clear() { particles_CONTEXT.clearRect(0, 0, particles_WIDTH, particles_HEIGHT) }
 
-    // --TEST
-    function particles_testMax() { if (PARTICLES_PARTICLES.length > particles_MAX) PARTICLES_PARTICLES.shift() }
+    // --TESTS
+    function particles_testMax() { return particles_I < particles_MAX ? true : false }
+
+    function particles_testOutside(x, y) { return x > APP.app_WIDTH || y > APP.app_HEIGHT ? true : false }
+    
+    function particles_testEdible(distance, color_NUMBER)
+    {
+        return (
+        snake$_ON && !gameover$_ON && !color_NUMBER
+        ? distance < snake$_BLOCKSIZE ? true : false
+        : false)
+    }
 
     // --COMMANDS
     function particles_c$(on) { COMMAND.command_test(on, 'boolean', particles_update, PARTICLES, particles_ON) }
@@ -275,15 +328,16 @@
 
     async function particles_e$Animation()
     {
+        [event_CLIENT_X, event_CLIENT_Y] = EVENT.event_CLIENT_XY
+    
         particles_drawBackground()
-        particles_draw()
+        particles_updateParticle()
 
         if (++particles_COUNT > particles_DELAY)
         {
             particles_COUNT = 0
 
-            particles_setParticle()
-            particles_testMax()
+            if (particles_testMax()) particles_setParticle()
         }
     }
 
@@ -295,7 +349,7 @@
     {
         const PARENT = parent instanceof HTMLElement ? parent : particles_PARENT
     
-        if (particles) PARENT.insertBefore(particles, PARENT.children[0])
+        if (particles && particles.parentElement !== PARENT) PARENT.insertBefore(particles, PARENT.children[0])
     }
 
 // #CYCLES

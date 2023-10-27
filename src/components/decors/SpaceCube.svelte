@@ -135,8 +135,8 @@
     },
     SPACECUBE_EVENTS_3 =
     {
-        mouseMove: wait_throttle(spacecube_e$MouseMove, 66.68),
-        animation: wait_throttle(spacecube_e$Animation2, 66.68)
+        mouseMove: wait_throttle(spacecube_e$MouseMove, 50.01),
+        animation: wait_throttle(spacecube_e$Animation2, 50.01)
     }
 
 // #VARIABLES
@@ -178,7 +178,8 @@
 
     // --ELEMENT-SPACECUBE
     $: spacecube_update2(prop_FOCUS)
-    $: spacecube_updateEvent(spacecube_ON && prop_ON)
+    $: spacecube_updateEvent(spacecube_ON, prop_ON)
+
 // #FUNCTIONS
 
     // --SET
@@ -446,23 +447,23 @@
 
     function spacecube_update2(focus)
     {
-        if (spacecube_ON)
-        {
-            const DURATION = spacecube_updateCubes(focus)
+        const DURATION = spacecube_updateCubes(focus)
 
-            spacecube_updateEvent(spacecube_ON && prop_ON, focus ? 0 : DURATION)
-        }
+        spacecube_updateEvent(spacecube_ON, prop_ON, focus ? 0 : DURATION)
     }
 
-    function spacecube_updateEvent(on, delay = 0)
+    function spacecube_updateEvent(spacecube_ON, on, delay = 0)
     {
         clearTimeout(spacecube_TIMEOUT_2)
 
         spacecube_TIMEOUT_2 = setTimeout(() =>
         {
-            on && prop_FOCUS
-            ? (spacecube_setEvents2(), spacecube_destroyEvents3())
-            : (spacecube_destroyEvents2(), spacecube_setEvents3())
+            const FOCUS = on && prop_FOCUS
+        
+            spacecube_ON && FOCUS
+            ?   (spacecube_setEvents2(), spacecube_destroyEvents3())
+            :   (spacecube_destroyEvents2(),
+                spacecube_ON || FOCUS ? spacecube_setEvents3() : spacecube_destroyEvents3())
         },
         delay) 
     }

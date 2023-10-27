@@ -53,7 +53,7 @@ context="module"
 // #IMPORTS
 
     // --SVELTE
-    import { onMount, onDestroy, afterUpdate } from 'svelte'
+    import { onMount, onDestroy } from 'svelte'
 
     // --COMPONENT-FIELDS
     import Header from './components/fields/Header.svelte'
@@ -76,13 +76,16 @@ context="module"
     // --ELEMENT-APP
     let app_FONTS_CHARGED = false
 
+    // --ELEMENT-MAIN
+    let main_CHARGED = false
+
     // --ELEMENT-OPTI
     let opti_ON = false
 
 // #REACTIVE
 
-    // --ELEMENT-APP
-    $: app$_CHARGED = app_FONTS_CHARGED && !opti_ON
+    // --ELEMENT-MAIN
+    $: main_CHARGED ? app_setContexts() : void 0
 
 // #FUNCTIONS
 
@@ -120,17 +123,6 @@ context="module"
     // --DESTROY
     function app_destroy() { EVENT.event_destroy() }
 
-    // --UPDATE
-    function app_update()
-    {
-        if (app$_CHARGED)
-        {
-            app_setContexts()
-
-            app_update = () => {} // destroy func
-        }
-    }
-
     // --COMMANDS
     function app_c$App() { console.log(APP) }
 
@@ -147,8 +139,6 @@ context="module"
 
 onMount(app_set)
 onDestroy(app_destroy)
-
-afterUpdate(() => app_update())
 </script>
 
 <!-- #HTML -->
@@ -165,9 +155,11 @@ on:mouseup={EVENT.event_mouseUp.bind(EVENT)}
 on:mouseleave={EVENT.event_mouseUp.bind(EVENT)}
 on:touchstart|once={app_eTouchStart}
 >
-    {#if app$_CHARGED}
+    {#if app_FONTS_CHARGED && !opti_ON}
         <Header />
-        <Main />
+        <Main
+        bind:main_CHARGED
+        />
         <Footer />
     {/if}
 
