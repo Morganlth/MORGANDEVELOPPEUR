@@ -177,7 +177,7 @@ onDestroy(title_destroy)
 this={prop_TITLE.html}
 class="title"
 class:focus={prop_INTRO}
-data-pe-content={prop_TITLE.fragments[0]?.frags?.substring(0, 3)}
+data-pe-content={prop_TITLE.fragments[0]?.frags?.substring(0, 1)}
 bind:offsetHeight={title_HEIGHT}
 >
     {#each prop_TITLE.fragments ?? [] as fragments}
@@ -217,8 +217,6 @@ lang="scss"
 >
 /* #USES */
 
-@use 'sass:math';
-
 @use '../../assets/scss/app';
 
 @use '../../assets/scss/styles/position';
@@ -229,27 +227,22 @@ lang="scss"
 
 .title
 {
-    $padding-top: 2rem;
+    $pe-duration: .4s;
 
     &::before
     {
-        @include position.placement(absolute, $top: math.div($padding-top, 2), $left: 2rem, $pseudo-element: attr(data-pe-content));
+        @include position.placement(absolute, $top: 0, $left: 0, $pseudo-element: attr(data-pe-content));
 
-        transform-origin: top;
-        transform: rotateX(.4rad);
-
-        padding-left: 2rem;
-
-        clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
-
-        border-left: solid $intermediate 1px;
+        padding-right: 2rem;
+    
+        clip-path: polygon(100% 0, 100% 0, 100% 100%, 100% 100%);
 
         color: $intermediate;
         font-family: inherit;
-        font-size: 134%;
-        writing-mode: vertical-lr;
+        font-size: 240%;
+        font-style: italic;
 
-        transition: clip-path .4s ease-in-out;
+        transition: clip-path $pe-duration ease-in-out;
     }
 
     @include font.h-(1);
@@ -271,14 +264,14 @@ lang="scss"
     {
         clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
 
-        transition-delay: .4s;
+        transition-delay: $pe-duration;
     }
 
     .element { transition: transform .8s ease-out; }
 
     :global
     {
-        &>* { padding-top: $padding-top; }
+        &>* { padding-top: 2rem; }
 
         .fragments
         {

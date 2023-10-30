@@ -51,15 +51,27 @@ constructor ()
         {
             value: 0,
             count: 0,
-            start: performance.now(),
+            i: 0,
+            samples: new Float32Array(20),
+            start: performance.now()
+        ,
+            getAverage: function () { return this.samples.reduce((som, n) => n === 0 ? som : som += n, 0) / this.samples.length }
+        ,
             update: function ()
             {
-                this.value = this.count * 2
+                const FPS = this.count * 2
+            
+                this.value = FPS
                 this.count = 0
+                this.samples[this.i] = FPS
+                
+                if (++this.i >= this.samples.length) this.i = 0
+
                 this.start = performance.now()
 
                 set(this.value)
-            },
+            }
+        ,
             subscribe
         }
     }

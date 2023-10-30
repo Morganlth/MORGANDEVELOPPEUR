@@ -96,8 +96,6 @@
     card_ROTATE_Y = 0,
     card_ROTATE_Z = 0,
 
-    card_OPACITY = 0,
-
     card_TRANSITION_DURATION = 0,
 
     card_HALF_WIDTH = 0,
@@ -111,6 +109,8 @@
 
     // --ELEMENT-DECOR
     let
+    decor_HIDE = true,
+
     decor_TRANSLATE_Z = 0,
 
     decor_ROTATE_Y = 0
@@ -299,7 +299,7 @@
     
         card_TIMEOUT = setTimeout(async () =>
         {
-            card_OPACITY = 1
+            decor_HIDE = false
 
             let {cancel, promise} = animation((t) =>
             {
@@ -347,7 +347,7 @@
 
         card_cancel = cancel
 
-        try { await promise, card_OPACITY = 0 } catch {}
+        try { await promise, decor_HIDE = true } catch {}
     }
 
     async function card_a()
@@ -422,7 +422,6 @@ perspective({CARD_PERSPECTIVE}px)
 rotateX({card_ROTATE_X}rad)
 rotateY({card_ROTATE_Y}rad)
 rotateZ({card_ROTATE_Z}deg)"
-style:opacity={card_OPACITY}
 style:transition-duration="{card_TRANSITION_DURATION}ms"
 tabindex={card_ON ? 0 : -1}
 bind:this={card}
@@ -433,6 +432,7 @@ on:mousedown={card_eMouseDown}
 >
     <div
     class="decor"
+    class:hide={decor_HIDE}
     style:transform="rotateY({decor_ROTATE_Y}deg) translateZ({decor_TRANSLATE_Z}px)"
     >
         <svg
@@ -518,7 +518,7 @@ lang="scss"
 
     pointer-events: auto;
 
-    transition: transform ease-out, opacity .2s;
+    transition: transform ease-out;
 
     &.focus { will-change: transform; }
 
@@ -527,6 +527,8 @@ lang="scss"
         @extend %f-center;
 
         pointer-events: none;
+
+        &.hide { display: none !important; }
 
         .background { @extend %any; }
 

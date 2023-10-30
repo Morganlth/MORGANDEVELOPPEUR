@@ -183,6 +183,8 @@ lang="scss"
 
     @include position.placement(absolute, $top: 50%, $right: 0, $left: 0);
 
+    overflow-x: clip;
+
     width: 100%;
     height: fit-content;
 
@@ -226,7 +228,7 @@ lang="scss"
 
             transform: translate(calc(100% * var(--feature-direction, 1)), 100%);
 
-            opacity: .9;
+            opacity: .94;
 
             height: 20vh;
 

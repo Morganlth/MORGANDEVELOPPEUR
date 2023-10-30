@@ -4,10 +4,10 @@
 -COMMAND
 -EVENT
     HOME
-        PARTICLES
         SNAKE
         SPACECUBE
         MASK
+        SLIDER
         GROUP
             GRAVITYAREA * 3
                 CUBE
@@ -28,6 +28,7 @@
     prop_FOCUS = false,
 
     prop_SPACECUBE = new Float64Array([]),
+    prop_SLIDER = [() => ''],
     prop_CUBES = [],
 
     prop_TOP = 0
@@ -55,6 +56,7 @@
     // --COMPONENT-ELEMENTS
     import Snake from '../elements/Snake.svelte'
     import Mask from '../elements/Mask.svelte'
+    import Slider from '../elements/Slider.svelte'
     import Cube from '../elements/Cube.svelte'
     import TicTacToe from '../elements/TicTacToe.svelte'
     import Terminal from '../elements/Terminal.svelte'
@@ -181,20 +183,18 @@ data-page-id={prop_ID}
     bind:spacecube_CHARGED={page_CHARGED}
     />
 
-    <Mask
-    prop_BLUR={true}
-    prop_COORDS={[70, 50]}
-    prop_GRADIENT={[10, 60]}
-    prop_OPACITY={prop_FOCUS ? 1 : 0}
+    {#if prop_FOCUS}
+        <Mask
+        prop_BLUR={true}
+        prop_COORDS={[70, 50]}
+        prop_GRADIENT={[10, 60]}
+        />
+    {/if}
+
+    <Slider
+    {prop_FOCUS}
+    {prop_SLIDER}
     />
-
-    <p
-    style:transform="perspective(800px) rotateX(-.6rad)"
-    >
-        <span style:transform="translateY({prop_FOCUS ? 0 : -100}%)">SCROLL</span>
-
-        ACCUEIL PRÉSENTATION COMPÉTENCES PROJETS
-    </p>
 
     <Group
     let:resize
@@ -204,6 +204,7 @@ data-page-id={prop_ID}
     >
         {#each prop_CUBES as cube}
             <GravityArea
+            let:hide
             let:grabbing
             {...cube.props}
             prop_FOCUS={gravityarea$_FOCUS}
@@ -216,6 +217,7 @@ data-page-id={prop_ID}
             on:click={gravityarea_eClick.bind(null, cube.id)}
             >
                 <Cube
+                prop_HIDE={hide}
                 prop_GRABBING={grabbing}
                 prop_COMPONENT={cube.component}
                 {prop_FOCUS}
@@ -240,13 +242,8 @@ lang="scss"
 >
 /* #USES */
 
-@use 'sass:map';
-
 @use '../../assets/scss/styles/position';
-@use '../../assets/scss/styles/display';
 @use '../../assets/scss/styles/size';
-@use '../../assets/scss/styles/font';
-@use '../../assets/scss/styles/media';
 
 /* #HOME */
 
@@ -259,51 +256,6 @@ lang="scss"
     @extend %any;
 
     overflow: clip;
-
-    p
-    {
-        @include position.placement(absolute, $bottom: 0, $left: 68%);
-        @include font.content($intermediate, $font-size: map.get(font.$font-sizes, s1));
-
-        @extend %f-column;
-
-        justify-content: center;
-
-        transform-origin: bottom right;
-
-        width: fit-content;
-        height: 100vh;
-
-        padding-bottom: 30vh;
-        padding-left: 2rem;
-
-        border-left: solid 1px $intermediate;
-
-        text-align: right;
-        writing-mode: vertical-rl;
-
-        box-sizing: border-box;
-
-        transition: transform .8s .6s ease-in-out;
-
-        span
-        {
-            #{--title-size}: map.get(font.$font-sizes, s7);
-
-            transition: transform .8s 1s ease-in;
-        
-            @include font.h-custom($line-height: 1.2, $italic: true);
-
-            @include media.min($ms4, $ms3) { #{--title-size}: 100px; }
-        }
-
-        @include media.min($ms3)
-        {
-            padding-bottom: 22vh;
-        
-            span { #{--title-size}: map.get(font.$font-sizes, s8); }
-        }
-    }
 
     :global .group
     {

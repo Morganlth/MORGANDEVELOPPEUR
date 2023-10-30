@@ -470,7 +470,7 @@
 
     function spacecube_updateCubes(invert = false, intro = false)
     {
-        const Z = intro ? -2 : 0
+        const Z = intro ? -2 : 2
     
         let total_DURATION = 0
     
@@ -630,11 +630,13 @@
     
         cube.cancel = animation((t) =>
         {
-            if (!intro) cube.t = t
-
             const T = cubicInOut(t)
 
-            cube.position.set(spacecube_getBarycentre(P0.x, P1.x, P2.x, T), spacecube_getBarycentre(P0.y, P1.y, P2.y, T), z * (1 - T))
+            let u = T
+        
+            intro ? u = 1 - T : cube.t = t
+
+            cube.position.set(spacecube_getBarycentre(P0.x, P1.x, P2.x, T), spacecube_getBarycentre(P0.y, P1.y, P2.y, T), z * u)
         },
         duration, t ?? 0, invert).cancel
     }

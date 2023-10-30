@@ -14,6 +14,7 @@
     // --PROPS
     export let
     prop_FOCUS = false,
+    prop_HIDE = true,
     prop_GRABBING = false,
 
     prop_COMPONENT = void {},
@@ -56,6 +57,7 @@ onMount(cube_set)
 <div
 class="cube"
 class:focus={prop_FOCUS}
+class:hide={prop_HIDE}
 class:grabbing={prop_GRABBING}
 style:--cube-color={prop_COLOR ?? COLORS.primary}
 >
@@ -125,6 +127,8 @@ lang="scss"
 
         border-color: var(--cube-color, $primary);
     }
+
+    &.hide { display: none !important; }
 
     &.grabbing .side { border-color: $indicator !important; }
 

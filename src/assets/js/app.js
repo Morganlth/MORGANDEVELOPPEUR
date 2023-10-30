@@ -43,7 +43,7 @@
                 }
             }
         ,
-            children: [HOME_SPACECUBE, HOME_CUBES]
+            children: [HOME_SPACECUBE, HOME_SLIDER, HOME_CUBES]
         ,
             props:
             {
@@ -249,6 +249,7 @@
 
     // --JS
     import HOME_SPACECUBE from './datas/home/dSpacecube'
+    import HOME_SLIDER from './datas/home/dSlider'
     import HOME_CUBES from './datas/home/dCubes'
 
     import PRESENTATION_FEATURES from './datas/presentation/dFeatures'

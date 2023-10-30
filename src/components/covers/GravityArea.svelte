@@ -93,6 +93,7 @@
 
     // --ELEMENT-SLOT
     let
+    slot_HIDE = true,
     slot_GRABBING = false,
 
     slot_FORCE_X = 0,
@@ -315,9 +316,9 @@
     function gravityarea_stop() { prop_$ANIMATION.splice(gravityarea_e$Animation) }
 
     // --ANIMATION
-    function gravityarea_a(invert = false)
+    async function gravityarea_a(invert = false)
     {
-        gravityarea_cancel = animation((t) =>
+        let { cancel, promise } = animation((t) =>
         {
             const [X, Y, Z] = prop_3D ? gravityarea_get3d() : gravityarea_get2d()
 
@@ -327,7 +328,11 @@
             gravityarea_TRANSLATE_Y = Y - APP.app_HEIGHT * t
             gravityarea_TRANSLATE_Z = prop_3D ? Z + GRAVITYAREA_PERSPECTIVE * t : 0
         },
-        400, gravityarea_T, invert).cancel
+        400, gravityarea_T, invert)
+
+        gravityarea_cancel = cancel
+
+        try { slot_HIDE = invert ? false : (await promise, true) } catch {}
     }
 
 // #CYCLES
@@ -367,6 +372,7 @@ on:mousedown={gravityarea_eMouseDown}
 on:mouseleave={gravityarea_eMouseLeave}
 >
     <slot
+    hide={slot_HIDE}
     grabbing={slot_GRABBING}
     />
 </div>

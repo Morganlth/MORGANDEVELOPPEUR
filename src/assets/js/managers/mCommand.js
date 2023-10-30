@@ -75,27 +75,10 @@ constructor ()
         }
     }
 
-    async command_c$Fps()
+    command_c$Fps()
     {
         if (this.command_testCommand('log'))
-        {
-            const START = performance.now()
-
-            let count = 0
-
-            await new Promise(resolve =>
-            {
-                requestAnimationFrame(async function frame()
-                {
-                    count++
-
-                    performance.now() - START >= 500
-                    ? resolve(count * 2)
-                    : requestAnimationFrame(frame)
-                })
-            })
-            .then(fps => this.#command_COMMANDS.log(fps + ' fps'))
-        }
+            this.#command_COMMANDS.log(`${EVENT.event_$FPS.value} fps - ${EVENT.event_$FPS.getAverage()} fps/moyen`)
     }
 
     // --TESTS
@@ -196,10 +179,11 @@ export class CommandSuccess extends Error
     }
 }
 
-// #IMPORT
+// #IMPORTS
 
-    // --CONTEXT
+    // --CONTEXTS
     import APP from './mApp'
+    import EVENT from './mEvent'
 
 // #EXPORT
 

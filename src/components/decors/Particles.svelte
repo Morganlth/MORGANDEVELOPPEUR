@@ -249,7 +249,12 @@
             [DISTANCE, DISTANCE_X, DISTANCE_Y] = particles_getDistances(x, y),
             T = PARTICLES[i]
 
-            if (particles_testOutside(x, y) || particles_testEdible(DISTANCE, PARTICLES[i + 7])) continue
+            if (particles_testOutside(x, y)) continue
+        
+            if (snake$_ON && !gameover$_ON && !PARTICLES[i + 7])
+            {
+                if (DISTANCE < snake$_BLOCKSIZE) continue
+            }
             else if (DISTANCE < particles_MOUSE_RADIUS) [x, y] = particles_updateXY(DISTANCE_X, DISTANCE_Y)
 
             particles_draw(x, y, PARTICLES[i + 5] * T, PARTICLES[i + 6] * T, PARTICLES_COLORS[PARTICLES[i + 7]])
@@ -300,14 +305,6 @@
     function particles_testMax() { return particles_I < particles_MAX ? true : false }
 
     function particles_testOutside(x, y) { return x > APP.app_WIDTH || y > APP.app_HEIGHT ? true : false }
-    
-    function particles_testEdible(distance, color_NUMBER)
-    {
-        return (
-        snake$_ON && !gameover$_ON && !color_NUMBER
-        ? distance < snake$_BLOCKSIZE ? true : false
-        : false)
-    }
 
     // --COMMANDS
     function particles_c$(on) { COMMAND.command_test(on, 'boolean', particles_update, PARTICLES, particles_ON) }

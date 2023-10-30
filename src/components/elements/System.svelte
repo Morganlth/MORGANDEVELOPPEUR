@@ -319,6 +319,7 @@ style:--system-r-y={system_ROTATE_Y}
         {#if !system_OPTIMISED}
             {#each prop_SYSTEM as cube}
                 <GravityArea
+                let:hide
                 let:grabbing
                 prop_$RESIZE={resize}
                 prop_$ANIMATION={animation}
@@ -335,6 +336,7 @@ style:--system-r-y={system_ROTATE_Y}
                 on:click={gravityarea_eClick.bind(cube)}
                 >
                     <Cube
+                    prop_HIDE={hide}
                     prop_GRABBING={grabbing}
                     prop_FOCUS={cube.focus ?? false}
                     prop_SRC={cube.props.prop_SRC}

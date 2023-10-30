@@ -15,9 +15,12 @@
     prop_SHADOW = false,
 
     prop_COORDS = [50, 50],
-    prop_GRADIENT = [0, 100],
+    prop_GRADIENT = [0, 100]
 
-    prop_OPACITY = 1
+// #IMPORT
+
+    // --JS
+    import { transition_fade } from '../../assets/js/utils/transition'
 </script>
 
 <!-- #HTML -->
@@ -30,7 +33,7 @@ style:--mask-x="{prop_COORDS[0]}%"
 style:--mask-y="{prop_COORDS[1]}%"
 style:--mask-transparent="{prop_GRADIENT[0]}%"
 style:--mask-dark="{prop_GRADIENT[1]}%"
-style:opacity={prop_OPACITY}
+transition:transition_fade={{ duration: 1000 }}
 >
 </div>
 
@@ -55,8 +58,6 @@ lang="scss"
     @extend %any;
 
     pointer-events: none;
-
-    transition: opacity 1.4s ease-in;
 
     &.blur
     {
