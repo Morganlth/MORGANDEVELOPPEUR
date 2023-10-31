@@ -160,8 +160,6 @@ lang="scss"
         align-items: flex-end;
         flex-wrap: wrap;
 
-        gap: 1rem;
-
         width: fit-content;
         max-width: calc(50vw - app.$gap-inline * 2);
         height: fit-content;
@@ -215,8 +213,6 @@ lang="scss"
         {
             flex-direction: column;
             align-items: flex-start;
-
-            gap: 0;
 
             max-width: auto;
 
