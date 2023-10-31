@@ -65,6 +65,9 @@ lang="scss"
 
     padding: 8rem app.$gap-inline;
 
+    background-color: crimson;
+    border: solid $light 2px;
+
     box-sizing: border-box;
 
     .header
