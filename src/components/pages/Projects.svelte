@@ -246,15 +246,15 @@ lang="scss"
 
     overflow: clip;
 
-    pointer-events: auto;
-
     &.scroller
     {
         @extend %scroll-bar;
 
         z-index: 2;
 
-        overflow: hidden scroll;
+        overflow-y: scroll;
+
+        pointer-events: auto;
     }
 
     .project
