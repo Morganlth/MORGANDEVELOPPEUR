@@ -158,7 +158,6 @@ lang="scss"
     {
         display: flex;
         align-items: flex-end;
-        flex-wrap: wrap;
 
         width: fit-content;
         max-width: calc(50vw - app.$gap-inline * 2);
