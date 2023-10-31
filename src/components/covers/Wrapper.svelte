@@ -62,6 +62,7 @@ lang="scss"
 
     width: 100%;
     height: 100vh;
+    height: 100svh;
 
     padding: 8rem app.$gap-inline;
 
