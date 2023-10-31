@@ -289,6 +289,7 @@ lang="scss"
 
         overflow: clip scroll;
 
+        width: 100%;
         height: calc(100% - var(--cell-size) - $margin-top);
         max-height: calc(100% - var(--cell-size) - $margin-top);
 
