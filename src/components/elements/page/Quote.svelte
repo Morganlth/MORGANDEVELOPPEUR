@@ -112,6 +112,7 @@ lang="scss"
 @use '../../../assets/scss/app';
 
 @use '../../../assets/scss/styles/font';
+
 @use '../../../assets/scss/styles/media';
 
 /* #QUOTE */
@@ -125,7 +126,7 @@ lang="scss"
 
     width: 100%;
 
-    margin-top: 26vh;
+    margin-top: 8vh;
 
     &.focus>* { clip-path: polygon(100% 0, 0 0, 0 100%, 100% 100%); }
 
@@ -145,5 +146,6 @@ lang="scss"
     q::before, q::after { content: '' }
 
     @include media.min($height: $ms3) { display: flex; }
+    @include media.min($ms4, $ms4) { margin-top: 26vh; }
 }
 </style>
