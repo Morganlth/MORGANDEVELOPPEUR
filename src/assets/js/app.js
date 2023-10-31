@@ -35,7 +35,7 @@
                     component: Icon,
                     props:
                     {
-                        prop_SIZE: 'calc(var(--title-size) * .71)',
+                        prop_SIZE: 'var(--title-size)',
                         prop_COLOR: COLORS.light,
                         prop_SPRING: false
                     },

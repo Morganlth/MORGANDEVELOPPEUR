@@ -137,10 +137,6 @@
         input_setVars()
 
         output_setVars()
-
-        setTimeout(() => {
-            output_c$Log('' + document.querySelector('#home .title .element .icon').offsetWidth)
-        }, 2000)
     }
 
     function terminalface_setCommands() { for (const CMD of TERMINALFACE_COMMANDS) COMMAND.command_add(CMD.name, CMD.callback, CMD.desc, CMD.args) }
