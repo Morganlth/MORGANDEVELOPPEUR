@@ -295,7 +295,7 @@ lang="scss"
 
     width: 100vw;
 
-    pointer-events: none;
+    /* pointer-events: none; */
 
     .pages
     {
