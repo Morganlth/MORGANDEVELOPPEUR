@@ -243,9 +243,9 @@ lang="scss"
     width: fit-content;
     height: fit-content;
 
-    padding-bottom: 1rem;
+    padding-bottom: 2rem;
 
-    :global .fragments { min-height: 3rem; }
+    :global .fragments { min-height: 2rem; }
 
     .element { transition: transform .8s ease-out; }
 
@@ -280,6 +280,8 @@ lang="scss"
 
         :global .fragments
         {
+            min-height: 3rem;
+
             &:nth-child(1) { margin-left: calc(app.$gap-inline * 2); }
             &:nth-child(2) { margin-left: app.$gap-inline; }
         }
