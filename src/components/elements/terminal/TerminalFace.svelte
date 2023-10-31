@@ -137,6 +137,8 @@
         input_setVars()
 
         output_setVars()
+
+        input_VALUE = document.querySelector('#header .title .element i').offsetWidth
     }
 
     function terminalface_setCommands() { for (const CMD of TERMINALFACE_COMMANDS) COMMAND.command_add(CMD.name, CMD.callback, CMD.desc, CMD.args) }
