@@ -285,13 +285,15 @@ lang="scss"
 
         @extend %scroll-bar;
 
-        overflow: scroll;
+        overflow: clip scroll;
 
         height: calc(100% - var(--cell-size) - $margin-top);
 
         margin-top: $margin-top;
         padding-bottom: 1rem;
         padding-right: app.$gap-inline;
+
+        border: solid red 1px;
 
         box-sizing: border-box;
 
