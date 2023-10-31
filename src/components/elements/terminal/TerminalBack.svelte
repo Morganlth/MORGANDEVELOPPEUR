@@ -277,7 +277,7 @@ lang="scss"
 
 .terminalback
 {
-    transform: rotateY(180deg);
+    /* transform: rotateY(180deg); */
 
     overflow: auto;
 
@@ -291,6 +291,7 @@ lang="scss"
 
         width: 100%;
         height: calc(100% - var(--cell-size) - $margin-top);
+        height: -webkit-fill-available;
         max-height: calc(100% - var(--cell-size) - $margin-top);
 
         margin-top: $margin-top;

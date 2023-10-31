@@ -558,6 +558,8 @@ lang="scss"
 {
     --icon-size: 2.4rem;
 
+    display: none !important;
+
     @include position.placement(absolute, 0, 0, 0, 0);
 
     @extend %f-column;
