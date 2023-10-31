@@ -191,6 +191,8 @@ lang="scss"
 @use '../../../assets/scss/styles/display';
 @use '../../../assets/scss/styles/font';
 
+@use '../../../assets/scss/styles/media';
+
 /* #NAV */
 
 .nav
@@ -242,11 +244,13 @@ lang="scss"
         justify-content: flex-start;
         flex-wrap: wrap;
     
-        gap: 1rem 3rem;
+        gap: .4rem 2rem;
 
         width: 100%;
         
         padding-top: 1rem;
+
+        @include media.min($ms4, $ms4) { gap: 1rem 3rem; }
     }
 
     li button

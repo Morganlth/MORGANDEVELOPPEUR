@@ -124,7 +124,7 @@ lang="scss"
 
     width: 100%;
 
-    margin-top: app.$gap-block;
+    margin-top: 26vh;
 
     &.focus>* { clip-path: polygon(100% 0, 0 0, 0 100%, 100% 100%); }
 
@@ -143,6 +143,6 @@ lang="scss"
 
     q::before, q::after { content: '' }
 
-    @include media.min($height: $ms3) { margin-top: 26vh; }
+    @include media.min($height: $ms3) { display: none; }
 }
 </style>

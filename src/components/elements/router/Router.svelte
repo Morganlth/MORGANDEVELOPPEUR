@@ -192,7 +192,7 @@ lang="scss"
         }
     }
 
-    @include media.min(false, $ms3)
+    @include media.min($height: $ms3)
     {
         &::before
         {
