@@ -259,7 +259,7 @@ lang="scss"
 
     .project
     {
-        @include position.placement(absolute, $top: 100vh, $right: 0, $left: 0);
+        @include position.placement(absolute, $top: 100svh, $right: 0, $left: 0);
     
         z-index: 1;
 

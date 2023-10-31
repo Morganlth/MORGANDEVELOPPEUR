@@ -293,6 +293,8 @@ lang="scss"
         padding-bottom: 1rem;
         padding-right: app.$gap-inline;
 
+        pointer-events: auto;
+
         box-sizing: border-box;
 
         h3
