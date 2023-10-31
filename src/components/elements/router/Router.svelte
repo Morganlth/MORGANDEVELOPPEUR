@@ -149,8 +149,8 @@ lang="scss"
 
     &.hide
     {
-        &:hover :global .route, :global .route:focus { clip-path: $li-d-clip !important; }
-
+        pointer-events: none;
+    
         ul :global .route { clip-path: polygon(0 0, 0 0, 0 100%, 0% 100%); }
     }
 
@@ -218,6 +218,16 @@ lang="scss"
             :global .icon { display: inline-block; }
         }
     }
-    @include media.min($ms4, $ms4) { top: 54%; }
+    @include media.min($ms4, $ms4)
+    {
+        top: 54%;
+
+        &.hide
+        {
+            pointer-events: auto;
+
+            &:hover :global .route, :global .route:focus { clip-path: $li-d-clip !important; }
+        }
+    }
 }
 </style>
