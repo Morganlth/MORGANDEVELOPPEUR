@@ -169,9 +169,7 @@ lang="scss"
         {
             position: relative;
 
-            flex: 1;
-
-            width: 100%;
+            width: fit-content;
             height: fit-content;
         }
 
@@ -215,6 +213,8 @@ lang="scss"
             align-items: flex-start;
 
             max-width: auto;
+
+            li { width: 100%; }
 
             :global .icon { display: inline-block; }
         }
