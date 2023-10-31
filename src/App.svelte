@@ -200,8 +200,6 @@ lang="scss"
 
     overflow: clip scroll;
 
-    pointer-events: auto;
-
     background-color: $dark;
 
     &.freeze { overflow: clip !important; }
