@@ -285,10 +285,9 @@ lang="scss"
 
         @extend %scroll-bar;
 
-        overflow: clip auto;
+        overflow: clip scroll;
 
-        height: auto;
-        max-height: calc(100% - var(--cell-size) - $margin-top);
+        height: calc(100% - var(--cell-size) - $margin-top);
 
         margin-top: $margin-top;
         padding-bottom: 1rem;
