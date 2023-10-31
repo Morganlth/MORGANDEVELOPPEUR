@@ -184,7 +184,7 @@ lang="scss"
 
     @include position.placement(absolute, $top: 50%, $right: 0, $left: 0);
 
-    /* overflow: clip; */
+    overflow: clip;
 
     width: 100%;
     height: fit-content;
