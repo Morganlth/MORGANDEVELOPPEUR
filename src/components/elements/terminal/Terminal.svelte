@@ -273,7 +273,12 @@ lang="scss"
 
                 :global .terminalback { transform: rotateY(0); }
 
-                :global .terminalface { transform: rotateY(-180deg); }
+                :global .terminalface
+                {
+                    transform: rotateY(-180deg);
+
+                    pointer-events: none;
+                }
             }
         }
 
