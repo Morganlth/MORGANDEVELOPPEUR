@@ -279,8 +279,6 @@ lang="scss"
 {
     transform: rotateY(180deg);
 
-    overflow: auto;
-
     .desc
     {
         $margin-top: 2rem;
@@ -292,13 +290,10 @@ lang="scss"
         width: 100%;
         height: calc(100% - var(--cell-size) - $margin-top);
         height: -webkit-fill-available;
-        max-height: calc(100% - var(--cell-size) - $margin-top);
 
         margin-top: $margin-top;
         padding-bottom: 1rem;
         padding-right: app.$gap-inline;
-
-        border: solid red 1px;
 
         box-sizing: border-box;
 
