@@ -18,6 +18,9 @@
 
 // #IMPORTS
 
+    // --JS
+    import { color_rgba } from '../../assets/js/utils/color'
+
     // --LIB
     import COLORS from '$lib/colors'
 
@@ -37,7 +40,10 @@
     // --ELEMENT-TICTACTOE
     const
     TICTACTOE_PLAYER = -1,
-    TICTACTOE_AI = 1,
+    TICTACTOE_AI = 1
+,
+    TICTACTOE_DEFAULT_COLOR = color_rgba(COLORS.light, .4)
+,
     TICTACTOE_BOARD =
     [
         0, 0, 0,
@@ -60,7 +66,7 @@
 
     // --ELEMENT-TICTACTOE
     let
-    tictactoe_BORDER_COLOR = COLORS.light,
+    tictactoe_BORDER_COLOR = TICTACTOE_DEFAULT_COLOR,
 
     tictactoe_SIMULATION = [],
 
@@ -73,11 +79,11 @@
 // #FUNCTIONS
 
     // --GET
-    function tictactoe_getResult(emptyCells, depth)
+    function tictactoe_getWinner(emptyCells, depth)
     {
-        const RESULT = tictactoe_isWinning()
+        const WINNER = tictactoe_isWinning()
 
-        return (depth === 0 || RESULT || !emptyCells.length) ? RESULT : null
+        return (depth === 0 || WINNER || !emptyCells.length) ? WINNER : null
     }
 
     function tictactoe_getEmptyCells()
@@ -91,16 +97,21 @@
     }
 
     // --RESET
-    function tictactoe_reset(result)
+    function tictactoe_reset(winner)
     {
-        tictactoe_BORDER_COLOR = COLORS[result === TICTACTOE_PLAYER ? 'primary' : result === TICTACTOE_AI ? 'indicator' : 'light']
+        tictactoe_BORDER_COLOR = COLORS
+        [
+            winner === TICTACTOE_PLAYER
+            ? 'primary'
+            : winner === TICTACTOE_AI ? 'indicator' : 'light'
+        ]
 
         setTimeout(() =>
         {
             icon_OPACITY = 0
 
             setTimeout(tictactoe_resetGame, 300)
-        }, 250)
+        }, 200)
     }
 
     function tictactoe_resetGame()
@@ -109,7 +120,7 @@
 
         icon_OPACITY = 1
 
-        tictactoe_BORDER_COLOR = COLORS.light
+        tictactoe_BORDER_COLOR = TICTACTOE_DEFAULT_COLOR
         tictactoe_ROUND = 0
         tictactoe_AI_ROUND = false
     }
@@ -132,9 +143,9 @@
         TICTACTOE_BOARD[id] = isAi ? TICTACTOE_AI : TICTACTOE_PLAYER
         tictactoe_SIMULATION = [...TICTACTOE_BOARD]
 
-        const RESULT = tictactoe_getResult(tictactoe_getEmptyCells())
+        const WINNER = tictactoe_getWinner(tictactoe_getEmptyCells())
 
-        RESULT !== null ? tictactoe_reset(RESULT) : isAi ? tictactoe_AI_ROUND = false : tictactoe_play()
+        WINNER != null ? tictactoe_reset(WINNER) : isAi ? tictactoe_AI_ROUND = false : tictactoe_play()
     }
 
     function tictactoe_isWinning() /* return -1 || 0 || 1 */
@@ -187,9 +198,9 @@
 
     function tictactoe_minimax(emptyCells, depth, maximizingPlayer)
     {
-        const RESULT = tictactoe_getResult(emptyCells, depth)
+        const WINNER = tictactoe_getWinner(emptyCells, depth)
         
-        return RESULT !== null ? RESULT * (1 + emptyCells.length) : tictactoe_run(emptyCells, depth, maximizingPlayer)
+        return WINNER != null ? WINNER * (1 + emptyCells.length) : tictactoe_run(emptyCells, depth, maximizingPlayer)
     }
 </script>
 
@@ -199,7 +210,7 @@
     <!-- svelte-ignore a11y-no-static-element-interactions -->
     <div
     class="tictactoe"
-    style:--border-color={tictactoe_BORDER_COLOR}
+    style:--pe-border-color={tictactoe_BORDER_COLOR}
     on:mouseenter={SPRING.spring_e$Hide.bind(SPRING)}
     on:mouseleave={SPRING.spring_e$Show.bind(SPRING)}
     >
@@ -233,15 +244,14 @@ lang="scss"
 @use '../../assets/scss/styles/utils';
 @use '../../assets/scss/styles/position';
 @use '../../assets/scss/styles/display';
-@use '../../assets/scss/styles/media';
 
 /* #TICTACTOE */
 
 .tictactoe
 {
-    $size: max(16vw, 16vh);
+    $size: max(15vw, 15vh);
 
-    $pe-color: rgba($light, .4);
+    $pe-color: var(--pe-border-color, rgba($light, .4));
 
     $cell-size: calc(100% / 3);
 
@@ -250,6 +260,8 @@ lang="scss"
     &::before, &::after
     {
         opacity: 0;
+
+        transition: border-color .4s;
 
         animation: aPe-intro .4s ease-out forwards;
     }
@@ -297,16 +309,5 @@ lang="scss"
             opacity: 1;
         }
     }
-
-    /* @include media.min(375px, 325px)
-    {
-        width: 140px;
-        height: 140px;
-    }
-    @include media.min(425px, 768px)
-    {
-        width: 180px;
-        height: 180px;
-    } */
 }
 </style>

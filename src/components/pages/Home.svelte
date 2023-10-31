@@ -188,7 +188,7 @@ data-page-id={prop_ID}
         <Mask
         prop_BLUR={true}
         prop_COORDS={[70, 50]}
-        prop_GRADIENT={[10, 60]}
+        prop_GRADIENT={[20, 70]}
         />
     {/if}
 

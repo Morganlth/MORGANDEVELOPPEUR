@@ -38,11 +38,13 @@ constructor()
 
     #process_setVars(str)
     {
+        const LENGTH = str.length
+    
         this.#process_STR = str
         this.#process_FIND = null
-        this.#process_LENGTH = str.length
+        this.#process_LENGTH = LENGTH
         this.#process_PREVIOUS_L = null,
-        this.#process_MIN = Process.__process_D_MIN
+        this.#process_MIN = LENGTH === 3 ? 1 : Process.__process_D_MIN
     }
 
     #process_setCommands() { for (const CMD of this.#process_COMMANDS) COMMAND.command_add(CMD.name, CMD.callback, CMD.desc) }

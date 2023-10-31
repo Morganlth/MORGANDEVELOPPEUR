@@ -123,8 +123,6 @@ lang="scss"
 
     position: relative;
 
-    transform: rotate(-.8deg);
-
     opacity: .9;
 
     width: 100%;

@@ -52,7 +52,7 @@
         () => Math.random() + particles_ANGLE_Y,                    // vel_Y
         () => Math.random() * 3 + 5,                                // size_X
         () => Math.random() * 3 + 5,                                // size_Y
-        () => Math.random() < .1 ? 0 : MATH.headsOrTails() ? 1 : 2  // color
+        () => Math.random() < .05 ? 0 : MATH.headsOrTails() ? 1 : 2  // color
     ],
 
     PARTICLES_COMMANDS =

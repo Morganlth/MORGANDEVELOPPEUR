@@ -311,7 +311,7 @@ lang="scss"
 
             border: solid $light .1rem;
 
-            box-shadow: 0 0 .6rem $light;
+            box-shadow: 0 0 .4rem $light;
             box-sizing: border-box;
         }
     }

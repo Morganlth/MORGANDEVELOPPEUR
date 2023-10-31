@@ -197,6 +197,8 @@ lang="scss"
         width: 100%;
         height: fit-content;
 
+        margin-bottom: 4rem;
+
         &.focus>div { opacity: 1; }
     
         &.show>div

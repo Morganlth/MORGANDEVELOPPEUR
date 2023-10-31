@@ -90,7 +90,8 @@
 
     function presentation_goTo(id = 0)
     {
-        const TOP = prop_START + id * FEATURES_FRACTION * prop_DIF + 1
+        console.log(id)
+        const TOP = prop_START + id * FEATURES_FRACTION * prop_DIF + prop_DIF * FEATURES_FRACTION / 2
 
         EVENT.event_scrollTo(TOP, ROUTER.router_getInstant(TOP))
     }
