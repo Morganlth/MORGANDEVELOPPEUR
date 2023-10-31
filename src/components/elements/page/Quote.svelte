@@ -119,7 +119,8 @@ lang="scss"
 {
     @include font.content($light);
 
-    display: flex;
+    display: none;
+
     justify-content: flex-end;
 
     width: 100%;
@@ -143,6 +144,6 @@ lang="scss"
 
     q::before, q::after { content: '' }
 
-    @include media.min($height: $ms3) { display: none; }
+    @include media.min($height: $ms3) { display: flex; }
 }
 </style>
