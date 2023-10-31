@@ -62,6 +62,7 @@ lang="scss"
 
     width: 100%;
     height: 100vh;
+    height: -webkit-fill-available;
 
     padding: 8rem app.$gap-inline;
 
