@@ -240,19 +240,6 @@ lang="scss"
             border-block: solid $intermediate 1px;
 
             transition: transform $duration var(--feature-delay, 0) ease-in-out, opacity $duration;
-
-            &::after
-            {
-                @include position.placement(absolute, $top: 0, $left: 15%, $pseudo-element: true);
-
-                height: 100%;
-
-                mix-blend-mode: soft-light;
-
-                border-left: solid $light 1px;
-
-                transition: transform .6s calc($duration + var(--feature-delay, 0));
-            }
         }
 
         :global .line
@@ -289,6 +276,19 @@ lang="scss"
         }
         @include media.min($ms4, $ms4)
         {
+            &>div::after
+            {
+                @include position.placement(absolute, $top: 0, $left: 16%, $pseudo-element: true);
+
+                height: 100%;
+
+                mix-blend-mode: soft-light;
+
+                border-left: solid $light 1px;
+
+                transition: transform .6s calc($duration + var(--feature-delay, 0));
+            }
+    
             .feature::before, a::after
             {
                 width: 100%;
