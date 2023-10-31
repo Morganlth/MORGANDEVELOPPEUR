@@ -136,7 +136,7 @@ lang="scss"
     $t-duration: .4s;
     $li-d-clip: polygon(-10% -10%, 110% -10%, 110% 110%, -10% 110%);
 
-    @include position.placement(fixed, $top: app.$gap-block, $left: 50%);
+    @include position.placement(fixed, $top: app.$gap-block, $left: 38%);
 
     z-index: 1;
 
