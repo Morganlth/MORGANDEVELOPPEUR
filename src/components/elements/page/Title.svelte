@@ -249,7 +249,7 @@ lang="scss"
 
     .element
     {
-        height: calc(var(--title-size) * .71);
+        height: var(--title-size);
 
         background-color: red;
 
