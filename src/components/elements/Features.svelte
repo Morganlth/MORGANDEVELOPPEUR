@@ -173,6 +173,7 @@ lang="scss"
 @use '../../assets/scss/styles/display';
 @use '../../assets/scss/styles/size';
 @use '../../assets/scss/styles/font';
+
 @use '../../assets/scss/styles/media';
 
 /* #FEATURES */
@@ -272,47 +273,12 @@ lang="scss"
             transform: translateX(-3rem);
         }
 
-        .feature
-        {
-            &::before
-            {
-                @include position.placement(absolute, $top: 60%, $left: app.$gap-inline, $pseudo-element: attr(data-content));
-
-                @extend %any;
-
-                padding-inline: .8rem;
-            
-                background-color: $dark;
-                mix-blend-mode: overlay;
-            }
-
-            position: relative;
-        }
-
         strong { font-weight: bold; }
 
         a
         {
-            position: relative;
-
             color: inherit;
             text-decoration: none;
-
-            &:hover::after { clip-path: polygon(0 110%, 100% 110%, 100% 0, 0 0); }
-
-            &::after
-            {
-                @include position.placement(absolute, $top: 0, $left: 0, $pseudo-element: attr(data-content));
-
-                @extend %any;
-
-                clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
-
-                color: $primary;
-                font: inherit;
-
-                transition: clip-path .4s ease-out;
-            }
         }
 
         @include media.min($ms3)
@@ -320,6 +286,48 @@ lang="scss"
             :global .line .content { padding-left: 26%; }
 
             h3 { transform: translateX(-10rem); }
+        }
+        @include media.min($ms4, $ms4)
+        {
+            .feature::before, a::after
+            {
+                width: 100%;
+                height: 100%;
+            }
+    
+            .feature
+            {
+                &::before
+                {
+                    @include position.placement(absolute, $top: 60%, $left: app.$gap-inline, $pseudo-element: attr(data-content));
+
+                    padding-inline: .8rem;
+                
+                    background-color: $dark;
+                    mix-blend-mode: overlay;
+                }
+
+                position: relative;
+            }
+
+            a
+            {
+                position: relative;
+
+                &:hover::after { clip-path: polygon(0 110%, 100% 110%, 100% 0, 0 0); }
+
+                &::after
+                {
+                    @include position.placement(absolute, $top: 0, $left: 0, $pseudo-element: attr(data-content));
+
+                    clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
+
+                    color: $primary;
+                    font: inherit;
+
+                    transition: clip-path .4s ease-out;
+                }
+            }
         }
     }
 }
