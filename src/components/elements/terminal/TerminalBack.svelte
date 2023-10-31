@@ -289,7 +289,6 @@ lang="scss"
 
         width: 100%;
         height: calc(100% - var(--cell-size) - $margin-top);
-        height: -webkit-fill-available;
 
         margin-top: $margin-top;
         padding-bottom: 1rem;
