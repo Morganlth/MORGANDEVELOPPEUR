@@ -130,8 +130,6 @@ lang="scss"
     
     padding-inline: 1.1rem;
 
-    pointer-events: auto;
-
     box-sizing: border-box;
 
     text-decoration: none;
