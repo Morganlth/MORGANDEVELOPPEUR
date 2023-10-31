@@ -227,24 +227,6 @@ lang="scss"
 
 .title
 {
-    $pe-duration: .4s;
-
-    &::before
-    {
-        @include position.placement(absolute, $top: 0, $left: 0, $pseudo-element: attr(data-pe-content));
-
-        padding-right: 2rem;
-    
-        clip-path: polygon(100% 0, 100% 0, 100% 100%, 100% 100%);
-
-        color: $intermediate;
-        font-family: inherit;
-        font-size: 240%;
-        font-style: italic;
-
-        transition: clip-path $pe-duration ease-in-out;
-    }
-
     @include font.h-(1);
 
     @extend %m-h-1;
@@ -258,28 +240,46 @@ lang="scss"
 
     padding-bottom: 3rem;
 
-    &.focus::before
-    {
-        clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
-
-        transition-delay: $pe-duration;
-    }
-
     .element { transition: transform .8s ease-out; }
 
     :global
     {
         &>* { padding-top: 2rem; }
 
-        .fragments
-        {
-            min-height: 3rem;
+        .fragments { min-height: 3rem; }
+    }
 
-            @include media.min($ms3)
-            {
-                &:nth-child(1) { margin-left: calc(app.$gap-inline * 2); }
-                &:nth-child(2) { margin-left: app.$gap-inline; }
-            }
+    @include media.min($ms3, $ms3)
+    {
+        $pe-duration: .4s;
+    
+        &::before
+        {
+            @include position.placement(absolute, $top: 0, $left: 0, $pseudo-element: attr(data-pe-content));
+
+            padding-right: 2rem;
+        
+            clip-path: polygon(100% 0, 100% 0, 100% 100%, 100% 100%);
+
+            color: $intermediate;
+            font-family: inherit;
+            font-size: 240%;
+            font-style: italic;
+
+            transition: clip-path $pe-duration ease-in-out;
+        }
+
+        &.focus::before
+        {
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+
+            transition-delay: $pe-duration;
+        }
+
+        :global .fragments
+        {
+            &:nth-child(1) { margin-left: calc(app.$gap-inline * 2); }
+            &:nth-child(2) { margin-left: app.$gap-inline; }
         }
     }
 }
