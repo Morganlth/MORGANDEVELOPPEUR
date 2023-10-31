@@ -139,7 +139,7 @@
         output_setVars()
 
         setTimeout(() => {
-            output_c$Log(document.querySelector('#home .title .element .icon').offsetWidth)
+            output_c$Log('' + document.querySelector('#home .title .element .icon').offsetWidth)
         }, 2000)
     }
 
