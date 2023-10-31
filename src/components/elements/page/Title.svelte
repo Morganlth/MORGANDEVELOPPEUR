@@ -247,14 +247,7 @@ lang="scss"
 
     :global .fragments { min-height: 3rem; }
 
-    .element
-    {
-        height: var(--title-size);
-
-        background-color: red;
-
-        transition: transform .8s ease-out;
-    }
+    .element { transition: transform .8s ease-out; }
 
     @include media.min($ms3, $ms3)
     {
