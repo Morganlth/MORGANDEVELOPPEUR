@@ -220,7 +220,9 @@ lang="scss"
 @use '../../../assets/scss/app';
 
 @use '../../../assets/scss/styles/position';
+@use '../../../assets/scss/styles/display';
 @use '../../../assets/scss/styles/font';
+
 @use '../../../assets/scss/styles/media';
 
 /* #TITLE */
@@ -229,12 +231,10 @@ lang="scss"
 {
     @include font.h-(1);
 
+    @extend %f-column;
     @extend %m-h-1;
 
     position: relative;
-
-    display: flex;
-    flex-direction: column;
 
     gap: 2rem;
 
