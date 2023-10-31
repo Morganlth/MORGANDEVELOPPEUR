@@ -126,7 +126,7 @@ lang="scss"
     opacity: .9;
 
     width: 100%;
-    height: 3.2rem;
+    height: 3rem;
     
     padding-inline: 1.1rem;
 
