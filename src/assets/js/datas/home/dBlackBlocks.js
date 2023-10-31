@@ -1,9 +1,9 @@
 // #EXPORT
 
-    // --SPACECUBE-DATAS
+    // --BLACKBLOCKS-DATAS
     export default
     {
-        name: 'spacecube'
+        name: 'blackblocks'
     ,
         datas: new Float64Array(
         [

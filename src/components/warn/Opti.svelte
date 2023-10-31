@@ -16,10 +16,11 @@
     // --BIND
     export let opti_ON = true
 
-// #IMPORT
+// #IMPORTS
 
-    // --CONTEXT
+    // --CONTEXTS
     import { APP } from '../../App.svelte'
+    import { TERMINAL_WORD_REFERENCE } from '../elements/terminal/Terminal.svelte'
 
 // #VARIABLE
 
@@ -74,7 +75,7 @@ style:opacity={opti_OPACITY}
                     <span
                     class="command"
                     >
-                        <span>app</span>
+                        <span>{TERMINAL_WORD_REFERENCE}</span>
                         <span>reset</span>
                     </span>
                     
@@ -85,7 +86,7 @@ style:opacity={opti_OPACITY}
                     <span
                     class="command"
                     >
-                        <span>app</span>
+                        <span>{TERMINAL_WORD_REFERENCE}</span>
                         <span>commands</span>
                     </span>
                 </p>
@@ -142,8 +143,6 @@ lang="scss"
         @extend %any;
 
         z-index: 1;
-    
-        backdrop-filter: blur(20px);
 
         transition: opacity .4s;
 
@@ -155,20 +154,27 @@ lang="scss"
 
         h5
         {
-            #{--title-size}: map.get(font.$font-sizes, s4);
+            --title-size: 30rem;
     
-            @include font.h-(2);
+            @include position.placement(absolute, 0, 0, 0, 0);
+            @include font.h-custom($indicator, $line-height: .8);
 
-            height: min-content;
+            @extend %f-a-center;
+            @extend %any;
 
-            margin-bottom: 2rem;
+            z-index: -1;
+
+            opacity: .2;
+
+            word-break: break-all;
+            writing-mode: vertical-rl;
         }
 
         h6
         {
-            @include font.h-(4);
+            @include font.h-custom($light);
 
-            margin-block: 1rem .3rem;
+            margin-block: app.$gap-block 1rem;
         }
     
         .content>section { box-sizing: border-box; }
@@ -196,60 +202,43 @@ lang="scss"
 
         .choice
         {
-            margin-top: 1.3rem;
+            display: flex;
+            flex-wrap: wrap;
 
-            text-align: right;
+            gap: 1rem;
+    
+            margin-top: 1.3rem;
 
             button
             {
                 @include font.content($light, false);
 
                 @extend %button-reset;
-        
-                margin-bottom: 1rem;
+
                 padding: .8rem 1.6rem;
 
-                &:nth-child(1)
-                {
-                    border: solid $primary 1px;
+                border: solid var(--btn-color, $primary) 1px;
 
-                    &:hover { color: $primary; }
-                }
-                &:nth-child(2)
-                {
-                    margin-left: 1rem;
+                &:hover { color: var(--btn-color, $primary); }
 
-                    border: solid $indicator 1px;
-            
-                    &:hover { color: $indicator; }
-                }
+                &:nth-child(1) { #{--btn-color}: $primary; }
+                
+                &:nth-child(2) { #{--btn-color}: $indicator; }
             }
         }
 
         @include media.min($ms4, $ms4)
         {
-            &>section
-            {
-                display: flex; /* @extend %f-a-center; ne fonctionne pas dans media queries */
-                align-items: center;
-    
-                width: 74%;
-            }
+            &>section { width: 74%;}
 
             h5
             {
-                #{--title-size}: map.get(font.$font-sizes, s5);
-    
                 margin-right: app.$gap-block;
                 margin-bottom: 0;
-
-                writing-mode: vertical-rl;
             }
 
-            h6 { margin-block: app.$gap-block 1rem; }
-
-            .choice {margin-top: app.$gap-block; }
+            .choice { margin-top: app.$gap-block; }
         }
-        @include media.min($ms6, $ms4) { &>section { width: 52%; } }
+        @include media.min($ms6, $ms4) { &>section { width: 34%; } }
     }
 </style>

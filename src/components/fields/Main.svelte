@@ -37,7 +37,7 @@
     import Page from '../covers/Page.svelte'
 
     // --COMPONENT-ELEMENTS
-    import Router from '../elements/Router.svelte'
+    import Router from '../elements/router/Router.svelte'
     import Spring from '../elements/Spring.svelte'
 
     // --COMPONENT-DECOR
@@ -305,14 +305,9 @@ lang="scss"
 
         opacity: 1;
 
-        transition: opacity .4s ease-in;
+        transition: filter .4s ease-in-out;
 
-        &.hide
-        {
-            opacity: 0;
-
-            transition: none;
-        }
+        &.hide { filter: blur(80px) hue-rotate(30deg); }
     }
 }
 </style>

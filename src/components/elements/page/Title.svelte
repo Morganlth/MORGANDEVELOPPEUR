@@ -27,18 +27,18 @@
 // #IMPORTS
 
     // --JS
-    import { animation_writing, animation_erase } from '../../assets/js/utils/animation'
+    import { animation_writing, animation_erase } from '../../../assets/js/utils/animation'
 
     // --LIB
 
     // --CONTEXTS
-    import { EVENT } from '../../App.svelte'
+    import { EVENT } from '../../../App.svelte'
 
     // --SVELTE
     import { onDestroy } from 'svelte'
 
     // --COMPONENT-ELEMENT
-    import Fragments from './Fragments.svelte'
+    import Fragments from '../Fragments.svelte'
 
 // #CONSTANTES
 
@@ -217,11 +217,11 @@ lang="scss"
 >
 /* #USES */
 
-@use '../../assets/scss/app';
+@use '../../../assets/scss/app';
 
-@use '../../assets/scss/styles/position';
-@use '../../assets/scss/styles/font';
-@use '../../assets/scss/styles/media';
+@use '../../../assets/scss/styles/position';
+@use '../../../assets/scss/styles/font';
+@use '../../../assets/scss/styles/media';
 
 /* #TITLE */
 
@@ -250,8 +250,6 @@ lang="scss"
     @extend %m-h-1;
 
     position: relative;
-
-    z-index: 1;
 
     perspective: 1000px;
 

@@ -20,7 +20,7 @@
 // #IMPORT
 
     // --JS
-    import { transition_fade } from '../../assets/js/utils/transition'
+    import { transition_fade } from '../../../assets/js/utils/transition'
 </script>
 
 <!-- #HTML -->
@@ -44,8 +44,8 @@ lang="scss"
 >
 /* #USES */
 
-@use '../../assets/scss/styles/position';
-@use '../../assets/scss/styles/size';
+@use '../../../assets/scss/styles/position';
+@use '../../../assets/scss/styles/size';
 
 /* #MASK */
 

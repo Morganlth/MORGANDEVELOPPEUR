@@ -47,10 +47,10 @@
     import Wrapper from './Wrapper.svelte'
 
     // --COMPONENT-ELEMENTS
-    import Info from '../elements/Info.svelte'
-    import Title from '../elements/Title.svelte'
-    import Nav from '../elements/Nav.svelte'
-    import Quote from '../elements/Quote.svelte'
+    import Info from '../elements/page/Info.svelte'
+    import Title from '../elements/page/Title.svelte'
+    import Nav from '../elements/page/Nav.svelte'
+    import Quote from '../elements/page/Quote.svelte'
 
 // #VARIABLES
 

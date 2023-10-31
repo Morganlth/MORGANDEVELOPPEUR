@@ -49,6 +49,7 @@ lang="scss"
 @use '../../assets/scss/app';
 
 @use '../../assets/scss/styles/position';
+@use '../../assets/scss/styles/media';
 
 /* #WRAPPER */
 
@@ -61,7 +62,7 @@ lang="scss"
     width: 100%;
     height: 100vh;
 
-    padding: max(11rem, 70px) app.$gap-inline 8rem;
+    padding: 8rem app.$gap-inline 8rem;
 
     pointer-events: none;
 
@@ -71,9 +72,13 @@ lang="scss"
     {
         position: absolute;
 
+        z-index: 1;
+
         width: calc(100% - app.$gap-inline * 2);
     
         user-select: none;
     }
+
+    @include media.min($height: $ms3) { padding-top: max(11rem, 70px); }
 }
 </style>

@@ -21,7 +21,7 @@
 // #IMPORTS
 
     // --JS
-    import { animation } from '../../assets/js/utils/animation'
+    import { animation } from '../../../assets/js/utils/animation'
 
 // #CONSTANTE
 
@@ -123,8 +123,8 @@ lang="scss"
 >
 /* #USES */
 
-@use '../../assets/scss/styles/position';
-@use '../../assets/scss/styles/font';
+@use '../../../assets/scss/styles/position';
+@use '../../../assets/scss/styles/font';
 
 /* #INFO */
 

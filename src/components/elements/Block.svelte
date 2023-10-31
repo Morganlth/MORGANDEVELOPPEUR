@@ -1,6 +1,6 @@
 <!-- #MAP
 
-    CUBE
+    BLOCK
         SIDE * 6
             ICON
 
@@ -45,21 +45,21 @@
 // #FUNCTION
 
     // --SET
-    function cube_set() { setTimeout(() => icon_OPACITY = 1, 1200) }
+    function block_set() { setTimeout(() => icon_OPACITY = 1, 1200) }
 
 // #CYCLE
 
-onMount(cube_set)
+onMount(block_set)
 </script>
 
 <!-- #HTML -->
 
 <div
-class="cube"
+class="block"
 class:focus={prop_FOCUS}
 class:hide={prop_HIDE}
 class:grabbing={prop_GRABBING}
-style:--cube-color={prop_COLOR ?? COLORS.primary}
+style:--block-color={prop_COLOR ?? COLORS.primary}
 >
     {#each [1, 2, 3, 4, 5, 6] as id}
         <div
@@ -100,9 +100,9 @@ lang="scss"
 @use '../../assets/scss/styles/display';
 @use '../../assets/scss/styles/size';
 
-/* #CUBE */
+/* #BLOCK */
 
-.cube
+.block
 {
     $size: var(--slot-size, '100px');
 
@@ -125,7 +125,7 @@ lang="scss"
     {
         opacity: 1;
 
-        border-color: var(--cube-color, $primary);
+        border-color: var(--block-color, $primary);
     }
 
     &.hide { display: none !important; }

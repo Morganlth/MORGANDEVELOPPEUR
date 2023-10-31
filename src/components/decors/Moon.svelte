@@ -4,10 +4,91 @@
 
 -->
 
+<!-- #SCRIPT -->
+
+<script>
+// #EXPORTS
+
+    // --PROPS
+    export let prop_FOCUS = false
+
+    // --BINDS
+
+// #IMPORTS
+
+    // --JS
+
+    // --LIB
+
+    // --CONTEXTS
+
+    // --SVELTE
+
+    // --COMPONENT-
+
+// #CONSTANTES
+
+// #VARIABLES
+
+// #REACTIVES
+
+// #FUNCTIONS
+
+    // --SET
+
+    // --GET
+
+    // --UPDATES
+
+    // --CLEAR
+
+    // --DESTROY
+
+        // !======IN-OUT=======!
+
+    // --INTROS
+
+    // --OUTROS
+
+        // !======CONTEXT======!
+
+    // --COMMANDS
+
+    // --EVENTS
+
+        // !======T-A==========!
+
+    // --TRANSITIONS
+
+    // --ANIMATIONS
+
+        // !======CONTROL======!
+
+    // --START
+
+    // --END
+
+        // !======TEST=========!
+
+    // --TESTS
+
+        // !======CANVAS=======!
+
+    // --DRAW
+
+        // !======UTILS========!
+
+    // --UTILS
+
+// #LIFECYCLES
+
+</script>
+
 <!-- #HTML -->
 
 <svg
 class="moon"
+class:focus={prop_FOCUS}
 width="300"
 height="300"
 viewBox="0 0 300 300"
@@ -25,13 +106,21 @@ xmlns="http://www.w3.org/2000/svg"
 <style
 lang="scss"
 >
+/* #USES */
+
 /* #MOON */
 
 .moon
 {
+    transform: translate(calc(50vw - 50%), calc(-50vh + 50%)) scale(.26);
+
     width: 34%;
     height: 34%;
 
     fill: $intermediate;
+
+    transition: transform .8s ease-in-out;
+
+    &.focus { transform: translate(0, 0) scale(1); }
 }
 </style>

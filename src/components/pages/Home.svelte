@@ -5,12 +5,12 @@
 -EVENT
     HOME
         SNAKE
-        SPACECUBE
+        BLACKBLOCKS
         MASK
         SLIDER
         GROUP
             GRAVITYAREA * 3
-                CUBE
+                BLOCK
         TICTACTOE
         TERMINAL
 
@@ -27,9 +27,9 @@
 
     prop_FOCUS = false,
 
-    prop_SPACECUBE = new Float64Array([]),
+    prop_BLACKBLOCKS = new Float64Array([]),
     prop_SLIDER = [() => ''],
-    prop_CUBES = [],
+    prop_GAMES = [],
 
     prop_TOP = 0
 
@@ -55,14 +55,14 @@
 
     // --COMPONENT-ELEMENTS
     import Snake from '../elements/Snake.svelte'
-    import Mask from '../elements/Mask.svelte'
+    import Mask from '../elements/mask/Mask.svelte'
     import Slider from '../elements/Slider.svelte'
-    import Cube from '../elements/Cube.svelte'
+    import Block from '../elements/Block.svelte'
     import TicTacToe from '../elements/TicTacToe.svelte'
-    import Terminal from '../elements/Terminal.svelte'
+    import Terminal from '../elements/terminal/Terminal.svelte'
 
     // --COMPONENT-DECOR
-    import SpaceCube from '../decors/SpaceCube.svelte'
+    import BlackBlocks from '../decors/BlackBlocks.svelte'
 
 // #CONSTANTES
 
@@ -75,8 +75,9 @@
         {
             name: SNAKE,
             callback: snake_c$,
-            params: { defaultValue: true },
+            params: { defaultValue: true, optimise: { value: false } },
             tests: { testBoolean: true },
+            desc: 'Activer/Désactiver le serpent (p: \'t\' ou \'f\')',
             storage: true
         }
     ]
@@ -176,11 +177,11 @@ data-page-id={prop_ID}
     bind:snake_GAME
     />
 
-    <SpaceCube
+    <BlackBlocks
     prop_ON={!snake_GAME}
     {prop_FOCUS}
-    {prop_SPACECUBE}
-    bind:spacecube_CHARGED={page_CHARGED}
+    {prop_BLACKBLOCKS}
+    bind:blackblocks_CHARGED={page_CHARGED}
     />
 
     {#if prop_FOCUS}
@@ -202,11 +203,11 @@ data-page-id={prop_ID}
     bind:group_start
     bind:group_stop
     >
-        {#each prop_CUBES as cube}
+        {#each prop_GAMES as item}
             <GravityArea
             let:hide
             let:grabbing
-            {...cube.props}
+            {...item.props}
             prop_FOCUS={gravityarea$_FOCUS}
             prop_FOCUSABLE={gravityarea$_FOCUS}
             prop_$RESIZE={resize}
@@ -214,12 +215,12 @@ data-page-id={prop_ID}
             prop_GRABBING={prop_FOCUS}
             prop_ROTATE_Y={Math.random() * MATH.PI.x2}
             prop_ROTATE_Z={Math.random() * MATH.PI.x2}
-            on:click={gravityarea_eClick.bind(null, cube.id)}
+            on:click={gravityarea_eClick.bind(null, item.id)}
             >
-                <Cube
+                <Block
                 prop_HIDE={hide}
                 prop_GRABBING={grabbing}
-                prop_COMPONENT={cube.component}
+                prop_COMPONENT={item.component}
                 {prop_FOCUS}
                 />
             </GravityArea>

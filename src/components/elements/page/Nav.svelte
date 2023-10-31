@@ -23,20 +23,20 @@
 // #IMPORTS
 
     // --JS
-    import { animation } from '../../assets/js/utils/animation'
+    import { animation } from '../../../assets/js/utils/animation'
 
     // --LIB
     import COLORS from '$lib/colors'
 
     // --CONTEXT
-    import { SPRING } from '../../App.svelte'
+    import { SPRING } from '../../../App.svelte'
 
     // --SVELTE
     import { onDestroy, createEventDispatcher } from 'svelte'
     import { cubicInOut } from 'svelte/easing'
 
     // --COMPONENT-COVERS
-    import Icon from '../covers/Icon.svelte'
+    import Icon from '../../covers/Icon.svelte'
 
 // #CONSTANTE
 
@@ -186,10 +186,10 @@ lang="scss"
 
 @use 'sass:map';
 
-@use '../../assets/scss/styles/elements';
-@use '../../assets/scss/styles/position';
-@use '../../assets/scss/styles/display';
-@use '../../assets/scss/styles/font';
+@use '../../../assets/scss/styles/elements';
+@use '../../../assets/scss/styles/position';
+@use '../../../assets/scss/styles/display';
+@use '../../../assets/scss/styles/font';
 
 /* #NAV */
 
@@ -214,8 +214,6 @@ lang="scss"
     }
 
     position: relative;
-
-    z-index: 2;
 
     width: 100%;
 

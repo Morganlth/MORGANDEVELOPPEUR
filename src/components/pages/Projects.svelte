@@ -51,7 +51,7 @@
 
     // --COMPONENT-ELEMENTS
     import Card from '../elements/Card.svelte'
-    import Mask2 from '../elements/Mask2.svelte'
+    import Mask2 from '../elements/mask/Mask2.svelte'
     import About from '../elements/About.svelte'
 
 // #VARIABLES

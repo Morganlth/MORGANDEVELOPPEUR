@@ -24,17 +24,17 @@
 // #IMPORTS
 
     // --JS
-    import { animation_writing } from '../../assets/js/utils/animation'
+    import { animation_writing } from '../../../assets/js/utils/animation'
 
     // --CONTEXT
-    import { EVENT } from '../../App.svelte'
+    import { EVENT } from '../../../App.svelte'
 
     // --SVELTE
     import { onMount, onDestroy } from 'svelte'
     import { createEventDispatcher } from 'svelte'
 
     // --COMPONENT-ELEMENT
-    import Fragments from './Fragments.svelte'
+    import Fragments from '../Fragments.svelte'
 
 // #CONSTANTES
 
@@ -106,11 +106,11 @@ lang="scss"
 
 @use 'sass:map';
 
-@use '../../assets/scss/styles/position';
-@use '../../assets/scss/styles/display';
-@use '../../assets/scss/styles/size';
-@use '../../assets/scss/styles/font';
-@use '../../assets/scss/styles/media';
+@use '../../../assets/scss/styles/position';
+@use '../../../assets/scss/styles/display';
+@use '../../../assets/scss/styles/size';
+@use '../../../assets/scss/styles/font';
+@use '../../../assets/scss/styles/media';
 
 /* #ROUTE */
 

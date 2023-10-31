@@ -26,16 +26,16 @@
     import COLORS from '$lib/colors'
 
     // --CONTEXTS
-    import { ROUTER, SPRING } from '../../App.svelte'
+    import { ROUTER, SPRING } from '../../../App.svelte'
 
     // --COMPONENT-COVER
-    import Icon from '../covers/Icon.svelte'
+    import Icon from '../../covers/Icon.svelte'
 
     // --COMPONENT-ELEMENT
     import Route from './Route.svelte'
 
      // --COMPONENT-ICON
-     import Arrow from '../icons/Arrow.svelte'
+     import Arrow from '../../icons/Arrow.svelte'
 
 // #VARIABLE
 
@@ -124,10 +124,10 @@ lang="scss"
 >
 /* #USES */
 
-@use '../../assets/scss/app';
+@use '../../../assets/scss/app';
 
-@use '../../assets/scss/styles/position';
-@use '../../assets/scss/styles/media';
+@use '../../../assets/scss/styles/position';
+@use '../../../assets/scss/styles/media';
 
 /* #ROUTER */
 

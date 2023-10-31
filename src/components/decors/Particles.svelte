@@ -62,6 +62,7 @@
             callback: particles_c$,
             params: { defaultValue: true, optimise: { value: false } },
             tests: { testBoolean: true },
+            desc: 'Activer/Désactiver les particules (p: \'t\' ou \'f\')',
             storage: true
         },
         {
@@ -69,6 +70,7 @@
             callback: particles_c$Delay,
             params: { defaultValue: 100, min: 10, max: 1000 },
             tests: { testNumber: true },
+            desc: 'Augmenter/Diminuer le nombre de particules (p: [10; 1000])',
             storage: true
         }
     ],

@@ -1,25 +1,20 @@
 // #EXPORTS
 
     // --ANIMATIONS
-    export function animation(callback, duration = 0, t = 0, invert = false)
+    export function animation(callback, duration = 0, t_INITIAL = 0, invert = false) // tenter de passer le t dans le resolve et reject pour le recuperer uniquement a ce moment la et non a chauqe iteration
     {
         let
-        cancel,
-        frameId
+        t = 0,
+        cancel = () => {},
+        frameId,
+        resolved = false
     
         const
-        RATIO = invert ? t : 1 - t,
-        DURATION = duration * RATIO,
-        START = +new Date(),
+        DURATION = duration * (invert ? t_INITIAL : 1 - t_INITIAL),
+        START = +new Date()
+    ,
         PROMISE = new Promise((resolve, reject) =>
         {
-            cancel = () =>
-            {
-                cancelAnimationFrame(frameId)
-    
-                reject()
-            }
-
             if (!DURATION) return resolve()
     
             ;(function frame()
@@ -28,18 +23,67 @@
 
                 if (TIME >= DURATION)
                 {
-                    callback(invert ? 0 : 1)
-                    resolve()
-
-                    return
-                }
-
-                const T = TIME / duration
+                    t = invert ? t_INITIAL : 1 - t_INITIAL
         
-                callback(invert ? t - T : t + T)
+                    resolved = true
+                }
+                else t = TIME / duration
+        
+                callback(t_INITIAL + (invert ? -t : t))
 
-                frameId = requestAnimationFrame(frame)
+                resolved ? resolve() : frameId = requestAnimationFrame(frame)
             })()
+
+            cancel = () =>
+            {
+                cancelAnimationFrame(frameId)
+    
+                reject()
+            }
+        })
+
+        PROMISE.catch(() => void null)
+
+        return { cancel, promise: PROMISE }
+    }
+
+    export function animation_interval(callback = () => {}, duration = 0, delay = 0)
+    {
+        let
+        t = 0,
+        cancel = () => {}
+    
+        const
+        START = +new Date()
+    ,
+        PROMISE = new Promise((resolve, reject) =>
+        {
+            if (!duration) return resolve()
+
+            const INTERVAL = setInterval(() =>
+            {
+                const TIME = +new Date() - START
+        
+                if (TIME >= duration)
+                {
+                    t = 1
+
+                    clearInterval(INTERVAL)
+        
+                    resolve()
+                }
+                else t = TIME / duration
+
+                callback(t)
+            },
+            delay)
+
+            cancel = () =>
+            {
+                clearInterval(INTERVAL)
+    
+                reject()
+            }
         })
 
         PROMISE.catch(() => void null)

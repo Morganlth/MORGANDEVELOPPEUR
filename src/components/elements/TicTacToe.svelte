@@ -231,73 +231,74 @@ lang="scss"
 /* #USES */
 
 @use '../../assets/scss/styles/utils';
+@use '../../assets/scss/styles/position';
 @use '../../assets/scss/styles/display';
-@use '../../assets/scss/styles/size';
 @use '../../assets/scss/styles/media';
 
 /* #TICTACTOE */
 
 .tictactoe
 {
-    --icon-size: 2.7rem;
+    $size: max(16vw, 16vh);
 
-    @include display.grid(calc(100% / 3), calc(100% / 3), 3, 3);
+    $pe-color: rgba($light, .4);
 
-    position: absolute;
-    right: 24%;
-    top: 50%;
+    $cell-size: calc(100% / 3);
 
-    width: 100px;
-    height: 100px;
+    --icon-size: 50%;
 
-    :global
+    &::before, &::after
     {
-        .cell
-        {
-            @extend %f-center;
-            @extend %any;
+        opacity: 0;
 
-            transition: border .4s;
-        }
-        .cell:nth-child(1)
+        animation: aPe-intro .4s ease-out forwards;
+    }
+
+    &::before
+    {
+        --pe-translate: translate(-50%, -100%);
+    
+        @include utils.solid-border($pe-color, 1px, $top: false, $bottom: false);
+        @include position.placement(absolute, $top: 100%, $left: 50%, $pseudo-element: true);
+
+        transform: translateX(-50%);
+
+        width: $cell-size;
+        height: 100%;
+    }
+
+    @include position.placement(absolute, $top: 46%, $left: 46%);
+    @include display.grid($cell-size, $cell-size, 3, 3);
+
+    width: $size;
+    height: $size;
+
+    :global .cell { @extend %f-center; }
+
+    &::after
+    {
+        --pe-translate: translate(-100%, -50%);
+
+        @include utils.solid-border($pe-color, 1px, $right: false, $left: false);
+        @include position.placement(absolute, $top: 50%, $left: 100%, $pseudo-element: true);
+
+        transform: translateY(-50%);
+
+        width: 100%;
+        height: $cell-size;
+    }
+
+    @keyframes aPe-intro
+    {
+        to
         {
-            @include utils.solid-border(var(--border-color, $light), 3px, true, false, false, true);
-        }
-        .cell:nth-child(2)
-        {
-            @include utils.solid-border($intermediate, 2px, false, true, true, true);
-        }
-        .cell:nth-child(3)
-        {
-            @include utils.solid-border(var(--border-color, $light), 3px, true, true, false, false);
-        }
-        .cell:nth-child(4)
-        {
-            @include utils.solid-border($intermediate, 2px, true, true, true, false);
-        }
-        .cell:nth-child(5)
-        {
-            @include utils.solid-border($intermediate, 2px, false, true, true, false);
-        }
-        .cell:nth-child(6)
-        {
-            @include utils.solid-border($intermediate, 2px, true, false, true, false);
-        }
-        .cell:nth-child(7)
-        {
-            @include utils.solid-border(var(--border-color, $light), 3px, false, false, true, true);
-        }
-        .cell:nth-child(8)
-        {
-            @include utils.solid-border($intermediate, 2px, false, true, false, true);
-        }
-        .cell:nth-child(9)
-        {
-            @include utils.solid-border(var(--border-color, $light), 3px, false, true, true, false);
+            transform: var(--pe-translate);
+
+            opacity: 1;
         }
     }
 
-    @include media.min(375px, 325px)
+    /* @include media.min(375px, 325px)
     {
         width: 140px;
         height: 140px;
@@ -306,8 +307,6 @@ lang="scss"
     {
         width: 180px;
         height: 180px;
-    }
-
-    /* @include media.max(650px, 584px) { display: none; } */
+    } */
 }
 </style>

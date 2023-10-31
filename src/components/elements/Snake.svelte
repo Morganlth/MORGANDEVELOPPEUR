@@ -26,8 +26,8 @@ context="module"
 
     // --ELEMENT-SNAKE
     export const
-    SNAKE_$ON = writable(true),
-
+    SNAKE_$ON = writable(true)
+,
     SNAKE_$BLOCKSIZE = writable(40)
 
     // --ELEMENT-GAMEOVER
@@ -74,13 +74,13 @@ context="module"
 
     // --ELEMENT-SNAKE
     const
-    SNAKE_SIZE_NAME = 'snake_size',
-
-    SNAKE_BLOCKSIZE = 40,
-
+    SNAKE_SIZE_NAME = 'snake_size'
+,
+    SNAKE_BLOCKSIZE = 40
+,
     SNAKE_SNAKE = [],
-    SNAKE_APPLE = [],
-
+    SNAKE_APPLE = []
+,
     SNAKE_COMMANDS =
     [
         {
@@ -88,10 +88,11 @@ context="module"
             callback: snake_c$Size,
             params: { defaultValue: SNAKE_BLOCKSIZE, min: 20, max: 70 },
             tests: { testNumber: true },
+            desc: 'Modifier la taille du serpent (p: [20; 70])',
             storage: true
         }
-    ],
-
+    ]
+,
     SNAKE_EVENTS = { resize: snake_e$Resize },
     SNAKE_EVENTS_2 = { mouseMove: snake_e$MouseMove }
 

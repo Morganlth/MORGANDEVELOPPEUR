@@ -36,6 +36,7 @@ constructor ()
         callback: this.app_c$Optimise.bind(this),
         params: { defaultValue: this.#app_$OPTIMISE.value },
         tests: { testBoolean: true },
+        desc: 'Optimiser l\'application (p: \'t\' ou \'f\')',
         storage: true
     })
 }
@@ -193,7 +194,7 @@ constructor ()
         {
             this.#app_$OPTIMISE.set(value)
 
-            localStorage.setItem('optimise', value) 
+            localStorage.setItem(App.__app_OPTIMISE_NAME, value) 
         }
     }
 

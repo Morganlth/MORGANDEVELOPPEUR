@@ -63,8 +63,8 @@ lang="scss"
 >
 /* #USES */
 
-@use '../../assets/scss/styles/position';
-@use '../../assets/scss/styles/size';
+@use '../../../assets/scss/styles/position';
+@use '../../../assets/scss/styles/size';
 
 /* #MASK2 */
 

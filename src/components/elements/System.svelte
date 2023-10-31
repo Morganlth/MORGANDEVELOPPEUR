@@ -8,7 +8,7 @@
             MOON
             ORBIT * n
                 GRAVITYAREA
-                    CUBES
+                    BLOCK
 
         GROUP
             TAG * n
@@ -53,7 +53,7 @@
 
     // --COMPONENT-ELEMENTS
     import Tag from './Tag.svelte'
-    import Cube from './Cube.svelte'
+    import Block from './Block.svelte'
 
     // --COMPONENT-DECOR
     import Moon from '../decors/Moon.svelte'
@@ -62,8 +62,8 @@
 
     // --ELEMENT-SYSTEM
     const
-    SYSTEM_OPTIMISE_NAME = 'system_optimise',
-
+    SYSTEM_OPTIMISE_NAME = 'system_optimise'
+,
     SYSTEM_COMMANDS =
     [
         {
@@ -71,9 +71,11 @@
             callback: system_c$Optimise,
             params: { defaultValue: false, optimise: { value: true } },
             tests: { testBoolean: true },
+            desc: 'Optimiser le système dans la section compétence (p: \'t\' ou \'f\')',
             storage: true
         }
-    ],
+    ]
+,
     SYSTEM_EVENTS = { mouseMove: wait_throttle(system_e$MouseMove, 50) }
 
     // --ELEMENT-GROUP
@@ -304,7 +306,6 @@ onDestroy(system_destroy)
 
 <div
 class="system"
-class:focus={prop_FOCUS}
 style:--system-r-x={system_ROTATE_X}
 style:--system-r-y={system_ROTATE_Y}
 >
@@ -314,49 +315,51 @@ style:--system-r-y={system_ROTATE_Y}
     bind:group_start
     bind:group_stop
     >
-        <Moon />
+        <Moon
+        {prop_FOCUS}
+        />
 
         {#if !system_OPTIMISED}
-            {#each prop_SYSTEM as cube}
+            {#each prop_SYSTEM as item}
                 <GravityArea
                 let:hide
                 let:grabbing
                 prop_$RESIZE={resize}
                 prop_$ANIMATION={animation}
-                prop_FOCUSABLE={(cube.focus ?? false) && !system_TARGET}
+                prop_FOCUSABLE={(item.focus ?? false) && !system_TARGET}
                 prop_3D={true}
                 prop_RATIO={gravityarea_RATIO}
                 prop_GRABBING={false}
-                prop_TITLE={cube.props.prop_TITLE}
+                prop_TITLE={item.props.prop_TITLE}
                 prop_ORBIT_RADIUS={orbit_RADIUS}
-                prop_ROTATE_Z={cube.props.prop_ROTATE}
-                prop_OFFSET={cube.props.prop_OFFSET}
+                prop_ROTATE_Z={item.props.prop_ROTATE}
+                prop_OFFSET={item.props.prop_OFFSET}
                 {prop_FOCUS}
-                bind:gravityarea_TRANSLATE_Z={GROUP_Z_POSITIONS[cube.id]}
-                on:click={gravityarea_eClick.bind(cube)}
+                bind:gravityarea_TRANSLATE_Z={GROUP_Z_POSITIONS[item.id]}
+                on:click={gravityarea_eClick.bind(item)}
                 >
-                    <Cube
+                    <Block
                     prop_HIDE={hide}
                     prop_GRABBING={grabbing}
-                    prop_FOCUS={cube.focus ?? false}
-                    prop_SRC={cube.props.prop_SRC}
-                    prop_ALT={cube.props.prop_ALT}
-                    prop_COLOR={cube.props.prop_COLOR}
+                    prop_FOCUS={item.focus ?? false}
+                    prop_SRC={item.props.prop_SRC}
+                    prop_ALT={item.props.prop_ALT}
+                    prop_COLOR={item.props.prop_COLOR}
                     />
                 </GravityArea>
             {/each}
         {/if}
     </Group>
 
-    {#each prop_SYSTEM as cube}
+    {#each prop_SYSTEM as item}
         <Cell
-        prop_FOCUS={(cube.focus ?? false) && !system_TARGET}
-        prop_TITLE={cube.tag}
-        on:click={tag_eClick.bind(cube)}
+        prop_FOCUS={(item.focus ?? false) && !system_TARGET}
+        prop_TITLE={item.tag}
+        on:click={tag_eClick.bind(item)}
         >
             <Tag
-            prop_FOCUS={cube.focus ?? false}
-            prop_CONTENT={cube.tag}
+            prop_FOCUS={item.focus ?? false}
+            prop_CONTENT={item.tag}
             prop_DURATION={TAG_DURATION}
             prop_IN={tag_in}
             prop_OUT={tag_out}
@@ -388,8 +391,6 @@ lang="scss"
     width: 50vw;
     height: 100%;
 
-    &.focus :global .moon { transform: translate(0, 0) scale(1); }
-
     :global
     {
         $rotate-x: var(--system-r-x, 0);
@@ -406,15 +407,6 @@ lang="scss"
     
             transform-style: preserve-3d;
             transform: rotate3d($rotate-x, $rotate-y, 0, .02rad);
-        }
-
-        .moon
-        {
-            transform: translate(calc(50vw - 50%), calc(-50vh + 50%)) scale(.3);
-
-            opacity: 1;
-
-            transition: transform .8s ease-out, opacity .8s;
         }
 
         .cell

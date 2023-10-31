@@ -43,7 +43,7 @@
                 }
             }
         ,
-            children: [HOME_SPACECUBE, HOME_SLIDER, HOME_CUBES]
+            children: [HOME_BLACKBLOCKS, HOME_SLIDER, HOME_GAMES]
         ,
             props:
             {
@@ -248,9 +248,9 @@
 // #IMPORTS
 
     // --JS
-    import HOME_SPACECUBE from './datas/home/dSpacecube'
+    import HOME_BLACKBLOCKS from './datas/home/dBlackBlocks'
     import HOME_SLIDER from './datas/home/dSlider'
-    import HOME_CUBES from './datas/home/dCubes'
+    import HOME_GAMES from './datas/home/dGames'
 
     import PRESENTATION_FEATURES from './datas/presentation/dFeatures'
 

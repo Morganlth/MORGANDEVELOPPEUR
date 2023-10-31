@@ -34,6 +34,7 @@ constructor ()
         callback: this.spring_c$,
         params: { defaultValue: this.#spring_$ON.value, optimise: { value: false } },
         tests: { testBoolean: true },
+        desc: 'Activer/Désactiver le curseur personnalisé (p: \'t\' ou \'f\')',
         storage: true
     })
 }

@@ -1,9 +1,9 @@
 // #EXPORT
 
-    // --CUBES-DATAS
+    // --GAMES-DATAS
     export default
     {
-        name: 'cubes'
+        name: 'games'
     ,
         process: true
     ,

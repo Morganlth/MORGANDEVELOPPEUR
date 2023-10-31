@@ -5,25 +5,67 @@ class Command
 // --VARIABLES
 
     // --COMMAND-CONTEXT
+    static __command_DEFAULTS_COMMANDS =
+    [
+        {
+            name: 'reset',
+            desc: 'Réinitialiser les paramètres',
+            args: false
+        },
+        {
+            name: 'success',
+            desc: 'Afficher un Succès (p1: message, p2: nom du succès)',
+            args: true
+        },
+        {
+            name: 'error',
+            desc: 'Afficher une Erreur (p1: message, p2: nom de l\'erreur)',
+            args: true
+        },
+        {
+            name: 'config',
+            desc: 'Afficher la configuration actuelle',
+            args: false
+        },
+        {
+            name: 'commands',
+            desc: 'Afficher l\'ensemble des commandes',
+            args: false
+        },
+        {
+            name: 'fps',
+            desc: 'Obtenir les fps et fps moyen',
+            args: false
+        }
+    ]
+
     static __command_PARAMS = { defaultValue: true, min: null, max: null, optimise: false }
     static __command_TESTS = { testBoolean: false, testNumber: false }
 
     #command_COMMANDS = {}
-    #command_KEYWORDS = ['reset', 'success', 'error', 'commands', 'fps']
     #command_KEYSTORAGE = []
 
 // #CONSTRUCTOR
 
 constructor ()
 {
-    for (const NAME of this.#command_KEYWORDS)
-        try { this.command_add(NAME, this['command_c$' + NAME.charAt(0).toUpperCase() + NAME.slice(1).toLowerCase()].bind(this)) } catch {}
+    for (const COMMAND of Command.__command_DEFAULTS_COMMANDS)
+    {
+        try
+        {
+            const
+            NAME = COMMAND.name,
+            CALLBACK = this['command_c$' + NAME.charAt(0).toUpperCase() + NAME.slice(1).toLowerCase()].bind(this)
+        
+            this.command_add(NAME, CALLBACK, COMMAND.desc, COMMAND.args)
+        } catch { continue }
+    }
 }
 
     // --SET
     command_setBasicCommands(commands)
     {
-        for (let { name, callback, params = Command.__command_PARAMS, tests = Command.__command_TESTS, storage } of commands)
+        for (let { name, callback, params = Command.__command_PARAMS, tests = Command.__command_TESTS, desc, storage } of commands)
         {
             if (params.optimise) APP.app_OPTIMISE_CONFIG = { name: name, value: params.optimise.value }
 
@@ -40,7 +82,7 @@ constructor ()
 
                     this.command_c$Success(name + ' ' + value)
                 }
-            }, storage)
+            }, desc, true, storage)
         }
     }
 
@@ -65,20 +107,36 @@ constructor ()
     
     command_c$Error(msg, type) { throw new CommandError(type ?? 'Error', msg) }
 
+    command_c$Config()
+    {
+        try { if (this.command_testCommand('clear')) this.command_COMMANDS.clear() } catch {}
+
+        for (const KEY of this.command_KEYSTORAGE) this.command_COMMANDS.success(localStorage.getItem(KEY) ?? 'default', KEY)
+    }
+
     command_c$Commands()
     {
-        if (this.command_testCommand('log') && this.command_testCommand('clear'))
+        for (const TOTEST of ['log', 'clear', 'write']) this.command_testCommand(TOTEST)
+
+        const COMMANDS = this.#command_COMMANDS
+    
+        COMMANDS.clear()
+    
+        for (const NAME in COMMANDS)
         {
-            this.command_COMMANDS.clear()
+            const
+            COMMAND = COMMANDS[NAME],
+            CALLBACK = COMMAND.args ? COMMANDS.write.bind(null, `app ${NAME} `) : COMMAND
         
-            for (const NAME of this.#command_KEYWORDS) this.#command_COMMANDS.log(NAME)
+            COMMANDS.log(NAME, { callback: CALLBACK, placeholder: COMMAND.desc })
         }
     }
 
     command_c$Fps()
     {
-        if (this.command_testCommand('log'))
-            this.#command_COMMANDS.log(`${EVENT.event_$FPS.value} fps - ${EVENT.event_$FPS.getAverage()} fps/moyen`)
+        this.command_testCommand('log')
+        
+        this.#command_COMMANDS.log(`${EVENT.event_$FPS.value} fps - ${EVENT.event_$FPS.getAverage()} fps/moyen`)
     }
 
     // --TESTS
@@ -93,7 +151,7 @@ constructor ()
 
     command_testCommand(toTest)
     {
-        return this.#command_KEYWORDS.includes(toTest)
+        return toTest in this.#command_COMMANDS
         ? true
         : this.command_c$Error('Une erreur s\'est produite, tenter de recharger la page')
     }
@@ -140,18 +198,18 @@ constructor ()
     }
     
     // --UTIL
-    command_add(name, command, storage = false)
+    command_add(name, command, desc = '', args = false, storage = false)
     {
-        if (!this.command_KEYWORDS.includes(name)) this.command_KEYWORDS.push(name)
         if (storage && !this.#command_KEYSTORAGE.includes(name)) this.#command_KEYSTORAGE.push(name)
+
+        command.desc = desc
+        command.args = args
 
         this.#command_COMMANDS[name] = command
     }
 
     // --GETTER
     get command_COMMANDS() { return this.#command_COMMANDS }
-
-    get command_KEYWORDS() { return this.#command_KEYWORDS }
 
     get command_KEYSTORAGE() { return this.#command_KEYSTORAGE }
 }

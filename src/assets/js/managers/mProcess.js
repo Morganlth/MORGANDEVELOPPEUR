@@ -9,6 +9,7 @@ class Process
 
     #process_KEYWORDS = []
     #process_TREE = { children: {} }
+    #process_COMMANDS = []
 
 //  {   current string
         #process_STR = ''
@@ -17,6 +18,18 @@ class Process
         #process_PREVIOUS_L = null
         #process_MIN = Process.__process_D_MIN
 //  }
+
+// #CONSTRUCTOR
+
+constructor()
+{
+    this.#process_COMMANDS.push(
+    {
+        name: Process.__process_KEYWORDS_NAME,
+        callback: this.#process_c$Keywords.bind(this),
+        desc: 'Afficher les mots clés'
+    })
+}
 
 // #FUNCTIONS
 
@@ -32,7 +45,7 @@ class Process
         this.#process_MIN = Process.__process_D_MIN
     }
 
-    #process_setCommands() { COMMAND.command_add(Process.__process_KEYWORDS_NAME, this.#process_c$Keywords.bind(this)) }
+    #process_setCommands() { for (const CMD of this.#process_COMMANDS) COMMAND.command_add(CMD.name, CMD.callback, CMD.desc) }
 
     // --GET
     static process_getLevenshteinDistance(s1 = '', s2 = '') // not used
@@ -140,7 +153,7 @@ class Process
         }
     }
 
-    async process_spellChecker(str)
+    process_spellChecker(str)
     {
         const
         ARRAY = this.#process_getArrayFrom(str),
