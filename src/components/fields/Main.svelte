@@ -309,7 +309,7 @@ lang="scss"
 
         transition: filter .4s ease-in-out;
 
-        &.hide { filter: blur(80px) hue-rotate(30deg); }
+        &.hide { filter: blur(10rem) hue-rotate(30deg); }
     }
 }
 </style>

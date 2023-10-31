@@ -35,7 +35,7 @@
                 {
                     prop_TITLE: 'Terminal',
                     prop_Z: 1,
-                    prop_X: .9,
+                    prop_X: .88,
                     prop_Y: .58,
                     prop_RADIUS: 160
                 }
