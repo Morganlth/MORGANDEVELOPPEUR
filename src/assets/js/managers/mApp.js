@@ -13,7 +13,7 @@ class App
     #app_$FREEZE = { init: false }
     #app_$OPTIMISE = { init: false }
     #app_$HIDE = writable(false)
-    #app_SMALL_SCREEN = false // use by presentation and skills for mask title with small height -> to modified
+    #app_$SMALL_SCREEN = writable(false)
     #app_OPTIMISE_CONFIG = {}
     #app_STORAGE = {}
     #app_COMMANDS = []
@@ -121,6 +121,7 @@ constructor ()
         COMMANDS = COMMAND.command_COMMANDS
 
         for (const NAME of COMMAND.command_KEYSTORAGE)
+        {
             try
             {
                 const [COMMAND, STORAGE] = [COMMANDS[NAME], localStorage.getItem(NAME)]
@@ -129,6 +130,7 @@ constructor ()
                 if (STORAGE != null) COMMAND(STORAGE)
             }
             catch { localStorage.removeItem(NAME) }
+        }
 
         try { if (COMMAND.command_testCommand('clear')) COMMANDS.clear() } catch {}
     }
@@ -136,7 +138,7 @@ constructor ()
     // --UPDATES
     app_updateSize() { [this.app_WIDTH, this.app_HEIGHT] = [window.innerWidth, window.innerHeight] }
 
-    app_updateSmallScreen() { this.#app_SMALL_SCREEN = this.app_testScreen(null, BREAKPOINTS.ms3) }
+    app_updateSmallScreen() { this.#app_$SMALL_SCREEN.set(this.app_testScreen(BREAKPOINTS.ms3, BREAKPOINTS.ms3)) }
 
     #app_updateMode(optimise)
     {
@@ -165,7 +167,7 @@ constructor ()
 
     get app_$HIDE() { return this.#app_$HIDE }
 
-    get app_SMALL_SCREEN() { return this.#app_SMALL_SCREEN }
+    get app_$SMALL_SCREEN() { return this.#app_$SMALL_SCREEN }
 
     get app_$OPTIMISE() { return this.#app_$OPTIMISE }
 

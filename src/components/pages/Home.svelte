@@ -47,7 +47,7 @@
     import { APP, COMMAND, EVENT } from '../../App.svelte'
 
     // --SVELTE
-    import { onMount, onDestroy } from 'svelte'
+    import { onMount } from 'svelte'
 
     // --COMPONENT-COVERS
     import GravityArea from '../covers/GravityArea.svelte'
@@ -82,20 +82,17 @@
         }
     ]
 
-    const SLIDER_EVENTS = { resize: slider_e$Resize }
-
 // #VARIABLES
 
     // --APP
-    let app_$OPTIMISE = APP.app_$OPTIMISE
+    let
+    app_$OPTIMISE = APP.app_$OPTIMISE,
+    app_$SMALL_SCREEN = APP.app_$SMALL_SCREEN
 
     // --ELEMENT-SNAKE
     let
     snake_ON = true,
     snake_GAME = false
-
-    // --ELEMENT-SLIDER
-    let slider_ON = false
 
     // --ELEMENT-GROUP
     let
@@ -119,24 +116,9 @@
 // #FUNCTIONS
 
     // --SET
-    function home_set()
-    {
-        snake_setCommands()
-
-        slider_setVars()
-        slider_setEvents()
-    }
+    function home_set() { snake_setCommands() }
 
     function snake_setCommands() { COMMAND.command_setBasicCommands(SNAKE_COMMANDS) }
-
-    function slider_setVars() { slider_ON = !APP.app_SMALL_SCREEN }
-
-    function slider_setEvents() { EVENT.event_add(SLIDER_EVENTS) }
-
-    // --DESTROY
-    function home_destroy() { slider_destroyEvents() }
-
-    function slider_destroyEvents() { EVENT.event_remove(SLIDER_EVENTS) }
 
     // --UPDATES
     function snake_update(on) { snake_ON = on }
@@ -152,9 +134,7 @@
     // --COMMAND
     function snake_c$(on) { COMMAND.command_test(on, 'boolean', snake_update, SNAKE, snake_ON) }
 
-    // --EVENTS
-    async function slider_e$Resize() { slider_setVars() }
-
+    // --EVENT
     async function gravityarea_eClick(id)
     {
         switch (id)
@@ -186,7 +166,6 @@
 // #LIFECYCLES
 
 onMount(home_set)
-onDestroy(home_destroy)
 </script>
 
 <!-- #HTML -->
@@ -215,7 +194,7 @@ data-page-id={prop_ID}
         />
     {/if}
 
-    {#if slider_ON}
+    {#if !$app_$SMALL_SCREEN}
         <Slider
         {prop_FOCUS}
         {prop_SLIDER}
