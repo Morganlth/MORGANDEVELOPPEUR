@@ -43,11 +43,14 @@
     // --JS
     import MATH from '../../assets/js/utils/math'
 
+    // --LIB
+    import BREAKPOINTS from '$lib/breakpoints'
+
     // --CONTEXTS
     import { APP, COMMAND, EVENT } from '../../App.svelte'
 
     // --SVELTE
-    import { onMount } from 'svelte'
+    import { onMount, onDestroy } from 'svelte'
 
     // --COMPONENT-COVERS
     import GravityArea from '../covers/GravityArea.svelte'
@@ -68,8 +71,8 @@
 
     // --ELEMENT-SNAKE
     const
-    SNAKE = 'snake',
-
+    SNAKE = 'snake'
+,
     SNAKE_COMMANDS =
     [
         {
@@ -82,6 +85,8 @@
         }
     ]
 
+    const SLIDER_EVENTS = { resize: slider_e$Resize }
+
 // #VARIABLES
 
     // --APP
@@ -91,6 +96,9 @@
     let
     snake_ON = true,
     snake_GAME = false
+
+    // --ELEMENT-SLIDER
+    let slider_ON = false
 
     // --ELEMENT-GROUP
     let
@@ -114,9 +122,29 @@
 // #FUNCTIONS
 
     // --SET
-    function home_set() { snake_setCommands() }
+    function home_set()
+    {
+        snake_setCommands()
+
+        slider_setVars()
+        slider_setEvents()
+    }
 
     function snake_setCommands() { COMMAND.command_setBasicCommands(SNAKE_COMMANDS) }
+
+    function slider_setVars()
+    {
+        const MS3 = BREAKPOINTS.ms3
+    
+        slider_ON = APP.app_WIDTH >= MS3 && APP.app_HEIGHT >= MS3
+    }
+
+    function slider_setEvents() { EVENT.event_add(SLIDER_EVENTS) }
+
+    // --DESTROY
+    function home_destroy() { slider_destroyEvents() }
+
+    function slider_destroyEvents() { EVENT.event_remove(SLIDER_EVENTS) }
 
     // --UPDATES
     function snake_update(on) { snake_ON = on }
@@ -132,7 +160,9 @@
     // --COMMAND
     function snake_c$(on) { COMMAND.command_test(on, 'boolean', snake_update, SNAKE, snake_ON) }
 
-    // --EVENT
+    // --EVENTS
+    async function slider_e$Resize() { slider_setVars() }
+
     async function gravityarea_eClick(id)
     {
         switch (id)
@@ -161,9 +191,10 @@
         terminal_update(str === 'terminal')
     }
 
-// #LIFECYCLE
+// #LIFECYCLES
 
 onMount(home_set)
+onDestroy(home_destroy)
 </script>
 
 <!-- #HTML -->
@@ -192,10 +223,12 @@ data-page-id={prop_ID}
         />
     {/if}
 
-    <Slider
-    {prop_FOCUS}
-    {prop_SLIDER}
-    />
+    {#if slider_ON}
+        <Slider
+        {prop_FOCUS}
+        {prop_SLIDER}
+        />
+    {/if}
 
     <Group
     let:resize
