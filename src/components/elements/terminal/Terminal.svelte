@@ -293,7 +293,7 @@ lang="scss"
 
         transform-origin: right;
         transform-style: preserve-3d;
-        transform: rotateY(calc($r-y * -1)) translateX(calc(100% + app.$gap-inline));
+        transform: rotateY(calc($r-y * -1)) translateX(calc(101% + app.$gap-inline));
 
         &, :global .terminalback, :global .terminalface
         {

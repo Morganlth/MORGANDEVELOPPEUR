@@ -240,7 +240,12 @@ lang="scss"
 
     padding-bottom: 3rem;
 
-    .element { transition: transform .8s ease-out; }
+    .element
+    {
+        transition: transform .8s ease-out;
+
+        :global &>* { border: solid red 1px; }
+    }
 
     :global
     {
