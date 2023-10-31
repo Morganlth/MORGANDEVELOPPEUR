@@ -49,6 +49,7 @@ lang="scss"
 @use '../../assets/scss/app';
 
 @use '../../assets/scss/styles/position';
+
 @use '../../assets/scss/styles/media';
 
 /* #WRAPPER */
@@ -63,8 +64,6 @@ lang="scss"
     height: 100vh;
 
     padding: 8rem app.$gap-inline;
-
-    pointer-events: none;
 
     box-sizing: border-box;
 

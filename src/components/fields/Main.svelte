@@ -295,6 +295,8 @@ lang="scss"
 
     width: 100vw;
 
+    pointer-events: none;
+
     .pages
     {
         @include position.placement(absolute, 0, 0, 0, 0);

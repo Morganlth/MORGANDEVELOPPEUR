@@ -130,5 +130,7 @@ lang="scss"
     @include position.placement(absolute, 0, 0, 0, 0);
 
     @extend %any;
+
+    overflow: clip;
 }
 </style>

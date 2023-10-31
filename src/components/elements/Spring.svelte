@@ -60,8 +60,6 @@ lang="scss"
 
     mix-blend-mode: difference;
 
-    pointer-events: none;
-
     &.true, &.false { mix-blend-mode: screen !important; }
     &.true circle { fill: $primary !important; }
     &.false circle { fill: $indicator !important; }

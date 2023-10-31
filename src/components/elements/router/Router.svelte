@@ -143,6 +143,8 @@ lang="scss"
     width: fit-content;
     height: fit-content;
 
+    pointer-events: auto;
+
     mix-blend-mode: difference;
 
     user-select: none;

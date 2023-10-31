@@ -244,6 +244,8 @@ lang="scss"
 
     @extend %any;
 
+    overflow: clip;
+
     pointer-events: auto;
 
     &.scroller

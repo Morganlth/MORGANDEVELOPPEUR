@@ -16,23 +16,23 @@
 
     // --PROPS
     export let
-    prop_ID = void 0,
-
+    prop_ID = void 0
+,
     prop_FOCUS = false,
-    prop_INTRO = false,
-
-    prop_SYSTEM = [],
-
+    prop_INTRO = false
+,
+    prop_SYSTEM = []
+,
     prop_TOP = 0,
-    prop_RATIO = 0,
-
+    prop_RATIO = 0
+,
     prop_START = void 0,
     prop_DIF = void 0
 
     // --BIND
     export let
-    page_CHARGED = false,
-
+    page_CHARGED = false
+,
     PAGE_NAV = { callback: nav_e$Click }
 
     // BIND page_process
@@ -113,7 +113,12 @@
     // --EVENTS
     export function nav_e$Click({id}) { skills_goTo(id) }
 
-    async function system_e$Resize() { system_setVars() }
+    async function system_e$Resize()
+    {
+        await tick() // wait prop_START and prop_DIF
+    
+        system_setVars()
+    }
 
     function table_eClick() { APP.app_$FREEZE = { value: false, target: prop_ID } } // call skills_reset with reactive app_$FREEZE
 
