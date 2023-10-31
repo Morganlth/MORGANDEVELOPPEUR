@@ -247,10 +247,13 @@ lang="scss"
         gap: .4rem 2rem;
 
         width: 100%;
-        
-        padding-top: 1rem;
 
-        @include media.min($ms4, $ms4) { gap: 1rem 3rem; }
+        @include media.min($ms4, $ms4)
+        {
+            gap: 1rem 3rem;
+
+            padding-top: 1rem;
+        }
     }
 
     li button
