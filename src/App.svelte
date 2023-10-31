@@ -180,6 +180,7 @@ lang="scss"
 @use './assets/scss/app';
 
 @use './assets/scss/styles/utils';
+@use './assets/scss/styles/size';
 
 /* #GLOBAL */
 
@@ -195,11 +196,9 @@ lang="scss"
 #app
 {
     @extend %scroll-bar;
+    @extend %any;
 
     overflow: clip scroll;
-
-    width: 100vw;
-    height: 100vh;
 
     background-color: $dark;
 
