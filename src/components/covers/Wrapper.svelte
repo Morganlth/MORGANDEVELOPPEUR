@@ -62,7 +62,7 @@ lang="scss"
     width: 100%;
     height: 100vh;
 
-    padding: 8rem app.$gap-inline 8rem;
+    padding: 8rem app.$gap-inline;
 
     pointer-events: none;
 
