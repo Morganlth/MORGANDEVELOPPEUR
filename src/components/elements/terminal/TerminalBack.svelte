@@ -277,7 +277,7 @@ lang="scss"
 
 .terminalback
 {
-    /* transform: rotateY(180deg); */
+    transform: rotateY(180deg);
 
     overflow: auto;
 
