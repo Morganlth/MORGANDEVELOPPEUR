@@ -279,6 +279,8 @@ lang="scss"
 {
     transform: rotateY(180deg);
 
+    overflow: auto;
+
     .desc
     {
         $margin-top: 2rem;
@@ -288,6 +290,7 @@ lang="scss"
         overflow: clip scroll;
 
         height: calc(100% - var(--cell-size) - $margin-top);
+        max-height: calc(100% - var(--cell-size) - $margin-top);
 
         margin-top: $margin-top;
         padding-bottom: 1rem;
