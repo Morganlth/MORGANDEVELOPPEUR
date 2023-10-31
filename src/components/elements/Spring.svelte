@@ -58,6 +58,8 @@ lang="scss"
 
     z-index: 3; /* > header */
 
+    pointer-events: none;
+
     mix-blend-mode: difference;
 
     &.true, &.false { mix-blend-mode: screen !important; }

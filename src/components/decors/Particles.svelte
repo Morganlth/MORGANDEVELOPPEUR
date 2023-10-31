@@ -382,5 +382,7 @@ lang="scss"
 
     width: 100%;
     height: 100vh;
+
+    pointer-events: none;
 }
 </style>
