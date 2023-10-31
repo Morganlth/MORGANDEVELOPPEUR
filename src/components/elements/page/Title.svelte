@@ -233,6 +233,11 @@ lang="scss"
 
     position: relative;
 
+    display: flex;
+    flex-direction: column;
+
+    gap: 2rem;
+
     perspective: 1000px;
 
     width: fit-content;
@@ -240,15 +245,15 @@ lang="scss"
 
     padding-bottom: 3rem;
 
-    .element { transition: transform .8s ease-out; background-color: green; }
+    :global .fragments { min-height: 3rem; }
 
-    :global
+    .element
     {
-        &>* { padding-top: 2rem; }
+        height: calc(var(--title-size) * .71);
 
-        .fragments { min-height: 3rem; }
+        background-color: red;
 
-        .fragments:nth-child(2) { background-color: red; }
+        transition: transform .8s ease-out;
     }
 
     @include media.min($ms3, $ms3)
