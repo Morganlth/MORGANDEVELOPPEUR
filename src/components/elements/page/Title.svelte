@@ -243,7 +243,7 @@ lang="scss"
     width: fit-content;
     height: fit-content;
 
-    padding-bottom: 3rem;
+    padding-bottom: 1rem;
 
     :global .fragments { min-height: 3rem; }
 
@@ -263,11 +263,13 @@ lang="scss"
 
             color: $intermediate;
             font-family: inherit;
-            font-size: 240%;
+            font-size: 228%;
             font-style: italic;
 
             transition: clip-path $pe-duration ease-in-out;
         }
+
+        padding-bottom: 3rem;
 
         &.focus::before
         {
