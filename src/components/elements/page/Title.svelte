@@ -240,18 +240,15 @@ lang="scss"
 
     padding-bottom: 3rem;
 
-    .element
-    {
-        transition: transform .8s ease-out;
-
-        :global &>* { border: solid red 1px; }
-    }
+    .element { transition: transform .8s ease-out; background-color: green; }
 
     :global
     {
         &>* { padding-top: 2rem; }
 
         .fragments { min-height: 3rem; }
+
+        .fragments:nth-child(2) { background-color: red; }
     }
 
     @include media.min($ms3, $ms3)
