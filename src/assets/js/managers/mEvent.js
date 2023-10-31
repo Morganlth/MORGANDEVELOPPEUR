@@ -11,7 +11,6 @@ class Event
     #event_MANAGER =
     {
         scroll: [],
-        wheel: [],
         mouseMove: [],
         mouseDown: [],
         mouseUp: [],
@@ -103,8 +102,6 @@ constructor ()
             this.#event_SCROLLFRAME = false
         })
     }
-
-    event_wheel({deltaY}) { this.#event_run.call(this.#event_MANAGER.wheel, deltaY) }
 
     event_mouseMove({clientX, clientY})
     {

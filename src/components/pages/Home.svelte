@@ -43,9 +43,6 @@
     // --JS
     import MATH from '../../assets/js/utils/math'
 
-    // --LIB
-    import BREAKPOINTS from '$lib/breakpoints'
-
     // --CONTEXTS
     import { APP, COMMAND, EVENT } from '../../App.svelte'
 
@@ -132,12 +129,7 @@
 
     function snake_setCommands() { COMMAND.command_setBasicCommands(SNAKE_COMMANDS) }
 
-    function slider_setVars()
-    {
-        const MS3 = BREAKPOINTS.ms3
-    
-        slider_ON = APP.app_WIDTH >= MS3 && APP.app_HEIGHT >= MS3
-    }
+    function slider_setVars() { slider_ON = !APP.app_SMALL_SCREEN }
 
     function slider_setEvents() { EVENT.event_add(SLIDER_EVENTS) }
 
