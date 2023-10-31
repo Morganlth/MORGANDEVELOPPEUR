@@ -28,7 +28,7 @@
     import { wait_throttle } from '../../assets/js/utils/wait'
 
     // --CONTEXTS
-    import { APP, ROUTER, EVENT, COMMAND } from '../../App.svelte'
+    import { APP, ROUTER, EVENT } from '../../App.svelte'
 
     // --SVELTE
     import { onMount, onDestroy, tick } from 'svelte'
@@ -213,8 +213,6 @@
         main_TIMEOUT = setTimeout(() => main_update(APP.app_SCROLLTOP), 50.01)
 
         main_update(scrollTop)
-
-        COMMAND.command_COMMANDS.log('' + scrollTop)
     }
 
     async function main_e$Resize() { pages_setPages() }
