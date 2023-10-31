@@ -68,8 +68,6 @@ lang="scss"
 
     box-sizing: border-box;
 
-        &::after { @include position.placement(absolute, 0, 0, 0, 0, true); background-color: lightgreen; }
-
     .header
     {
         position: absolute;
