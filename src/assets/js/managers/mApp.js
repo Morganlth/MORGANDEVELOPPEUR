@@ -14,6 +14,7 @@ class App
     #app_$OPTIMISE = { init: false }
     #app_$HIDE = writable(false)
     #app_$SMALL_SCREEN = writable(false)
+    #app_$MOBILE = writable(false)
     #app_OPTIMISE_CONFIG = {}
     #app_STORAGE = {}
     #app_COMMANDS = []
@@ -174,6 +175,8 @@ constructor ()
 
     get app_$SMALL_SCREEN() { return this.#app_$SMALL_SCREEN }
 
+    get app_$MOBILE() { return this.#app_$MOBILE }
+
     get app_$OPTIMISE() { return this.#app_$OPTIMISE }
 
     get app_OPTIMISE_CONFIG() { return this.#app_OPTIMISE_CONFIG }
@@ -204,6 +207,8 @@ constructor ()
             localStorage.setItem(App.__app_OPTIMISE_NAME, value) 
         }
     }
+
+    set app_$MOBILE(value) { this.#app_$MOBILE.set(value) }
 
     set app_OPTIMISE_CONFIG({name, value}) { this.#app_OPTIMISE_CONFIG[name] = value ?? false }
 }

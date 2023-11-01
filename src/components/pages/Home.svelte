@@ -87,7 +87,8 @@
     // --APP
     let
     app_$OPTIMISE = APP.app_$OPTIMISE,
-    app_$SMALL_SCREEN = APP.app_$SMALL_SCREEN
+    app_$SMALL_SCREEN = APP.app_$SMALL_SCREEN,
+    app_$MOBILE = APP.app_$MOBILE
 
     // --ELEMENT-SNAKE
     let
@@ -174,10 +175,12 @@ onMount(home_set)
 class="home"
 data-page-id={prop_ID}
 >
-    <Snake
-    prop_ON={snake_ON && prop_FOCUS}
-    bind:snake_GAME
-    />
+    {#if !$app_$MOBILE}
+        <Snake
+        prop_ON={snake_ON && prop_FOCUS}
+        bind:snake_GAME
+        />
+    {/if}
 
     <BlackBlocks
     prop_ON={!snake_GAME}
