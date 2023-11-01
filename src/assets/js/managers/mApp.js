@@ -28,9 +28,9 @@ class App
 
 constructor ()
 {
-    this.#app_$FREEZE = storecustom_get(this.#app_$FREEZE)
-    this.#app_$OPTIMISE = storecustom_get(this.#app_$OPTIMISE)
-    this.#app_$SMALL_SCREEN = storecustom_get(this.#app_$SMALL_SCREEN)
+    this.#app_$FREEZE = store_custom(this.#app_$FREEZE)
+    this.#app_$OPTIMISE = store_custom(this.#app_$OPTIMISE)
+    this.#app_$SMALL_SCREEN = store_custom(this.#app_$SMALL_SCREEN)
 
     this.#app_COMMANDS.push(
     {
@@ -61,59 +61,6 @@ constructor ()
         this.#app = document.getElementById('app')
 
         this.app_updateSmallScreen()
-    }
-
-    #app_setVars2()
-    {
-        let { set, subscribe } = writable(this.#app_$FREEZE.init)
-
-        this.#app_$FREEZE =
-        {
-            value: this.#app_$FREEZE.init,
-            target: null,
-            set: function (value, target)
-            {
-                this.value = value
-                this.target = target
-
-                set(value)
-            },
-            subscribe
-        }
-    }
-
-    #app_setVars3()
-    {
-        let { set, subscribe } = writable(this.#app_$OPTIMISE.init)
-
-        this.#app_$OPTIMISE =
-        {
-            value: this.#app_$OPTIMISE.init,
-            set: function (value)
-            {
-                this.value = value
-
-                set(value)
-            },
-            subscribe
-        }
-    }
-
-    #app_setVars4()
-    {
-        let { set, subscribe } = writable(this.#app_$SMALL_SCREEN.init)
-
-        this.#app_$SMALL_SCREEN =
-        {
-            value: this.#app_$SMALL_SCREEN.init,
-            set: function (value)
-            {
-                this.value = value
-
-                set(value)
-            },
-            subscribe
-        }
     }
 
     #app_setCommands() { COMMAND.command_setBasicCommands(this.#app_COMMANDS) }
@@ -235,7 +182,7 @@ constructor ()
 // #IMPORTS
 
     // --JS
-    import storecustom_get from '../utils/storeCustom'
+    import store_custom from '../utils/store'
 
     // --LIB
     import BREAKPOINTS from '$lib/breakpoints'

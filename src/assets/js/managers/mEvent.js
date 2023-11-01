@@ -5,7 +5,30 @@ class Event
 // #VARIABLES
 
     // --EVENT-CONTEXT
-    #event_$FPS = {}
+    #event_$FPS =
+    {
+        value: 0
+    ,
+        setter: function ()
+        {
+            this.count = 0
+            this.samples[this.i] = this.value // fps
+            
+            if (++this.i >= this.samples.length) this.i = 0
+
+            this.start = performance.now()
+        }
+    ,
+        optionalparameters:
+        {
+            count: 0,
+            i: 0,
+            samples: new Float32Array(20),
+            start: performance.now()
+        ,
+            getAverage: function () { return this.samples.reduce((som, n) => n === 0 ? som : som += n, 0) / this.samples.length }
+        }
+    }
     event_GRABBING = writable(false)
     event_CLIENT_XY = [0, 0]
     #event_MANAGER =
@@ -27,7 +50,7 @@ class Event
 
 constructor ()
 {
-    this.#event_setVars()
+    this.#event_$FPS = store_custom(this.#event_$FPS)
 
     this.event_resize = wait_debounce.call(this, this.event_resize, 100)
 }
@@ -40,39 +63,6 @@ constructor ()
         window.addEventListener('resize', this.event_resize)
 
         this.#event_setAnimationLoop()
-    }
-
-    #event_setVars()
-    {
-        let { subscribe, set } = writable(0)
-    
-        this.#event_$FPS =
-        {
-            value: 0,
-            count: 0,
-            i: 0,
-            samples: new Float32Array(20),
-            start: performance.now()
-        ,
-            getAverage: function () { return this.samples.reduce((som, n) => n === 0 ? som : som += n, 0) / this.samples.length }
-        ,
-            update: function ()
-            {
-                const FPS = this.count * 2
-            
-                this.value = FPS
-                this.count = 0
-                this.samples[this.i] = FPS
-                
-                if (++this.i >= this.samples.length) this.i = 0
-
-                this.start = performance.now()
-
-                set(this.value)
-            }
-        ,
-            subscribe
-        }
     }
 
     #event_setAnimationLoop()
@@ -150,7 +140,7 @@ constructor ()
     
         FPS.count++
     
-        if (performance.now() - FPS.start >= 500) FPS.update()
+        if (performance.now() - FPS.start >= 500) FPS.set(FPS.count * 2)
 
         for (let i = 0; i < this.#event_ANIMATION.length; i++) this.#event_ANIMATION[i]()
 
@@ -212,6 +202,7 @@ constructor ()
 
     // --JS
     import { wait_debounce } from '../utils/wait'
+    import store_custom from '../utils/store'
 
     // --CONTEXT
     import APP from './mApp'

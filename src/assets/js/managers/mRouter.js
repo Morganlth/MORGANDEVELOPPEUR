@@ -6,13 +6,24 @@ class Router
 
     // --CONTEXT-ROUTER
     #router_$ID = {}
-    #router_$HIDE = {}
-    #router_PAGES = []
+    #router_$HIDE =
+    {
+        value: false
+    ,
+        setter: function ({target}) { this.target = target }
+    ,
+        optionalparameters: { target: null }
+    }
     #router_$SUBPATH = writable('')
+    #router_PAGES = []
 
 // #CONSTRUCTOR
 
-constructor () { this.#router_setVars() }
+constructor ()
+{
+    this.#router_$ID = store_custom(this.#router_$ID)
+    this.#router_$HIDE = store_custom(this.#router_$HIDE)
+}
 
 // #FUNCTIONS
 
@@ -21,43 +32,6 @@ constructor () { this.#router_setVars() }
     {
         this.router_updateSubPath(id, subPath)
         this.router_update(id, true)
-    }
-
-    #router_setVars()
-    {
-        this.#router_setVars2()
-        this.#router_setVars3()
-    }
-
-    #router_setVars2()
-    {
-        let { subscribe, set } = writable(null)
-
-        this.#router_$ID =
-        {
-            value: null,
-            subscribe,
-            set: function (value) { set(this.value = value) }
-        }
-    }
-
-    #router_setVars3()
-    {
-        let { set, subscribe } = writable(false)
-
-        this.#router_$HIDE =
-        {
-            value: false,
-            target: null,
-            set: function (value, target)
-            {
-                this.value = value
-                this.target = target
-
-                set(value)
-            },
-            subscribe
-        }
     }
 
     // --GET
@@ -135,11 +109,14 @@ constructor () { this.#router_setVars() }
     {
         const CURRENT_TARGET = this.#router_$HIDE.target
     
-        if (!CURRENT_TARGET || CURRENT_TARGET === target) this.#router_$HIDE.set(value, value ? target : null)
+        if (!CURRENT_TARGET || CURRENT_TARGET === target) this.#router_$HIDE.set(value, { target: value ? target : null })
     }
 }
 
 // #IMPORTS
+
+    // --JS
+    import store_custom from '../utils/store'
 
     // --CONTEXTS
     import APP from './mApp'

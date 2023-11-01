@@ -1,9 +1,9 @@
 // #EXPORT
 
-    // --STORECUSTOM
-    export default function storecustom_get({ value, setter, optionalparameters })
+    // --STORES
+    export default function store_custom({ value, setter, optionalparameters })
     {
-        value ??= false
+        value ??= null
         setter ??= () => {}
         optionalparameters ??= {}
 

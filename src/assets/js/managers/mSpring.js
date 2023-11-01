@@ -9,8 +9,8 @@ class Spring
     static __spring_D_SIZE = 7
     static __spring_D_DELAY = 50.01
 
-    #spring_$ON = { init: true }
-    #spring_$STATE = { init: 0 }
+    #spring_$ON = { value: true }
+    #spring_$STATE = { value: 0 }
     #spring_HOVER = false           // icon hover
     #spring_HIDE = false
     #spring_$COORDS = spring({ x: -Spring.__spring_D_SIZE, y: -Spring.__spring_D_SIZE }, { stiffness: .1, damping: .6 })
@@ -22,7 +22,9 @@ class Spring
 
 constructor ()
 {
-    this.#spring_setVars()
+    this.#spring_$ON = store_custom(this.#spring_$ON)
+    this.#spring_$STATE = store_custom(this.#spring_$STATE)
+
     this.#spring_updateMouseMove()
 
     this.spring_update = this.spring_update.bind(this)
@@ -44,36 +46,6 @@ constructor ()
     {
         this.#spring_setCommands()
         this.#spring_setEvents()
-    }
-
-    #spring_setVars()
-    {
-        this.#spring_setVars2()
-        this.#spring_setVars3()
-    }
-
-    #spring_setVars2()
-    {
-        let { subscribe, set } = writable(this.#spring_$ON.init)
-
-        this.#spring_$ON =
-        {
-            value: this.#spring_$ON.init,
-            subscribe,
-            set: function (value) { set(this.value = value) }
-        }
-    }
-
-    #spring_setVars3()
-    {
-        let { subscribe, set } = writable(this.#spring_$STATE.init)
-
-        this.#spring_$STATE =
-        {
-            value: this.#spring_$STATE.init,
-            subscribe,
-            set: function (value) { set(this.value = value) }
-        }
     }
 
     #spring_setCommands() { COMMAND.command_setBasicCommands(this.#spring_COMMANDS) }
@@ -172,6 +144,7 @@ constructor ()
 
     // --JS
     import { wait_throttle } from '../utils/wait'
+    import store_custom from '../utils/store'
 
     // --CONTEXTS
     import COMMAND from './mCommand'
