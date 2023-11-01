@@ -87,10 +87,11 @@ $gap-inline: var(--app-g-inline, $inline);
                 height: 100svh;
 
                 overscroll-behavior: none;
-                touch-action: none;
             }
 
             &, body { background-color: $dark; }
+
+            body { touch-action: none; }
 
             font-size: 31.25%;
 
