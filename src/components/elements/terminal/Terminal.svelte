@@ -259,7 +259,7 @@ lang="scss"
     overflow: visible;
 
     width: calc((100vw - app.$gap-inline * 2) / var(--cos, 1));
-    height: 26vh;
+    height: min(26vw, 26vh);
 
     &.focus
     {
@@ -326,8 +326,8 @@ lang="scss"
         top: 44%;
         bottom: auto;
 
-        width: 56vw;
-        height: 46vh;
+        width: max(56vw, 56vh);
+        height: min(46vw, 46vh);
 
         .container { #{--cell-size}: $cell-size; }
     }
