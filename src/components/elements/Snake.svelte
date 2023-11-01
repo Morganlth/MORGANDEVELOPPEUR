@@ -479,8 +479,7 @@ context="module"
             snake.webkitEnterFullscreen     ??
             snake.mozRequestFullScreen      ??
             snake.msRequestFullscreen).bind(snake)
-
-            console.log()
+        
             await REQUEST_FULL_SCREEN()
 
             if (!prop_ON) snake_start()
