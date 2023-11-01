@@ -99,7 +99,7 @@
     BLACKBLOCKS_MOUSE_RADIUS = 3,                           // mouse radius ?
     BLACKBLOCKS_MOUSE_INTENSITY = .5
 ,
-    BLACKBLOCKS_CUBES = new Group()
+    BLACKBLOCKS_BLOCKS = new Group()
 ,
     BLACKBLOCKS_SHADER_UNIFORMS =
     {
@@ -120,7 +120,7 @@
             callback: blackblocks_c$Optimise,
             params: { defaultValue: false, optimise: { value: true } },
             tests: { testBoolean: true },
-            desc: 'Optimiser les cubes noirs (p: \'t\' ou \'f\')',
+            desc: 'Optimiser les blocks noirs (p: \'t\' ou \'f\')',
             storage: true
         }
     ]
@@ -152,7 +152,7 @@
     blackblocks_RENDERER,
     blackblocks_MOUSELIGHT
 ,
-    blackblocks_FLOATING_CUBES_UPDATE = []
+    blackblocks_FLOATING_BLOCKS_UPDATE = []
 ,
     blackblocks_OPACITY = 0
 ,
@@ -255,10 +255,10 @@
             blackblocks_TEXTURE = texture
 
             blackblocks_setShaderUniforms()
-            blackblocks_setCubes()
+            blackblocks_setBlocks()
 
             blackblocks_SCENE.add(BLACKBLOCKS_LINES)
-            blackblocks_SCENE.add(BLACKBLOCKS_CUBES)
+            blackblocks_SCENE.add(BLACKBLOCKS_BLOCKS)
             
             blackblocks_e$Animation2() // render
 
@@ -309,38 +309,38 @@
 
     function blackblocks_setFog() { blackblocks_SCENE.fog = new Fog(COLORS.dark, 4, blackblocks_DEPTH) }
 
-    function blackblocks_setCubes()
+    function blackblocks_setBlocks()
     {
         for (let i = 0; i < prop_BLACKBLOCKS.length; i += 4)
         {
             const
             [SIZE, X, Y, FLOAT] = [prop_BLACKBLOCKS[i], prop_BLACKBLOCKS[i + 1], prop_BLACKBLOCKS[i + 2], prop_BLACKBLOCKS[i + 3]],
             MATERIAL = new MeshStandardMaterial({ color: COLORS.dark }),
-            CUBE = new Mesh(new BoxGeometry(SIZE, SIZE, SIZE), MATERIAL)
+            BLOCK = new Mesh(new BoxGeometry(SIZE, SIZE, SIZE), MATERIAL)
 
-            MATERIAL.onBeforeCompile = blackblocks_setShader.bind(CUBE)
+            MATERIAL.onBeforeCompile = blackblocks_setShader.bind(BLOCK)
     
-            blackblocks_setCubeLayout(CUBE, X, Y)
-            blackblocks_setCubeLine(CUBE.checkPoints)
+            blackblocks_setBlockLayout(BLOCK, X, Y)
+            blackblocks_setBlockLine(BLOCK.checkPoints)
     
-            BLACKBLOCKS_CUBES.add(CUBE)
+            BLACKBLOCKS_BLOCKS.add(BLOCK)
 
-            if (FLOAT) blackblocks_setFloatingCube(CUBE)
+            if (FLOAT) blackblocks_setFloatingBlock(BLOCK)
         }
     }
-    function blackblocks_setCubeLayout(cube, x, y)
+    function blackblocks_setBlockLayout(block, x, y)
     {
-        const [P0, P1, P2, P3, P4] = blackblocks_getCubePoints(x, y)
+        const [P0, P1, P2, P3, P4] = blackblocks_getBlockPoints(x, y)
 
-        cube.position.x = x
-        cube.position.y = y
-        cube.iPosition = {...cube.position}
-        cube.checkPoints = [P0, P1, P2, P3, P4]
-        cube.vel = Math.random() + 1
-        cube.rotation.x = BLACKBLOCKS_ROTATION_X
-        cube.rotation.y = BLACKBLOCKS_ROTATION_Y
+        block.position.x = x
+        block.position.y = y
+        block.iPosition = {...block.position}
+        block.checkPoints = [P0, P1, P2, P3, P4]
+        block.vel = Math.random() + 1
+        block.rotation.x = BLACKBLOCKS_ROTATION_X
+        block.rotation.y = BLACKBLOCKS_ROTATION_Y
     }
-    function blackblocks_setCubeLine([a, b, c, d, e])
+    function blackblocks_setBlockLine([a, b, c, d, e])
     {
         const
         CURVE = new CubicBezierCurve(new Vector2(a.x, a.y), new Vector2(b.x, b.y), new Vector2(d.x, d.y), new Vector2(e.x, e.y)),
@@ -350,11 +350,11 @@
 
         BLACKBLOCKS_LINES.add(LINE)
     }
-    function blackblocks_setFloatingCube(cube)
+    function blackblocks_setFloatingBlock(block)
     {
         const UPDATE = update_floating().update
 
-        blackblocks_FLOATING_CUBES_UPDATE.push(async () => cube.position.y += UPDATE() * .0015)
+        blackblocks_FLOATING_BLOCKS_UPDATE.push(async () => block.position.y += UPDATE() * .0015)
     }
 
     function blackblocks_setShader(shader)
@@ -405,7 +405,7 @@
     // --GET
     function blackblocks_getAspectRatio() { return APP.app_WIDTH / APP.app_HEIGHT }
 
-    function blackblocks_getCubePoints(x, y)
+    function blackblocks_getBlockPoints(x, y)
     {
         const
         [RATIO, FORCE] = [blackblocks_CAMERA.aspect, 3],
@@ -432,7 +432,7 @@
 
     function blackblocks_getBarycentre(a, b, c, t) { return a + a*t*t + 2*b*t - 2*t*t*b + t*t*c - 2*a*t }
 
-    function blackblocks_getCubeLayout(cube, dif_X, dif_Y, dif_X_ABS, dif_Y_ABS)
+    function blackblocks_getBlockLayout(block, dif_X, dif_Y, dif_X_ABS, dif_Y_ABS)
     {
         const
         ANGLE = Math.atan(dif_Y / dif_X),
@@ -440,15 +440,15 @@
         Y = (1 - dif_Y_ABS / (Math.abs(Math.sin(ANGLE)) * blackblocks_MOUSE_RADIUS)) * dif_Y
 
         return {
-            cube,
-            x: cube.position.x,
-            y: cube.position.y,
-            rX: cube.rotation.x,
-            rY: cube.rotation.y,
-            step_P_X: cube.iPosition.x + X * blackblocks_FORCE_POSITION - cube.position.x,
-            step_P_Y: cube.iPosition.y + Y * blackblocks_FORCE_POSITION - cube.position.y,
-            step_R_X: BLACKBLOCKS_ROTATION_X + X * blackblocks_FORCE_ROTATION - cube.rotation.x,
-            step_R_Y: BLACKBLOCKS_ROTATION_Y + Y * blackblocks_FORCE_ROTATION - cube.rotation.y
+            block,
+            x: block.position.x,
+            y: block.position.y,
+            rX: block.rotation.x,
+            rY: block.rotation.y,
+            step_P_X: block.iPosition.x + X * blackblocks_FORCE_POSITION - block.position.x,
+            step_P_Y: block.iPosition.y + Y * blackblocks_FORCE_POSITION - block.position.y,
+            step_R_X: BLACKBLOCKS_ROTATION_X + X * blackblocks_FORCE_ROTATION - block.rotation.x,
+            step_R_Y: BLACKBLOCKS_ROTATION_Y + Y * blackblocks_FORCE_ROTATION - block.rotation.y
         }
     }
 
@@ -457,7 +457,7 @@
 
     function blackblocks_update2(focus)
     {
-        const DURATION = blackblocks_updateCubesPosition(focus)
+        const DURATION = blackblocks_updateBlocksPosition(focus)
 
         blackblocks_updateEvent(prop_ON, blackblocks_OPTIMISE, focus ? 0 : DURATION)
     }
@@ -478,24 +478,24 @@
         delay) 
     }
 
-    function blackblocks_updateCubesPosition(invert = false, intro = false)
+    function blackblocks_updateBlocksPosition(invert = false, intro = false)
     {
         const Z = intro ? -2 : 2
     
         let total_DURATION = 0
     
-        for (const CUBE of BLACKBLOCKS_CUBES.children)
+        for (const BLOCK of BLACKBLOCKS_BLOCKS.children)
         {
-            if (!intro) blackblocks_clear(CUBE)
+            if (!intro) blackblocks_clear(BLOCK)
 
             const
-            P0 = CUBE.checkPoints[0],
+            P0 = BLOCK.checkPoints[0],
             DURATION = Math.random() * 1000 + 800,
             DELAY = intro ? Math.random() * 1000 : 0
 
-            if (intro) CUBE.position.set(P0.x, P0.y, Z)
+            if (intro) BLOCK.position.set(P0.x, P0.y, Z)
 
-            CUBE.timeout = setTimeout(() => blackblocks_a(CUBE, intro, Z, DURATION, CUBE.t, invert), DELAY)
+            BLOCK.timeout = setTimeout(() => blackblocks_a(BLOCK, intro, Z, DURATION, BLOCK.t, invert), DELAY)
 
             total_DURATION = Math.max(total_DURATION, DURATION)
         }
@@ -503,7 +503,7 @@
         return total_DURATION * (intro ? .5 : 1)
     }
 
-    const blackblocks_updateFloatingCubes = wait_throttle(async () => { for (const UPDATE of blackblocks_FLOATING_CUBES_UPDATE) UPDATE() }, 100.02)
+    const blackblocks_updateFloatingBlocks = wait_throttle(async () => { for (const UPDATE of blackblocks_FLOATING_BLOCKS_UPDATE) UPDATE() }, 100.02)
 
     function blackblocks_updateSceneVars(radius, forcePosition, forceRotation, mouseIntensity)
     {
@@ -521,7 +521,7 @@
         if (prop_FOCUS)
         {
             blackblocks_updateMouseLight()
-            blackblocks_updateCubesLayout()
+            blackblocks_updateBlocksLayout()
         }
     }
     async function blackblocks_updateMouseLight()
@@ -529,31 +529,31 @@
         blackblocks_MOUSELIGHT.target.position.x = blackblocks_MOUSE_X
         blackblocks_MOUSELIGHT.target.position.y = blackblocks_MOUSE_Y
     }
-    async function blackblocks_updateCubesLayout()
+    async function blackblocks_updateBlocksLayout()
     {
         const
-        CUBES = BLACKBLOCKS_CUBES.children,
+        BLOCKS = BLACKBLOCKS_BLOCKS.children,
         DATAS = []
     
-        for (let i = 0; i < CUBES.length; i++)
+        for (let i = 0; i < BLOCKS.length; i++)
         {
             const
-            CUBE = CUBES[i],
-            [DIF_X, DIF_Y] = [CUBE.iPosition.x - blackblocks_MOUSE_X, CUBE.iPosition.y - blackblocks_MOUSE_Y],
+            BLOCK = BLOCKS[i],
+            [DIF_X, DIF_Y] = [BLOCK.iPosition.x - blackblocks_MOUSE_X, BLOCK.iPosition.y - blackblocks_MOUSE_Y],
             [DIF_X_ABS, DIF_Y_ABS] = [Math.abs(DIF_X), Math.abs(DIF_Y)],
             HYP = Math.sqrt(DIF_X_ABS ** 2 + DIF_Y_ABS ** 2)
 
-            if (HYP < blackblocks_MOUSE_RADIUS) DATAS.push(blackblocks_getCubeLayout(CUBE, DIF_X, DIF_Y, DIF_X_ABS, DIF_Y_ABS))
+            if (HYP < blackblocks_MOUSE_RADIUS) DATAS.push(blackblocks_getBlockLayout(BLOCK, DIF_X, DIF_Y, DIF_X_ABS, DIF_Y_ABS))
         }
 
-        if (DATAS.length) blackblocks_a2(blackblocks_updateCubeLayout, DATAS, 200)
+        if (DATAS.length) blackblocks_a2(blackblocks_updateBlockLayout, DATAS, 200)
     }
-    function blackblocks_updateCubeLayout(t, { cube, x, y, rX, rY, step_P_X, step_P_Y, step_R_X, step_R_Y })
+    function blackblocks_updateBlockLayout(t, { block, x, y, rX, rY, step_P_X, step_P_Y, step_R_X, step_R_Y })
     {
-        cube.position.x = x + step_P_X * t
-        cube.position.y = y + step_P_Y * t
-        cube.rotation.x = rX + step_R_X * t
-        cube.rotation.y = rY + step_R_Y * t
+        block.position.x = x + step_P_X * t
+        block.position.y = y + step_P_Y * t
+        block.rotation.x = rX + step_R_X * t
+        block.rotation.y = rY + step_R_Y * t
     }
 
     function blackblocks_updateShaderProjectionMatrixCamera() { BLACKBLOCKS_SHADER_UNIFORMS.projectionMatrixCamera.value.copy(blackblocks_CAMERA.projectionMatrix) }
@@ -615,23 +615,23 @@
         blackblocks_setShaderUniforms()
 
         blackblocks_removeChildrenFrom(BLACKBLOCKS_LINES)
-        blackblocks_removeChildrenFrom(BLACKBLOCKS_CUBES)
+        blackblocks_removeChildrenFrom(BLACKBLOCKS_BLOCKS)
 
-        blackblocks_FLOATING_CUBES_UPDATE = []
+        blackblocks_FLOATING_BLOCKS_UPDATE = []
 
-        blackblocks_setCubes()
+        blackblocks_setBlocks()
 
         if (!prop_FOCUS)
         {
             blackblocks_e$Animation2() // render
 
-            blackblocks_hideCubes()
+            blackblocks_hideBlocks()
         }
     }
 
     async function blackblocks_e$Animation()
     {
-        blackblocks_updateFloatingCubes()
+        blackblocks_updateFloatingBlocks()
 
         blackblocks_e$Animation2()
     }
@@ -643,26 +643,26 @@
     {
         setTimeout(() => blackblocks_CHARGED = true,
         prop_FOCUS
-        ? blackblocks_OPTIMISE ? 0 : blackblocks_updateCubesPosition(false, true)
-        : blackblocks_hideCubes() ?? 0)
+        ? blackblocks_OPTIMISE ? 0 : blackblocks_updateBlocksPosition(false, true)
+        : blackblocks_hideBlocks() ?? 0)
 
         blackblocks_OPACITY = 1
     }
 
     // --ANIMATIONS
-    function blackblocks_a(cube, intro, z, duration, t, invert = false)
+    function blackblocks_a(block, intro, z, duration, t, invert = false)
     {
-        const [P0, P1, P2] = cube.checkPoints.slice(...(intro ? [0, 3] : [2]))
+        const [P0, P1, P2] = block.checkPoints.slice(...(intro ? [0, 3] : [2]))
     
-        cube.cancel = animation((t) =>
+        block.cancel = animation((t) =>
         {
             const T = cubicInOut(t)
 
             let u = T
         
-            intro ? u = 1 - T : cube.t = t
+            intro ? u = 1 - T : block.t = t
 
-            cube.position.set(blackblocks_getBarycentre(P0.x, P1.x, P2.x, T), blackblocks_getBarycentre(P0.y, P1.y, P2.y, T), z * u)
+            block.position.set(blackblocks_getBarycentre(P0.x, P1.x, P2.x, T), blackblocks_getBarycentre(P0.y, P1.y, P2.y, T), z * u)
         },
         duration, t ?? 0, invert).cancel
     }
@@ -712,14 +712,14 @@
         : [1, 1 / (1 / RATIO / CAMERA_HEIGHT)]
     }
 
-    function blackblocks_hideCubes()
+    function blackblocks_hideBlocks()
     {
-        for (const CUBE of BLACKBLOCKS_CUBES.children)
+        for (const BLOCK of BLACKBLOCKS_BLOCKS.children)
         {
-            let { x, y } = CUBE.checkPoints[4]
+            let { x, y } = BLOCK.checkPoints[4]
 
-            CUBE.position.set(x, y, 2)
-            CUBE.t = 1
+            BLOCK.position.set(x, y, 2)
+            BLOCK.t = 1
         }
     }
 
