@@ -733,6 +733,8 @@ lang="scss"
 
     @extend %f-center;
 
+    overflow: clip;
+
     max-height: 100svh;
 
     &.game
@@ -769,11 +771,9 @@ lang="scss"
 
         pre
         {
-            @include font.h-custom($light);
+            @include font.h-custom($light, $line-height: .9, $italic: true);
             
             @extend %m-h-1;
-
-            font-style: italic;
         }
         span { @include font.content($primary, false, map.get(font.$font-sizes, s3), 1.4); }
     }

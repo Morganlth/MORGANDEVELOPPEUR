@@ -58,6 +58,8 @@ lang="scss"
 
     z-index: 3; /* > header */
 
+    max-height: 100svh;
+
     pointer-events: none;
 
     mix-blend-mode: difference;

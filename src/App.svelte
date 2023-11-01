@@ -200,6 +200,8 @@ lang="scss"
 
     overflow: clip scroll;
 
+    max-height: 100svh;
+
     background-color: $dark;
 
     &.freeze { overflow: clip !important; }
