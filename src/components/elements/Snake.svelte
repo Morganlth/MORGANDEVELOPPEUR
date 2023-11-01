@@ -472,15 +472,12 @@ context="module"
     {
         try
         {
-            const REQUEST_FULL_SCREEN =
-            (snake.requestFullscreen        ??
-            snake.webkitRequestFullscreen   ??
-            snake.webkitEnterFullScreen     ??
-            snake.webkitEnterFullscreen     ??
-            snake.mozRequestFullScreen      ??
-            snake.msRequestFullscreen).bind(snake)
-        
-            await REQUEST_FULL_SCREEN()
+            await  (snake.requestFullscreen         ??
+                    snake.webkitRequestFullscreen   ??
+                    snake.webkitEnterFullScreen     ??
+                    snake.webkitEnterFullscreen     ??
+                    snake.mozRequestFullScreen      ??
+                    snake.msRequestFullscreen).call(snake)
 
             if (!prop_ON) snake_start()
 
