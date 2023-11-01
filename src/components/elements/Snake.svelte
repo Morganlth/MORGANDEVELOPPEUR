@@ -483,8 +483,6 @@ context="module"
     {
         try
         {
-            throw new Error()
-        
             await  (snake.requestFullscreen         ??
                     snake.webkitRequestFullscreen   ??
                     snake.webkitEnterFullScreen     ??
