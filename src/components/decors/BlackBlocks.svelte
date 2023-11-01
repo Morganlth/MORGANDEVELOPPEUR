@@ -203,18 +203,25 @@
     {
         const
         ASPECT = blackblocks_getAspectRatio(),
-        HEIGHT = Math.tan(MATH.toRad(BLACKBLOCKS_CAMERA_FOV / 2)) * BLACKBLOCKS_CAMERA_Z,
         DEPTH = BLACKBLOCKS_CAMERA_Z + 1
     
         blackblocks_SCENE = new Scene()
         blackblocks_CAMERA = new PerspectiveCamera(BLACKBLOCKS_CAMERA_FOV, ASPECT, BLACKBLOCKS_CAMERA_NEAR, DEPTH)
         blackblocks_RENDERER = new WebGLRenderer({ alpha: true, antialias: BLACKBLOCKS_ANTIALIAS })
 
-        blackblocks_WIDTH = HEIGHT * ASPECT
-        blackblocks_HEIGHT = HEIGHT
         blackblocks_DEPTH = DEPTH
 
         blackblocks.appendChild(blackblocks_RENDERER.domElement)
+
+        blackblocks_setVars2(ASPECT)
+    }
+
+    function blackblocks_setVars2(aspect)
+    {
+        const HEIGHT = Math.tan(MATH.toRad(BLACKBLOCKS_CAMERA_FOV / 2)) * BLACKBLOCKS_CAMERA_Z
+
+        blackblocks_WIDTH = HEIGHT * aspect
+        blackblocks_HEIGHT = HEIGHT
     }
 
     function blackblocks_setCommands() { COMMAND.command_setBasicCommands(BLACKBLOCKS_COMMANDS) }
@@ -252,7 +259,8 @@
 
             blackblocks_SCENE.add(BLACKBLOCKS_LINES)
             blackblocks_SCENE.add(BLACKBLOCKS_CUBES)
-            blackblocks_RENDERER.render(blackblocks_SCENE, blackblocks_CAMERA)
+            
+            blackblocks_e$Animation2() // render
 
             blackblocks_start()
         })
@@ -595,8 +603,12 @@
 
     async function blackblocks_e$Resize()
     {
-        blackblocks_CAMERA.aspect = blackblocks_getAspectRatio()
+        const ASPECT = blackblocks_getAspectRatio()
+    
+        blackblocks_CAMERA.aspect = ASPECT
         blackblocks_CAMERA.updateProjectionMatrix()
+
+        blackblocks_setVars2(ASPECT)
 
         blackblocks_setRenderer()
     
@@ -609,7 +621,12 @@
 
         blackblocks_setCubes()
 
-        blackblocks_start()
+        if (!prop_FOCUS)
+        {
+            blackblocks_e$Animation2() // render
+
+            blackblocks_hideCubes()
+        }
     }
 
     async function blackblocks_e$Animation()
