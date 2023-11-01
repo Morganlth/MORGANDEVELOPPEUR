@@ -735,6 +735,8 @@ lang="scss"
 
     @extend %f-center;
 
+    max-height: 100svh;
+
     &.game
     {
         background-color: $dark;
