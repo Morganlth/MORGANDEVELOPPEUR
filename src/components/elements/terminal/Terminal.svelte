@@ -216,16 +216,16 @@ on:mouseleave={terminal_eMouseLeave}
     class="container"
     style:--container-duration="{CONTAINER_DURATION}ms"
     >
-        <TerminalBack
-        prop_FOCUS={terminal_ON && terminal_TURN}
-        prop_turn={terminal_updateTurn}
-        />
-        
         <TerminalFace
         prop_FOCUS={terminal_ON}
         prop_goTo={terminal_goTo}
         prop_turn={terminal_updateTurn}
         bind:input_fieldFocus={terminalface_focus}
+        />
+
+        <TerminalBack
+        prop_FOCUS={terminal_ON && terminal_TURN}
+        prop_turn={terminal_updateTurn}
         />
     </div>
 </div>
@@ -253,7 +253,11 @@ lang="scss"
 
 .terminal
 {
+    --icon-size: 2.4rem;
+
     $r-y: var(--r-y, 18deg);
+
+    $width: calc(100vw - app.$gap-inline * 2);
 
     $cell-size: var(--icon-size, 2.4rem);
 
@@ -264,13 +268,13 @@ lang="scss"
 
     overflow: visible;
 
-    width: calc((100vw - app.$gap-inline * 2) / var(--cos, 1));
+    width: calc($width / var(--cos, 1));
     height: 26vh;
-
-    touch-action: auto;
 
     &.focus
     {
+        touch-action: auto;
+
         &.turn
         {
             z-index: 1;
@@ -294,7 +298,7 @@ lang="scss"
         {
             transform: rotateY(calc($r-y * -1)) translateX(0);
 
-            pointer-events: auto;
+            :global .terminalback, :global .terminalface { pointer-events: auto; }
         }
     }
 
@@ -308,12 +312,7 @@ lang="scss"
         transform-style: preserve-3d;
         transform: rotateY(calc($r-y * -1)) translateX(calc(101% + app.$gap-inline));
 
-        &, :global .terminalback, :global .terminalface
-        {
-            @extend %any;
-
-            transition: transform var(--container-duration, .4s) ease-out;
-        }
+        &, :global .terminalback, :global .terminalface { transition: transform var(--container-duration, .4s) ease-out; }
 
         :global .terminalback, :global .terminalface
         {
@@ -327,6 +326,8 @@ lang="scss"
             box-shadow: 0 0 .4rem $light;
             box-sizing: border-box;
         }
+
+        :global .terminalback { width: $width; }
     }
 
     @include media.min($ms3)
@@ -337,7 +338,12 @@ lang="scss"
         width: max(56vw, 56vh);
         height: min(46vw, 46vh);
 
-        .container { #{--cell-size}: $cell-size; }
+        .container
+        {
+            #{--cell-size}: $cell-size;
+
+            :global .terminalback { width: 100%; }
+        }
     }
     @include media.min($ms4, $ms4) { top: 33%; }
 }

@@ -269,6 +269,7 @@ lang="scss"
 @use '../../../assets/scss/app';
 
 @use '../../../assets/scss/styles/utils';
+@use '../../../assets/scss/styles/position';
 @use '../../../assets/scss/styles/font';
 
 @use '../../../assets/scss/styles/media';
@@ -277,7 +278,11 @@ lang="scss"
 
 .terminalback
 {
+    @include position.placement(absolute, $top: 0, $right: 0, $bottom: 0);
+
     transform: rotateY(180deg);
+
+    height: 100%;
 
     .desc
     {
@@ -287,7 +292,6 @@ lang="scss"
 
         overflow: clip scroll;
 
-        width: 100%;
         height: calc(100% - var(--cell-size) - $margin-top);
 
         margin-top: $margin-top;
@@ -295,6 +299,8 @@ lang="scss"
         padding-right: app.$gap-inline;
 
         box-sizing: border-box;
+
+        &>* { pointer-events: none; }
 
         h3
         {

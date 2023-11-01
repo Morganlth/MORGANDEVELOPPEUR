@@ -251,11 +251,12 @@ lang="scss"
 
     @include media.min($ms3, $ms3)
     {
+        $top: 2rem;
         $pe-duration: .4s;
     
         &::before
         {
-            @include position.placement(absolute, $top: 0, $left: 0, $pseudo-element: attr(data-pe-content));
+            @include position.placement(absolute, $top, $left: 0, $pseudo-element: attr(data-pe-content));
 
             padding-right: 2rem;
         
@@ -263,13 +264,13 @@ lang="scss"
 
             color: $intermediate;
             font-family: inherit;
-            font-size: 228%;
+            font-size: 230%;
             font-style: italic;
 
             transition: clip-path $pe-duration ease-in-out;
         }
 
-        padding-bottom: 3rem;
+        padding-block: $top 3rem;
 
         &.focus::before
         {

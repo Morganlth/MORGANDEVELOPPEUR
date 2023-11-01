@@ -560,14 +560,12 @@ lang="scss"
 
 .terminalface
 {
-    @include position.placement(absolute, 0, 0, 0, 0);
-
     @extend %f-column;
+
+    @extend %any;
 
     .header
     {
-        --icon-size: 2.4rem;
-
         display: flex;
         justify-content: space-between;
 
