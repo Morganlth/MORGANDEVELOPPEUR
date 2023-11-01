@@ -13,7 +13,7 @@ class App
     #app_$FREEZE = { init: false }
     #app_$OPTIMISE = { init: false }
     #app_$HIDE = writable(false)
-    #app_$SMALL_SCREEN = writable(false)
+    #app_$SMALL_SCREEN = { init: false }
     #app_$MOBILE = writable(false)
     #app_OPTIMISE_CONFIG = {}
     #app_STORAGE = {}
@@ -30,6 +30,7 @@ constructor ()
 {
     this.#app_setVars2()
     this.#app_setVars3()
+    this.#app_setVars4()
 
     this.#app_COMMANDS.push(
     {
@@ -87,6 +88,23 @@ constructor ()
         this.#app_$OPTIMISE =
         {
             value: this.#app_$OPTIMISE.init,
+            set: function (value)
+            {
+                this.value = value
+
+                set(value)
+            },
+            subscribe
+        }
+    }
+
+    #app_setVars4()
+    {
+        let { set, subscribe } = writable(this.#app_$SMALL_SCREEN.init)
+
+        this.#app_$SMALL_SCREEN =
+        {
+            value: this.#app_$SMALL_SCREEN.init,
             set: function (value)
             {
                 this.value = value
@@ -165,7 +183,7 @@ constructor ()
     app_testScreen(width, height) { return this.app_WIDTH < (width ?? -Infinity) || this.app_HEIGHT < (height ?? -Infinity) }
 
     // --GETTER
-    get app() { return this.#app }
+    get app() { return this.#app ??= document.getElementById('app') }
 
     get app_$CHARGED() { return this.#app_$CHARGED }
 

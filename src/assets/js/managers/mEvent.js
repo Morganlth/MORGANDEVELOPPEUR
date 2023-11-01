@@ -201,7 +201,7 @@ constructor ()
         }
         if (instant && hide) APP.app_$HIDE = true
 
-        ;(APP.app ?? document.getElementById('app')).scrollTo({ top: top, behavior: instant ? 'instant' : 'smooth' })
+        APP.app.scrollTo({ top: top, behavior: instant ? 'instant' : 'smooth' })
     }
 
     // --GETTER

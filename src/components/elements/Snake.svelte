@@ -111,7 +111,12 @@ context="module"
     // --ELEMENT-SNAKE
     let
     snake,
-
+    snake_PARENT
+,
+    snake_INVINCIBLE = true
+,
+    snake_Z = 0
+,
     snake_WIDTH = 0,
     snake_HEIGHT = 0,
 
@@ -125,8 +130,6 @@ context="module"
     snake_Y = -1,
 
     snake_CUSTOM_BLOCKSIZE,
-
-    snake_INVINCIBLE = true,
 
     snake_SCORE = 10,
 
@@ -170,10 +173,12 @@ context="module"
     {
         const
         [WIDTH, HEIGHT] = [snake.offsetWidth, snake.offsetHeight],
-        SIZE = snake_CUSTOM_BLOCKSIZE ?? (APP.app_testScreen(BREAKPOINTS.ms4, BREAKPOINTS.ms4) ? SNAKE_BLOCKSIZE - 10 : SNAKE_BLOCKSIZE),
+        SIZE = snake_CUSTOM_BLOCKSIZE ?? (APP.app_$SMALL_SCREEN.value ? SNAKE_BLOCKSIZE - 10 : SNAKE_BLOCKSIZE),
         OVERFLOW =  snake_GAME ? -SIZE : SIZE
 
         SNAKE_$BLOCKSIZE.set(SIZE)
+
+        snake_PARENT ??= snake.parentElement
 
         snake_WIDTH = WIDTH - WIDTH % SIZE + OVERFLOW
         snake_HEIGHT = HEIGHT - HEIGHT % SIZE + OVERFLOW
@@ -339,7 +344,15 @@ context="module"
         }
     }
 
-    // --RESET
+    // --RESETS
+    function snake_resetGame()
+    {
+        if (snake_Z && snake_PARENT instanceof HTMLElement) snake_PARENT.insertBefore(snake, snake_PARENT.firstElementChild ?? snake_PARENT.children[0])
+    
+        snake_GAME = false
+        snake_Z = 0
+    }
+
     function snake_resetScore()
     {
         SNAKE_SNAKE.length = 10
@@ -374,13 +387,12 @@ context="module"
         {
             const FULL_SCREEN_ELEMENT =
             document.fullscreenElement          ??
-            document.webkitFullScreenElement    ??
             document.webkitFullscreenElement    ??
             document.mozFullScreenElement       ??
             document.msFullscreenElement        ??
             null
 
-            if (!FULL_SCREEN_ELEMENT) snake_GAME = false
+            if (!FULL_SCREEN_ELEMENT) snake_resetGame()
         }
         catch (e) { COMMAND.command_COMMANDS.log(e) }
     }
@@ -397,14 +409,13 @@ context="module"
         try 
         {
                  if (document.fullscreenElement)        document.exitFullscreen()
-            else if (document.webkitFullScreenElement)  document.webkitExitFullScreen()
             else if (document.webkitFullscreenElement)  document.webkitExitFullscreen()
             else if (document.mozFullScreenElement)     document.mozCancelFullScreen()
             else if (document.msFullscreenElement)      document.msExitFullscreen()
         }
         catch (e) { COMMAND.command_COMMANDS.log(e) }
 
-        snake_GAME = false
+        snake_resetGame()
     }
 
     function gameover_eClick()
@@ -472,24 +483,29 @@ context="module"
     {
         try
         {
+            throw new Error()
+        
             await  (snake.requestFullscreen         ??
                     snake.webkitRequestFullscreen   ??
                     snake.webkitEnterFullScreen     ??
                     snake.webkitEnterFullscreen     ??
                     snake.mozRequestFullScreen      ??
                     snake.msRequestFullscreen).call(snake)
-
-            if (!prop_ON) snake_start()
-
-            snake_notInvincible()
-
-            ;(particles ??= document.querySelector('.particles')).moveTo(snake)
         }
-        catch (e)
+        catch
         {
-            COMMAND.command_COMMANDS.log(e)
-            snake_GAME = false
+            APP.app.appendChild(snake)
+
+            snake_Z = 3 // header / footer / spring
+
+            snake_e$Resize()
         }
+
+        if (!prop_ON) snake_start()
+
+        snake_notInvincible()
+
+        ;(particles ??= document.querySelector('.particles')).moveTo(snake)
     }
 
     function snake_stopGame()
@@ -622,6 +638,7 @@ onDestroy(snake_destroy)
 class="snake"
 class:game={snake_GAME}
 style:--snake-blocksize="{snake$_BLOCKSIZE}px"
+style:z-index={snake_Z}
 bind:this={snake}
 on:fullscreenchange={snake_eFullscreenChange}
 >
@@ -714,9 +731,9 @@ lang="scss"
 
     &, .gameover { @extend %any; }
 
-    @extend %f-center;
+    @include position.placement(absolute, $top: 0, $left: 0);
 
-    &, .canvas { position: absolute; }
+    @extend %f-center;
 
     &.game
     {
@@ -725,9 +742,13 @@ lang="scss"
         .canvas, .gameover { pointer-events: auto; }
     }
 
+    .canvas { position: absolute; }
+
     .grid
     {
         position: absolute;
+
+        pointer-events: none;
 
         background:
         repeating-linear-gradient($intermediate 0 1px, transparent 1px 100%),
