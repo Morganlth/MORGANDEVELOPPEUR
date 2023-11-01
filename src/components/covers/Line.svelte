@@ -82,7 +82,7 @@ lang="scss"
 
         width: 100%;
 
-        padding-left: 2rem;
+        padding-left: 1rem;
 
         box-sizing: border-box;
 

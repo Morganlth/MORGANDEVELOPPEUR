@@ -450,6 +450,7 @@ class="terminalface"
         slot="id"
         >
             <Icon
+            prop_SIZE="1.8rem"
             prop_COLOR={COLORS.primary}
             >
                 <CommandLine />
@@ -556,14 +557,14 @@ lang="scss"
 
 .terminalface
 {
-    --icon-size: 2.4rem;
-
     @include position.placement(absolute, 0, 0, 0, 0);
 
     @extend %f-column;
 
     .header
     {
+        --icon-size: 2.4rem;
+
         display: flex;
         justify-content: space-between;
 

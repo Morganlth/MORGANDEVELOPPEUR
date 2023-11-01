@@ -176,7 +176,7 @@ onDestroy(title_destroy)
 <svelte:element
 this={prop_TITLE.html}
 class="title"
-class:focus={prop_INTRO}
+class:focus={prop_CHARGED && prop_INTRO}
 data-pe-content={prop_TITLE.fragments[0]?.frags?.substring(0, 1)}
 bind:offsetHeight={title_HEIGHT}
 >
