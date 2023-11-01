@@ -265,7 +265,7 @@ lang="scss"
     overflow: visible;
 
     width: calc((100vw - app.$gap-inline * 2) / var(--cos, 1));
-    height: min(26vw, 26vh);
+    height: 26vh;
 
     &.focus
     {
