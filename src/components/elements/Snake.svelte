@@ -452,7 +452,11 @@ context="module"
 
             ;(particles ??= document.querySelector('.particles')).moveTo(snake)
         }
-        catch { snake_GAME = false }
+        catch (e)
+        {
+            COMMAND.command_COMMANDS.log(e)
+            snake_GAME = false
+        }
     }
 
     function snake_stopGame()
