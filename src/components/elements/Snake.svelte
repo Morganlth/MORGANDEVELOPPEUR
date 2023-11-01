@@ -98,7 +98,7 @@ context="module"
     SNAKE_EVENTS_2 =
     {
         mouseMove: snake_e$MouseMove,
-        touchmove: snake_e$MouseMove
+        touchMove: snake_e$MouseMove
     }
 
 // #VARIABLES
