@@ -175,12 +175,10 @@ onMount(home_set)
 class="home"
 data-page-id={prop_ID}
 >
-    {#if !$app_$MOBILE}
-        <Snake
-        prop_ON={snake_ON && prop_FOCUS}
-        bind:snake_GAME
-        />
-    {/if}
+    <Snake
+    prop_ON={snake_ON && prop_FOCUS && !$app_$MOBILE}
+    bind:snake_GAME
+    />
 
     <BlackBlocks
     prop_ON={!snake_GAME}
