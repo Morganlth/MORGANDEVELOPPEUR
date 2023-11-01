@@ -45,7 +45,10 @@ lang="scss"
 
 .line
 {
-    $line-h: 5rem;
+    --line-height: 3rem;
+
+    $line-h: var(--line-height, 3rem);
+
     $font-size: map.get(font.$font-sizes, s3);
 
     @include font.content($regular: true, $font-size: inherit);
@@ -82,16 +85,24 @@ lang="scss"
 
         width: 100%;
 
-        padding-left: 1rem;
-
         box-sizing: border-box;
 
         user-select: auto;
 
         color: $light;
         font-size: map.get(font.$font-sizes, s2);
+    }
 
-        @include media.min($ms3) { font-size: $font-size; }
+    @include media.min($ms3)
+    {
+        --line-height: 5rem;
+
+        .content
+        {
+            padding-left: 1rem;
+    
+            font-size: $font-size;
+        }
     }
 }
 </style>
