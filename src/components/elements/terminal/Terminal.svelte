@@ -267,6 +267,8 @@ lang="scss"
     width: calc((100vw - app.$gap-inline * 2) / var(--cos, 1));
     height: 26vh;
 
+    touch-action: auto;
+
     &.focus
     {
         &.turn
