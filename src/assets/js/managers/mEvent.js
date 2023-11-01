@@ -121,6 +121,8 @@ constructor ()
             TOUCH = e.changedTouches[0],
             [CLIENT_X, CLIENT_Y] =  [TOUCH.clientX, TOUCH.clientY]
 
+            COMMAND.command_COMMANDS.log(CLIENT_X, CLIENT_Y)
+
             this.event_CLIENT_XY = [CLIENT_X, CLIENT_Y]
 
             this.#event_run.apply(this.#event_MANAGER.touchMove, CLIENT_X, CLIENT_Y)
@@ -210,6 +212,7 @@ constructor ()
 
     // --CONTEXT
     import APP from './mApp'
+    import COMMAND from './mCommand'
 
     // --SVELTE
     import { tick } from 'svelte'
