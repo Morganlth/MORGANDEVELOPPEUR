@@ -456,9 +456,9 @@
 
     function blackblocks_updateEvent(on, optimise, delay = 0)
     {
-        clearTimeout(blackblocks_TIMEOUT_2)
+        clearTimeout(blackblocks_TIMEOUT)
 
-        blackblocks_TIMEOUT_2 = setTimeout(() =>
+        blackblocks_TIMEOUT = setTimeout(() =>
         {
             const FOCUS = on && prop_FOCUS
         
@@ -584,11 +584,11 @@
         blackblocks_updateScene()
     }
 
-    async function blackblocks_e$MouseDown() { blackblocks_TIMEOUT = setTimeout(() => { blackblocks_updateSceneVars(4, .3, .03, 3) }, 200) }
+    async function blackblocks_e$MouseDown() { blackblocks_TIMEOUT_2 = setTimeout(() => blackblocks_updateSceneVars(4, .3, .03, 3), 200) }
 
     async function blackblocks_e$MouseUp()
     {
-        clearTimeout(blackblocks_TIMEOUT)
+        clearTimeout(blackblocks_TIMEOUT_2)
 
         blackblocks_updateSceneVars(BLACKBLOCKS_MOUSE_RADIUS, BLACKBLOCKS_FORCE_POSITION, BLACKBLOCKS_FORCE_ROTATION, BLACKBLOCKS_MOUSE_INTENSITY)
     }
