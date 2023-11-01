@@ -85,6 +85,9 @@ $gap-inline: var(--app-g-inline, $inline);
                 width: 100vw;
                 height: 100vh;
                 height: 100svh;
+
+                overscroll-behavior: none;
+                touch-action: none;
             }
 
             &, body { background-color: $dark; }
