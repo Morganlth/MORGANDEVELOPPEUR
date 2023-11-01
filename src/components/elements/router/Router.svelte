@@ -153,7 +153,7 @@ lang="scss"
     {
         pointer-events: none;
     
-        ul :global .route { clip-path: polygon(0 0, 0 0, 0 100%, 0% 100%); }
+        ul :global .route { clip-path: polygon(-1% 0, -1% 0, -1% 100%, -1% 100%); }
     }
 
     ul
