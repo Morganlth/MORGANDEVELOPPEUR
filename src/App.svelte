@@ -200,6 +200,7 @@ lang="scss"
     @extend %any;
 
     overflow: clip scroll;
+    overscroll-behavior: none;
 
     max-height: 100svh;
 
