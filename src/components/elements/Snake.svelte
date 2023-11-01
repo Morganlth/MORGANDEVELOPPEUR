@@ -368,7 +368,22 @@ context="module"
         if (prop_ON || snake_GAME) snake_draw()
     }
 
-    function snake_eFullscreenChange() { if (!document.fullscreenElement) snake_GAME = false }
+    function snake_eFullscreenChange()
+    {
+        try 
+        {
+            const FULL_SCREEN_ELEMENT =
+            document.fullscreenElement          ??
+            document.webkitFullScreenElement    ??
+            document.webkitFullscreenElement    ??
+            document.mozFullScreenElement       ??
+            document.msFullscreenElement        ??
+            null
+
+            if (!FULL_SCREEN_ELEMENT) snake_GAME = false
+        }
+        catch (e) { COMMAND.command_COMMANDS.log(e) }
+    }
 
     function canvas_eMouseLeave(e)
     {
@@ -377,7 +392,20 @@ context="module"
         if (!TARGET || TARGET.classList.contains('snake')) gameover_update(true)
     }
 
-    function cell_eClick() { document.exitFullscreen() }
+    function cell_eClick()
+    {
+        try 
+        {
+                 if (document.fullscreenElement)        document.exitFullscreen()
+            else if (document.webkitFullScreenElement)  document.webkitExitFullScreen()
+            else if (document.webkitFullscreenElement)  document.webkitExitFullscreen()
+            else if (document.mozFullScreenElement)     document.mozCancelFullScreen()
+            else if (document.msFullscreenElement)      document.msExitFullscreen()
+        }
+        catch (e) { COMMAND.command_COMMANDS.log(e) }
+
+        snake_GAME = false
+    }
 
     function gameover_eClick()
     {
@@ -444,7 +472,12 @@ context="module"
     {
         try
         {
-            await snake.requestFullscreen()
+            (snake.requestFullscreen        ??
+            snake.webkitRequestFullscreen   ??
+            snake.webkitEnterFullScreen     ??
+            snake.webkitEnterFullscreen     ??
+            snake.mozRequestFullScreen      ??
+            snake.msRequestFullscreen)()
 
             if (!prop_ON) snake_start()
 
