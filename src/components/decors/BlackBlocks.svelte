@@ -93,8 +93,8 @@
     BLACKBLOCKS_FORCE_POSITION = .05,
     BLACKBLOCKS_FORCE_ROTATION = .01
 ,
-    BLACKBLOCKS_ROTATION_X = -MATH.rad.r45 / 2,
-    BLACKBLOCKS_ROTATION_Y = MATH.rad.r45
+    BLACKBLOCKS_ROTATION_X = -MATH.toRad(18),
+    BLACKBLOCKS_ROTATION_Y = MATH.toRad(38)
 ,
     BLACKBLOCKS_MOUSE_RADIUS = 3,                           // mouse radius ?
     BLACKBLOCKS_MOUSE_INTENSITY = .5
@@ -110,7 +110,7 @@
         projectedTexture: { value: '' },
         widthScaled: { value: 0 },
         heightScaled: { value: 0 },
-        textureOffset: { value: new Vector2(-0.215, 0) }
+        textureOffset: { value: new Vector2(-.21, 0) }
     }
 ,
     BLACKBLOCKS_COMMANDS =
