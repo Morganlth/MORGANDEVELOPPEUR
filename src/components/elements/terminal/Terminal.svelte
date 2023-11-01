@@ -55,7 +55,11 @@ context="module"
 ,
     TERMINAL_ROTATE_Y = MATH.toRad(18)
 ,
-    TERMINAL_EVENTS = { mouseDown: terminal_e$MouseDown }
+    TERMINAL_EVENTS =
+    {
+        mouseDown: terminal_e$MouseDown,
+        resize: terminal_e$Resize
+    }
 
     // --ELEMENT-CONTAINER
     const CONTAINER_DURATION = 400
@@ -158,6 +162,8 @@ context="module"
             terminal_update(false)
         }
     }
+
+    async function terminal_e$Resize() { terminal_ON = false }
 
 // !===============T-A==================!
 

@@ -74,6 +74,7 @@ context="module"
 
     // --ELEMENT-SNAKE
     const
+    SNAKE_NAME = 'snake',
     SNAKE_SIZE_NAME = 'snake_size'
 ,
     SNAKE_BLOCKSIZE = 40
@@ -348,6 +349,8 @@ context="module"
     function snake_resetGame()
     {
         if (snake_Z && snake_PARENT instanceof HTMLElement) snake_PARENT.insertBefore(snake, snake_PARENT.firstElementChild ?? snake_PARENT.children[0])
+
+        APP.app_$FREEZE = { value: false, target: SNAKE_NAME } 
     
         snake_GAME = false
         snake_Z = 0
@@ -498,6 +501,8 @@ context="module"
 
             snake_e$Resize()
         }
+
+        APP.app_$FREEZE = { value: true, target: SNAKE_NAME } 
 
         if (!prop_ON) snake_start()
 

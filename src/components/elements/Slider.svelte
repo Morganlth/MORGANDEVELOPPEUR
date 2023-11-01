@@ -199,7 +199,7 @@ lang="scss"
 
 .slider
 {
-    @include position.placement(absolute, $bottom: 0, $left: 46%);
+    @include position.placement(absolute, $bottom: 0, $left: 50%);
     @include font.content($intermediate, $regular: false, $font-size: map.get(font.$font-sizes, s3));
 
     transform-origin: bottom right;
