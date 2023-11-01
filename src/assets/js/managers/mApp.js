@@ -138,7 +138,12 @@ constructor ()
     // --UPDATES
     app_updateSize() { [this.app_WIDTH, this.app_HEIGHT] = [window.innerWidth, window.innerHeight] }
 
-    app_updateSmallScreen() { this.#app_$SMALL_SCREEN.set(this.app_testScreen(BREAKPOINTS.ms3, BREAKPOINTS.ms3)) }
+    app_updateSmallScreen()
+    {
+        const MS4 = BREAKPOINTS.ms4
+    
+        this.#app_$SMALL_SCREEN.set(this.app_testScreen(MS4, MS4))
+    }
 
     #app_updateMode(optimise)
     {
