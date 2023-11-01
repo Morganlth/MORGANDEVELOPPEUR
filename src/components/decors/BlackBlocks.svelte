@@ -99,8 +99,7 @@
     BLACKBLOCKS_MOUSE_RADIUS = 3,                           // mouse radius ?
     BLACKBLOCKS_MOUSE_INTENSITY = .5
 ,
-    BLACKBLOCKS_CUBES = new Group(),
-    BLACKBLOCKS_FLOATING_UPDATE_CUBES = []
+    BLACKBLOCKS_CUBES = new Group()
 ,
     BLACKBLOCKS_SHADER_UNIFORMS =
     {
@@ -144,35 +143,37 @@
 
     // --ELEMENT-BLACKBLOCKS
     let
-    blackblocks,
-
-    blackblocks_OPTIMISE = false,
-
+    blackblocks
+,
+    blackblocks_OPTIMISE = false
+,
     blackblocks_SCENE,
     blackblocks_CAMERA,
     blackblocks_RENDERER,
-    blackblocks_MOUSELIGHT,
-
-    blackblocks_OPACITY = 0,
-
+    blackblocks_MOUSELIGHT
+,
+    blackblocks_FLOATING_CUBES_UPDATE = []
+,
+    blackblocks_OPACITY = 0
+,
     blackblocks_WIDTH,
-    blackblocks_HEIGHT,
-
-    blackblocks_DEPTH,
-
-    blackblocks_TEXTURE = null,
-
-    blackblocks_MOUSE_RADIUS = BLACKBLOCKS_MOUSE_RADIUS,
-
+    blackblocks_HEIGHT
+,
+    blackblocks_DEPTH
+,
+    blackblocks_TEXTURE = null
+,
+    blackblocks_MOUSE_RADIUS = BLACKBLOCKS_MOUSE_RADIUS
+,
     blackblocks_FORCE_POSITION = BLACKBLOCKS_FORCE_POSITION,
-    blackblocks_FORCE_ROTATION = BLACKBLOCKS_FORCE_ROTATION,
-
+    blackblocks_FORCE_ROTATION = BLACKBLOCKS_FORCE_ROTATION
+,
     blackblocks_MOUSE_X = 0,
-    blackblocks_MOUSE_Y = 0,
-
+    blackblocks_MOUSE_Y = 0
+,
     blackblocks_TIMEOUT,
-    blackblocks_TIMEOUT_2,
-
+    blackblocks_TIMEOUT_2
+,
     blackblocks_cancel = () => {}
 
 // #REACTIVES
@@ -345,7 +346,7 @@
     {
         const UPDATE = update_floating().update
 
-        BLACKBLOCKS_FLOATING_UPDATE_CUBES.push(async () => cube.position.y += UPDATE() * 0.0015)
+        blackblocks_FLOATING_CUBES_UPDATE.push(async () => cube.position.y += UPDATE() * .0015)
     }
 
     function blackblocks_setShader(shader)
@@ -448,7 +449,7 @@
 
     function blackblocks_update2(focus)
     {
-        const DURATION = blackblocks_updateCubes(focus)
+        const DURATION = blackblocks_updateCubesPosition(focus)
 
         blackblocks_updateEvent(prop_ON, blackblocks_OPTIMISE, focus ? 0 : DURATION)
     }
@@ -469,7 +470,7 @@
         delay) 
     }
 
-    function blackblocks_updateCubes(invert = false, intro = false)
+    function blackblocks_updateCubesPosition(invert = false, intro = false)
     {
         const Z = intro ? -2 : 2
     
@@ -494,7 +495,7 @@
         return total_DURATION * (intro ? .5 : 1)
     }
 
-    const blackblocks_updateFloatingCubes = wait_throttle(async () => { for (const UPDATE of BLACKBLOCKS_FLOATING_UPDATE_CUBES) UPDATE() }, 100.02)
+    const blackblocks_updateFloatingCubes = wait_throttle(async () => { for (const UPDATE of blackblocks_FLOATING_CUBES_UPDATE) UPDATE() }, 100.02)
 
     function blackblocks_updateSceneVars(radius, forcePosition, forceRotation, mouseIntensity)
     {
@@ -600,8 +601,13 @@
         blackblocks_setRenderer()
     
         blackblocks_setShaderUniforms()
-        blackblocks_updateShaderProjectionMatrixCamera()
-        blackblocks_updateShaderTextureDimensions()
+
+        blackblocks_removeChildrenFrom(BLACKBLOCKS_LINES)
+        blackblocks_removeChildrenFrom(BLACKBLOCKS_CUBES)
+
+        blackblocks_FLOATING_CUBES_UPDATE = []
+
+        blackblocks_setCubes()
     }
 
     async function blackblocks_e$Animation()
@@ -618,7 +624,7 @@
     {
         setTimeout(() => blackblocks_CHARGED = true,
         prop_FOCUS
-        ? blackblocks_OPTIMISE ? 0 : blackblocks_updateCubes(false, true)
+        ? blackblocks_OPTIMISE ? 0 : blackblocks_updateCubesPosition(false, true)
         : blackblocks_hideCubes() ?? 0)
 
         blackblocks_OPACITY = 1
@@ -696,6 +702,13 @@
             CUBE.position.set(x, y, 2)
             CUBE.t = 1
         }
+    }
+
+    function blackblocks_removeChildrenFrom(parent = {})
+    {
+        const CHILDREN = parent.children
+    
+        while (CHILDREN?.length) parent.remove(CHILDREN[0])
     }
 
 // #CYCLES
