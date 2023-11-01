@@ -608,6 +608,8 @@
         blackblocks_FLOATING_CUBES_UPDATE = []
 
         blackblocks_setCubes()
+
+        blackblocks_start()
     }
 
     async function blackblocks_e$Animation()
