@@ -95,7 +95,11 @@ context="module"
     ]
 ,
     SNAKE_EVENTS = { resize: snake_e$Resize },
-    SNAKE_EVENTS_2 = { mouseMove: snake_e$MouseMove }
+    SNAKE_EVENTS_2 =
+    {
+        mouseMove: snake_e$MouseMove,
+        touchmove: snake_e$MouseMove
+    }
 
 // #VARIABLES
 

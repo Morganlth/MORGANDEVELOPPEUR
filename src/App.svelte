@@ -153,6 +153,7 @@ on:mousemove={EVENT.event_mouseMove.bind(EVENT)}
 on:mousedown={EVENT.event_mouseDown.bind(EVENT)}
 on:mouseup={EVENT.event_mouseUp.bind(EVENT)}
 on:mouseleave={EVENT.event_mouseUp.bind(EVENT)}
+on:touchmove={EVENT.event_touchMove.bind(EVENT)}
 on:touchstart|once={app_eTouchStart}
 >
     {#if app_FONTS_CHARGED && !opti_ON}

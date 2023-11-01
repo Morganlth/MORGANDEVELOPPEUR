@@ -117,9 +117,13 @@ constructor ()
 
         this.#event_TOUCHFRAME = requestAnimationFrame(() =>
         {
-            const TOUCH = e.changedTouches[0]
+            const
+            TOUCH = e.changedTouches[0],
+            [CLIENT_X, CLIENT_Y] =  [TOUCH.clientX, TOUCH.clientY]
 
-            this.#event_run.apply(this.#event_MANAGER.touchMove, [TOUCH.clientX, TOUCH.clientY])
+            this.event_CLIENT_XY = [CLIENT_X, CLIENT_Y]
+
+            this.#event_run.apply(this.#event_MANAGER.touchMove, CLIENT_X, CLIENT_Y)
 
             this.#event_TOUCHFRAME = false
         })
