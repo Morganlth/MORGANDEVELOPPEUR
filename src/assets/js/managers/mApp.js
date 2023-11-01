@@ -10,10 +10,10 @@ class App
 
     #app
     #app_$CHARGED = writable(false)
-    #app_$FREEZE = { init: false }
-    #app_$OPTIMISE = { init: false }
+    #app_$FREEZE = { value: false, setter: function ({target}) { this.target = target }, optionalparameters: { target: null } }
+    #app_$OPTIMISE = { value: false }
+    #app_$SMALL_SCREEN = { value: false }
     #app_$HIDE = writable(false)
-    #app_$SMALL_SCREEN = { init: false }
     #app_$MOBILE = writable(false)
     #app_OPTIMISE_CONFIG = {}
     #app_STORAGE = {}
@@ -28,9 +28,9 @@ class App
 
 constructor ()
 {
-    this.#app_setVars2()
-    this.#app_setVars3()
-    this.#app_setVars4()
+    this.#app_$FREEZE = storecustom_get(this.#app_$FREEZE)
+    this.#app_$OPTIMISE = storecustom_get(this.#app_$OPTIMISE)
+    this.#app_$SMALL_SCREEN = storecustom_get(this.#app_$SMALL_SCREEN)
 
     this.#app_COMMANDS.push(
     {
@@ -52,12 +52,13 @@ constructor ()
         this.#app_setCommands()
 
         this.#app_restore()
+
+        this.#app_$CHARGED.set(true)
     }
 
     #app_setVars()
     {
         this.#app = document.getElementById('app')
-        this.#app_$CHARGED.set(true)
 
         this.app_updateSmallScreen()
     }
@@ -204,7 +205,7 @@ constructor ()
     {
         const CURRENT_TARGET = this.#app_$FREEZE.target
     
-        if (!CURRENT_TARGET || CURRENT_TARGET === target) this.#app_$FREEZE.set(value, value ? target : null)
+        if (!CURRENT_TARGET || CURRENT_TARGET === target) this.#app_$FREEZE.set(value, { target: value ? target : null })
     }
 
     set app_$HIDE(value)
@@ -232,6 +233,9 @@ constructor ()
 }
 
 // #IMPORTS
+
+    // --JS
+    import storecustom_get from '../utils/storeCustom'
 
     // --LIB
     import BREAKPOINTS from '$lib/breakpoints'
