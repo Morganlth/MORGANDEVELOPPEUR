@@ -135,7 +135,7 @@ class:grabbing={slot_GRABBING}
     GRAVITYAREA_DELAY_2     = wait_getDelay(12), // +- 200ms
     GRAVITYAREA_DELAY_3     = wait_getDelay(24)  // +- 400ms
     ,
-    GRAVITYAREA_EVENTS   = { mouseMove: wait_throttle(gravityarea_e$MouseMove, 3) },
+    GRAVITYAREA_EVENTS   = { mouseMove: wait_throttle(gravityarea_e$MouseMove, 3) }, // +- 50ms
     GRAVITYAREA_EVENTS_2 = { mouseUp: gravityarea_e$MouseUp }
 
     // --INSIDE

@@ -145,7 +145,7 @@
         }
     }
 
-    export function animation_staticFloating(t)
+    export function animation_staticFloating(t, step = .05)
     {
         const DIRECTION = MATH.headsOrTails() ? 1 : -1
     
@@ -155,7 +155,7 @@
 
         return () =>
         {
-            t += invert ? -.05 : .05
+            t += invert ? -step : step
         
             if (t > 1)
             {
