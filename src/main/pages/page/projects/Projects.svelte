@@ -85,12 +85,12 @@ bind:this={projects}
     // --DATA
 
     // --SVELTE
-    import { onMount, tick } from 'svelte'
+    import { onMount } from 'svelte'
 
     // --LIB
 
     // --CONTEXTS
-    import { APP, ROUTER, EVENT } from '../../../../App.svelte'
+    import { APP, ROUTER, EVENT, COMMAND } from '../../../../App.svelte'
 
 //=======@COMPONENTS|
 
@@ -185,12 +185,15 @@ bind:this={projects}
 
     async function projects_setProject(id)
     {
-        if (page_CHARGED && (id != null || projects_TARGET))
-        {
-            router_updatePaths(id)
+        try {
+            if (page_CHARGED && (id != null || projects_TARGET))
+            {
+                router_updatePaths(id)
 
-            projects_update()
+                projects_update()
+            }
         }
+        catch (e) { COMMAND.command_COMMANDS.log(e) }
     }
 
     // --GET
