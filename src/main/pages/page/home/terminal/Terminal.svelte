@@ -350,7 +350,7 @@ lang="scss"
 
         :global .face, :global .back
         {
-            padding: 2rem 4rem;
+            padding: 1.4rem 1.8rem;
 
             background-color: $dark;
             backface-visibility: hidden;
@@ -379,7 +379,12 @@ lang="scss"
             :global .back { width: 100%; }
         }
     }
-    @include media.min($ms4, $ms4) { top: 33%; }
+    @include media.min($ms4, $ms4)
+    {
+        top: 33%;
+
+        :global .face, :global .back { padding: 2rem 4rem; }
+    }
 }
 
 .terminal.focus
