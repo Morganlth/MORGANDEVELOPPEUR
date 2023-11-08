@@ -58,7 +58,7 @@
 
             #{--title-size}: $default-size;
 
-            @include media.min($ms2)        { #{--title-size}: map.get($font-sizes, 's#{$font-sizes-length - $n - 1}'); }
+            @include media.min($ms2, $ms3)  { #{--title-size}: map.get($font-sizes, 's#{$font-sizes-length - $n - 1}'); }
             @include media.min($ms3, $ms3)  { #{--title-size}: map.get($font-sizes, 's#{$font-sizes-length - $n - 0}'); }
         }
     }
