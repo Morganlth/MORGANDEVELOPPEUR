@@ -629,7 +629,7 @@ bind:this={blackblocks}
     {
         const [TEXTURE_WIDTHSCALED, TEXTURE_HEIGHTSCALED] = blackblocks_computeScaledDimensions(blackblocks_TEXTURE.image, blackblocks_CAMERA)
 
-        BLACKBLOCKS_SHADER_UNIFORMS.widthScaled.value = TEXTURE_WIDTHSCALED
+        BLACKBLOCKS_SHADER_UNIFORMS.widthScaled.value  = TEXTURE_WIDTHSCALED
         BLACKBLOCKS_SHADER_UNIFORMS.heightScaled.value = TEXTURE_HEIGHTSCALED
     }
 
