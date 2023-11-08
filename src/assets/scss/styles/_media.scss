@@ -1,17 +1,40 @@
-// #VARIABLE
+/*----------------------------------------------- #||--media--|| */
 
-$screen: (s1: 320px, s2: 375px, s3: 425px, s4: 768px, s5: 1024px, s6: 1440px);
 
-// #MIXIN
+/* #\-USES-\ */
 
-    // --MEDIA
+    /* --SASS */
+
+    /* --GLOBAL */
+
+    /* --APP */
+
+    /* --DEPENDENCIES */
+
+    /* --MEDIA */
+
+
+/* #\-VARIABLES-\ */
+
+    /* --* */
+    $screen: (s1: 320px, s2: 375px, s3: 425px, s4: 768px, s5: 1024px, s6: 1440px);
+
+
+/* #\-MIXIN-\ */
+
+    /* --* */
     @mixin min($width: false, $height: false, $or: false)
     {
         @if $width and $height
         {
-            @if $or { @media screen and (min-width: $width), screen and (min-height: $height) { @content; }  }
-            @else { @media screen and (min-width: $width) and (min-height: $height) { @content; }  }
+            @if $or { @media screen and (min-width: $width), screen and (min-height: $height)   { @content; }  }
+            @else   { @media screen and (min-width: $width) and (min-height: $height)           { @content; }  }
         }
-        @else if $width { @media screen and (min-width: $width) { @content; } }
-        @else { @media screen and (min-height: $height) { @content; } }
+        @else if $width { @media screen and (min-width: $width)     { @content; } }
+        @else           { @media screen and (min-height: $height)   { @content; } }
     }
+
+
+/* #\-PLACEHOLDER-\ */
+
+    /* --* */

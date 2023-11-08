@@ -1,9 +1,45 @@
-// #DISPLAY
+/*----------------------------------------------- #||--display--|| */
 
-    // --DISPLAY-FLEX
+
+/* #\-USES-\ */
+
+    /* --SASS */
+
+    /* --GLOBAL */
+
+    /* --APP */
+
+    /* --DEPENDENCIES */
+
+    /* --MEDIA */
+
+
+/* #\-VARIABLES-\ */
+
+    /* --* */
+
+
+/* #\-MIXIN-\ */
+
+    /* --* */
+    @mixin grid($width: 0, $height: 0, $columns: 1, $rows: 1)
+    {
+        display: grid;
+
+        @if type-of($width) == list { grid-template-columns: $width; }
+        @else { grid-template-columns: repeat($columns, $width); }
+        @if type-of($height) == list { grid-template-rows: $height; }
+        @else { grid-template-rows: repeat($rows, $height); }
+    }
+
+
+/* #\-PLACEHOLDER-\ */
+
+    /* --* */
     %f-column-center
     {
         @extend %f-center;
+
         flex-direction: column;
     }
 
@@ -30,15 +66,4 @@
     {
         display: flex;
         align-items: center;
-    }
-
-    // --DISPLAY-GRID
-    @mixin grid($width: 0, $height: 0, $columns: 1, $rows: 1)
-    {
-        display: grid;
-
-        @if type-of($width) == list { grid-template-columns: $width; }
-        @else { grid-template-columns: repeat($columns, $width); }
-        @if type-of($height) == list { grid-template-rows: $height; }
-        @else { grid-template-rows: repeat($rows, $height); }
     }

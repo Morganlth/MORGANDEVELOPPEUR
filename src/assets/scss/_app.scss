@@ -1,32 +1,64 @@
-// #USES
+/*----------------------------------------------- #||--app--|| */
 
-@use './global/colors' as *;
-@use './global/breakpoints' as *;
 
-@use './styles/media';
+/* #\-USES-\ */
 
-// #VARIABLES
+    /* --SASS */
 
-$block: 2rem;
-$inline: 5rem;
+    /* --GLOBAL */
+    @use './global/colors' as *;
+    @use './global/breakpoints' as *;
 
-$gap-block: var(--app-g-block, $block);
-$gap-inline: var(--app-g-inline, $inline);
+    /* --APP */
 
-// #APP
+    /* --DEPENDENCIES */
+    @use './styles/utils';
 
-    // --GLOBAL
-    %global
+    /* --MEDIA */
+    @use './styles/media';
+
+
+/* #\-VARIABLES-\ */
+
+    /* --* */
+    $default-gap-inline: 3rem;
+    $gap-block: 2rem;
+    $gap-inline: var(--app-g-inline, $default-gap-inline);
+
+
+/* #\-MIXIN-\ */
+
+    /* --* */
+
+
+/* #\-PLACEHOLDER-\ */
+
+    /* --* */
+    %reset
     {
-        // #RESET
-
         body, h1, h2, h3, h4, h5, h6, ul, p, figure, blockquote, pre { margin: 0; }
         ul, button, input, input[type="text"], textarea { padding: 0; }
 
         li { list-style: none; }
 
-        // #FONT
+        a, img { @extend %no-drag; }
 
+        a { text-decoration: none; }
+
+        button, input
+        {
+            background-color: transparent;
+
+            border: none;
+        }
+
+        button { cursor: pointer; }
+
+        input { outline: none; }
+    }
+
+    %fonts
+    {
         @font-face
         {
             font-family: 'CodeNext-BLACK';
@@ -68,15 +100,15 @@ $gap-inline: var(--app-g-inline, $inline);
             url('/fonts/AnonymousPro/AnonymousPro.woff') format('woff'),
             url('/fonts/AnonymousPro/AnonymousPro.ttf') format('truetype');
         }
+    }
 
-        // #SET
-
+    %html
+    {
         html
         {
             // overflow: hidden; padding-top: 16vh; box-sizing: border-box; width: 100vw; height: 100vh; body { transform: scale(1); } body, body>div, #app { overflow: hidden; width: 100%; height: 100%; }
         
-            #{--app-g-block}: $block;
-            --app-g-inline: 3rem;
+            #{--app-g-inline}: $default-gap-inline;
 
             &, body, body>div
             {
@@ -93,11 +125,13 @@ $gap-inline: var(--app-g-inline, $inline);
 
             body { touch-action: none; }
 
+            body>div { transform: scale(1); } // fixed children
+
             font-size: 31.25%;
 
             @include media.min($ms4)
             {
-                #{--app-g-inline}: $inline;
+                --app-g-inline: 5rem;
 
                 font-size: 46.875%;
             }

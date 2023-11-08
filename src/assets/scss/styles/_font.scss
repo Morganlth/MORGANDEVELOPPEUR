@@ -1,52 +1,43 @@
-// #USES
+/*----------------------------------------------- #||--font--|| */
 
-@use 'sass:map';
 
-@use '../global/colors' as *;
-@use '../global/breakpoints' as *;
+/* #\-USES-\ */
 
-@use './position';
-@use './size';
-@use './media';
+    /* --SASS */
+    @use 'sass:map';
+    @use 'sass:list';
 
-// #VARIABLES
+    /* --GLOBAL */
+    @use '../global/breakpoints' as *;
 
-    // --FONT-FAMILY
-    $family-title: 'CodeNext-BLACK', 'CodeNext', 'sans-serif', 'arial';
+    /* --APP */
+
+    /* --DEPENDENCIES */
+
+    /* --MEDIA */
+    @use './media';
+
+
+/* #\-VARIABLES-\ */
+
+    /* --* */
+    $family-title:        'CodeNext-BLACK', 'CodeNext', 'sans-serif', 'arial';
     $family-title-italic: 'CodeNext-BLACK-ITALIC', 'CodeNext-BLACK', 'CodeNext', 'sans-serif', 'arial';
-    $family-subtitle: 'CodeNext', 'CodeNext-BLACK', 'sans-serif', 'arial';
-    $family-content: 'AnonymousPro', 'Courier New';
-    $family-content-bold: 'AnonymousProBold', 'Courier New';
+    $family-subtitle:     'CodeNext', 'CodeNext-BLACK', 'sans-serif', 'arial';
+    $family-text:         'AnonymousPro', 'Courier New';
+    $family-text-bold:    'AnonymousProBold', 'Courier New';
 
-    // --FONT-SIZE -> 0 - 12 - 18 - 24 - 36 - 48 - 60 - 72 - 88
-    $font-sizes: (s0: 0rem, s1: 1.2rem, s2: 1.8rem, s3: 2.4rem, s4: 3.6rem, s5: 4.8rem, s6: 6rem, s7: 7.2rem, s8: 8.8rem);
+    // 0 - 12 - 18 - 24 - 36 - 48 - 60 - 72 - 88
+    $font-sizes:        (s0: 0rem, s1: 1.2rem, s2: 1.8rem, s3: 2.4rem, s4: 3.6rem, s5: 4.8rem, s6: 6rem, s7: 7.2rem, s8: 9.6rem);
+    $font-sizes-length: list.length($font-sizes);
 
-    // --LINE-HEIGHT
     $line-height-title-min: .76;
 
-    // --FONT-TITLE
-    $h-1: (color: $light, font-family: $family-title, font-size: var(--title-size, map.get($font-sizes, s6)), font-weight: 900, line-height: $line-height-title-min);
 
-    $titles: ('h-1': $h-1);
+/* #\-MIXIN-\ */
 
-// #FONT
-
-    // --DEFAULT
-    %default-settings
-    {
-        font-kerning: normal;
-        font-smooth: antialiased;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-        font-optical-sizing: auto;
-        text-rendering: geometricPrecision;
-        user-select: none;
-    }
-
-    // --FONT-TITLE
-    @mixin h-($number: 1) { @each $key, $value in map.get($titles, 'h-#{$number}') { #{$key}: $value; } } // set title properties
-
-    @mixin h-custom($color: inherit, $font-size: var(--title-size, map.get($font-sizes, s3)), $line-height: $line-height-title-min, $italic: false)
+    /* --* */
+    @mixin h-($n: false, $color: inherit, $line-height: $line-height-title-min, $italic: false)
     {
         @extend %default-settings;
 
@@ -58,23 +49,32 @@
         @else { font-family: $family-title; }
 
         color: $color;
-        font-size: $font-size;
+        font-size: var(--title-size, map.get($font-sizes, s3));
         line-height: $line-height;
+
+        @if $n
+        {
+            $default-size: map.get($font-sizes, 's#{$font-sizes-length - $n - 2}');
+
+            #{--title-size}: $default-size;
+
+            @include media.min($ms2)        { #{--title-size}: map.get($font-sizes, 's#{$font-sizes-length - $n - 1}'); }
+            @include media.min($ms3, $ms3)  { #{--title-size}: map.get($font-sizes, 's#{$font-sizes-length - $n - 0}'); }
+        }
     }
 
-    // --FONT-CONTENT
-    @mixin content($color: inherit, $regular: true, $font-size: map.get($font-sizes, s2), $line-height: 1)
+    @mixin text($color: inherit, $regular: true, $font-size: map.get($font-sizes, s2), $line-height: 1)
     {
         @extend %default-settings;
     
         @if $regular
         {
-            font-family: $family-content;
+            font-family: $family-text;
             font-weight: normal;
         }
         @else
         {
-            font-family: $family-content-bold;
+            font-family: $family-text-bold;
             font-weight: bold;
             font-synthesis-weight: auto;
         }
@@ -84,40 +84,17 @@
         line-height: $line-height;
     }
 
-    // --FONT-ANIMATIONS
-    @mixin simple-hover($color: $primary)
-    {
-        transition: color .27s;
 
-        &:hover { color: $color; }
-    }
+/* #\-PLACEHOLDER-\ */
 
-    // --FONT-MEDIAS
-    %m-h-1
+    /* --* */
+    %default-settings
     {
-        #{--title-size}: map.get($font-sizes, s6);
-    
-        @include media.min($ms1) { #{--title-size}: map.get($font-sizes, s7); }
-        @include media.min($ms2, $ms3) { #{--title-size}: map.get($font-sizes, s8); }
-    }
-    %m-h-2
-    {
-        #{--title-size}: map.get($font-sizes, s5);
-    
-        @include media.min($ms2) { #{--title-size}: map.get($font-sizes, s6); }
-        @include media.min($ms3, $ms3) { #{--title-size}: map.get($font-sizes, s7); }
-    }
-    %m-h-3
-    {
-        #{--title-size}: map.get($font-sizes, s4);
-    
-        @include media.min($ms2) { #{--title-size}: map.get($font-sizes, s5); }
-        @include media.min($ms3, $ms3) { #{--title-size}: map.get($font-sizes, s6); }
-    }
-    %m-h-4
-    {
-        #{--title-size}: map.get($font-sizes, s3);
-    
-        @include media.min($ms2) { #{--title-size}: map.get($font-sizes, s4); }
-        @include media.min($ms3, $ms3) { #{--title-size}: map.get($font-sizes, s5); }
+        font-kerning: normal;
+        font-smooth: antialiased;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        font-optical-sizing: auto;
+        text-rendering: geometricPrecision;
+        user-select: none;
     }

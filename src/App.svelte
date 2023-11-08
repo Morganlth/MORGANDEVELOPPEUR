@@ -1,113 +1,174 @@
-<!-- #MAP
+<!----------------------------------------------- #||--app--|| -->
 
--APP
--COMMANDS
--EVENT
--SPRING
-    APP
-        #if
-            HEADER
-            MAIN
-            ASIDE
-            FOOTER
 
-        #if OPTI
-
--->
-
-<!-- #SCRIPT -->
+<!-- #|-CONTEXT-| -->
 
 <script
 context="module"
 >
-// #EXPORTS
+
+// #\-IMPORTS-\
+
+    // --SVELTE
+
+     // --LIB
+
+    // --JS
+    import a from './assets/js/managers/app'
+    import r from './assets/js/managers/router'
+    import c from './assets/js/managers/command'
+    import e from './assets/js/managers/event'
+    import p from './assets/js/managers/process'
+    import s from './assets/js/managers/spring'
+
+
+// #\-EXPORTS-\
 
     // --CONTEXTS
     export const
-    APP = a,
-    ROUTER = r,
+    APP     = a,
+    ROUTER  = r,
     COMMAND = c,
-    EVENT = e,
+    EVENT   = e,
     PROCESS = p,
-    SPRING = s
+    SPRING  = s
 
-// #IMPORTS
 
-    // --CONTEXTS
-    import a from './assets/js/managers/mApp'
-    import r from './assets/js/managers/mRouter'
-    import c from './assets/js/managers/mCommand'
-    import e from './assets/js/managers/mEvent'
-    import p from './assets/js/managers/mProcess'
-    import s from './assets/js/managers/mSpring'
 </script>
 
+
+<!-- #|-HTML-| -->
+
+<!-- svelte-ignore a11y-no-static-element-interactions -->
+<div
+id="app"
+class:freeze={$app_$FREEZE}
+style:visibility={app_FONTS_CHARGED ? 'visible' : 'hidden'}
+bind:this={app}
+on:scroll={EVENT.event_scroll.bind(EVENT)}
+on:mousemove={EVENT.event_mouseMove.bind(EVENT)}
+on:mousedown={EVENT.event_mouseDown.bind(EVENT)}
+on:mouseup={EVENT.event_mouseUp.bind(EVENT)}
+on:mouseleave={EVENT.event_mouseUp.bind(EVENT)}
+on:touchmove={EVENT.event_touchMove.bind(EVENT)}
+on:touchstart|once={app_eTouchStart}
+>
+    {#if warn_ACTIVE}
+        <Warn
+        bind:warn_ACTIVE
+        />
+    {:else if app_FONTS_CHARGED}
+        <Header />
+        <Main
+        bind:main_CHARGED
+        />
+        <Footer />
+    {/if}
+</div>
+
+
+<!-- #|-SCRIPT-| -->
+
 <script>
-// #EXPORTS
 
-    // --PROPS
-    export let
-    prop_PAGE_ID = 0,
-    prop_SUBPATH = void ''
-
-// #IMPORTS
+// #\-IMPORTS-\
 
     // --SVELTE
     import { onMount, onDestroy } from 'svelte'
 
-    // --COMPONENT-FIELDS
-    import Header from './components/fields/Header.svelte'
-    import Main from './components/fields/Main.svelte'
-    import Footer from './components/fields/Footer.svelte'
+    // --LIB
 
-    // --COMPONENT-WARN
-    import Opti from './components/warn/Opti.svelte'
+    // --CONTEXTS
 
-// #CONSTANTE
+//=======@COMPONENTS|
 
-    // --ELEMENT-APP
+    // --*
+    import Warn from './warn/Warn.svelte'
+
+    import Header   from './header/Header.svelte'
+    import Main     from './main/Main.svelte'
+    import Footer   from './footer/Footer.svelte'
+
+
+// #\-EXPORTS-\
+
+    // --PROPS
+    export let
+    prop_PAGE_ID = 0
+    ,
+    prop_SUBPATH = void ''
+
+    // --BINDING
+
+
+// #\-CONSTANTES-\
+
+    // --SVELTE
+
+    // --CONTEXTS
+
+    // --OUTSIDE
+
+    // --THIS
     const APP_PERFORMANCE = performance.now()
 
-// #VARIABLES
+    // --INSIDE
 
-    // --APP
+
+// #\-VARIABLES-\
+
+    // --CONTEXTS
     let app_$FREEZE = APP.app_$FREEZE
 
-    // --ELEMENT-APP
-    let app_FONTS_CHARGED = false
+    // --OUTSIDE
 
-    // --ELEMENT-MAIN
+    // --THIS
+    let
+    app
+    ,
+    app_FONTS_CHARGED = false
+
+    // --INSIDE
+    let warn_ACTIVE = false
+
     let main_CHARGED = false
 
-    // --ELEMENT-OPTI
-    let opti_ON = false
 
-// #REACTIVE
+// #\\-REATIVES-\\
 
-    // --ELEMENT-MAIN
-    $: main_CHARGED ? app_setContexts() : void 0
+    // --CONTEXTS
 
-// #FUNCTIONS
+    // --OUTSIDE
+
+    // --THIS
+
+    // --INSIDE
+    $: app_setContexts(main_CHARGED)
+
+
+// #\-FUNCTIONS-\
+
+//=======@LIFE|
+
+    // --SVELTE
+    onMount(app_set), onDestroy(app_destroy)
 
     // --SET
     function app_set()
     {
-        APP.app_updateSize()
-
-        opti_setVars()
-
+        app_setVars()
         app_setCommands()
 
-        document.fonts.ready.then(() => app_FONTS_CHARGED = true)
+        warn_setVars()
     }
 
-    function app_setContexts()
+    function app_setVars()
     {
-        SPRING.spring_set() // set command
-        APP.app_set()
-        ROUTER.router_set(prop_PAGE_ID, prop_SUBPATH)
-        EVENT.event_set()
-        PROCESS.process_set()
+        // set screen size + small screen
+        APP.app_updateSize()
+        APP.app_updateSmallScreen()
+
+        document.fonts.ready.then(() => app_FONTS_CHARGED = true)
     }
 
     function app_setCommands()
@@ -118,94 +179,128 @@ context="module"
         COMMAND.command_add('event', app_c$Event)
     }
 
-    function opti_setVars() { opti_ON = (performance.now() - APP_PERFORMANCE) > 7 && localStorage.getItem('optimise') !== 'true' }
+    function app_setContexts(charged)
+    {
+        if (charged)
+        {
+            ROUTER.router_set(prop_PAGE_ID, prop_SUBPATH)
+            EVENT.event_set()
+            PROCESS.process_set()
+            SPRING.spring_set()
+
+            APP.app_set(app)
+
+            app_setContexts = () => {}
+        }
+    }
+
+    async function warn_setVars()
+    {
+        const
+        SCORE = performance.now() - APP_PERFORMANCE,
+        OPTIMISE_STORAGE = APP.app_getOptimiseState()
+
+        warn_ACTIVE = SCORE > 68 && !OPTIMISE_STORAGE
+    }
+
+    // --GET
+
+    // --UPDATES
 
     // --DESTROY
-    function app_destroy() { EVENT.event_destroy() }
+    function app_destroy()
+    {
+        EVENT.event_destroy()
+        SPRING.spring_destroy()
+    }
 
-    // --COMMANDS
-    function app_c$App() { console.log(APP) }
 
-    function app_c$Router() { console.log(ROUTER) }
+//=======@COMMANDS|
 
-    function app_c$Command() { console.log(COMMAND) }
+    // --*
+    function app_c$App()        { console.log(APP) }
 
-    function app_c$Event() { console.log(EVENT) }
+    function app_c$Router()     { console.log(ROUTER) }
 
-    // --EVENT
+    function app_c$Command()    { console.log(COMMAND) }
+
+    function app_c$Event()      { console.log(EVENT) }
+
+
+//=======@EVENTS|
+
+    // --*
     async function app_eTouchStart() { APP.app_$MOBILE = true }
 
-// #CYCLES
 
-onMount(app_set)
-onDestroy(app_destroy)
+//=======@TRANSITIONS|
+
+    // --*
+
+
+//=======@ANIMATIONS|
+
+    // --*
+
+
+//=======@UTILS|
+
+    // --*
+
+
 </script>
 
-<!-- #HTML -->
 
-<!-- svelte-ignore a11y-no-static-element-interactions -->
-<div
-id="app"
-class:freeze={$app_$FREEZE}
-style:visibility={app_FONTS_CHARGED ? 'visible' : 'hidden'}
-on:scroll={EVENT.event_scroll.bind(EVENT)}
-on:mousemove={EVENT.event_mouseMove.bind(EVENT)}
-on:mousedown={EVENT.event_mouseDown.bind(EVENT)}
-on:mouseup={EVENT.event_mouseUp.bind(EVENT)}
-on:mouseleave={EVENT.event_mouseUp.bind(EVENT)}
-on:touchmove={EVENT.event_touchMove.bind(EVENT)}
-on:touchstart|once={app_eTouchStart}
->
-    {#if app_FONTS_CHARGED && !opti_ON}
-        <Header />
-        <Main
-        bind:main_CHARGED
-        />
-        <Footer />
-    {/if}
-
-    {#if opti_ON}
-        <Opti
-        bind:opti_ON
-        />
-    {/if}
-</div>
-
-<!-- #STYLE -->
+<!-- #|-STYLE-| -->
 
 <style
 lang="scss"
 >
-/* #USES */
 
-@use './assets/scss/app';
+/* #\-USES-\ */
 
-@use './assets/scss/styles/utils';
-@use './assets/scss/styles/size';
+    /* --SASS */
 
-/* #GLOBAL */
+    /* --APP */
+    @use './assets/scss/app';
 
-:global
-{
-    @extend %global;
+    /* --DEPENDENCIES */
+    @use './assets/scss/styles/utils';
 
-    a, img { @extend %no-drag; }
-}
+    /* --MEDIA  */
 
-/* #APP */
+
+/* #\-VARIABLES-\ */
+
+    /* --* */
+
+
+/* #\-GLOBAL-\ */
+
+    /* --* */
+    :global
+    {
+        @extend %reset;
+        @extend %fonts;
+        @extend %html;
+    }
+
+
+/* #\-THIS-\ */
 
 #app
 {
+    @include utils.fixed;
+
     @extend %scroll-bar;
-    @extend %any;
 
     overflow: clip scroll;
     overscroll-behavior: none;
-
-    max-height: 100svh;
 
     background-color: $dark;
 
     &.freeze { overflow: clip !important; }
 }
+
+
 </style>

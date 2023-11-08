@@ -1,11 +1,60 @@
-// #ANIMATION
+/*----------------------------------------------- #||--animation--|| */
 
-    // --TRANSFORM
-    %aScaled
+
+/* #\-USES-\ */
+
+    /* --SASS */
+
+    /* --GLOBAL */
+    @use '../global/colors' as *;
+
+    /* --APP */
+
+    /* --DEPENDENCIES */
+    @use './utils';
+    @use './display';
+
+    /* --MEDIA */
+
+
+/* #\-VARIABLES-\ */
+
+    /* --* */
+
+
+/* #\-MIXIN-\ */
+
+    /* --* */
+
+
+/* #\-PLACEHOLDER-\ */
+
+    /* --* */
+    %a-scaled
     {
-        transform: translateY(100%) scaleY(0);
+        transform: translateY(50%) scaleY(0);
 
-        animation: aScaled .4s ease forwards;
+        animation: a-scaled .4s .4s ease-out forwards;
 
-        @keyframes aScaled { to { transform: translateY(0) scaleY(1); } }
+        @keyframes a-scaled { to { transform: translateY(0) scaleY(1); } }
+    }
+
+    %a-text
+    {
+        &:hover::after { clip-path: polygon(0 110%, 100% 110%, 100% 0, 0 0); }
+
+        &::after
+        {
+            @include utils.placement(absolute, 0, 0, 0, 0, $pe: attr(data-content));
+
+            @extend %f-center;
+            @extend %any-size;
+
+            clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
+
+            color: $primary;
+            font: inherit;
+
+            transition: clip-path .4s ease-out;
+        }
     }

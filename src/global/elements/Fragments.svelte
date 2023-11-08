@@ -1,0 +1,238 @@
+<!----------------------------------------------- #||--fragments--|| -->
+
+
+<!-- #|-CONTEXT-| -->
+<!--
+<script
+context="module"
+>
+
+// #\-IMPORTS-\
+
+    // --SVELTE
+
+     // --LIB
+
+    // --JS
+
+
+// #\-EXPORTS-\
+
+    // --CONTEXTS
+
+
+</script>
+-->
+
+<!-- #|-HTML-| -->
+
+<div
+class="fragments"
+>
+    {#each prop_FRAGS.value as char, i}
+        <pre
+        class:void={char === ' '}
+        style={prop_STYLE(i)}
+        bind:this={prop_FRAGS.children[prop_FRAGS.children.length]}
+        >{char}</pre>
+    {/each}
+
+    {#if prop_TAGS.value instanceof Array}
+        <ul>
+            {#each prop_TAGS.value as tag}
+                <li>
+                    <strong>
+                        {#each tag + '.' as char}
+                            <pre
+                            data-char={char}
+                            bind:this={prop_TAGS.children[prop_TAGS.children.length]}
+                            >&nbsp;</pre>
+                        {/each}
+                    </strong>
+                </li>
+            {/each}
+        </ul>
+    {:else if prop_TAGS.value != void '' }
+        {#each prop_TAGS.value as char}
+            <pre
+            data-char={char}
+            bind:this={prop_TAGS.children[prop_TAGS.children.length]}
+            >&nbsp;</pre>
+        {/each}
+    {/if}
+</div>
+
+
+<!-- #|-SCRIPT-| -->
+
+<script>
+
+// #\-IMPORTS-\
+
+    // --DATA
+
+    // --SVELTE
+
+    // --LIB
+
+    // --CONTEXTS
+
+//=======@COMPONENTS|
+
+    // --*
+
+
+// #\-EXPORTS-\
+
+    // --PROPS
+    export let
+    prop_FRAGS  = { children: [], value: '' },
+    prop_TAGS   = { children: [], value: '' }
+    ,
+    prop_STYLE = () => {}
+
+    // --BINDING
+
+
+// #\-CONSTANTES-\
+
+    // --SVELTE
+
+    // --CONTEXTS
+
+    // --OUTSIDE
+
+    // --THIS
+
+    // --INSIDE
+
+
+// #\-VARIABLES-\
+
+    // --CONTEXTS
+
+    // --OUTSIDE
+
+    // --THIS
+
+    // --INSIDE
+
+
+// #\-REATIVES-\
+
+    // --CONTEXTS
+
+    // --OUTSIDE
+
+    // --THIS
+
+    // --INSIDE
+
+
+// #\-FUNCTIONS-\
+
+//=======@LIFE|
+
+    // --SVELTE
+
+    // --SET
+
+    // --GET
+
+    // --UPDATES
+
+    // --DESTROY
+
+
+//=======@COMMANDS|
+
+    // --*
+
+
+//=======@EVENTS|
+
+    // --*
+
+
+//=======@TRANSITIONS|
+
+    // --*
+
+
+//=======@ANIMATIONS|
+
+    // --*
+
+
+//=======@UTILS|
+
+    // --*
+
+
+</script>
+
+
+<!-- #|-STYLE-| -->
+
+<style
+lang="scss"
+>
+
+/* #\-USES-\ */
+
+    /* --SASS */
+
+    /* --APP */
+
+    /* --DEPENDENCIES */
+    @use '../../assets/scss/styles/font';
+
+    /* --MEDIA */
+
+
+/* #\-VARIABLES-\ */
+
+    /* --* */
+
+
+/* #\-GLOBAL-\ */
+
+    /* --* */
+
+
+/* #\-THIS-\ */
+
+.fragments
+{
+    &, ul { display: flex; }
+
+    align-items: flex-end;
+
+    transform-style: preserve-3d;
+
+    pre
+    {
+        display: inline-block;
+
+        font: inherit;
+    }
+
+    ul
+    {
+        flex-wrap: wrap;
+
+        gap: 1rem;
+
+        margin-left: 2rem;
+
+        li
+        {
+            @include font.text($primary, $regular: false, $line-height: font.$line-height-title-min);
+
+            white-space: nowrap;
+        }
+    }
+}
+
+
+</style>
