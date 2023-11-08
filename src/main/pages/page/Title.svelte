@@ -275,7 +275,7 @@ lang="scss"
 /* #\-VARIABLES-\ */
 
     /* --* */
-    $shadow: 0 0 2rem $intermediate;
+    $shadow: 0 0 2rem rgba($light, .1);
 
 
 /* #\-GLOBAL-\ */

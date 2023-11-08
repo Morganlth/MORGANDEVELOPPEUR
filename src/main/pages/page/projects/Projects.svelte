@@ -185,15 +185,12 @@ bind:this={projects}
 
     async function projects_setProject(id)
     {
-        try {
-            if (page_CHARGED && (id != null || projects_TARGET))
-            {
-                router_updatePaths(id)
+        if (page_CHARGED && (id != null || projects_TARGET))
+        {
+            router_updatePaths(id)
 
-                projects_update()
-            }
+            projects_update()
         }
-        catch (e) { COMMAND.command_COMMANDS.log(e) }
     }
 
     // --GET
