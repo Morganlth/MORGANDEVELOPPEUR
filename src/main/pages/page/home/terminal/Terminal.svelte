@@ -383,7 +383,7 @@ lang="scss"
     {
         top: 33%;
 
-        :global .face, :global .back { padding: 2rem 4rem; }
+        .container { :global .face, :global .back { padding: 2rem 4rem; } }
     }
 }
 

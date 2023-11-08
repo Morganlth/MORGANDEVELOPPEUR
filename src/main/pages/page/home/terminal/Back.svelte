@@ -339,7 +339,7 @@ lang="scss"
 
     .desc
     {
-        $margin-top: 2rem;
+        $margin-top: 1rem;
 
         @extend %scroll-bar;
 
