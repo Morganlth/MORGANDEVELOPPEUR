@@ -413,7 +413,7 @@ bind:this={blackblocks}
     }
     function blackblocks_setBlockFloating(block)
     {
-        block.getFloating = animation_staticFloating(null, .02)
+        block.getFloating = animation_staticFloating(null, .01)
 
         blackblocks_FLOATING_BLOCKS.push(block)
     }
@@ -618,10 +618,10 @@ bind:this={blackblocks}
         {
             const BLOCK = blackblocks_FLOATING_BLOCKS[i]
 
-            BLOCK.position.y += BLOCK.getFloating() * .0006
+            BLOCK.position.y += BLOCK.getFloating() * .0004
         }
     },
-    3) // +- 50ms
+    2) // +- 33ms
 
     function blackblocks_updateShaderProjectionMatrixCamera() { BLACKBLOCKS_SHADER_UNIFORMS.projectionMatrixCamera.value.copy(blackblocks_CAMERA.projectionMatrix) }
 
