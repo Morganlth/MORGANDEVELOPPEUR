@@ -227,7 +227,7 @@ lang="scss"
 
         box-sizing: border-box;
 
-        user-select: auto;
+        user-select: text;
 
         color: $light;
         font-size: map.get(font.$font-sizes, s2);

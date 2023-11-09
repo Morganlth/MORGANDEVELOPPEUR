@@ -254,8 +254,6 @@ lang="scss"
 
     mix-blend-mode: difference;
 
-    user-select: none;
-
     &.hide
     {
         pointer-events: none;

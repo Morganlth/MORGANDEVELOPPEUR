@@ -145,6 +145,8 @@
                 height: 100svh;
 
                 overscroll-behavior: none;
+        
+                user-select: none;
             }
 
             &, body { background-color: $dark; }

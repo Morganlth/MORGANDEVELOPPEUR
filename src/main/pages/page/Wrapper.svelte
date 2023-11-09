@@ -206,8 +206,6 @@ lang="scss"
         z-index: 1;
 
         width: calc(100% - app.$gap-inline * 2);
-
-        user-select: none;
     }
 
     @include media.min($height: $ms3) { padding-top: max(11rem, 70px); }
