@@ -213,7 +213,8 @@ lang="scss"
     q::before, q::after { content: '' }
 
     @include media.min($height: $ms3) { display: flex; }
-    @include media.min($ms4, $ms4) { margin-top: 26vh; }
+
+    @include media.min($ms4, $ms4)    { margin-top: 26vh; }
 }
 
 
