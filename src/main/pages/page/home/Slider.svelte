@@ -292,7 +292,7 @@ lang="scss"
 
         display: block;
 
-        letter-spacing: -.4rem;
+        letter-spacing: -.6rem;
     }
 
     p
