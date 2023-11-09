@@ -29,11 +29,11 @@ context="module"
 <nav
 class="nav"
 class:focus={prop_FOCUS}
-class:top={prop_FOCUS && !prop_INTRO}
+class:top={!prop_INTRO}
 style:--nav-t-x="{nav_TRANSLATE_X}%"
 style:--nav-t-y="{prop_TRANSLATE_Y}px"
 style:--nav-rotate="{nav_ROTATE}deg"
-style:--nav-border-color={nav_BORDER_COLOR}
+style:--pe-color={nav_PE_COLOR}
 >
     <ul
     class="items"
@@ -136,7 +136,7 @@ style:--nav-border-color={nav_BORDER_COLOR}
     nav_TRANSLATE_X = 0,
     nav_ROTATE      = 90
     ,
-    nav_BORDER_COLOR = COLORS.intermediate
+    nav_PE_COLOR = COLORS.intermediate
     ,
     nav_T = 0
     ,
@@ -230,7 +230,7 @@ style:--nav-border-color={nav_BORDER_COLOR}
                 nav_TRANSLATE_X = -100 * T
                 nav_ROTATE = 90 * (1 - T)
 
-                nav_BORDER_COLOR = prop_INTRO ? COLORS[t > .2 ? 'light' : 'intermediate'] : 'transparent'
+                nav_PE_COLOR = prop_INTRO ? COLORS[t > .2 ? 'light' : 'intermediate'] : 'transparent'
             }
             else
             {
@@ -239,7 +239,7 @@ style:--nav-border-color={nav_BORDER_COLOR}
                 items_TRANSLATE_X = (nav_TRANSLATE_X = -100 * (1 - T))
                 items_OPACITY = T
 
-                nav_BORDER_COLOR = COLORS.intermediate
+                nav_PE_COLOR = COLORS.intermediate
             }
         },
         NAV_DURATION, nav_T, invert).cancel
@@ -279,7 +279,7 @@ lang="scss"
 /* #\-VARIABLES-\ */
 
     /* --* */
-    $pe-transition: border .6s;
+    $pe-transition: background-color .6s;
 
 
 /* #\-GLOBAL-\ */
@@ -291,6 +291,8 @@ lang="scss"
 
 .nav
 {
+    &::before, &, .items { width: 100%; }
+
     &::before
     {
         @include utils.placement(absolute, $top: 0, $right: 0, $left: 0, $pe: true);
@@ -299,17 +301,14 @@ lang="scss"
 
         opacity: 0;
 
-        width: 100%;
-        height: 0;
+        height: 1px;
 
-        border-top: solid var(--nav-border-color, $intermediate) 1px;
+        background-color: var(--pe-color, $intermediate);
 
         transition: $pe-transition, opacity 1s;
     }
 
     position: relative;
-
-    width: 100%;
 
     transition: transform .4s .2s ease-out;
 
@@ -322,14 +321,14 @@ lang="scss"
             transition: $pe-transition;
         }
 
+        &.top
+        {
+            &::before { background-color: transparent !important; }
+
+            transform: translateY(var(--nav-t-y, -300%));
+        }
+
         li button { pointer-events: auto; }
-    }
-
-    &.top
-    {
-        &::before { border-top-color: transparent !important; }
-
-        transform: translateY(var(--nav-t-y, -300%));
     }
 
     .items
@@ -340,30 +339,20 @@ lang="scss"
 
         justify-content: flex-start;
         flex-wrap: wrap;
-    
-        gap: .4rem 2rem;
-
-        width: 100%;
-
-        @include media.min($ms4, $ms4)
-        {
-            gap: 1rem 3rem;
-
-            padding-top: 1rem;
-        }
+        gap: .8rem;
     }
 
     li button
     {
-        @include font.text($n: 1, $color: var(--item-color, $light));
+        @include font.text($n: 0, $color: var(--item-color, $light));
 
-        display: flex;
-
-        gap: .8rem;
-
-        padding-block: 1rem;
+        padding: .8rem 1.8rem;
 
         pointer-events: none;
+
+        background-color: $dark;
+
+        border: solid $intermediate 1px;
     }
 }
 

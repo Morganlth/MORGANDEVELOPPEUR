@@ -336,7 +336,7 @@ lang="scss"
 
         pointer-events: auto;
 
-        padding-inline: app.$gap-inline;
+        padding-inline: app.$gap-inline calc(app.$gap-inline - utils.$scroll-bar-width);
 
         .line
         {
@@ -362,7 +362,7 @@ lang="scss"
     
             flex: 1;
 
-            min-height: 24%;
+            min-height: 30%;
 
             padding-inline: app.$gap-inline;
 

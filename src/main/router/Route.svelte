@@ -235,8 +235,6 @@ lang="scss"
     
     padding-inline: 1.2rem;
 
-    text-decoration: none;
-
     &::after
     {
         @include utils.placement(absolute, 50%, 0, 0, 0, $pe: true);

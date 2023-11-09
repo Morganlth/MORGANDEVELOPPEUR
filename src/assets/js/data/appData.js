@@ -122,7 +122,7 @@
                 {
                     id: 0,
                     title: 'Page de contact',
-                    value: 'CONTACT'
+                    value: 'Contact'
                 }
             ]
         ,

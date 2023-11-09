@@ -319,13 +319,13 @@ lang="scss"
         {
             @include utils.placement(absolute, $top: 2.4rem, $left: 0, $pe: attr(data-pe-content));
 
-            padding-right: 2rem;
+            padding-right: 2.2rem;
         
             clip-path: polygon(100% 0, 100% 0, 100% 100%, 100% 100%);
 
             color: $intermediate;
             font-family: inherit;
-            font-size: 210%;
+            font-size: 212%;
             font-style: italic;
 
             transition: clip-path $pe-duration ease-in-out;
