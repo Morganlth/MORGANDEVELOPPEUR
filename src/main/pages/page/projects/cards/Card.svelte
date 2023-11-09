@@ -367,6 +367,8 @@ on:out={tag_eOut}
         card_destroyEvents()
         
         card_GRABBING = false
+
+        COMMAND.command_COMMANDS.log(+new Date())
     }
 
     async function card_e$Resize()
@@ -410,6 +412,8 @@ on:out={tag_eOut}
         card_LAST = +new Date()
 
         card_setEvents()
+
+        COMMAND.command_COMMANDS.log(card_LAST)
 
         card_GRABBING = true
     }
