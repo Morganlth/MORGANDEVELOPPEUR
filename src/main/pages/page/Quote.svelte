@@ -185,7 +185,7 @@ lang="scss"
 
 .quote
 {
-    @include font.text($n: 1, $color: $light);
+    @include font.text($n: 0, $color: $light);
     
     display: none;
 
