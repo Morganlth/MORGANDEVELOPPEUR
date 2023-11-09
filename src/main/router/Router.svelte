@@ -230,7 +230,7 @@ lang="scss"
     /* --* */
     $t-duration: .4s;
 
-    $li-d-clip: polygon(-10% -10%, 110% -10%, 110% 110%, -10% 110%);
+    $route-default-clip: polygon(-10% -10%, 110% -10%, 110% 110%, -10% 110%);
 
 
 /* #\-GLOBAL-\ */
@@ -258,7 +258,7 @@ lang="scss"
     {
         pointer-events: none;
     
-        :global .route { clip-path: polygon(-10% 0, -10% 0, -10% 100%, -10% 100%); }
+        :global .route { clip-path: polygon(-20% 0, -20% 0, -20% 100%, -20% 100%); }
     }
 
     ul
@@ -287,7 +287,7 @@ lang="scss"
 
         .route
         {
-            clip-path: $li-d-clip;
+            clip-path: $route-default-clip;
 
             transition: clip-path $t-duration var(--route-t-delay, 0s) ease-out;
         }
@@ -323,7 +323,7 @@ lang="scss"
         {
             pointer-events: auto;
 
-            &:hover :global .route, :global .route:focus { clip-path: $li-d-clip !important; }
+            &:hover :global .route, :global .route:focus { clip-path: $route-default-clip !important; }
         }
     }
 }
