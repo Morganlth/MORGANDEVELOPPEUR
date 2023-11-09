@@ -258,7 +258,7 @@ lang="scss"
 .slider
 {
     @include utils.placement(absolute, $bottom: 0, $left: 62%);
-    @include font.text($intermediate, $regular: false, $font-size: map.get(font.$font-sizes, s3));
+    @include font.text($n: 1, $color: $intermediate, $regular: false, $font-size: map.get(font.$font-sizes, s3));
 
     transform-origin: bottom right;
     transform: perspective(900px) rotateX(-.6rad) scale(.5);

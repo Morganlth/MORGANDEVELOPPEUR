@@ -212,6 +212,7 @@ lang="scss"
 
     /* --SASS */
     @use 'sass:math';
+    @use 'sass:map';
 
     /* --APP */
     @use '../../../../assets/scss/app';
@@ -305,7 +306,12 @@ lang="scss"
 
             padding-left: 2rem;
 
-            .content { padding-inline: 6% app.$gap-inline; }
+            .content
+            {
+                padding-inline: 6% app.$gap-inline;
+
+                font-family: map.get(font.$family-text-map, t1) !important;
+            }
         }
 
         h3
@@ -371,6 +377,8 @@ lang="scss"
                 
                     background-color: $dark;
                     mix-blend-mode: overlay;
+
+                    font-family: map.get(font.$family-text-map, t0) !important;
                 }
             }
 

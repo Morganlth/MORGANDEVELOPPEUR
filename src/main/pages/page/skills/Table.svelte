@@ -379,7 +379,7 @@ lang="scss"
                 font-size: map.get(font.$font-sizes, s2);
             }
     
-            p { @include font.text($light, $font-size: map.get(font.$font-sizes, s3)); }
+            p { @include font.text($n: 1, $color: $light); }
         }
 
         @keyframes a-0 { from { transform: translateX(100%); } to { transform: translateX(0%); } }

@@ -208,6 +208,7 @@ lang="scss"
 /* #\-VARIABLES-\ */
 
     /* --* */
+    $pe-before-duration: .2s;
 
 
 /* #\-GLOBAL-\ */
@@ -221,7 +222,7 @@ lang="scss"
 {
     &, &::after { box-sizing: border-box; }
 
-    @include font.text($light, false);
+    @include font.text($color: $light, $regular: false);
 
     @extend %f-a-center;
 
@@ -230,9 +231,9 @@ lang="scss"
     opacity: .9;
 
     width: 100%;
-    height: 3rem;
+    height: 3.4rem;
     
-    padding-inline: 1.1rem;
+    padding-inline: 1.2rem;
 
     text-decoration: none;
 
@@ -255,17 +256,17 @@ lang="scss"
 
         animation: a-selected .4s forwards;
 
+        &::after
+        {
+            animation: a-pe-after-selected .2s $pe-before-duration ease-out forwards;
+
+            @keyframes a-pe-after-selected { 100% { transform: translateY(-50%) scale(1); } }
+        }
+
         @keyframes a-selected
         {
             40%     { color: $indicator; }
             100%    { color: $primary; }    
-        }
-
-        &::after
-        {
-            animation: a-pe-after-selected .2s linear .25s forwards;
-
-            @keyframes a-pe-after-selected { 100% { transform: translateY(-50%) scale(1); } }
         }
     }
 
@@ -275,9 +276,9 @@ lang="scss"
         {
             @include utils.placement(absolute, 50%, 0, 0, 0, $pe: true);
 
-            transform: translateX(-50%) scaleX(.04);
+            transform: translateX(-50%);
 
-            width: 100%;
+            width: .8rem;
             height: 0;
             
             border-top: solid $light 1px;
@@ -289,9 +290,17 @@ lang="scss"
         {
             border-top-color: $primary;
 
-            animation: a-pe-before-selected .3s ease-out;
+            animation: a-pe-before-selected $pe-before-duration ease-out;
 
-            @keyframes a-pe-before-selected { 100% { width: 100%; } }
+            @keyframes a-pe-before-selected
+            {
+                100%
+                {
+                    transform: translateX(0);
+        
+                    width: 100%;
+                }
+            }
         }
     }
 }

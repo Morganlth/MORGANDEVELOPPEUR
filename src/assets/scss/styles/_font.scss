@@ -24,8 +24,10 @@
     $family-title:        'CodeNext-BLACK', 'CodeNext', 'sans-serif', 'arial';
     $family-title-italic: 'CodeNext-BLACK-ITALIC', 'CodeNext-BLACK', 'CodeNext', 'sans-serif', 'arial';
     $family-subtitle:     'CodeNext', 'CodeNext-BLACK', 'sans-serif', 'arial';
-    $family-text:         'AnonymousPro', 'Courier New';
-    $family-text-bold:    'AnonymousProBold', 'Courier New';
+
+    $family-text-default:       'Courier New';
+    $family-text-map:      (t0: 'AnonymousPro', t1: 'Hack', t2: 'JetBrainsMono');
+    $family-text-bold-map: (t0: 'AnonymousPro-Bold', t1: 'Hack-Bold', t2: 'JetBrainsMono-Bold');
 
     // 0 - 12 - 18 - 24 - 36 - 48 - 60 - 72 - 88
     $font-sizes:        (s0: 0rem, s1: 1.2rem, s2: 1.8rem, s3: 2.4rem, s4: 3.6rem, s5: 4.8rem, s6: 6rem, s7: 7.2rem, s8: 9.6rem);
@@ -63,18 +65,18 @@
         }
     }
 
-    @mixin text($color: inherit, $regular: true, $font-size: map.get($font-sizes, s2), $line-height: 1)
+    @mixin text($n: 0, $color: inherit, $regular: true, $font-size: map.get($font-sizes, s2), $line-height: 1)
     {
         @extend %default-settings;
     
         @if $regular
         {
-            font-family: $family-text;
+            font-family: map.get($family-text-map, 't#{$n}'), $family-text-default;
             font-weight: normal;
         }
         @else
         {
-            font-family: $family-text-bold;
+            font-family: map.get($family-text-bold-map, 't#{$n}'), $family-text-default;
             font-weight: bold;
             font-synthesis-weight: auto;
         }

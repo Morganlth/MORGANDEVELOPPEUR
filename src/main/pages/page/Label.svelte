@@ -245,7 +245,7 @@ lang="scss"
     &, .content { width: min-content; }
     
     @include utils.placement(relative, $z: 2);
-    @include font.text($light);
+    @include font.text($color: $light);
 
     padding-bottom: 2rem;
 

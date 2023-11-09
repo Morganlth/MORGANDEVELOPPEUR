@@ -220,7 +220,7 @@ lang="scss"
 
         a
         {
-            @include font.text($light, $regular: false);
+            @include font.text($color: $light, $regular: false);
 
             @extend %a-text;
 
@@ -245,7 +245,7 @@ lang="scss"
 
     &>p
     {
-        @include font.text($light);
+        @include font.text($color: $light);
 
         padding-bottom: $padding-block;
     }

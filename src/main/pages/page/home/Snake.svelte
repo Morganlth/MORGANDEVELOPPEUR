@@ -831,7 +831,7 @@ lang="scss"
 
         pre { @include font.h-(1, $light, .9, true); }
 
-        span { @include font.text($primary, false, map.get(font.$font-sizes, s3), 1.4); }
+        span { @include font.text($color: $primary, $regular: false, $font-size: map.get(font.$font-sizes, s3), $line-height: 1.4); }
     }
 
     .frame
@@ -856,9 +856,9 @@ lang="scss"
 
             .score, .fps
             {
-                @include font.text($light);
+                @include font.text($color: $light);
 
-                span { font-family: font.$family-text-bold !important; }
+                span { font-family: map.get(font.$family-text-bold-map, t0) !important; }
             }
         }
     }

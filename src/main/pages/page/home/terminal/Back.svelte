@@ -361,12 +361,12 @@ lang="scss"
 
         h4
         {
-            @include font.text($light, $regular: false, $font-size: map.get(font.$font-sizes, s3));
+            @include font.text($n: 1, $color: $light, $regular: false, $font-size: map.get(font.$font-sizes, s3));
 
             margin-block: 2.4rem 1.2rem;
         }
 
-        p { @include font.text($light, $font-size: map.get(font.$font-sizes, s2), $line-height: 1.2); }
+        p { @include font.text($color: $light, $font-size: map.get(font.$font-sizes, s2), $line-height: 1.2); }
 
         span { user-select: text; }
 

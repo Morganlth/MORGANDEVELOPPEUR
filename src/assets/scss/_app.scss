@@ -82,7 +82,7 @@
         }
         @font-face
         {
-            font-family: 'AnonymousProBold';
+            font-family: 'AnonymousPro-Bold';
             src: url('/fonts/AnonymousPro/AnonymousPro-Bold.eot');
             src: local('Anonymous Pro Bold'), local('AnonymousPro-Bold'),
             url('/fonts/AnonymousPro/AnonymousPro-Bold.eot?#iefix') format('embedded-opentype'),
@@ -99,6 +99,34 @@
             url('/fonts/AnonymousPro/AnonymousPro.woff2') format('woff2'),
             url('/fonts/AnonymousPro/AnonymousPro.woff') format('woff'),
             url('/fonts/AnonymousPro/AnonymousPro.ttf') format('truetype');
+        }
+
+        @font-face
+        {
+            font-family: 'JetBrainsMono-Bold';
+            src: local('JetBrainsMono-Bold'),
+            url('/fonts/JetBrainsMono/webfonts/JetBrainsMono-Bold.woff2') format('woff2'),
+            url('/fonts/JetBrainsMono/ttf/JetBrainsMono-Bold.ttf') format('truetype');
+        }
+        @font-face
+        {
+            font-family: 'JetBrainsMono';
+            src: local('JetBrainsMono'), local('JetBrainsMono-Regular'),
+            url('/fonts/JetBrainsMono/webfonts/JetBrainsMono-Reegular.woff2') format('woff2'),
+            url('/fonts/JetBrainsMono/ttf/JetBrainsMono-Regular.ttf') format('truetype');
+        }
+
+        @font-face
+        {
+            font-family: 'Hack-Bold';
+            src: local('Hack-Bold'),
+            url('/fonts/Hack/fonts/Hack_v3_003/Hack-Bold.ttf') format('truetype');
+        }
+        @font-face
+        {
+            font-family: 'Hack';
+            src: local('Hack-Regular'), local('Hack'),
+            url('/fonts/Hack/fonts/Hack_v3_003/Hack-Regular.ttf') format('truetype');
         }
     }
 

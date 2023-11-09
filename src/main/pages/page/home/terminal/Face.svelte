@@ -611,7 +611,7 @@ lang="scss"
 
         p
         {
-            @include font.text($light, $font-size: map.get(font.$font-sizes, s1));
+            @include font.text($color: $light, $font-size: map.get(font.$font-sizes, s1));
 
             text-align: right;
             

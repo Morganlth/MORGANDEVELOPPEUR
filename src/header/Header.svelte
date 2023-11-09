@@ -224,7 +224,7 @@ lang="scss"
 
     &>strong
     {   
-        p { @include font.text($light); }
+        p { @include font.text($color: $light); }
 
         span
         {
@@ -234,7 +234,7 @@ lang="scss"
         }
     }
 
-    span { @include font.text($primary, false); }
+    span { @include font.text($color: $primary, $regular: false); }
 }
 
 </style>

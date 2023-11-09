@@ -355,7 +355,7 @@ lang="scss"
 
     li button
     {
-        @include font.text(var(--item-color, $light), $font-size: map.get(font.$font-sizes, s3));
+        @include font.text($n: 1, $color: var(--item-color, $light));
 
         display: flex;
 

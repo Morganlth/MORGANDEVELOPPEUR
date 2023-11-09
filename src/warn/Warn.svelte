@@ -299,13 +299,13 @@ lang="scss"
 
     p
     {
-        @include font.text($light, $font-size: map.get(font.$font-sizes, s2), $line-height: 1.3);
+        @include font.text($color: $light, $font-size: map.get(font.$font-sizes, s2), $line-height: 1.3);
 
         margin-bottom: .8rem;
 
         text-align: justify;
 
-        &>span { font-family: font.$family-text-bold !important; }
+        &>span { font-family: map.get(font.$family-text-bold-map, t0) !important; }
 
         .command
         {
@@ -320,7 +320,7 @@ lang="scss"
 
     article>div
     {
-        @include font.text($light, false);
+        @include font.text($color: $light, $regular: false);
 
         margin-top: app.$gap-block;
 
