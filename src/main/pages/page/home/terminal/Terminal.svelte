@@ -420,8 +420,6 @@ lang="scss"
         transform: rotateY(calc($r-y * -1)) translateX(0);
 
         :global .face { pointer-events: auto; }
-
-        :global .back { pointer-events: none; }
     }
 }
 
