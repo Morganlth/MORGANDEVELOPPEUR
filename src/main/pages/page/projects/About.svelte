@@ -274,6 +274,7 @@ lang="scss"
     @use '../../../../assets/scss/styles/font';
 
     /* --MEDIA */
+    @use '../../../../assets/scss/styles/media';
 
 
 /* #\-VARIABLES-\ */
@@ -295,6 +296,8 @@ lang="scss"
 
     width:  min(42rem, calc(100vw - app.$gap-inline * 2));
     height: 100% - $top * 2;
+
+    pointer-events: none;
 
     .content, .canvas { @extend %any-size; }
 
@@ -322,14 +325,11 @@ lang="scss"
         p:nth-child(1) { color: $light; }
 
         p:not(:nth-child(1)) { color: $primary; }
+
+        @include media.min($ms2) { pointer-events: auto; }
     }
 
-    .canvas
-    {
-        @include utils.placement(absolute, 0, 0, 0, 0);
-
-        pointer-events: none;
-    }
+    .canvas { @include utils.placement(absolute, 0, 0, 0, 0); }
 }
 
 
