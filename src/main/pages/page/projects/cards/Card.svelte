@@ -168,6 +168,7 @@ on:out={tag_eOut}
     CARD_EVENTS =
     {
         mouseMove: wait_throttle(card_e$MouseMove, 3), // +- 50ms
+        touchMove: wait_throttle(card_e$TouchMove, 3), // +- 50ms
         mouseUp  : card_e$MouseUp
     }
 
@@ -356,6 +357,8 @@ on:out={tag_eOut}
 
     // --*
     async function card_e$MouseMove(clientX, clientY) { card_updateTranslate(clientX, clientY) }
+
+    async function card_e$TouchMove(clientX, clientY) { card_updateTranslate(clientX, clientY) }
 
     function card_e$MouseUp()
     {
