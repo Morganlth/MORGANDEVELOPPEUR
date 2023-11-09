@@ -317,6 +317,13 @@ lang="scss"
             padding-right: 1rem;
         }
 
+        .feature
+        {
+            position: relative;
+
+            width: fit-content;
+        }
+
         a
         {
             @extend %a-text;
@@ -355,25 +362,18 @@ lang="scss"
                 transition: transform .4s ease-in;
             }
 
-            .feature
+            .feature::before
             {
-                position: relative;
+                @include utils.placement(absolute, $top: 90%, $left: -12vw, $z: -1, $pe: attr(data-content));
 
-                width: fit-content;
-
-                &::before
-                {
-                    @include utils.placement(absolute, $top: 90%, $left: -12vw, $z: -1, $pe: attr(data-content));
-
-                    /* You may not @extend selectors across media queries */
-                    width:  100%;
-                    height: 100%;
-        
-                    padding-inline: .8rem;
-                
-                    background-color: $dark;
-                    mix-blend-mode: overlay;
-                }
+                /* You may not @extend selectors across media queries */
+                width:  100%;
+                height: 100%;
+    
+                padding-inline: .8rem;
+            
+                background-color: $dark;
+                mix-blend-mode: overlay;
             }
 
             
