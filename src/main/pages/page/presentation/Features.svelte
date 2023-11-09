@@ -321,6 +321,8 @@ lang="scss"
         {
             position: relative;
 
+            display: block;
+
             width: fit-content;
         }
 
