@@ -116,7 +116,7 @@ on:out={tag_eOut}
     import { animation }                    from '$lib/animation'
 
     // --CONTEXTS
-    import { APP, EVENT } from '../../../../../App.svelte'
+    import { APP, EVENT, COMMAND } from '../../../../../App.svelte'
 
 //=======@COMPONENTS|
 
@@ -358,7 +358,7 @@ on:out={tag_eOut}
     // --*
     async function card_e$MouseMove(clientX, clientY) { card_updateTranslate(clientX, clientY) }
 
-    async function card_e$TouchMove(clientX, clientY) { card_updateTranslate(clientX, clientY) }
+    async function card_e$TouchMove(clientX, clientY) { card_updateTranslate(clientX, clientY); COMMAND.command_COMMANDS.log(clientX, clientY) }
 
     function card_e$MouseUp()
     {
