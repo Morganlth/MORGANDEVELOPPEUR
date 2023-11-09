@@ -288,7 +288,7 @@ lang="scss"
     {
         #{--title-size}: calc(map.get(font.$font-sizes, s8) * 2);
 
-        @include font.h-($line-height: 1.2, $italic: true);
+        @include font.h-($color: $intermediate, $line-height: 1.2, $italic: true);
 
         display: block;
 
