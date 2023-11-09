@@ -310,9 +310,11 @@ lang="scss"
 
         h3
         {
-            @include font.h-(3, $intermediate, .4, true);
+            @include font.h-(3, $color: $intermediate, $line-height: .4, $italic: true);
 
             transform: translateX(-3rem);
+
+            padding-right: 1rem;
         }
 
         a
