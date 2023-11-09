@@ -325,7 +325,7 @@ lang="scss"
 
             color: $intermediate;
             font-family: inherit;
-            font-size: 212%;
+            font-size: 210%;
             font-style: italic;
 
             transition: clip-path $pe-duration ease-in-out;
