@@ -342,18 +342,18 @@ bind:this={blackblocks}
     }
     function blackblocks_setDirectionalLight()
     {
-        const DIRECTIONALLIGHT = new DirectionalLight(COLORS.light, 1)
+        const DIRECTIONALLIGHT = new DirectionalLight(COLORS.light, .6)
 
-        DIRECTIONALLIGHT.position.set(3, -1.4, 0)
+        DIRECTIONALLIGHT.position.set(3, -1.2, 0)
 
         blackblocks_SCENE.add(DIRECTIONALLIGHT)
     }
     function blackblocks_setSpotLight()
     {
-        const SPOTLIGHT = new SpotLight(COLORS.primary, 32, 16, .32, .8, .8)
+        const SPOTLIGHT = new SpotLight(COLORS.primary, 40, 16, .4, .8, .8)
 
         SPOTLIGHT.position.set(6, -8, 8)
-        SPOTLIGHT.target.position.set(3.2, -1.2, 0)
+        SPOTLIGHT.target.position.set(3, -1.2, 0)
 
         blackblocks_SCENE.add(SPOTLIGHT)
         blackblocks_SCENE.add(SPOTLIGHT.target)
