@@ -302,12 +302,7 @@ lang="scss"
 
     padding-bottom: 2rem;
 
-    :global .fragments
-    {
-        min-height: 2rem;
-
-        text-shadow: $shadow;
-    }
+    :global .fragments { text-shadow: $shadow; }
 
     .element
     {
@@ -330,7 +325,7 @@ lang="scss"
 
             color: $intermediate;
             font-family: inherit;
-            font-size: 210%;
+            font-size: 212%;
             font-style: italic;
 
             transition: clip-path $pe-duration ease-in-out;
@@ -347,8 +342,6 @@ lang="scss"
 
         :global .fragments
         {
-            min-height: 3rem;
-
             &:nth-child(1) { margin-left: calc(app.$gap-inline * 2); }
             &:nth-child(2) { margin-left: app.$gap-inline; }
         }
