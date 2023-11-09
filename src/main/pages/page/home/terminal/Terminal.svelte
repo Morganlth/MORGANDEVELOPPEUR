@@ -406,7 +406,12 @@ lang="scss"
                 pointer-events: none;
             }
 
-            :global .back { transform: rotateY(0); }
+            :global .back
+            {
+                transform: rotateY(0);
+
+                pointer-events: auto;
+             }
         }
     }
 
@@ -414,7 +419,9 @@ lang="scss"
     {
         transform: rotateY(calc($r-y * -1)) translateX(0);
 
-        :global .face, :global .back { pointer-events: auto; }
+        :global .face { pointer-events: auto; }
+
+        :global .back { pointer-events: none; }
     }
 }
 
