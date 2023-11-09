@@ -42,7 +42,6 @@ rotateZ({card_ROTATE_Z}deg)"
 style:transition-duration="{card_TRANSITION_DURATION}ms"
 tabindex={card_ON ? 0 : -1}
 bind:this={card}
-on:click={card_eClick}
 on:mousemove={card_eMouseMove}
 on:mouseenter={card_eMouseEnter}
 on:mouseleave={card_eMouseLeave}
@@ -162,7 +161,8 @@ on:out={tag_eOut}
     const
     CARD_DURATION    = wait_getDelay(36), // id * +- 600ms
     CARD_DURATION_2  = wait_getDelay(24), // id * +- 400ms
-    CARD_DELAY       = (prop_ID ?? 0) * CARD_DURATION,
+    CARD_DELAY       = wait_getDelay(18), // +- 300ms
+    CARD_DELAY_2     = (prop_ID ?? 0) * CARD_DURATION,
     CARD_PERSPECTIVE = 3000
     ,
     CARD_EVENTS =
@@ -206,6 +206,8 @@ on:out={tag_eOut}
     ,
     card_HALF_WIDTH  = 0,
     card_HALF_HEIGHT = 0
+    ,
+    card_LAST = +new Date()
     ,
     card_TIMEOUT
     ,
@@ -357,6 +359,8 @@ on:out={tag_eOut}
 
     function card_e$MouseUp()
     {
+        if (+new Date() < card_LAST + CARD_DELAY) card_eClick()
+
         card_destroyEvents()
         
         card_GRABBING = false
@@ -400,6 +404,8 @@ on:out={tag_eOut}
 
     function card_eMouseDown()
     {
+        card_LAST = +new Date()
+
         card_setEvents()
 
         card_GRABBING = true
@@ -467,7 +473,7 @@ on:out={tag_eOut}
 
             try { await promise, card_setTransition(400) } catch { card_setTransition(400) }
         },
-        card_START ? CARD_DELAY : 0)
+        card_START ? CARD_DELAY_2 : 0)
     }
 
     async function card_aOut()
