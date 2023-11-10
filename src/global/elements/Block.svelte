@@ -233,7 +233,7 @@ lang="scss"
 
     pointer-events: none;
 
-    transition: transform .6s ease-out;
+    transition: transform .4s ease-out;
 
     &.focus .side
     {

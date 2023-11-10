@@ -141,7 +141,7 @@ class Spring
     #spring_updateMouseDelay(optimise)
     {
         this.spring_updateCoords = optimise
-        ? wait_throttle.call(this, this.spring_updateCoords, Spring.__spring_DEFAULT_DELAY)
+        ? wait_throttle.call(this, this.spring_updateCoords, Spring.__spring_DEFAULT_DELAY, Spring.__spring_DEFAULT_DELAY + 1)
         : this.spring_updateCoords.bind(this)
     }
 

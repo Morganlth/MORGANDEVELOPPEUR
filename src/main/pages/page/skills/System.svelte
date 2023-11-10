@@ -56,6 +56,7 @@ style:--system-r-y={system_ROTATE_Y}
                 prop_ORBIT_RADIUS={gravityarea_ORBIT_RADIUS}
                 prop_ROTATE_Z={item.props.prop_ROTATE}
                 prop_OFFSET={item.props.prop_OFFSET}
+                prop_FORCE={.16}
                 {prop_FOCUS}
                 bind:gravityarea_TRANSLATE_Z={GROUP_Z_POSITIONS[item.id]}
                 on:click={gravityarea_eClick.bind(item)}
@@ -171,7 +172,7 @@ style:--system-r-y={system_ROTATE_Y}
     ,
     GROUP_Z_POSITIONS = new Float64Array(prop_SYSTEM.length)
     ,
-    GROUP_EVENTS = { scroll: wait_throttle(group_e$Scroll, 12) } // +- 200ms
+    GROUP_EVENTS = { scroll: wait_throttle(group_e$Scroll, 12, 13) } // +- 200ms, +- 220ms
 
     const GRAVITYAREA_EVENTS = { resize: gravityarea_e$Resize }
 
@@ -269,7 +270,7 @@ style:--system-r-y={system_ROTATE_Y}
         for (let i = 0; i < GROUP_Z_POSITIONS.length; i++) prop_SYSTEM[i] = { ...prop_SYSTEM[i], focus: i === INDEX }
     }
 
-    const gravityarea_update = wait_throttle(async function gravityarea_update(ratio) { gravityarea_RATIO = ratio }, 2) // +- 30 ms
+    const gravityarea_update = wait_throttle(async function gravityarea_update(ratio) { gravityarea_RATIO = ratio }, 2, 3) // +- 30 ms, +- 50ms
 
     function tag_update(tag, frags, y, n)
     {
@@ -471,7 +472,7 @@ lang="scss"
             @extend %any-size;
     
             transform-style: preserve-3d;
-            transform: rotate3d($r-x, $r-y, 0, .02rad);
+            transform: rotate3d($r-x, $r-y, 0, .016rad);
         }
 
         .cell

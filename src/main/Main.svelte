@@ -95,7 +95,7 @@ style:height="{MAIN_HEIGHT}%"
     ,
     MAIN_HEIGHT = DATA.reduce((accumulator, page) => accumulator + page.h, 0) * 100
     ,
-    MAIN_EVENTS = { scroll: wait_throttle(main_e$Scroll, 1) }
+    MAIN_EVENTS = { scroll: wait_throttle(main_e$Scroll, 1, 2) } // +- 20ms, +- 30ms
 
     // --INSIDE
     const ROUTER_LINKS = DATA.map(page => router_getRoute(page))

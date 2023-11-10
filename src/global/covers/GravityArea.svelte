@@ -111,7 +111,8 @@ on:touchend={gravityarea_eTouchEnd}
     prop_OFFSET       = 0,
     prop_X            = 0,
     prop_Y            = 0,
-    prop_RADIUS       = 100
+    prop_RADIUS       = 100,
+    prop_FORCE        = .4
 
     // --BINDING
     export let gravityarea_TRANSLATE_Z = 0
@@ -134,8 +135,8 @@ on:touchend={gravityarea_eTouchEnd}
     GRAVITYAREA_DELAY_3     = wait_getDelay(24)  // +- 400ms
     ,
     GRAVITYAREA_EVENTS   = { mouseUp:   gravityarea_e$MouseUp },
-    GRAVITYAREA_EVENTS_2 = { mouseMove: wait_throttle(gravityarea_e$MouseMove, 3) }, // +- 50ms
-    GRAVITYAREA_EVENTS_3 = { touchMove: wait_throttle(gravityarea_e$TouchMove, 3) }  // +- 50ms
+    GRAVITYAREA_EVENTS_2 = { mouseMove: wait_throttle(gravityarea_e$MouseMove, 3, 4) }, // +- 50ms, 70ms
+    GRAVITYAREA_EVENTS_3 = { touchMove: wait_throttle(gravityarea_e$TouchMove, 3, 4) }  // +- 50ms, 70ms
 
     // --INSIDE
 
@@ -149,8 +150,6 @@ on:touchend={gravityarea_eTouchEnd}
     // --THIS
     let
     gravityarea
-    ,
-    gravityarea_ANIMATE = false
     ,
     gravityarea_TRANSLATE_X = 0,
     gravityarea_TRANSLATE_Y = 0
@@ -309,15 +308,17 @@ on:touchend={gravityarea_eTouchEnd}
     function slot_updateForces(clientX, clientY, x, y, r)
     {
         const
-        DIF_X  = clientX - x,
-        DIF_Y  = clientY - y,
-        ANGLE  = Math.atan(DIF_Y / DIF_X),
-        RADIUS = r * gravityarea_RATIO
+        DIF_X     = clientX - x,
+        DIF_Y     = clientY - y,
+        ABS_DIF_X = Math.abs(DIF_X),
+        ABS_DIF_Y = Math.abs(DIF_Y),
+        ANGLE     = Math.atan(DIF_Y / DIF_X),
+        RADIUS    = r * gravityarea_RATIO
 
-        if (!ANGLE) return
+        if (!ANGLE || ABS_DIF_X > r || ABS_DIF_Y > r) return
     
-        slot_FORCE_X = DIF_X * .3 * (1 - Math.abs(DIF_X) / (Math.cos(ANGLE) * RADIUS))
-        slot_FORCE_Y = DIF_Y * .3 * (1 - Math.abs(DIF_Y) / Math.abs(Math.sin(ANGLE) * RADIUS))
+        slot_FORCE_X = DIF_X * prop_FORCE * (1 - ABS_DIF_X / (Math.cos(ANGLE) * RADIUS))
+        slot_FORCE_Y = DIF_Y * prop_FORCE * (1 - ABS_DIF_Y / Math.abs(Math.sin(ANGLE) * RADIUS))
     }
 
     function slot_updateRotate(rY, rZ)
@@ -387,9 +388,9 @@ on:touchend={gravityarea_eTouchEnd}
 
     const gravityarea_eMouseMove = wait_throttle(async function gravityarea_eMouseMove({clientX, clientY})
     {
-        if (!gravityarea_ANIMATE) slot_update(clientX, clientY)
+        if (!slot_GRABBING) slot_update(clientX, clientY)
     },
-    12) // +- 200 ms
+    5) // +- 80 ms
 
     function gravityarea_eMouseLeave()
     {
@@ -442,8 +443,6 @@ on:touchend={gravityarea_eTouchEnd}
     // --*
     async function gravityarea_a(invert = false)
     {
-        gravityarea_ANIMATE = true
-
         let {cancel, promise} = animation(t =>
         {
             gravityarea_T = t
@@ -458,17 +457,9 @@ on:touchend={gravityarea_eTouchEnd}
 
         gravityarea_cancel = cancel
         
-        try
-        {
-            if (invert) slot_HIDE = false
-        
-            await promise
-            
-            if (!invert) slot_HIDE = true
 
-            gravityarea_ANIMATE = false
-        }
-        catch { gravityarea_ANIMATE = false }
+        if (invert) slot_HIDE = false
+        else try { await promise, slot_HIDE = true } catch {}
     }
 
     function gravityarea_a$Floating() { gravityarea_FLOATING_Y = gravityarea_getFloating() }
@@ -565,6 +556,7 @@ lang="scss"
     pointer-events: auto;
 
     border-radius: 50%;
+    border: solid red 1px;
 
     &.focus { will-change: transform; }
 

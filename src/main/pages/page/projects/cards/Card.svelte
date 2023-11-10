@@ -169,10 +169,10 @@ on:out={tag_eOut}
     ,
     CARD_EVENTS =
     {
-        mouseMove: wait_throttle(card_e$MouseMove, 3), // +- 50ms
+        mouseMove: wait_throttle(card_e$MouseMove, 3, 4), // +- 50ms, +- 70ms
         mouseUp  : card_e$MouseUp
     },
-    CARD_EVENTS_2 = { touchMove: wait_throttle(card_e$TouchMove, 3) } // +- 50ms
+    CARD_EVENTS_2 = { touchMove: wait_throttle(card_e$TouchMove, 3, 4) } // +- 50ms, +- 70ms
 
     // --INSIDE
 
@@ -401,7 +401,7 @@ on:out={tag_eOut}
 
         tag_updateTranslate(clientX, clientY)
     },
-    6) // +- 100ms
+    6, 7) // +- 100ms, +- 120ms
 
     function card_eMouseEnter()
     {

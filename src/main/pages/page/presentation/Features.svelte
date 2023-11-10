@@ -141,7 +141,7 @@ style:transform="translateY({features_TRANSLATE_Y}%)"
     // --OUTSIDE
 
     // --THIS
-    $: wait_throttle(features_update, 3)(prop_RATIO) // +- 50ms
+    $: wait_throttle(features_update, 3, 4)(prop_RATIO) // +- 50ms, +- 70ms
 
     // --INSIDE
 

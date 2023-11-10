@@ -19,33 +19,53 @@
         return debounce
     }
 
-    export function wait_throttle(callback = () => {}, n = 0, timeoutDelay)
+    export function wait_throttle(callback = () => {}, n = 0, timeoutDelay = 0)
     {
         const
-            CONTEXT = this,
-            DELAY = wait_getDelay(n)
+        CONTEXT = this,
+        DELAY   = wait_getDelay(n)
     
         let
-            last = +new Date(),
-            timeout
+        last = +new Date()
+        ,
+        throttle
 
-        timeoutDelay ??= DELAY
-    
-        function throttle()
+        if (timeoutDelay)
         {
-            const NOW = +new Date()
+            const TIMEOUT_DELAY = wait_getDelay(timeoutDelay)
+    
+            let timeout
+    
+            throttle = function ()
+            {
+                const NOW = +new Date()
 
-            clearTimeout(timeout)
+                clearTimeout(timeout)
 
-            NOW > last + DELAY
-            ?   (callback.apply(CONTEXT, arguments),
-                last = NOW)
-            :   timeout = setTimeout(() =>
+                NOW > last + DELAY
+                ?   (callback.apply(CONTEXT, arguments),
+                    last = NOW)
+                :   timeout = setTimeout(() =>
+                    {
+                        callback.apply(CONTEXT, arguments)
+
+                        last = +new Date()
+                    }, TIMEOUT_DELAY)
+            }
+        }
+        else
+        {
+            throttle = function ()
+            {
+                const NOW = +new Date()
+
+                if (NOW > last + DELAY)
                 {
                     callback.apply(CONTEXT, arguments)
 
-                    last = +new Date()
-                }, timeoutDelay)
+                    last = NOW
+                }
+            }
         }
 
         throttle.callback_NAME = callback.name
