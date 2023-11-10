@@ -370,13 +370,6 @@ on:out={tag_eOut}
     // --*
     async function card_e$MouseMove(clientX, clientY) { card_updateTranslate(clientX, clientY) }
 
-    async function card_e$TouchMove(clientX, clientY)
-    {
-        card_updateTranslate(clientX, clientY)
-
-        tag_updateTranslate(clientX, clientY)
-    }
-
     function card_e$MouseUp()
     {
         if (+new Date() < card_LAST + CARD_DELAY) card_eClick()
@@ -384,6 +377,13 @@ on:out={tag_eOut}
         card_destroyEvents()
         
         card_GRABBING = false
+    }
+
+    async function card_e$TouchMove(clientX, clientY)
+    {
+        card_updateTranslate(clientX, clientY)
+
+        tag_updateTranslate(clientX, clientY)
     }
 
     async function card_e$Resize()
