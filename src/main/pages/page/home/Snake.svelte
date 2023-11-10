@@ -423,11 +423,9 @@ on:fullscreenchange={snake_eFullscreenChange}
             snake_INVINCIBLE = true
 
             snake_stop()
-            snake_clearApple()
         }
         else
         {
-            snake_setApple()
             snake_updateSnake(SNAKE_DEFAULT_SIZE * 3)
             snake_start()
         }
@@ -484,10 +482,10 @@ on:fullscreenchange={snake_eFullscreenChange}
         try 
         {
             const FULL_SCREEN_ELEMENT =
-            document.fullscreenElement          ??
-            document.webkitFullscreenElement    ??
-            document.mozFullScreenElement       ??
-            document.msFullscreenElement        ??
+            document.fullscreenElement       ??
+            document.webkitFullscreenElement ??
+            document.mozFullScreenElement    ??
+            document.msFullscreenElement     ??
             null
 
             if (!FULL_SCREEN_ELEMENT) snake_resetGame()
@@ -506,10 +504,10 @@ on:fullscreenchange={snake_eFullscreenChange}
     {
         try 
         {
-                 if (document.fullscreenElement)        document.exitFullscreen()
-            else if (document.webkitFullscreenElement)  document.webkitExitFullscreen()
-            else if (document.mozFullScreenElement)     document.mozCancelFullScreen()
-            else if (document.msFullscreenElement)      document.msExitFullscreen()
+                 if (document.fullscreenElement)       document.exitFullscreen()
+            else if (document.webkitFullscreenElement) document.webkitExitFullscreen()
+            else if (document.mozFullScreenElement)    document.mozCancelFullScreen()
+            else if (document.msFullscreenElement)     document.msExitFullscreen()
         }
         catch {}
 
@@ -579,7 +577,7 @@ on:fullscreenchange={snake_eFullscreenChange}
         [event_CLIENT_X, event_CLIENT_Y] = EVENT.event_CLIENT_XY
     
         snake_setEvents2()
-
+        snake_setApple()
         snake_updateCoords()
         snake_moveTo()
         snake_a()
@@ -588,7 +586,7 @@ on:fullscreenchange={snake_eFullscreenChange}
     function snake_stop()
     {
         snake_destroyEvents2()
-
+        snake_clearApple()
         snake_a(true)
     }
 
@@ -598,12 +596,12 @@ on:fullscreenchange={snake_eFullscreenChange}
     {
         try
         {
-            await  (snake.requestFullscreen         ??
-                    snake.webkitRequestFullscreen   ??
-                    snake.webkitEnterFullScreen     ??
-                    snake.webkitEnterFullscreen     ??
-                    snake.mozRequestFullScreen      ??
-                    snake.msRequestFullscreen).call(snake)
+            await (snake.requestFullscreen       ??
+                   snake.webkitRequestFullscreen ??
+                   snake.webkitEnterFullScreen   ??
+                   snake.webkitEnterFullscreen   ??
+                   snake.mozRequestFullScreen    ??
+                   snake.msRequestFullscreen).call(snake)
         }
         catch
         {
@@ -625,17 +623,15 @@ on:fullscreenchange={snake_eFullscreenChange}
 
     function snake_stopGame()
     {
-        if (!prop_ON) snake_stop()
+        if (prop_ON)
+        {
+            if (gameover$_ON) gameover_update(false)
+        }
+        else snake_stop()
         
         particles?.moveTo()
 
         snake_INVINCIBLE = true
-
-        gameover$_ON
-        ? gameover_update(false)
-        : prop_ON
-            ? (snake_moveTo(), snake_a())
-            : void 0
     }
 
     function snake_testMove() { return snake_SNAKE[0] !== snake_X || snake_SNAKE[1] !== snake_Y }
