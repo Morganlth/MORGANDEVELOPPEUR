@@ -280,7 +280,7 @@ lang="scss"
 /* #\-VARIABLES-\ */
 
     /* --* */
-    $top: max(12%, 130px);
+    $top: 160px;
 
 
 /* #\-GLOBAL-\ */
