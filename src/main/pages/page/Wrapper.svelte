@@ -35,7 +35,7 @@ class="wrapper"
 
     <section
     class="header"
-    style:transform="translateY({(prop_RATIO > 0 ? 0 : prop_RATIO) * -80}%)"
+    style:transform="translateY({(prop_RATIO > 0 ? 0 : prop_RATIO) * -70}%)"
     >
         <slot
         name="title"
@@ -44,11 +44,11 @@ class="wrapper"
         <slot
         name="nav"
         />
-
-        <slot
-        name="quote"
-        />
     </section>
+
+    <slot
+    name="quote"
+    />
 
     <slot />
 </div>
