@@ -331,6 +331,12 @@ on:out={tag_eOut}
         }
     }
 
+    function tag_updateTranslate(x, y)
+    {
+        tag_TRANSLATE_X = x
+        tag_TRANSLATE_Y = y
+    }
+
     // --DESTROY
     function card_destroy()
     {
@@ -388,8 +394,7 @@ on:out={tag_eOut}
     {
         if (offsetX && offsetY) card_updateRotate(offsetX - card_HALF_WIDTH, offsetY - card_HALF_HEIGHT)
 
-        tag_TRANSLATE_X = clientX
-        tag_TRANSLATE_Y = clientY
+        tag_updateTranslate(clientX, clientY)
     },
     6) // +- 100ms
 
@@ -420,7 +425,14 @@ on:out={tag_eOut}
         card_GRABBING = true
     }
 
-    function card_eTouchStart() { card_setEvents2() }
+    function card_eTouchStart({touches})
+    {
+        const TOUCHE = touches[0]
+    
+        card_setEvents2()
+
+        tag_updateTranslate(TOUCHE.clientX, TOUCHE.clientY)
+    }
 
     function card_eTouchEnd() { card_destroyEvents2() }
 
