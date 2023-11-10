@@ -345,7 +345,7 @@ lang="scss"
 
         text-shadow: $shadow;
 
-        transition: transform .6s ease-out;
+        transition: transform .4s ease-out;
     }
 
     .element
