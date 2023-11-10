@@ -138,12 +138,9 @@ class:grabbing={slot_GRABBING}
     GRAVITYAREA_DELAY_2     = wait_getDelay(12), // +- 200ms
     GRAVITYAREA_DELAY_3     = wait_getDelay(24)  // +- 400ms
     ,
-    GRAVITYAREA_EVENTS   =
-    {
-        mouseMove: wait_throttle(gravityarea_e$MouseMove, 3), // +- 50ms
-        mouseUp:   gravityarea_e$MouseUp
-    },
-    GRAVITYAREA_EVENTS_2 = { touchMove: wait_throttle(gravityarea_e$TouchMove, 3) }  // +- 50ms
+    GRAVITYAREA_EVENTS   = { mouseUp:   gravityarea_e$MouseUp },
+    GRAVITYAREA_EVENTS_2 = { mouseMove: wait_throttle(gravityarea_e$MouseMove, 3) }, // +- 50ms
+    GRAVITYAREA_EVENTS_3 = { touchMove: wait_throttle(gravityarea_e$TouchMove, 3) }  // +- 50ms
 
     // --INSIDE
 
@@ -235,6 +232,8 @@ class:grabbing={slot_GRABBING}
     function gravityarea_setEvents()  { EVENT.event_add(GRAVITYAREA_EVENTS) }
 
     function gravityarea_setEvents2() { EVENT.event_add(GRAVITYAREA_EVENTS_2) }
+
+    function gravityarea_setEvents3() { EVENT.event_add(GRAVITYAREA_EVENTS_3) }
 
     // --GET
     function gravityarea_get2d()
@@ -340,6 +339,7 @@ class:grabbing={slot_GRABBING}
     
         gravityarea_destroyEvents()
         gravityarea_destroyEvents2()
+        gravityarea_destroyEvents3()
 
         gravityarea_stop()
 
@@ -351,6 +351,8 @@ class:grabbing={slot_GRABBING}
     function gravityarea_destroyEvents()  { EVENT.event_remove(GRAVITYAREA_EVENTS) }
 
     function gravityarea_destroyEvents2() { EVENT.event_remove(GRAVITYAREA_EVENTS_2) }
+
+    function gravityarea_destroyEvents3() { EVENT.event_remove(GRAVITYAREA_EVENTS_3) }
 
 
 //=======@COMMANDS|
@@ -370,6 +372,7 @@ class:grabbing={slot_GRABBING}
         slot_GRABBING = false
     
         gravityarea_destroyEvents()
+        gravityarea_destroyEvents2()
     }
 
     async function gravityarea_e$TouchMove(clientX, clientY) { gravityarea_move(clientX, clientY) }
@@ -412,13 +415,15 @@ class:grabbing={slot_GRABBING}
 
     function gravityarea_eMouseDown() // no async
     {
+        gravityarea_LAST_2 = +new Date()
+
+        gravityarea_setEvents()
+
         if (prop_GRABBING)
         {
-            gravityarea_LAST_2 = +new Date()
-
             slot_GRABBING = true
 
-            gravityarea_setEvents()
+            gravityarea_setEvents2()
         }
     }
 
@@ -428,7 +433,7 @@ class:grabbing={slot_GRABBING}
         {
             slot_GRABBING = true
 
-            gravityarea_setEvents2()
+            gravityarea_setEvents3()
         }
     }
 
@@ -436,7 +441,7 @@ class:grabbing={slot_GRABBING}
     {
         slot_GRABBING = false
 
-        gravityarea_destroyEvents2()
+        gravityarea_destroyEvents3()
     }
 
 
