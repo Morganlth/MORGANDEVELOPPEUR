@@ -329,7 +329,7 @@ lang="scss"
     {
         @extend %scroll-bar;
 
-        /* z-index: 2; */
+        z-index: 2; /* label & nav */
 
         overflow-y: scroll;
 
