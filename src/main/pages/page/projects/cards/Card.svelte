@@ -370,7 +370,12 @@ on:out={tag_eOut}
     // --*
     async function card_e$MouseMove(clientX, clientY) { card_updateTranslate(clientX, clientY) }
 
-    async function card_e$TouchMove(clientX, clientY) { card_updateTranslate(clientX, clientY) }
+    async function card_e$TouchMove(clientX, clientY)
+    {
+        card_updateTranslate(clientX, clientY)
+
+        tag_updateTranslate(clientX, clientY)
+    }
 
     function card_e$MouseUp()
     {
