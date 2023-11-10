@@ -145,7 +145,7 @@ bind:this={blackblocks}
         projectedTexture: { value: '' },
         widthScaled: { value: 0 },
         heightScaled: { value: 0 },
-        textureOffset: { value: new Vector2(-.21, .03) }
+        textureOffset: { value: new Vector2(-.204, 0) }
     }
     ,
     BLACKBLOCKS_COMMANDS =
@@ -899,6 +899,8 @@ lang="scss"
     @include utils.placement(absolute, $top: 0, $left: 0);
 
     &.hide { visibility: hidden; }
+
+    pointer-events: auto;
 }
 
 
