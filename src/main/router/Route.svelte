@@ -276,7 +276,7 @@ lang="scss"
 
             transform: translateX(-50%);
 
-            width: .8rem;
+            width: .6rem;
             height: 0;
             
             border-top: solid $light 1px;
