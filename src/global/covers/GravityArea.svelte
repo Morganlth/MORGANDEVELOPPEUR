@@ -26,7 +26,7 @@ context="module"
 
 <!-- #|-HTML-| -->
 
-<!-- svelte-ignore a11y-no-static-element-interactions a11y-no-noninteractive-tabindex -->
+<!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions a11y-no-noninteractive-tabindex -->
 <div
 class="gravityarea"
 class:focus={prop_FOCUS}
