@@ -30,7 +30,7 @@
         [
             {
                 tags: ['html', 'css'],
-                tag: 'HTML CSS',
+                tag: 'Html Css',
                 props:
                 {
                     prop_ROTATE: MATH.toRad(150),
