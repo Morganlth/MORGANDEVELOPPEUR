@@ -37,6 +37,7 @@ class:hide={$app_$HIDE}
         prop_FOCUS={page.focus}
         prop_INTRO={page.intro}
         prop_Z={page.focus ? PAGE_Z : PAGE_Z - page.id - 1}
+        prop_RATIO={page.ratio ?? 0}
         prop_COMPONENT={page.component}
         prop_LABEL={page.label}
         prop_TITLE={page.title}
@@ -197,7 +198,7 @@ class:hide={$app_$HIDE}
             page_updateProps(PAGE, i,
             {
                 prop_INTRO: (PAGE.intro = page_getIntro(PAGE.top, PAGE.start, scrollTop)),
-                prop_RATIO: page_getRatio(PAGE.start, PAGE.dif, PAGE.overflow, scrollTop)
+                prop_RATIO: (PAGE.ratio = page_getRatio(PAGE.start, PAGE.dif, PAGE.overflow, scrollTop))
             })
 
             if (PAGE.focus) router_updateHide(!PAGE.intro)

@@ -91,8 +91,8 @@ bind:offsetHeight={title_HEIGHT}
 
     // --PROPS
     export let
-    prop_CHARGED    = false,
-    prop_INTRO      = false
+    prop_CHARGED = false,
+    prop_INTRO   = false
     ,
     prop_TITLE = {}
 

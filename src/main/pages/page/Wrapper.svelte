@@ -35,6 +35,7 @@ class="wrapper"
 
     <section
     class="header"
+    style:transform="translateY({(prop_RATIO > 0 ? 0 : prop_RATIO) * -80}%)"
     >
         <slot
         name="title"
@@ -75,6 +76,7 @@ class="wrapper"
 // #\-EXPORTS-\
 
     // --PROPS
+    export let prop_RATIO = 0
 
     // --BINDING
 
@@ -206,6 +208,8 @@ lang="scss"
         z-index: 1;
 
         width: calc(100% - app.$gap-inline * 2);
+
+        transition: transform .2s ease-out;
     }
 
     @include media.min($height: $ms3) { padding-top: max(11rem, 70px); }
