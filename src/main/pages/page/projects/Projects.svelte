@@ -167,8 +167,6 @@ bind:this={projects}
     // --INSIDE
     $: card$_ON = prop_FOCUS && !prop_INTRO
 
-    $: console.log(prop_INTRO)
-
 
 // #\-FUNCTIONS-\
 
