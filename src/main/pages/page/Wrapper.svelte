@@ -43,11 +43,11 @@ class="wrapper"
         <slot
         name="nav"
         />
-    </section>
 
-    <slot
-    name="quote"
-    />
+        <slot
+        name="quote"
+        />
+    </section>
 
     <slot />
 </div>
