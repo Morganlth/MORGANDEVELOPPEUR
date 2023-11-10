@@ -117,7 +117,7 @@ bind:offsetHeight={title_HEIGHT}
 
     // --INSIDE
     const
-    FRAGMENTS_MAX_TRANSLATE = 40,
+    FRAGMENTS_MAX_TRANSLATE = 50,
     FRAGMENTS_FORCE         = 2000
     ,
     FRAGMENTS_FRAGS = [],
