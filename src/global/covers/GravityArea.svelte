@@ -49,6 +49,7 @@ title={prop_TITLE}
 tabindex={prop_FOCUSABLE ? 0 : -1}
 data-tag={prop_TITLE.toLowerCase()}
 bind:this={gravityarea}
+on:click={gravityarea_eClick}
 on:mouseenter={gravityarea_eMouseEnter}
 on:mousemove={gravityarea_eMouseMove}
 on:mouseleave={gravityarea_eMouseLeave}
@@ -368,8 +369,6 @@ class:grabbing={slot_GRABBING}
 
     function gravityarea_e$MouseUp()
     {
-        if (+new Date() - gravityarea_LAST < GRAVITYAREA_DELAY_2) SVELTE_DISPATCH('click')
-
         slot_GRABBING = false
     
         gravityarea_destroyEvents()
@@ -379,6 +378,8 @@ class:grabbing={slot_GRABBING}
     async function gravityarea_e$TouchMove(clientX, clientY) { gravityarea_move(clientX, clientY) }
 
     async function gravityarea_e$Resize() { gravityarea_setVars() }
+
+    function gravityarea_eClick() { if (+new Date() - gravityarea_LAST < GRAVITYAREA_DELAY_2) SVELTE_DISPATCH('click') }
 
     function gravityarea_eMouseEnter()
     {
@@ -578,8 +579,6 @@ lang="scss"
         transform: scale(1);
     
         cursor: grabbing !important;
-
-        background-color: crimson;
     }
 }
 
