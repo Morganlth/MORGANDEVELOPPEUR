@@ -135,7 +135,7 @@ class:grabbing={slot_GRABBING}
     const
     GRAVITYAREA_PERSPECTIVE = 1200,
     GRAVITYAREA_DELAY       = wait_getDelay(3),  // +- 50ms
-    GRAVITYAREA_DELAY_2     = wait_getDelay(12), // +- 200ms
+    GRAVITYAREA_DELAY_2     = wait_getDelay(18), // +- 300ms
     GRAVITYAREA_DELAY_3     = wait_getDelay(24)  // +- 400ms
     ,
     GRAVITYAREA_EVENTS   = { mouseUp:   gravityarea_e$MouseUp },
@@ -389,20 +389,7 @@ class:grabbing={slot_GRABBING}
         }
     }
 
-    async function gravityarea_eMouseMove({clientX, clientY})
-    {
-        const NOW = +new Date()
-
-        gravityarea_destroyTimeout()
-
-        if (NOW > gravityarea_LAST + GRAVITYAREA_DELAY)
-        {
-            slot_update(clientX, clientY)
-
-            gravityarea_LAST = NOW
-        }
-        else gravityarea_TIMEOUT = setTimeout(() => slot_update(clientX, clientY), GRAVITYAREA_DELAY_2)
-    }
+    const gravityarea_eMouseMove = wait_throttle(async function gravityarea_eMouseMove({clientX, clientY}) { slot_update(clientX, clientY) }, 12) // +- 200 ms
 
     function gravityarea_eMouseLeave()
     {
