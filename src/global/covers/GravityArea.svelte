@@ -556,7 +556,6 @@ lang="scss"
     pointer-events: auto;
 
     border-radius: 50%;
-    border: solid red 1px;
 
     &.focus { will-change: transform; }
 
