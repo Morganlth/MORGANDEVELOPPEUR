@@ -50,8 +50,10 @@ data-tag={prop_TITLE.toLowerCase()}
 bind:this={gravityarea}
 on:mouseenter={gravityarea_eMouseEnter}
 on:mousemove={gravityarea_eMouseMove}
-on:mousedown={gravityarea_eMouseDown}
 on:mouseleave={gravityarea_eMouseLeave}
+on:mousedown={gravityarea_eMouseDown}
+on:touchstart={gravityarea_eTouchStart}
+on:touchend={gravityarea_eTouchEnd}
 >
     <slot
     hide={slot_HIDE}
@@ -135,8 +137,12 @@ class:grabbing={slot_GRABBING}
     GRAVITYAREA_DELAY_2     = wait_getDelay(12), // +- 200ms
     GRAVITYAREA_DELAY_3     = wait_getDelay(24)  // +- 400ms
     ,
-    GRAVITYAREA_EVENTS   = { mouseMove: wait_throttle(gravityarea_e$MouseMove, 3) }, // +- 50ms
-    GRAVITYAREA_EVENTS_2 = { mouseUp: gravityarea_e$MouseUp }
+    GRAVITYAREA_EVENTS   =
+    {
+        mouseMove: wait_throttle(gravityarea_e$MouseMove, 3), // +- 50ms
+        mouseUp:   gravityarea_e$MouseUp
+    },
+    GRAVITYAREA_EVENTS_2 = { touchMove: wait_throttle(gravityarea_e$TouchMove, 3) }  // +- 50ms
 
     // --INSIDE
 
@@ -194,7 +200,6 @@ class:grabbing={slot_GRABBING}
 
     // --THIS
     $: gravityarea_update(prop_FOCUS)
-    $: gravityarea_updateEvent(slot_GRABBING)
     $: gravityarea_updateOrbit(prop_RATIO)
 
     // --INSIDE
@@ -273,8 +278,6 @@ class:grabbing={slot_GRABBING}
         gravityarea_a(focus)
     }
 
-    function gravityarea_updateEvent(grabbing) { if (prop_GRABBING) grabbing ? gravityarea_setEvents() : gravityarea_destroyEvents() }
-
     function gravityarea_updateOrbit()
     {
         if (prop_3D && prop_FOCUS)
@@ -283,6 +286,12 @@ class:grabbing={slot_GRABBING}
         
             slot_updateRotate(.025)
         }
+    }
+
+    function gravityarea_updatetranslate(x, y)
+    {
+        gravityarea_TRANSLATE_X = x
+        gravityarea_TRANSLATE_Y = y
     }
 
     function slot_update2d(clientX, clientY)
@@ -351,16 +360,29 @@ class:grabbing={slot_GRABBING}
 //=======@EVENTS|
 
     // --*
-    function gravityarea_e$MouseMove(clientX, clientY) // THROTTLE
+    async function gravityarea_e$MouseMove(clientX, clientY) { gravityarea_move(clientX, clientY) }
+
+    function gravityarea_e$MouseUp()
     {
-        const
-        X = clientX - gravityarea_RADIUS,
-        Y = clientY - gravityarea_RADIUS
+        if (+new Date() - gravityarea_LAST_2 < GRAVITYAREA_DELAY_2) SVELTE_DISPATCH('click')
 
-        slot_updateRotate((Y - gravityarea_TRANSLATE_Y) * .005, (X - gravityarea_TRANSLATE_X) * .005)
+        slot_GRABBING = false
+    
+        gravityarea_destroyEvents()
+    }
 
-        gravityarea_TRANSLATE_X = X
-        gravityarea_TRANSLATE_Y = Y
+    async function gravityarea_e$TouchMove(clientX, clientY) { gravityarea_move(clientX, clientY) }
+
+    async function gravityarea_e$Resize() { gravityarea_setVars() }
+
+    function gravityarea_eMouseEnter()
+    {
+        if (!slot_GRABBING)
+        {
+            gravityarea_stop()
+
+            gravityarea_FLOATING_Y = 0
+        }
     }
 
     async function gravityarea_eMouseMove({clientX, clientY})
@@ -378,17 +400,7 @@ class:grabbing={slot_GRABBING}
         else gravityarea_TIMEOUT = setTimeout(() => slot_update(clientX, clientY), GRAVITYAREA_DELAY_2)
     }
 
-    async function gravityarea_eMouseEnter()
-    {
-        if (!slot_GRABBING)
-        {
-            gravityarea_stop()
-
-            gravityarea_FLOATING_Y = 0
-        }
-    }
-
-    async function gravityarea_eMouseLeave()
+    function gravityarea_eMouseLeave()
     {
         slot_FORCE_X = (slot_FORCE_Y = 0)
 
@@ -399,23 +411,26 @@ class:grabbing={slot_GRABBING}
 
     function gravityarea_eMouseDown() // no async
     {
+        gravityarea_LAST_2 = +new Date()
+
         slot_GRABBING = true
 
-        gravityarea_setEvents2()
-
-        gravityarea_LAST_2 = +new Date()
+        if (prop_GRABBING) gravityarea_setEvents()
     }
 
-    function gravityarea_e$MouseUp() // no async
+    function gravityarea_eTouchStart()
     {
-        if (+new Date() - gravityarea_LAST_2 < GRAVITYAREA_DELAY_2) SVELTE_DISPATCH('click')
+        slot_GRABBING = true
 
+        if (prop_GRABBING) gravityarea_setEvents2()
+    }
+
+    function gravityarea_eTouchEnd()
+    {
         slot_GRABBING = false
-    
+
         gravityarea_destroyEvents2()
     }
-
-    async function gravityarea_e$Resize() { gravityarea_setVars() }
 
 
 //=======@TRANSITIONS|
@@ -460,6 +475,17 @@ class:grabbing={slot_GRABBING}
     }
 
     function gravityarea_stop() { prop_$ANIMATION.splice(gravityarea_a$Floating) }
+
+    function gravityarea_move(x, y)
+    {
+        const
+        X = x - gravityarea_RADIUS,
+        Y = y - gravityarea_RADIUS
+
+        slot_updateRotate((Y - gravityarea_TRANSLATE_Y) * .005, (X - gravityarea_TRANSLATE_X) * .005)
+
+        gravityarea_updatetranslate(X, Y)
+    }
 
 
 </script>
