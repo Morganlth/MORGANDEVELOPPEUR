@@ -389,8 +389,6 @@ lang="scss"
 
 .terminal.focus
 {
-    touch-action: auto;
-
     &.turn
     {
         z-index: 1;
