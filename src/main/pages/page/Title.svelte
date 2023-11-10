@@ -117,7 +117,7 @@ bind:offsetHeight={title_HEIGHT}
 
     // --INSIDE
     const
-    FRAGMENTS_MAX_TRANSLATE = 30,
+    FRAGMENTS_MAX_TRANSLATE = 40,
     FRAGMENTS_FORCE         = 2000
     ,
     FRAGMENTS_FRAGS = [],
@@ -251,8 +251,7 @@ bind:offsetHeight={title_HEIGHT}
         const DIF = scrollTop - prop_TOP
 
         if (prop_INTRO)   fragments_TRANSLATE_X = DIF / APP.app_HEIGHT * FRAGMENTS_MAX_TRANSLATE
-        else if (DIF > 0) fragments_TRANSLATE_X = FRAGMENTS_MAX_TRANSLATE
-        else              fragments_TRANSLATE_X = 0
+        else if (DIF < 0) fragments_TRANSLATE_X = 0
     }
 
 

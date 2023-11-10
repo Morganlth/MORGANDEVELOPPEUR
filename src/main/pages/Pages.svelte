@@ -163,7 +163,7 @@ class:hide={$app_$HIDE}
         [page.end, page.start] = page.h
         ?   [
                 (page.h + (0)) * APP.app_HEIGHT + top,
-                top + APP.app_HEIGHT
+                top + APP.app_HEIGHT * 1.4
             ]
         :   [1, 1]
 
