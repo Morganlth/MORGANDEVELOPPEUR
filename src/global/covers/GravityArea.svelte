@@ -26,10 +26,11 @@ context="module"
 
 <!-- #|-HTML-| -->
 
-<!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions a11y-no-noninteractive-tabindex -->
-<div
+<!-- svelte-ignore a11y-no-static-element-interactions a11y-no-noninteractive-tabindex -->
+<button
 class="gravityarea"
 class:focus={prop_FOCUS}
+class:grabbing={slot_GRABBING}
 style:--slot-default-size="{prop_RADIUS}px"
 style:--slot-f-x="{slot_FORCE_X}px"
 style:--slot-f-y="{slot_FORCE_Y}px"
@@ -61,14 +62,7 @@ on:touchend={gravityarea_eTouchEnd}
     hide={slot_HIDE}
     grabbing={slot_GRABBING}
     />
-</div>
-
-<div
-class="shield"
-class:grabbing={slot_GRABBING}
->
-</div>
-
+</button>
 
 <!-- #|-SCRIPT-| -->
 
@@ -540,12 +534,21 @@ lang="scss"
 
 /* #\-THIS-\ */
 
-.gravityarea, .shield { pointer-events: auto; }
-
 .gravityarea
 {
     --slot-ratio: .4;
     --slot-size:  calc(var(--slot-default-size, '100px') * var(--slot-ratio, 1));
+
+    &::before
+    {
+        @include utils.placement(absolute, $pe: true);
+
+        transform: scale(0);
+
+        width:  100vw;
+        height: 100vh;
+        height: 100svh;
+    }
 
     @extend %f-center;
 
@@ -559,27 +562,22 @@ lang="scss"
     width:  $size;
     height: $size;
 
+    pointer-events: auto;
+
     border-radius: 50%;
 
     &.focus { will-change: transform; }
 
-    @include media.min($ms4, $ms3) { --slot-ratio: .5; }
-    @include media.min($ms5, $ms4) { --slot-ratio: .75; }
-    @include media.min($ms6, $ms4) { --slot-ratio: 1; }
-}
-
-.shield
-{
-    @include utils.fixed(2);
-
-    transform: scale(0);
-
     &.grabbing
     {
-        transform: scale(1);
+        &::before { transform: scale(1); }
     
         cursor: grabbing !important;
     }
+
+    @include media.min($ms4, $ms3) { --slot-ratio: .5; }
+    @include media.min($ms5, $ms4) { --slot-ratio: .75; }
+    @include media.min($ms6, $ms4) { --slot-ratio: 1; }
 }
 
 
