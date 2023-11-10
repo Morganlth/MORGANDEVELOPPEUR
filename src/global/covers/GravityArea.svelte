@@ -155,6 +155,8 @@ class:grabbing={slot_GRABBING}
     let
     gravityarea
     ,
+    gravityarea_ANIMATE = false
+    ,
     gravityarea_TRANSLATE_X = 0,
     gravityarea_TRANSLATE_Y = 0
     ,
@@ -167,8 +169,7 @@ class:grabbing={slot_GRABBING}
     ,
     gravityarea_T = 0
     ,
-    gravityarea_LAST   = +new Date(),
-    gravityarea_LAST_2 = +new Date()
+    gravityarea_LAST = +new Date()
     ,
     gravityarea_TIMEOUT
     ,
@@ -367,7 +368,7 @@ class:grabbing={slot_GRABBING}
 
     function gravityarea_e$MouseUp()
     {
-        if (+new Date() - gravityarea_LAST_2 < GRAVITYAREA_DELAY_2) SVELTE_DISPATCH('click')
+        if (+new Date() - gravityarea_LAST < GRAVITYAREA_DELAY_2) SVELTE_DISPATCH('click')
 
         slot_GRABBING = false
     
@@ -389,7 +390,11 @@ class:grabbing={slot_GRABBING}
         }
     }
 
-    const gravityarea_eMouseMove = wait_throttle(async function gravityarea_eMouseMove({clientX, clientY}) { slot_update(clientX, clientY) }, 12) // +- 200 ms
+    const gravityarea_eMouseMove = wait_throttle(async function gravityarea_eMouseMove({clientX, clientY})
+    {
+        if (!gravityarea_ANIMATE) slot_update(clientX, clientY)
+    },
+    12) // +- 200 ms
 
     function gravityarea_eMouseLeave()
     {
@@ -402,7 +407,7 @@ class:grabbing={slot_GRABBING}
 
     function gravityarea_eMouseDown() // no async
     {
-        gravityarea_LAST_2 = +new Date()
+        gravityarea_LAST = +new Date()
 
         gravityarea_setEvents()
 
@@ -442,6 +447,8 @@ class:grabbing={slot_GRABBING}
     // --*
     async function gravityarea_a(invert = false)
     {
+        gravityarea_ANIMATE = true
+
         let {cancel, promise} = animation(t =>
         {
             gravityarea_T = t
@@ -455,9 +462,18 @@ class:grabbing={slot_GRABBING}
         GRAVITYAREA_DELAY_3, gravityarea_T, invert)
 
         gravityarea_cancel = cancel
+        
+        try
+        {
+            if (invert) slot_HIDE = false
+        
+            await promise
+            
+            if (!invert) slot_HIDE = true
 
-        if (invert) slot_HIDE = false
-        else try { await promise, slot_HIDE = true } catch {}
+            gravityarea_ANIMATE = false
+        }
+        catch { gravityarea_ANIMATE = false }
     }
 
     function gravityarea_a$Floating() { gravityarea_FLOATING_Y = gravityarea_getFloating() }
@@ -562,6 +578,8 @@ lang="scss"
         transform: scale(1);
     
         cursor: grabbing !important;
+
+        background-color: crimson;
     }
 }
 
