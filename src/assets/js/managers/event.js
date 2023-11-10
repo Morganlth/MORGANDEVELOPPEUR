@@ -158,15 +158,15 @@ class Event
 
     async event_mouseUp() { this.#event_run.call(this.#event_MANAGER.mouseUp) }
 
-    async event_touchMove(e)
+    async event_touchMove({changedTouches})
     {
         if (this.#event_FRAMES.touchMove) return
 
         this.#event_FRAMES.touchMove = requestAnimationFrame(() =>
         {
             const
-            TOUCH = e.changedTouches[0],
-            [CLIENT_X, CLIENT_Y] =  [TOUCH.clientX, TOUCH.clientY]
+            TOUCHE               = changedTouches[0],
+            [CLIENT_X, CLIENT_Y] =  [TOUCHE.clientX, TOUCHE.clientY]
 
             this.event_CLIENT_XY = [CLIENT_X, CLIENT_Y]
 
