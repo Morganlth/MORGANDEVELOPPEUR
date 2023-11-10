@@ -90,7 +90,7 @@ bind:this={projects}
     // --LIB
 
     // --CONTEXTS
-    import { APP, ROUTER, EVENT, COMMAND } from '../../../../App.svelte'
+    import { APP, ROUTER, EVENT } from '../../../../App.svelte'
 
 //=======@COMPONENTS|
 
@@ -166,6 +166,8 @@ bind:this={projects}
 
     // --INSIDE
     $: card$_ON = prop_FOCUS && !prop_INTRO
+
+    $: console.log(prop_INTRO)
 
 
 // #\-FUNCTIONS-\
