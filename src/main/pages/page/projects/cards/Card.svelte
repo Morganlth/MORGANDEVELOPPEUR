@@ -46,6 +46,8 @@ on:mousemove={card_eMouseMove}
 on:mouseenter={card_eMouseEnter}
 on:mouseleave={card_eMouseLeave}
 on:mousedown={card_eMouseDown}
+on:touchstart={card_eTouchStart}
+on:touchend={card_eTouchEnd}
 >
     <div
     class="decor"
@@ -168,9 +170,9 @@ on:out={tag_eOut}
     CARD_EVENTS =
     {
         mouseMove: wait_throttle(card_e$MouseMove, 3), // +- 50ms
-        touchMove: wait_throttle(card_e$TouchMove, 3), // +- 50ms
         mouseUp  : card_e$MouseUp
-    }
+    },
+    CARD_EVENTS_2 = { touchMove: wait_throttle(card_e$TouchMove, 3) } // +- 50ms
 
     // --INSIDE
 
@@ -265,7 +267,9 @@ on:out={tag_eOut}
         card_ROTATE_Z = card_getRotateZ()
     }
 
-    function card_setEvents() { EVENT.event_add(CARD_EVENTS) }
+    function card_setEvents()  { EVENT.event_add(CARD_EVENTS) }
+
+    function card_setEvents2() { EVENT.event_add(CARD_EVENTS_2) }
 
     function card_setTransition(value) { card_TRANSITION_DURATION = value }
 
@@ -345,7 +349,9 @@ on:out={tag_eOut}
 
     function card_destroyTimeout() { clearTimeout(card_TIMEOUT) }
 
-    function card_destroyEvents() { EVENT.event_remove(CARD_EVENTS) }
+    function card_destroyEvents()  { EVENT.event_remove(CARD_EVENTS) }
+
+    function card_destroyEvents2() { EVENT.event_remove(CARD_EVENTS_2) }
 
 
 //=======@COMMANDS|
@@ -413,6 +419,10 @@ on:out={tag_eOut}
 
         card_GRABBING = true
     }
+
+    function card_eTouchStart() { card_setEvents2() }
+
+    function card_eTouchEnd() { card_destroyEvents2() }
 
     function tag_eIn({detail: {frags}})
     {
