@@ -31,10 +31,12 @@ this={prop_TITLE.html}
 class="title"
 class:focus={prop_CHARGED && prop_INTRO}
 data-pe-content={prop_TITLE.fragments[0]?.frags?.substring(0, 1)}
+style:--fragments-t-x="{fragments_TRANSLATE_X}%"
 bind:offsetHeight={title_HEIGHT}
 >
-    {#each prop_TITLE.fragments ?? [] as fragments}
+    {#each prop_TITLE.fragments ?? [] as fragments, i}
         <Fragments
+        prop_ID={i}
         prop_FRAGS={{ children: FRAGMENTS_FRAGS, value: fragments.frags ?? '' }}
         prop_TAGS={{ children: FRAGMENTS_TAGS, value: fragments.tags }}
         prop_STYLE={fragments_getStyle}
@@ -76,10 +78,11 @@ bind:offsetHeight={title_HEIGHT}
     import { onDestroy } from 'svelte'
 
     // --LIB
+    import { wait_throttle }                                  from '$lib/wait'
     import { animation_staticWriting, animation_staticErase } from '$lib/animation'
 
     // --CONTEXTS
-    import { EVENT } from '../../../App.svelte'
+    import { APP, EVENT } from '../../../App.svelte'
 
 //=======@COMPONENTS|
 
@@ -93,6 +96,8 @@ bind:offsetHeight={title_HEIGHT}
     export let
     prop_CHARGED = false,
     prop_INTRO   = false
+    ,
+    prop_TOP = 0
     ,
     prop_TITLE = {}
 
@@ -112,12 +117,14 @@ bind:offsetHeight={title_HEIGHT}
 
     // --INSIDE
     const
-    FRAGMENTS_FORCE = 2000
+    FRAGMENTS_MAX_TRANSLATE = 30,
+    FRAGMENTS_FORCE         = 2000
     ,
     FRAGMENTS_FRAGS = [],
     FRAGMENTS_TAGS  = []
     ,
-    FRAGMENTS_EVENTS = {}
+    FRAGMENTS_EVENTS   = { scroll: wait_throttle(fragments_e$Scroll, 5) }, // +- 80ms
+    FRAGMENTS_EVENTS_2 = {}
 
 
 // #\-VARIABLES-\
@@ -129,7 +136,10 @@ bind:offsetHeight={title_HEIGHT}
     // --THIS
 
     // --INSIDE
-    let fragments_TIMEOUT
+    let
+    fragments_TRANSLATE_X = 0
+    ,
+    fragments_TIMEOUT
 
 
 // #\-REATIVES-\
@@ -152,7 +162,9 @@ bind:offsetHeight={title_HEIGHT}
     onDestroy(title_destroy)
 
     // --SET
-    function fragments_setEvents() { EVENT.event_add(FRAGMENTS_EVENTS) }
+    function fragments_setEvents()  { EVENT.event_add(FRAGMENTS_EVENTS) }
+
+    function fragments_setEvents2() { EVENT.event_add(FRAGMENTS_EVENTS_2) }
 
     // --GET
     function fragments_getTranslate3d()
@@ -173,7 +185,19 @@ bind:offsetHeight={title_HEIGHT}
     }
 
     // --UPDATES
-    function fragments_update(intro) { intro ? fragments_intro() : fragments_outro() }
+    function fragments_update(intro)
+    {
+        if (intro)
+        {
+            fragments_setEvents()
+            fragments_intro()
+        }
+        else
+        {
+            fragments_destroyEvents()
+            fragments_outro()
+        }
+    }
     
     function fragments_updateFrags(opacity, transform)
     {
@@ -188,11 +212,12 @@ bind:offsetHeight={title_HEIGHT}
     {
         if (FRAGMENTS_TAGS.length)
         {
-            fragments_destroy()
+            fragments_destroyTimeout()
+            fragments_destroyEvents2()
 
-            FRAGMENTS_EVENTS.animation = animation(FRAGMENTS_TAGS, fragments_destroyEvents)
+            FRAGMENTS_EVENTS_2.animation = animation(FRAGMENTS_TAGS, fragments_destroyEvents2)
 
-            fragments_TIMEOUT = setTimeout(fragments_setEvents, delay)
+            fragments_TIMEOUT = setTimeout(fragments_setEvents2, delay)
         }
     }
 
@@ -201,12 +226,16 @@ bind:offsetHeight={title_HEIGHT}
         
     function fragments_destroy()
     {
-        clearTimeout(fragments_TIMEOUT)
-    
+        fragments_destroyTimeout()
         fragments_destroyEvents()
+        fragments_destroyEvents2()
     }
 
+    function fragments_destroyTimeout() { clearTimeout(fragments_TIMEOUT) }
+
     function fragments_destroyEvents() { EVENT.event_remove(FRAGMENTS_EVENTS) }
+
+    function fragments_destroyEvents2() { EVENT.event_remove(FRAGMENTS_EVENTS_2) }
 
 
 //=======@COMMANDS|
@@ -217,6 +246,14 @@ bind:offsetHeight={title_HEIGHT}
 //=======@EVENTS|
 
     // --*
+    async function fragments_e$Scroll(scrollTop)
+    {
+        const DIF = scrollTop - prop_TOP
+
+        if (prop_INTRO)   fragments_TRANSLATE_X = DIF / APP.app_HEIGHT * FRAGMENTS_MAX_TRANSLATE
+        else if (DIF > 0) fragments_TRANSLATE_X = FRAGMENTS_MAX_TRANSLATE
+        else              fragments_TRANSLATE_X = 0
+    }
 
 
 //=======@TRANSITIONS|
@@ -302,7 +339,14 @@ lang="scss"
 
     padding-bottom: 2rem;
 
-    :global .fragments { text-shadow: $shadow; }
+    :global .fragments
+    {
+        transform: translateX(calc(var(--fragments-t-x, 0) / (var(--fragments-id, 0) + 1)));
+
+        text-shadow: $shadow;
+
+        transition: transform .6s ease-out;
+    }
 
     .element
     {

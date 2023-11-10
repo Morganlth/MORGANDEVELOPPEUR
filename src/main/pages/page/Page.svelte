@@ -32,9 +32,7 @@ class="page"
 class:hide={page_HIDE}
 style:z-index={prop_Z}
 >
-    <Wrapper
-    {prop_RATIO}
-    >
+    <Wrapper>
         <Label
         prop_CONTENT={prop_LABEL}
         {prop_FOCUS}
@@ -44,6 +42,7 @@ style:z-index={prop_Z}
         <Title
         prop_CHARGED={page_CHARGED}
         {prop_INTRO}
+        {prop_TOP}
         {prop_TITLE}
         bind:title_HEIGHT
         slot="title"
@@ -123,8 +122,8 @@ style:z-index={prop_Z}
     prop_FOCUS = false,
     prop_INTRO = false
     ,
-    prop_Z     = 0,
-    prop_RATIO = 0
+    prop_TOP = 0,
+    prop_Z   = 0
     ,
     prop_COMPONENT  = {},
     prop_LABEL      = '',

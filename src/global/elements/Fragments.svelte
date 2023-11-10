@@ -28,6 +28,7 @@ context="module"
 
 <div
 class="fragments"
+style:--fragments-id={prop_ID}
 >
     {#each prop_FRAGS.value as char, i}
         <pre
@@ -86,6 +87,8 @@ class="fragments"
 
     // --PROPS
     export let
+    prop_ID = 0
+    ,
     prop_FRAGS  = { children: [], value: '' },
     prop_TAGS   = { children: [], value: '' }
     ,
