@@ -411,18 +411,24 @@ class:grabbing={slot_GRABBING}
 
     function gravityarea_eMouseDown() // no async
     {
-        gravityarea_LAST_2 = +new Date()
+        if (prop_GRABBING)
+        {
+            gravityarea_LAST_2 = +new Date()
 
-        slot_GRABBING = true
+            slot_GRABBING = true
 
-        if (prop_GRABBING) gravityarea_setEvents()
+            gravityarea_setEvents()
+        }
     }
 
     function gravityarea_eTouchStart()
     {
-        slot_GRABBING = true
+        if (prop_GRABBING)
+        {
+            slot_GRABBING = true
 
-        if (prop_GRABBING) gravityarea_setEvents2()
+            gravityarea_setEvents2()
+        }
     }
 
     function gravityarea_eTouchEnd()
