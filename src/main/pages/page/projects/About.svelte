@@ -280,7 +280,7 @@ lang="scss"
 /* #\-VARIABLES-\ */
 
     /* --* */
-    $top: 12%;
+    $top: max(12%, 130px);
 
 
 /* #\-GLOBAL-\ */
@@ -294,8 +294,8 @@ lang="scss"
 {
     @include utils.placement(fixed, $top, $right: app.$gap-inline);
 
-    width:  min(42rem, calc(100vw - app.$gap-inline * 2));
-    height: 100% - $top * 2;
+    width:  calc(100% - app.$gap-inline * 2);
+    height: calc(100% - $top);
 
     pointer-events: none;
 
@@ -309,7 +309,7 @@ lang="scss"
 
         overflow: clip auto;
 
-        padding-right: 3rem;
+        padding-inline: 3rem;
 
         box-sizing: border-box;
 
@@ -325,11 +325,17 @@ lang="scss"
         p:nth-child(1) { color: $light; }
 
         p:not(:nth-child(1)) { color: $primary; }
-
-        @include media.min($ms2) { pointer-events: auto; }
     }
 
     .canvas { @include utils.placement(absolute, 0, 0, 0, 0); }
+
+    @include media.min($ms2)
+    {
+        width:  min(42rem, calc(100vw - app.$gap-inline * 2));
+        height: calc(100% - $top * 2);
+        
+        .content { pointer-events: auto; }
+    }
 }
 
 
