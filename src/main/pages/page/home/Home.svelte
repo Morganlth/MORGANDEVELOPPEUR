@@ -57,6 +57,10 @@ data-page-id={prop_ID}
         />
     {/if}
 
+    <TicTacToe
+    prop_ON={prop_FOCUS && tictactoe_ON}
+    />
+
     <Group
     prop_STYLE="width: 0; height: 0;"
     let:resize
@@ -87,10 +91,6 @@ data-page-id={prop_ID}
             </GravityArea>
         {/each}
     </Group>
-
-    <TicTacToe
-    prop_ON={prop_FOCUS && tictactoe_ON}
-    />
 
     <Terminal
     {prop_ID}
