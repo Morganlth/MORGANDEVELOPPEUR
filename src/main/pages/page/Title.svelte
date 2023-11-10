@@ -181,7 +181,7 @@ bind:offsetHeight={title_HEIGHT}
         opacity: 0;
         transition: transform ease-out, opacity;
         transition-duration: .6s;
-        transition-delay: ${.05 * i}s;`
+        transition-delay: ${.04 * i}s;`
     }
 
     // --UPDATES
@@ -197,6 +197,8 @@ bind:offsetHeight={title_HEIGHT}
             fragments_destroyEvents()
             fragments_outro()
         }
+
+        fragments_e$Scroll(APP.app_SCROLLTOP)
     }
     
     function fragments_updateFrags(opacity, transform)
@@ -250,8 +252,13 @@ bind:offsetHeight={title_HEIGHT}
     {
         const DIF = scrollTop - prop_TOP
 
-        if (prop_INTRO)   fragments_TRANSLATE_X = DIF / APP.app_HEIGHT * FRAGMENTS_MAX_TRANSLATE
-        else if (DIF < 0) fragments_TRANSLATE_X = 0
+        if (DIF < 0) fragments_TRANSLATE_X = 0
+        else
+        {
+            const RATIO = DIF / APP.app_HEIGHT
+
+            fragments_TRANSLATE_X = RATIO >= 1 ? FRAGMENTS_MAX_TRANSLATE : RATIO * FRAGMENTS_MAX_TRANSLATE
+        }
     }
 
 
