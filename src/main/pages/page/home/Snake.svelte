@@ -45,7 +45,6 @@ on:fullscreenchange={snake_eFullscreenChange}
     style:width="{canvas_WIDTH}px"
     style:height="{canvas_HEIGHT}px"
     bind:this={canvas}
-    on:mouseleave={canvas_eMouseLeave}
     >
     </canvas>
 
@@ -387,14 +386,21 @@ on:fullscreenchange={snake_eFullscreenChange}
         if (!snake_INVINCIBLE) snake_updateSnake(snake_SNAKE.length + 3)
     }
 
-    function snake_updateMove(clientX, clientY)
+    function snake_updateMove(x, y)
     {
-        event_CLIENT_X = clientX
-        event_CLIENT_Y = clientY
+        event_CLIENT_X = x
+        event_CLIENT_Y = y
 
         snake_updateCoords()
 
-        if (snake_testMove()) snake_draw()
+        if (snake_testMove())
+        {
+            if (!snake_INVINCIBLE && snake_testOutside()) return gameover_update(true)
+
+            if (snake_testEatenApple()) snake_update()
+
+            snake_draw()
+        }
     }
 
     function snake_updateCoords()
@@ -491,13 +497,6 @@ on:fullscreenchange={snake_eFullscreenChange}
             if (!FULL_SCREEN_ELEMENT) snake_resetGame()
         }
         catch {}
-    }
-
-    function canvas_eMouseLeave(e)
-    {
-        const TARGET = e.relatedTarget
-
-        if (!TARGET || TARGET.classList.contains('snake')) gameover_update(true)
     }
 
     function cell_eClick()
@@ -636,9 +635,11 @@ on:fullscreenchange={snake_eFullscreenChange}
 
     function snake_testMove() { return snake_SNAKE[0] !== snake_X || snake_SNAKE[1] !== snake_Y }
 
-    function snake_testEatenApple(x, y) { if (x === SNAKE_APPLE[0] && y === SNAKE_APPLE[1]) snake_update() }
+    function snake_testEatenApple() { return snake_X === SNAKE_APPLE[0] && snake_Y === SNAKE_APPLE[1] }
 
-    function snake_testOverlay(x, y) { if (!snake_INVINCIBLE && x === snake_X && y === snake_Y) gameover_update(true) }
+    function snake_testOutside() { console.log(snake_X, snake_Y); return snake_X < 0 || snake_X >= canvas_COLUMNS || snake_Y < 0 || snake_Y >= canvas_ROWS }
+
+    function snake_testOverlay(x, y) { return x === snake_X && y === snake_Y  }
 
     function snake_draw()
     {
@@ -692,7 +693,7 @@ on:fullscreenchange={snake_eFullscreenChange}
 
             if (HIDE) continue
 
-            snake_testOverlay(X, Y)
+            if (!snake_INVINCIBLE && snake_testOverlay(X, Y)) return gameover_update(true)
 
             snake_drawBody(X, Y, i, x, y)
         }
@@ -715,8 +716,6 @@ on:fullscreenchange={snake_eFullscreenChange}
     }
     function snake_drawHead(x, y)
     {
-        snake_testEatenApple(x, y)
-
         snake_SNAKE[0] = x
         snake_SNAKE[1] = y
     
