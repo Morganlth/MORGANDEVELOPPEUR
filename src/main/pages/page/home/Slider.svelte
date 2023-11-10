@@ -270,7 +270,7 @@ lang="scss"
 
     padding-left: 4rem;
 
-    border-left: solid $intermediate 2px;
+    border-left: solid $intermediate 1px;
 
     text-align: right;
     writing-mode: vertical-rl;
@@ -288,7 +288,7 @@ lang="scss"
     {
         #{--title-size}: calc(map.get(font.$font-sizes, s8) * 2);
 
-        @include font.h-($color: $intermediate, $line-height: 1.2, $italic: true);
+        @include font.h-($color: $intermediate, $line-height: 1.1, $italic: true);
 
         display: block;
 
