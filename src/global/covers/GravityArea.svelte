@@ -42,7 +42,7 @@ translate3d(
 {gravityarea_TRANSLATE_X}px,
 {gravityarea_TRANSLATE_Y + gravityarea_FLOATING_Y}px,
 {gravityarea_TRANSLATE_Z}px)"
-style:cursor={prop_GRABBING ? 'grab' : 'initial'}
+style:cursor={prop_GRABBING ? 'grab' : 'pointer'}
 style:transition="transform {gravityarea_TRANSITION_DELAY}ms ease-out"
 type="button"
 title={prop_TITLE}
