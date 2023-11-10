@@ -2,8 +2,8 @@
 
 
 <!-- #|-CONTEXT-| -->
-<!--
-<script
+
+<!-- <script
 context="module"
 >
 
@@ -21,8 +21,8 @@ context="module"
     // --CONTEXTS
 
 
-</script>
--->
+</script> -->
+
 
 <!-- #|-HTML-| -->
 
@@ -160,12 +160,7 @@ class:hide={$app_$HIDE}
 
     function page_setVars(page, i, top)
     {
-        [page.end, page.start] = page.h
-        ?   [
-                (page.h + (0)) * APP.app_HEIGHT + top,
-                top + Math.floor(APP.app_HEIGHT * 1.4)
-            ]
-        :   [1, 1]
+        [page.end, page.start] = page.h ? [page.h * APP.app_HEIGHT + top, top + APP.app_PAGE_INTRO_HEIGHT] : [1, 1]
 
         page_updateProps(page, i,
         {

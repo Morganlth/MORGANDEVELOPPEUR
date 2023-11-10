@@ -34,10 +34,10 @@ class App
 // #\-PUBLICS-\
 
     // --THIS
-    app_WIDTH  = 0
-    app_HEIGHT = 0
-
-    app_SCROLLTOP = 0
+    app_WIDTH             = 0
+    app_HEIGHT            = 0
+    app_PAGE_INTRO_HEIGHT = 0
+    app_SCROLLTOP         = 0
 
     app_WAITING_LOADING = []
 
@@ -145,7 +145,12 @@ class App
     app_getOptimiseState() { return localStorage.getItem(App.__app_OPTIMISE_NAME) === 'true' }
 
     // --UPDATES
-    app_updateSize() { [this.app_WIDTH, this.app_HEIGHT] = [window.innerWidth, window.innerHeight] }
+    app_updateSize()
+    {
+        this.app_WIDTH             = window.innerWidth
+        this.app_HEIGHT            = window.innerHeight
+        this.app_PAGE_INTRO_HEIGHT = Math.floor(this.app_HEIGHT * 1.4)
+    }
 
     app_updateSmallScreen()
     {

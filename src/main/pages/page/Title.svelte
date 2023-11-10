@@ -31,7 +31,7 @@ this={prop_TITLE.html}
 class="title"
 class:focus={prop_CHARGED && prop_INTRO}
 data-pe-content={prop_TITLE.fragments[0]?.frags?.substring(0, 1)}
-style:--fragments-t-x="{fragments_TRANSLATE_X}%"
+style:--fragments-t-x="{fragments_TRANSLATE_X}vw"
 bind:offsetHeight={title_HEIGHT}
 >
     {#each prop_TITLE.fragments ?? [] as fragments, i}
@@ -117,7 +117,7 @@ bind:offsetHeight={title_HEIGHT}
 
     // --INSIDE
     const
-    FRAGMENTS_MAX_TRANSLATE = 50,
+    FRAGMENTS_MAX_TRANSLATE = 30,
     FRAGMENTS_FORCE         = 2000
     ,
     FRAGMENTS_FRAGS = [],
@@ -255,7 +255,7 @@ bind:offsetHeight={title_HEIGHT}
         if (DIF < 0) fragments_TRANSLATE_X = 0
         else
         {
-            const RATIO = DIF / APP.app_HEIGHT
+            const RATIO = DIF / APP.app_PAGE_INTRO_HEIGHT
 
             fragments_TRANSLATE_X = RATIO >= 1 ? FRAGMENTS_MAX_TRANSLATE : RATIO * FRAGMENTS_MAX_TRANSLATE
         }
