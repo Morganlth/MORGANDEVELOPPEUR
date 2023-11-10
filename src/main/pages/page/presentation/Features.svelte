@@ -251,7 +251,7 @@ lang="scss"
 
     pointer-events: auto;
 
-    transition: transform $duration ease-out;
+    transition: transform .6s ease-out;
 
     .container
     {
