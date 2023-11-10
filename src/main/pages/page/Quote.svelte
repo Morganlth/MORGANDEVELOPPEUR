@@ -193,7 +193,7 @@ lang="scss"
 
     width: 100%;
 
-    margin-top: 26vh;
+    margin-top: 20vh;
 
     &.focus>* { clip-path: polygon(100% 0, 0 0, 0 100%, 100% 100%); }
 
