@@ -357,7 +357,7 @@ lang="scss"
 
         .tag
         {
-            @include utils.placement(absolute, $top: 0, $left: 0, $z: 1);
+            @include utils.placement(absolute, $top: 0, $left: 0, $z: 2);
 
             transform: translate(-50%, -100%);
 
