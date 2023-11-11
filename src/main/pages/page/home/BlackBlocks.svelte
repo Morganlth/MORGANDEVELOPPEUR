@@ -899,8 +899,6 @@ lang="scss"
     @include utils.placement(absolute, $top: 0, $left: 0);
 
     &.hide { visibility: hidden; }
-
-    pointer-events: auto;
 }
 
 
