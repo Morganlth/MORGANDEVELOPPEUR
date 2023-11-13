@@ -218,8 +218,6 @@ lang="scss"
 
     ul
     {
-        flex-wrap: wrap;
-
         gap: 1rem;
 
         margin-left: 2rem;
