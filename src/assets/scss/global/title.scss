@@ -45,7 +45,7 @@
 {
     .fragments
     {
-        transform: translateX(calc(var(--fragments-t-x, 0) / (var(--fragments-id, 0) + 1)));
+        transform: translateX(calc(var(--fragments-t-x, 0) * (var(--fragments-id, 0) + 1)));
 
         text-shadow: $shadow;
 

@@ -31,8 +31,8 @@ this={prop_TITLE.html}
 class="title"
 class:focus={prop_CHARGED && prop_INTRO}
 data-pe-content={prop_TITLE.fragments[0]?.frags?.substring(0, 1)}
-style:--fragments-t-x="{fragments_TRANSLATE_X}vw"
-bind:offsetHeight={title_HEIGHT}
+style:--fragments-t-x="{fragments_TRANSLATE_X}px"
+bind:this={title}
 >
     {#each prop_TITLE.fragments ?? [] as fragments, i}
         <Fragments
@@ -75,7 +75,7 @@ bind:offsetHeight={title_HEIGHT}
     // --DATA
 
     // --SVELTE
-    import { onDestroy } from 'svelte'
+    import { onMount, onDestroy } from 'svelte'
 
     // --LIB
     import { wait_throttle }                                  from '$lib/wait'
@@ -119,10 +119,10 @@ bind:offsetHeight={title_HEIGHT}
     // --OUTSIDE
 
     // --THIS
+    const TITLE_EVENTS = { resize: title_e$Resize }
 
     // --INSIDE
     const
-    FRAGMENTS_MAX_TRANSLATE = 20,
     FRAGMENTS_FORCE         = 2000
     ,
     FRAGMENTS_FRAGS = [],
@@ -139,6 +139,10 @@ bind:offsetHeight={title_HEIGHT}
     // --OUTSIDE
 
     // --THIS
+    let
+    title
+    ,
+    title_LEFT = 0
 
     // --INSIDE
     let
@@ -164,9 +168,23 @@ bind:offsetHeight={title_HEIGHT}
 //=======@LIFE|
 
     // --SVELTE
-    onDestroy(title_destroy)
+    onMount(title_set), onDestroy(title_destroy)
 
     // --SET
+    function title_set()
+    {
+        title_setVars()
+        title_setEvents()
+    }
+
+    function title_setVars()
+    {
+        title_HEIGHT = title?.offsetHeight                              ?? 0
+        title_LEFT   = title?.firstChild?.getBoundingClientRect()?.left ?? 0
+    }
+
+    function title_setEvents() { EVENT.event_add(TITLE_EVENTS) }
+
     function fragments_setEvents()  { EVENT.event_add(FRAGMENTS_EVENTS) }
 
     function fragments_setEvents2() { EVENT.event_add(FRAGMENTS_EVENTS_2) }
@@ -211,7 +229,7 @@ bind:offsetHeight={title_HEIGHT}
         for (const FRAG of FRAGMENTS_FRAGS)
         {
             FRAG.style.transform = transform ?? fragments_getTranslate3d()
-            FRAG.style.opacity = opacity
+            FRAG.style.opacity   = opacity
         }
     }
 
@@ -229,7 +247,14 @@ bind:offsetHeight={title_HEIGHT}
     }
 
     // --DESTROY
-    function title_destroy() { fragments_destroy() }
+    function title_destroy()
+    {
+        title_destroyEvents()
+    
+        fragments_destroy()
+    }
+
+    function title_destroyEvents() { EVENT.event_remove(TITLE_EVENTS) }
         
     function fragments_destroy()
     {
@@ -253,6 +278,8 @@ bind:offsetHeight={title_HEIGHT}
 //=======@EVENTS|
 
     // --*
+    async function title_e$Resize() { title_setVars() }
+
     async function fragments_e$Scroll(scrollTop)
     {
         const DIF = scrollTop - prop_TOP
@@ -261,8 +288,8 @@ bind:offsetHeight={title_HEIGHT}
         else
         {
             const RATIO = DIF / APP.app_PAGE_INTRO_HEIGHT
-
-            fragments_TRANSLATE_X = RATIO >= 1 ? FRAGMENTS_MAX_TRANSLATE : RATIO * FRAGMENTS_MAX_TRANSLATE
+        
+            fragments_TRANSLATE_X = -title_LEFT * RATIO
         }
     }
 
