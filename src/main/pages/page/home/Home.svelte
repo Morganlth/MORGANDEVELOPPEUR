@@ -323,7 +323,7 @@ lang="scss"
 
 .home
 {
-    @include utils.placement(absolute, 0, 0, 0, 0, -1);
+    @include utils.placement(absolute, 0, 0, 0, 0);
 
     @extend %any-size;
 
