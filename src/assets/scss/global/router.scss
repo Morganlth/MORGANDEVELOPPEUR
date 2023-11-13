@@ -43,7 +43,7 @@
 {
     &.hide
     {
-        pointer-events: none;
+        pointer-events: none !important;
     
         .route { clip-path: polygon(-20% 0, -20% 0, -20% 100%, -20% 100%); }
     }
@@ -59,7 +59,7 @@
     {
         &.hide
         {
-            pointer-events: auto;
+            pointer-events: auto !important;
 
             &:hover .route, .route:focus { clip-path: $route-default-clip !important; }
         }
