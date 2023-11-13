@@ -123,7 +123,7 @@ bind:this={title}
 
     // --INSIDE
     const
-    FRAGMENTS_FORCE         = 2000
+    FRAGMENTS_FORCE = 2000
     ,
     FRAGMENTS_FRAGS = [],
     FRAGMENTS_TAGS  = []

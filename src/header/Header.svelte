@@ -32,7 +32,8 @@ class="header"
     <strong>
         <a
         href={$page.url.origin}
-        alt="Page d'accueil du site LE THUAUT Morgan Développeur Web"
+        aria-label={LINK_LABEL}
+        alt={LINK_LABEL}
         data-sveltekit-reload
         >
             <Icon
@@ -99,6 +100,7 @@ class="header"
     // --THIS
 
     // --INSIDE
+    const LINK_LABEL = 'Page d\'accueil du site LE THUAUT Morgan Développeur Web'
 
 
 // #\-VARIABLES-\

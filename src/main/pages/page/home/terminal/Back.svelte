@@ -45,10 +45,10 @@ class="back"
     <article
     class="desc"
     >
-        <h3>FONCTIONS DU TERMINAL</h3>
+        <h2>FONCTIONS DU TERMINAL</h2>
 
         <section>
-            <h4>- Taper une commande pour obtenir, modifier, ou optimiser</h4>
+            <h3>- Taper une commande pour obtenir, modifier, ou optimiser</h3>
 
             <p>
                 Le terminal vous offre la possibilité de personnaliser le site web LE THUAUT Morgan.
@@ -129,7 +129,7 @@ class="back"
         </section>
 
         <section>
-            <h4>- Rechercher une section ou une information</h4>
+            <h3>- Rechercher une section ou une information</h3>
 
             <p>
                 Le terminal agit comme une barre de recherche.
@@ -377,9 +377,9 @@ lang="scss"
 
         user-select: text;
 
-        h3 { @include font.h-(4, $light, 1.4); }
+        h2 { @include font.h-(4, $light, 1.4); }
 
-        h4
+        h3
         {
             @include font.text($n: 1, $color: $light, $regular: false, $font-size: map.get(font.$font-sizes, s3));
 

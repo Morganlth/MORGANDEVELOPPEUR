@@ -26,7 +26,7 @@ context="module"
 
 <!-- #|-HTML-| -->
 
-<div
+<span
 class="fragments"
 style:--fragments-id={prop_ID}
 >
@@ -61,7 +61,7 @@ style:--fragments-id={prop_ID}
             >&nbsp;</pre>
         {/each}
     {/if}
-</div>
+</span>
 
 
 <!-- #|-SCRIPT-| -->
@@ -206,18 +206,15 @@ lang="scss"
 
 .fragments
 {
+    &, pre { font: inherit; }
+
     &, ul { display: flex; }
 
     align-items: flex-end;
 
     transform-style: preserve-3d;
 
-    pre
-    {
-        display: inline-block;
-
-        font: inherit;
-    }
+    pre { display: inline-block; }
 
     ul
     {

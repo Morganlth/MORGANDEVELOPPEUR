@@ -129,13 +129,13 @@ style:z-index={prop_Z}
     prop_TOP = 0,
     prop_Z   = 0
     ,
-    prop_COMPONENT  = {},
-    prop_LABEL      = '',
-    prop_TITLE      = {},
-    prop_NAV        = {},
-    prop_QUOTE      = {},
-    prop_PROPS      = {},
-    prop_PROCESS    = {}
+    prop_COMPONENT = {},
+    prop_LABEL     = '',
+    prop_TITLE     = {},
+    prop_NAV       = {},
+    prop_QUOTE     = {},
+    prop_PROPS     = {},
+    prop_PROCESS   = {}
 
     // --BINDING
 

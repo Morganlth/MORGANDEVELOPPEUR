@@ -52,8 +52,7 @@
             route:
             {
                 value: 'ACCUEIL',
-                alt: 'Accueil',
-                label: 'Page accueil / home du site Morgan Développeur'
+                alt: 'Page accueil/home du site Morgan Développeur'
             }
         ,
             label: 'FR'
@@ -102,8 +101,7 @@
             route:
             {
                 value: 'PRÉSENTATION',
-                alt: 'Ma présentation',
-                label: 'Page de ma présentation personnel'
+                alt: 'Page de ma présentation personnel'
             }
         ,
             label: 'PRO'
@@ -155,8 +153,7 @@
             route:
             {
                 value: 'COMPÉTENCES',
-                alt: 'Mes compétences',
-                label: 'Page de mes compétences de développeur web'
+                alt: 'Page de mes compétences de développeur web'
             }
         ,
             label: 'SYSTEM'
@@ -220,8 +217,7 @@
             route:
             {
                 value: 'PROJETS',
-                alt: 'Mes projets',
-                label: 'Page de mes projets web'
+                alt: 'Page de mes projets web'
             }
         ,
             label: 'CARDS'
@@ -272,7 +268,7 @@
         page.focus = (page.intro = false)
         page.top   = (page.start = (page.end = (page.dif = 0)))
 
-        page.route = app_getRoute({ ...page.route, href: page.name })
+        page.route = app_getRoute(page.name, page.route)
         page.title = app_getTitle(id, page.title)
 
         const [PROCESS, PROPS] = app_getChildrenData(page.children)
@@ -299,7 +295,7 @@
     // --SET
 
     // --GET
-    function app_getRoute({value, href, alt, label})
+    function app_getRoute(href, {value, alt})
     {
         return (
         {
@@ -309,7 +305,7 @@
             {
                 href: '#' + href,
                 alt,
-                'aria-label': label
+                'aria-label': `${value} ${value.split('').join(' ')}`
             }
         })
     }

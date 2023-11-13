@@ -30,6 +30,7 @@ context="module"
 class="card"
 class:focus={card_ON}
 data-id={prop_ID}
+title={prop_CONTENT}
 style:transform="
 translate3d(
 {card_TRANSLATE_X}px,
