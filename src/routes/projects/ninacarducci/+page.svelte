@@ -50,6 +50,10 @@ prop_SUBPATH="ninacarducci"
 
     // --*
     import App from '../../../App.svelte'
+    
+//=======@STYLE|
+
+    // --*
 
 
 // #\-EXPORTS-\
@@ -139,7 +143,7 @@ prop_SUBPATH="ninacarducci"
 
 <!-- #|-STYLE-| -->
 
-<style
+<!-- <style
 lang="scss"
 >
 
@@ -159,12 +163,7 @@ lang="scss"
     /* --* */
 
 
-/* #\-GLOBAL-\ */
-
-    /* --* */
-
-
 /* #\-THIS-\ */
 
 
-</style>
+</style> -->

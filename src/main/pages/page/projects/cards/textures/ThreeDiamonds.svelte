@@ -75,7 +75,7 @@ class="threediamonds"
 
 <!-- #|-SCRIPT-| -->
 
-<script>
+<!-- <script>
 
 // #\-IMPORTS-\
 
@@ -88,6 +88,10 @@ class="threediamonds"
     // --CONTEXTS
 
 //=======@COMPONENTS|
+
+    // --*
+    
+//=======@STYLE|
 
     // --*
 
@@ -174,12 +178,12 @@ class="threediamonds"
     // --*
 
 
-</script>
+</script> -->
 
 
 <!-- #|-STYLE-| -->
 
-<style
+<!-- <style
 lang="scss"
 >
 
@@ -199,12 +203,7 @@ lang="scss"
     /* --* */
 
 
-/* #\-GLOBAL-\ */
-
-    /* --* */
-
-
 /* #\-THIS-\ */
 
 
-</style>
+</style> -->

@@ -670,6 +670,10 @@ id="ninacarducci"
 //=======@COMPONENTS|
 
     // --*
+    
+//=======@STYLE|
+
+    // --*
 
 
 // #\-EXPORTS-\
@@ -928,11 +932,6 @@ lang="scss"
 
     $contact-p-color: #d8d3a8;
     $contact-s-color: #beb45a;
-
-
-/* #\-GLOBAL-\ */
-
-    /* --* */
 
 
 /* #\-THIS-\ */

@@ -89,6 +89,10 @@ bind:this={blackblocks}
 //=======@COMPONENTS|
 
     // --*
+    
+//=======@STYLE|
+
+    // --*
 
 
 // #\-EXPORTS-\
@@ -883,11 +887,6 @@ lang="scss"
 
 
 /* #\-VARIABLES-\ */
-
-    /* --* */
-
-
-/* #\-GLOBAL-\ */
 
     /* --* */
 

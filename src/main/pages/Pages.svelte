@@ -70,6 +70,10 @@ class:hide={$app_$HIDE}
 
     // --*
     import Page from './page/Page.svelte'
+            
+//=======@STYLE|
+
+    // --*
 
 
 // #\-EXPORTS-\
@@ -279,11 +283,6 @@ lang="scss"
     /* --* */
 
 
-/* #\-GLOBAL-\ */
-
-    /* --* */
-
-
 /* #\-THIS-\ */
 
 .pages
@@ -292,7 +291,7 @@ lang="scss"
 
     @extend %any-size;
 
-    transform: scale(1); /* fixed and z-index */
+    transform: scale(1); /* fixed and page z-index */
 
     transition: filter .4s ease-in-out;
 

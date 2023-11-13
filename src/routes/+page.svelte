@@ -47,6 +47,10 @@ context="module"
 
     // --*
     import App from '../App.svelte'
+    
+//=======@STYLE|
+
+    // --*
 
 
 // #\-EXPORTS-\
@@ -136,7 +140,7 @@ context="module"
 
 <!-- #|-STYLE-| -->
 
-<style
+<!-- <style
 lang="scss"
 >
 
@@ -156,12 +160,7 @@ lang="scss"
     /* --* */
 
 
-/* #\-GLOBAL-\ */
-
-    /* --* */
-
-
 /* #\-THIS-\ */
 
 
-</style>
+</style> -->

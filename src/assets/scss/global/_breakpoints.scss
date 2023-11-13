@@ -1,12 +1,29 @@
-// #USES
+/*----------------------------------------------- #||--breakpoints--|| */
 
-@use 'sass:map';
 
-@use '../styles/media';
+/* #\-USES-\ */
 
-// #VARIABLES
+    /* --SASS */
+    @use 'sass:map';
 
-    // --BREAKPOINTS
+    /* --GLOBAL */
+
+    /* --APP */
+
+    /* --DEPENDENCIES */
+
+    /* --MEDIA */
+    @use '../styles/media';
+
+
+/* #\-EXPORTS-\ */
+
+    /* --THIS */
+
+
+/* #\-VARIABLES-\ */
+
+    /* --* */
     $ms1: map.get(media.$screen, s1);
     $ms2: map.get(media.$screen, s2);
     $ms3: map.get(media.$screen, s3);
@@ -23,3 +40,16 @@
         ms5 $ms5,
         ms6 $ms6
     );
+
+
+/* #\-MIXIN-\ */
+
+    /* --* */
+
+
+/* #\-PLACEHOLDER-\ */
+
+    /* --* */
+
+
+/* #\-THIS-\ */

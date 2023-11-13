@@ -30,6 +30,7 @@ context="module"
 class="cell"
 class:focus={prop_FOCUS}
 class:container={prop_CONTAINER}
+class:center={prop_CENTER || prop_CONTAINER}
 type="button"
 title={prop_TITLE}
 tabindex={prop_FOCUS ? 0 : -1}
@@ -56,14 +57,19 @@ on:click={cell_eClick}
 //=======@COMPONENTS|
 
     // --*
+    
+//=======@STYLE|
+
+    // --*
 
 
 // #\-EXPORTS-\
 
     // --PROPS
     export let
-    prop_FOCUS = true,
-    prop_CONTAINER = false
+    prop_FOCUS     = true,
+    prop_CONTAINER = false,
+    prop_CENTER    = false
     ,
     prop_TITLE = ''
 
@@ -175,16 +181,14 @@ lang="scss"
     /* --* */
 
 
-/* #\-GLOBAL-\ */
-
-    /* --* */
-
-
 /* #\-THIS-\ */
 
 .cell
 {
     pointer-events: none;
+
+    color: inherit;
+    font:  inherit;
 
     &.focus { pointer-events: auto; }
 
@@ -194,15 +198,15 @@ lang="scss"
     
         #{--icon-size}: calc($size * .4);
 
-        @extend %f-center;
-
-        width: $size;
+        width:  $size;
         height: $size;
 
         border: solid $light .2rem;
 
         box-sizing: content-box;
     }
+
+    &.center { @extend %f-center; }
 }
 
 

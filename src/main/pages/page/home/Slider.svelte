@@ -59,6 +59,10 @@ class="slider"
 //=======@COMPONENTS|
 
     // --*
+    
+//=======@STYLE|
+
+    // --*
 
 
 // #\-EXPORTS-\
@@ -244,11 +248,6 @@ lang="scss"
 
 
 /* #\-VARIABLES-\ */
-
-    /* --* */
-
-
-/* #\-GLOBAL-\ */
 
     /* --* */
 

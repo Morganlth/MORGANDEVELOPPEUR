@@ -71,6 +71,10 @@ data-page-id={prop_ID}
     // --*
     import System from './System.svelte'
     import Table  from './Table.svelte'
+            
+//=======@STYLE|
+
+    // --*
 
 
 // #\-EXPORTS-\
@@ -233,7 +237,7 @@ data-page-id={prop_ID}
 
 <!-- #|-STYLE-| -->
 
-<style
+<!-- <style
 lang="scss"
 >
 
@@ -253,12 +257,7 @@ lang="scss"
     /* --* */
 
 
-/* #\-GLOBAL-\ */
-
-    /* --* */
-
-
 /* #\-THIS-\ */
 
 
-</style>
+</style> -->

@@ -86,6 +86,10 @@ on:touchend={gravityarea_eTouchEnd}
 //=======@COMPONENTS|
 
     // --*
+    
+//=======@STYLE|
+
+    // --*
 
 
 // #\-EXPORTS-\
@@ -516,11 +520,6 @@ lang="scss"
 
     /* --* */
     $size: calc(var(--slot-size, '100px') * 2);
-
-
-/* #\-GLOBAL-\ */
-
-    /* --* */
 
 
 /* #\-THIS-\ */

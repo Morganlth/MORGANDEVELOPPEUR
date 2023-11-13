@@ -93,6 +93,11 @@ style:transform="translateY({features_TRANSLATE_Y}%)"
 
     // --*
     import Line from '../../../../global/covers/Line.svelte'
+    
+//=======@STYLE|
+
+    // --*
+    import '../../../../assets/scss/global/features.scss'
 
 
 // #\-EXPORTS-\
@@ -232,11 +237,6 @@ lang="scss"
     $duration: .8s;
 
 
-/* #\-GLOBAL-\ */
-
-    /* --* */
-
-
 /* #\-THIS-\ */
 
 .features
@@ -299,15 +299,6 @@ lang="scss"
             transition: transform $duration var(--feature-delay, 0) ease-in-out;
         }
 
-        :global .line
-        {
-            &, .content { box-sizing: border-box; }
-
-            padding-left: 2rem;
-
-            .content { padding-inline: 6% app.$gap-inline; }
-        }
-
         h3
         {
             @include font.h-(3, $color: $intermediate, $line-height: .4, $italic: true);
@@ -333,12 +324,6 @@ lang="scss"
             color: inherit;
         }
 
-        @include media.min($ms3)
-        {
-            :global .line .content { padding-left: 28%; }
-
-            h3 { transform: translateX(-10rem); }
-        }
         @include media.min($ms4, $ms4)
         {
             &.show>div::after
@@ -364,18 +349,21 @@ lang="scss"
                 transition: transform .4s ease-in;
             }
 
+            h3 { transform: translateX(-10rem); }
+
             .feature::before
             {
                 @include utils.placement(absolute, $top: 90%, $left: -12vw, $z: -1, $pe: attr(data-content));
 
-                /* You may not @extend selectors across media queries */
-                width:  100%;
+                width:  fit-content;
                 height: 100%;
     
                 padding-inline: .8rem;
             
                 background-color: $dark;
-                mix-blend-mode: overlay;
+                mix-blend-mode:   overlay;
+
+                white-space: nowrap;
             }
 
             

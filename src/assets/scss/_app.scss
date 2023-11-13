@@ -6,7 +6,7 @@
     /* --SASS */
 
     /* --GLOBAL */
-    @use './global/colors' as *;
+    @use './global/colors'      as *;
     @use './global/breakpoints' as *;
 
     /* --APP */
@@ -18,12 +18,17 @@
     @use './styles/media';
 
 
+/* #\-EXPORTS-\ */
+
+    /* --THIS */
+
+
 /* #\-VARIABLES-\ */
 
     /* --* */
     $default-gap-inline: 3rem;
-    $gap-block: 2rem;
-    $gap-inline: var(--app-g-inline, $default-gap-inline);
+    $gap-block:          2rem;
+    $gap-inline:         var(--app-g-inline, $default-gap-inline);
 
 
 /* #\-MIXIN-\ */
@@ -37,7 +42,7 @@
     %reset
     {
         body, h1, h2, h3, h4, h5, h6, ul, p, figure, blockquote, pre { margin: 0; }
-        ul, button, input, input[type="text"], textarea { padding: 0; }
+        ul, button, input, input[type="text"], textarea              { padding: 0; }
 
         li { list-style: none; }
 
@@ -55,6 +60,40 @@
         button { cursor: pointer; }
 
         input { outline: none; }
+    }
+
+    %set
+    {
+        #{--app-g-inline}: $default-gap-inline;
+
+        &, body, body>div
+        {
+            overflow: clip;
+
+            width:  100vw;
+            height: 100vh;
+            height: 100svh;
+
+            overscroll-behavior: none;
+    
+            user-select: none;
+        }
+
+        &, body { background-color: $dark; }
+
+        body { touch-action: none; }
+
+        body>div { transform: scale(1); } // fixed children
+
+        font-size: 31.25%;
+
+        @include media.min($ms4)
+        {
+            --app-g-inline: 5rem;
+
+            font-size: 46.875%;
+        }
+        @include media.min($ms6) { font-size: 62.5%; }
     }
 
     %fonts
@@ -130,39 +169,5 @@
         }
     }
 
-    %html
-    {
-        html
-        {
-            #{--app-g-inline}: $default-gap-inline;
 
-            &, body, body>div
-            {
-                overflow: clip;
-
-                width: 100vw;
-                height: 100vh;
-                height: 100svh;
-
-                overscroll-behavior: none;
-        
-                user-select: none;
-            }
-
-            &, body { background-color: $dark; }
-
-            body { touch-action: none; }
-
-            body>div { transform: scale(1); } // fixed children
-
-            font-size: 31.25%;
-
-            @include media.min($ms4)
-            {
-                --app-g-inline: 5rem;
-
-                font-size: 46.875%;
-            }
-            @include media.min($ms6) { font-size: 62.5%; }
-        }
-    }
+/* #\-THIS-\ */

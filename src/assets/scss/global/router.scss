@@ -1,0 +1,67 @@
+/*----------------------------------------------- #||--router--|| */
+
+
+/* #\-USES-\ */
+
+    /* --SASS */
+
+    /* --GLOBAL */
+    @use './breakpoints' as *;
+
+    /* --APP */
+
+    /* --DEPENDENCIES */
+
+    /* --MEDIA */
+    @use '../styles/media';
+
+
+/* #\-EXPORTS-\ */
+
+    /* --THIS */
+
+
+/* #\-VARIABLES-\ */
+
+    /* --* */
+    $route-default-clip: polygon(-10% -10%, 110% -10%, 110% 110%, -10% 110%);
+
+
+/* #\-MIXIN-\ */
+
+    /* --* */
+
+
+/* #\-PLACEHOLDER-\ */
+
+    /* --* */
+
+
+/* #\-THIS-\ */
+
+.router
+{
+    &.hide
+    {
+        pointer-events: none;
+    
+        .route { clip-path: polygon(-20% 0, -20% 0, -20% 100%, -20% 100%); }
+    }
+
+    .route
+    {
+        clip-path: $route-default-clip;
+
+        transition: clip-path .4s var(--route-t-delay, 0s) ease-out;
+    }
+
+    @include media.min($ms4, $ms4)
+    {
+        &.hide
+        {
+            pointer-events: auto;
+
+            &:hover .route, .route:focus { clip-path: $route-default-clip !important; }
+        }
+    }
+}

@@ -16,9 +16,9 @@
         ,
             set: function (value)
             {
-                this.value = value
-               
                 setter.call(this, arguments)
+    
+                this.value = value
 
                 set(value)
             }

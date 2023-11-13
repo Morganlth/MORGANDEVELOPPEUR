@@ -50,6 +50,10 @@ prop_PAGE_ID={1}
     // --*
     import App from '../../App.svelte'
 
+//=======@STYLE|
+
+    // --*
+
 
 // #\-EXPORTS-\
 
@@ -138,7 +142,7 @@ prop_PAGE_ID={1}
 
 <!-- #|-STYLE-| -->
 
-<style
+<!-- <style
 lang="scss"
 >
 
@@ -158,12 +162,7 @@ lang="scss"
     /* --* */
 
 
-/* #\-GLOBAL-\ */
-
-    /* --* */
-
-
 /* #\-THIS-\ */
 
 
-</style>
+</style> -->

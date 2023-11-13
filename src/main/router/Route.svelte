@@ -62,6 +62,10 @@ on:click|preventDefault={route_eClick}
 
     // --*
     import Fragments from '../../global/elements/Fragments.svelte'
+            
+//=======@STYLE|
+
+    // --*
 
 
 // #\-EXPORTS-\
@@ -209,11 +213,6 @@ lang="scss"
 
     /* --* */
     $pe-before-duration: .2s;
-
-
-/* #\-GLOBAL-\ */
-
-    /* --* */
 
 
 /* #\-THIS-\ */

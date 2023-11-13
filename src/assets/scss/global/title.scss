@@ -1,0 +1,62 @@
+/*----------------------------------------------- #||--title--|| */
+
+
+/* #\-USES-\ */
+
+    /* --SASS */
+
+    /* --GLOBAL */
+    @use './colors'      as *;
+    @use './breakpoints' as *;
+
+    /* --APP */
+    @use '../app';
+
+    /* --DEPENDENCIES */
+
+    /* --MEDIA */
+    @use '../styles/media';
+
+
+/* #\-EXPORTS-\ */
+
+    /* --THIS */
+
+
+/* #\-VARIABLES-\ */
+
+    /* --* */
+    $shadow: 0 0 2rem rgba($light, .1);
+
+
+/* #\-MIXIN-\ */
+
+    /* --* */
+
+
+/* #\-PLACEHOLDER-\ */
+
+    /* --* */
+
+
+/* #\-THIS-\ */
+
+.title
+{
+    .fragments
+    {
+        transform: translateX(calc(var(--fragments-t-x, 0) / (var(--fragments-id, 0) + 1)));
+
+        text-shadow: $shadow;
+
+        transition: transform .4s ease-out;
+
+        @include media.min($ms3, $ms3)
+        {
+            &:nth-child(1) { margin-left: calc(app.$gap-inline * 2); }
+            &:nth-child(2) { margin-left: app.$gap-inline; }
+        }
+    }
+
+    .element>* { filter: drop-shadow($shadow); }
+}

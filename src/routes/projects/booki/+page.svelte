@@ -51,6 +51,10 @@ prop_SUBPATH="booki"
     // --*
     import App from '../../../App.svelte'
 
+//=======@STYLE|
+
+    // --*
+
 
 // #\-EXPORTS-\
 
@@ -139,7 +143,7 @@ prop_SUBPATH="booki"
 
 <!-- #|-STYLE-| -->
 
-<style
+<!-- <style
 lang="scss"
 >
 
@@ -159,12 +163,7 @@ lang="scss"
     /* --* */
 
 
-/* #\-GLOBAL-\ */
-
-    /* --* */
-
-
 /* #\-THIS-\ */
 
 
-</style>
+</style> -->

@@ -81,6 +81,10 @@ transition:transition_fade={{ duration: 200 }}
 //=======@COMPONENTS|
 
     // --*
+    
+//=======@STYLE|
+
+    // --*
 
 
 // #\-EXPORTS-\
@@ -281,11 +285,6 @@ lang="scss"
 
     /* --* */
     $top: 14rem;
-
-
-/* #\-GLOBAL-\ */
-
-    /* --* */
 
 
 /* #\-THIS-\ */

@@ -1,0 +1,101 @@
+/*----------------------------------------------- #||--terminal--|| */
+
+
+/* #\-USES-\ */
+
+    /* --SASS */
+
+    /* --GLOBAL */
+    @use './colors'      as *;
+    @use './breakpoints' as *;
+
+    /* --APP */
+
+    /* --DEPENDENCIES */
+    @use '../styles/utils';
+
+    /* --MEDIA */
+    @use '../styles/media';
+
+
+/* #\-EXPORTS-\ */
+
+    /* --THIS */
+
+
+/* #\-VARIABLES-\ */
+
+    /* --* */
+
+
+/* #\-MIXIN-\ */
+
+    /* --* */
+
+
+/* #\-PLACEHOLDER-\ */
+
+    /* --* */
+
+
+/* #\-THIS-\ */
+
+.terminal
+{
+    &.focus
+    {
+        &.turn .container
+        {
+            .face
+            {
+                transform: rotateY(-180deg);
+
+                pointer-events: none;
+            }
+
+            .back
+            {
+                transform: rotateY(0);
+
+                pointer-events: auto;
+            }
+        }
+    
+        .container .face { pointer-events: auto; }
+    }
+
+    .container
+    {
+        &, .face, .back { transition: transform var(--container-duration, .4s) ease-out; }
+
+        .face, .back
+        {
+            @extend %any-size;
+
+            flex-shrink: 0;
+    
+            padding: 1.4rem 1.8rem;
+
+            background-color:    $dark;
+            backface-visibility: hidden;
+
+            border: solid $light .1rem;
+
+            box-shadow: 0 0 .4rem $light;
+            box-sizing: border-box;
+
+            @include media.min($ms4, $ms4) { padding: 2rem 4rem; }
+        }
+
+        .face .output .cell
+        {
+            height: fit-content;
+    
+            padding: .2rem .6rem;
+
+            background-color: $light;
+
+            color: $dark;
+        }
+    }
+}

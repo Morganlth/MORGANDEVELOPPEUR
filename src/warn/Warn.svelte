@@ -124,6 +124,10 @@ transition:transition_fade={{ duration: 400 }}
 
     // --*
 
+//=======@STYLE|
+
+    // --*
+
 
 // #\-EXPORTS-\
 
@@ -243,11 +247,6 @@ lang="scss"
 
 
 /* #\-VARIABLES-\ */
-
-    /* --* */
-
-
-/* #\-GLOBAL-\ */
 
     /* --* */
 

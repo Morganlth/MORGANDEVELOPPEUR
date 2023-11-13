@@ -58,6 +58,10 @@ bind:this={tag}
 
     // --*
     import Fragments from './Fragments.svelte'
+    
+//=======@STYLE|
+
+    // --*
 
 
 // #\-EXPORTS-\
@@ -193,11 +197,6 @@ lang="scss"
 
 
 /* #\-VARIABLES-\ */
-
-    /* --* */
-
-
-/* #\-GLOBAL-\ */
 
     /* --* */
 

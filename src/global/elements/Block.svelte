@@ -86,6 +86,10 @@ style:--block-color={prop_COLOR ?? COLORS.primary}
     import Icon  from '../covers/Icon.svelte'
     import Logo  from '../icons/Logo.svelte'
     import Image from '../icons/Image.svelte'
+    
+//=======@STYLE|
+
+    // --*
 
 
 // #\-EXPORTS-\
@@ -208,11 +212,6 @@ lang="scss"
 
     /* --* */
     $size: var(--slot-size, '100px');
-
-
-/* #\-GLOBAL-\ */
-
-    /* --* */
 
 
 /* #\-THIS-\ */

@@ -372,6 +372,10 @@ id="booki"
 //=======@COMPONENTS|
 
     // --*
+    
+//=======@STYLE|
+
+    // --*
 
 
 // #\-EXPORTS-\
@@ -484,11 +488,6 @@ lang="scss"
     $primary-light-color: #DEEBFF;
     $light-color: #F2F2F2;
     $border-color: #D9D9D9;
-
-
-/* #\-GLOBAL-\ */
-
-    /* --* */
 
 
 /* #\-THIS-\ */

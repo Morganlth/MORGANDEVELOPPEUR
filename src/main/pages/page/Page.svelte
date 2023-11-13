@@ -104,11 +104,15 @@ style:z-index={prop_Z}
 //=======@COMPONENTS|
 
     // --*
-    import Wrapper  from './Wrapper.svelte'
-    import Label    from './Label.svelte'
-    import Title    from './Title.svelte'
-    import Nav      from './Nav.svelte'
-    import Quote    from './Quote.svelte'
+    import Wrapper from './Wrapper.svelte'
+    import Label   from './Label.svelte'
+    import Title   from './Title.svelte'
+    import Nav     from './Nav.svelte'
+    import Quote   from './Quote.svelte'
+            
+//=======@STYLE|
+
+    // --*
 
 
 // #\-EXPORTS-\
@@ -263,11 +267,6 @@ lang="scss"
 
 
 /* #\-VARIABLES-\ */
-
-    /* --* */
-
-
-/* #\-GLOBAL-\ */
 
     /* --* */
 

@@ -67,10 +67,14 @@ style:height="{MAIN_HEIGHT}%"
 //=======@COMPONENTS|
 
     // --*
-    import Particles    from './Particles.svelte'
-    import Pages        from './pages/Pages.svelte'
-    import Router       from './router/Router.svelte'
-    import Spring       from './Spring.svelte'
+    import Particles from './Particles.svelte'
+    import Pages     from './pages/Pages.svelte'
+    import Router    from './router/Router.svelte'
+    import Spring    from './Spring.svelte'
+    
+//=======@STYLE|
+
+    // --*
 
 
 // #\-EXPORTS-\
@@ -246,11 +250,6 @@ lang="scss"
     /* --* */
 
 
-/* #\-GLOBAL-\ */
-
-    /* --* */
-
-
 /* #\-THIS-\ */
 
 .main
@@ -259,7 +258,7 @@ lang="scss"
 
     overflow: clip;
     
-    width: 100vw;
+    width:      100vw;
     min-height: 100vh;
     min-height: 100svh;
 

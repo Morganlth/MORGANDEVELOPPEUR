@@ -58,6 +58,10 @@ bind:this={icon}
 //=======@COMPONENTS|
 
     // --*
+    
+//=======@STYLE|
+
+    // --*
 
 
 // #\-EXPORTS-\
@@ -162,7 +166,8 @@ bind:this={icon}
     {
         const
         CLIENTRECT = icon.getBoundingClientRect(),
-        [X, Y] = [CLIENTRECT.left + CLIENTRECT.width / 2, CLIENTRECT.top + CLIENTRECT.height / 2]
+        X = CLIENTRECT.left + CLIENTRECT.width / 2,
+        Y = CLIENTRECT.top  + CLIENTRECT.height / 2
 
         spring_update(true, CLIENTRECT.width)
 
@@ -171,7 +176,7 @@ bind:this={icon}
         SPRING.spring_$COORDS = { x: X, y: Y }
     }
 
-    function icon_eMouseLeave() { spring_update(false, SPRING.spring_HIDE ? 0 : SPRING.spring_D_SIZE) } // no async
+    function icon_eMouseLeave() { spring_update(false, SPRING.spring_$HIDE.lastValue ? 0 : SPRING.spring_D_SIZE) } // no async
 
 
 //=======@TRANSITIONS|
@@ -211,11 +216,6 @@ lang="scss"
 
 
 /* #\-VARIABLES-\ */
-
-    /* --* */
-
-
-/* #\-GLOBAL-\ */
 
     /* --* */
 

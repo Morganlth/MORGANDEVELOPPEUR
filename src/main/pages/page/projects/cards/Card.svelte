@@ -128,6 +128,11 @@ on:out={tag_eOut}
     import Tag from '../../../../../global/elements/Tag.svelte'
 
     import Logo from '../../../../../global/icons/Logo.svelte'
+    
+//=======@STYLE|
+
+    // --*
+    import '../../../../../assets/scss/global/card.scss'
 
 
 // #\-EXPORTS-\
@@ -597,21 +602,16 @@ lang="scss"
 
     $size: max(14vw, 14vh);
 
-
-/* #\-GLOBAL-\ */
-
-    /* --* */
+    $texture-size: 94%;
 
 
 /* #\-THIS-\ */
 
 .card
 {
-    &, .decor, .texture, :global .tag { transform-style: preserve-3d; }
+    &, .decor, .texture { transform-style: preserve-3d; }
 
-    &, .texture, :global .icon { position: absolute; }
-
-    contain: layout size;
+    contain:   layout size;
     isolation: isolate;
 
     aspect-ratio: 234 / 333;
@@ -635,15 +635,11 @@ lang="scss"
 
         .background { @extend %any-size; }
 
-        .texture, :global .icon { backface-visibility: hidden; }
-
         .texture
         {
-            width: 94%;
-            height: 94%;
+            width:  $texture-size;
+            height: $texture-size;
         }
-
-        :global .icon { transform: rotateY(180deg); }
     }
 }
 

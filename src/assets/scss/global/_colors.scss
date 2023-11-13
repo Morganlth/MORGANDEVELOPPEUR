@@ -1,17 +1,51 @@
-// #VARIABLES
+/*----------------------------------------------- #||--colors--|| */
 
-    // --COLORS
-    $dark: #0A0A0A;
-    $light: #EDF7F6;
+
+/* #\-USES-\ */
+
+    /* --SASS */
+
+    /* --GLOBAL */
+
+    /* --APP */
+
+    /* --DEPENDENCIES */
+
+    /* --MEDIA */
+
+
+/* #\-EXPORTS-\ */
+
+    /* --THIS */
+
+
+/* #\-VARIABLES-\ */
+
+    /* --* */
+    $dark:       #0A0A0A;
+    $light:      #EDF7F6;
+    $primary:    #3F8EFC;
+    $indicator:  #EF233C;
     $intermediate: rgba($light, .2);
-    $primary: #3F8EFC;
-    $indicator: #EF233C;
 
     $colors:
     (
         dark $dark,
         light $light,
-        intermediate $intermediate,
         primary $primary,
-        indicator $indicator
+        indicator $indicator,
+        intermediate $intermediate
     );
+
+
+/* #\-MIXIN-\ */
+
+    /* --* */
+
+
+/* #\-PLACEHOLDER-\ */
+
+    /* --* */
+
+
+/* #\-THIS-\ */

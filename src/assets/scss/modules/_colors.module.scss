@@ -1,9 +1,39 @@
-// #USE
+/*----------------------------------------------- #||--colors--|| */
 
-@use '../global/colors';
 
-// #EXPORT
+/* #\-USES-\ */
 
-    // --COLORS
+    /* --SASS */
 
+    /* --GLOBAL */
+    @use '../global/colors';
+
+    /* --APP */
+
+    /* --DEPENDENCIES */
+
+    /* --MEDIA */
+
+
+/* #\-EXPORTS-\ */
+
+    /* --THIS */
     :export { @each $name, $color in colors.$colors { #{$name}: $color; } }
+
+
+/* #\-VARIABLES-\ */
+
+    /* --* */
+
+
+/* #\-MIXIN-\ */
+
+    /* --* */
+
+
+/* #\-PLACEHOLDER-\ */
+
+    /* --* */
+
+
+/* #\-THIS-\ */

@@ -1,4 +1,4 @@
-/*----------------------------------------------- #||--breakpoints--|| */
+/*----------------------------------------------- #||--card--|| */
 
 
 /* #\-USES-\ */
@@ -6,7 +6,6 @@
     /* --SASS */
 
     /* --GLOBAL */
-    @use '../global/breakpoints';
 
     /* --APP */
 
@@ -18,7 +17,6 @@
 /* #\-EXPORTS-\ */
 
     /* --THIS */
-    :export { @each $name, $point in breakpoints.$breakpoints { #{$name}: str-slice(#{$point}, 1, -3); } }
 
 
 /* #\-VARIABLES-\ */
@@ -37,4 +35,12 @@
 
 
 /* #\-THIS-\ */
-    
+
+.card
+{
+    &, .texture, .icon { position: absolute; }
+
+    .texture, .icon { backface-visibility: hidden; }
+
+    .icon { transform: rotateY(180deg); }
+}

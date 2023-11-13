@@ -128,6 +128,10 @@ on:fullscreenchange={snake_eFullscreenChange}
     import Cell  from '../../../../global/covers/Cell.svelte'
     import Icon  from '../../../../global/covers/Icon.svelte'
     import Cross from '../../../../global/icons/Cross.svelte'
+    
+//=======@STYLE|
+
+    // --*
 
 
 // #\-EXPORTS-\
@@ -775,11 +779,6 @@ lang="scss"
 
     /* --* */
     $blocksize: var(--snake-blocksize, '40px');
-
-
-/* #\-GLOBAL-\ */
-
-    /* --* */
 
 
 /* #\-THIS-\ */

@@ -59,6 +59,10 @@ class:focus={prop_INTRO}
 //=======@COMPONENTS|
 
     // --*
+            
+//=======@STYLE|
+
+    // --*
 
 
 // #\-EXPORTS-\
@@ -172,11 +176,6 @@ lang="scss"
 
 
 /* #\-VARIABLES-\ */
-
-    /* --* */
-
-
-/* #\-GLOBAL-\ */
 
     /* --* */
 

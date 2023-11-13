@@ -100,6 +100,11 @@ bind:this={projects}
     import Card  from './cards/Card.svelte'
     import Mask2 from './Mask2.svelte'
     import About from './About.svelte'
+        
+//=======@STYLE|
+
+    // --*
+    import '../../../../assets/scss/global/projects.scss'
 
 
 // #\-EXPORTS-\
@@ -309,12 +314,6 @@ lang="scss"
     /* --* */
 
 
-/* #\-GLOBAL-\ */
-
-    /* --* */
-    :global #projects .wrapper { transform: scale(1); } /* fixed children */
-
-
 /* #\-THIS-\ */
 
 .projects
@@ -342,27 +341,6 @@ lang="scss"
 
         width:  100%;
         height: fit-content;
-    }
-
-    :global
-    {
-        .particles { z-index: -1; }
-    
-        .group
-        {
-            @include utils.placement(fixed, 0, 0, 0, 0);
-
-            @extend %any-size;
-        }
-
-        .tag
-        {
-            @include utils.placement(absolute, $top: 0, $left: 0, $z: 2);
-
-            transform: translate(-50%, -100%);
-
-            pointer-events: none;
-        }
     }
 }
 

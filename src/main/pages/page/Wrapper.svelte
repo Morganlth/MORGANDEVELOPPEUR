@@ -55,7 +55,7 @@ class="wrapper"
 
 <!-- #|-SCRIPT-| -->
 
-<script>
+<!-- <script>
 
 // #\-IMPORTS-\
 
@@ -68,6 +68,10 @@ class="wrapper"
     // --CONTEXTS
 
 //=======@COMPONENTS|
+
+    // --*
+            
+//=======@STYLE|
 
     // --*
 
@@ -154,7 +158,7 @@ class="wrapper"
     // --*
 
 
-</script>
+</script> -->
 
 
 <!-- #|-STYLE-| -->
@@ -182,16 +186,13 @@ lang="scss"
     /* --* */
 
 
-/* #\-GLOBAL-\ */
-
-    /* --* */
-
-
 /* #\-THIS-\ */
 
 .wrapper
 {
     @extend %sticky;
+
+    transform: scale(1); /* fixed */
 
     overflow: clip;
 

@@ -36,6 +36,8 @@ context="module"
     >
         {#each TICTACTOE_BOARD as cell, i (i)}
             <Cell
+            prop_FOCUS={prop_ON}
+            prop_CENTER={true}
             on:click={cell_eClick.bind(i)}
             >
                 <Icon
@@ -78,6 +80,10 @@ context="module"
     import Icon   from '../../../../global/covers/Icon.svelte'
     import Circle from '../../../../global/icons/Circle.svelte'
     import Cross  from '../../../../global/icons/Cross.svelte'
+    
+//=======@STYLE|
+
+    // --*
 
 
 // #\-EXPORTS-\
@@ -342,11 +348,6 @@ lang="scss"
     $cell-size: calc(100% / 3);
 
 
-/* #\-GLOBAL-\ */
-
-    /* --* */
-
-
 /* #\-THIS-\ */
 
 .tictactoe
@@ -384,8 +385,6 @@ lang="scss"
 
     width:  $size;
     height: $size;
-
-    :global .cell { @extend %f-center; }
 
     &::after
     {

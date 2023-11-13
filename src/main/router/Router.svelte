@@ -37,15 +37,19 @@ on:mouseleave={router_eMouseLeave}
                 <li
                 style:--route-t-delay="{i * 100}ms"
                 >
-                    <Icon
-                    prop_SIZE="1rem"
-                    prop_COLOR={COLORS.intermediate}
-                    prop_SPRING={false}
+                    <span
+                    class="indicator"
                     >
-                        <Arrow
-                        prop_FOCUS={route.on}
-                        />
-                    </Icon>
+                        <Icon
+                        prop_SIZE="1rem"
+                        prop_COLOR={COLORS.intermediate}
+                        prop_SPRING={false}
+                        >
+                            <Arrow
+                            prop_FOCUS={route.on}
+                            />
+                        </Icon>
+                    </span>
             
                     <Route
                     prop_ON={route.on}
@@ -86,6 +90,11 @@ on:mouseleave={router_eMouseLeave}
     import Arrow from '../../global/icons/Arrow.svelte'
 
     import Route from './Route.svelte'
+            
+//=======@STYLE|
+
+    // --*
+    import '../../assets/scss/global/router.scss'
 
 
 // #\-EXPORTS-\
@@ -228,14 +237,6 @@ lang="scss"
 /* #\-VARIABLES-\ */
 
     /* --* */
-    $t-duration: .4s;
-
-    $route-default-clip: polygon(-10% -10%, 110% -10%, 110% 110%, -10% 110%);
-
-
-/* #\-GLOBAL-\ */
-
-    /* --* */
 
 
 /* #\-THIS-\ */
@@ -244,7 +245,7 @@ lang="scss"
 {
     &, ul, li
     {
-        width: fit-content;
+        width:  fit-content;
         height: fit-content;
     }
 
@@ -254,42 +255,25 @@ lang="scss"
 
     mix-blend-mode: difference;
 
-    &.hide
-    {
-        pointer-events: none;
-    
-        :global .route { clip-path: polygon(-20% 0, -20% 0, -20% 100%, -20% 100%); }
-    }
-
     ul
     {
-        display: flex;
+        display:     flex;
         align-items: flex-end;
 
         transform: rotate(-.01rad);
 
-        max-width: calc(50vw - app.$gap-inline * 2);
+        max-width:  calc(50vw - app.$gap-inline * 2);
         min-height: 2.4rem;
 
         li { position: relative; }
-    }
 
-    :global
-    {
-        .icon
+        .indicator
         {
             @include utils.placement(absolute, $top: 50%, $left: 0);
 
             display: none;
 
             transform: translate(-250%, -50%);
-        }
-
-        .route
-        {
-            clip-path: $route-default-clip;
-
-            transition: clip-path $t-duration var(--route-t-delay, 0s) ease-out;
         }
     }
 
@@ -302,28 +286,19 @@ lang="scss"
             pointer-events: none;
         }
 
-        top: 56%;
+        top:  56%;
         left: app.$gap-inline;
 
         ul
         {
             flex-direction: column;
-            align-items: flex-start;
+            align-items:    flex-start;
 
             max-width: none;
 
             li { width: 100%; }
 
-            :global .icon { display: inline-block; }
-        }
-    }
-    @include media.min($ms4, $ms4)
-    {
-        &.hide
-        {
-            pointer-events: auto;
-
-            &:hover :global .route, :global .route:focus { clip-path: $route-default-clip !important; }
+            .indicator { display: inline-block; }
         }
     }
 }

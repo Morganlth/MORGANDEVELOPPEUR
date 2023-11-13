@@ -18,10 +18,10 @@ class Event
     {
         value: 0
     ,
-        setter: function ()
+        setter: function ({value})
         {
             this.count = 0
-            this.samples[this.i] = this.value // fps
+            this.samples[this.i] = value // fps
             
             if (++this.i >= this.samples.length) this.i = 0
 
@@ -165,8 +165,9 @@ class Event
         this.#event_FRAMES.touchMove = requestAnimationFrame(() =>
         {
             const
-            TOUCHE               = changedTouches[0],
-            [CLIENT_X, CLIENT_Y] =  [TOUCHE.clientX, TOUCHE.clientY]
+            TOUCHE   = changedTouches[0],
+            CLIENT_X = TOUCHE.clientX,
+            CLIENT_Y = TOUCHE.clientY
 
             this.event_CLIENT_XY = [CLIENT_X, CLIENT_Y]
 

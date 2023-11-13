@@ -18,11 +18,18 @@ class Spring
     // --THIS
     #spring_$ON     = { value: true }
     #spring_$STATE  = { value: 0 }
+    #spring_$HIDE   =
+    {
+        value: false
+        ,
+        setter: function () { this.lastValue = this.value }
+        ,
+        optionalparameters: { lastValue: false }
+    }
     #spring_$COORDS = spring({ x: -Spring.__spring_DEFAULT_SIZE, y: -Spring.__spring_DEFAULT_SIZE }, { stiffness: .1, damping: .6 })
     #spring_$SIZE   = spring(Spring.__spring_DEFAULT_SIZE)
 
     #spring_HOVER = false // icon hover
-    #spring_HIDE  = false
    
     #spring_COMMANDS = []
     #spring_EVENTS   = {}
@@ -72,7 +79,7 @@ class Spring
 
     set spring_$COORDS(coords) { this.#spring_$COORDS.set(coords) }
 
-    set spring_$SIZE(size)     { this.#spring_$SIZE.set(size) }
+    set spring_$SIZE(size)     { this.#spring_update(size) }
 
 
 //=======@GETTER|
@@ -90,7 +97,9 @@ class Spring
 
     get spring_HOVER()   { return this.#spring_HOVER }
 
-    get spring_HIDE()    { return this.#spring_HIDE }
+    get spring_$HIDE()   { return this.#spring_$HIDE }
+
+    get spring_HIDE() { console.trace('spring hide'); return null }
 
 
 //=======@LIFE|
@@ -106,6 +115,7 @@ class Spring
     {
         this.#spring_$ON    = store_custom(this.#spring_$ON)
         this.#spring_$STATE = store_custom(this.#spring_$STATE)
+        this.#spring_$HIDE  = store_custom(this.#spring_$HIDE)
     }
 
     #spring_setCommands() { COMMAND.command_setCommands(this.#spring_COMMANDS) }
@@ -115,11 +125,10 @@ class Spring
     // --GET
 
     // --UPDATES
-    #spring_updateSize(size)
+    #spring_update(size)
     {
-        this.#spring_HIDE = !size
-
-        this.spring_$SIZE = size
+        this.#spring_$HIDE.set(!size)
+        this.#spring_$SIZE.set(size)
     }
 
     #spring_updateState(value)
@@ -174,9 +183,9 @@ class Spring
 
     async #spring_e$TouchMove(x, y) { this.spring_updateCoords(x, y) }
 
-    spring_e$Show() { this.#spring_updateSize(Spring.__spring_DEFAULT_SIZE) }
+    spring_e$Show() { this.#spring_update(Spring.__spring_DEFAULT_SIZE) }
 
-    spring_e$Hide() { this.#spring_updateSize(0) }
+    spring_e$Hide() { this.#spring_update(0) }
 
 
 //=======@UTILS|

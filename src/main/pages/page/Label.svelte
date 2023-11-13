@@ -72,6 +72,10 @@ style:opacity={label_OPACITY}
 //=======@COMPONENTS|
 
     // --*
+            
+//=======@STYLE|
+
+    // --*
 
 
 // #\-EXPORTS-\
@@ -229,11 +233,6 @@ lang="scss"
 
 
 /* #\-VARIABLES-\ */
-
-    /* --* */
-
-
-/* #\-GLOBAL-\ */
 
     /* --* */
 

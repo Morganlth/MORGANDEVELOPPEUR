@@ -64,6 +64,10 @@ class="line"
 //=======@COMPONENTS|
 
     // --*
+    
+//=======@STYLE|
+
+    // --*
 
 
 // #\-EXPORTS-\
@@ -167,9 +171,9 @@ lang="scss"
     /* --DEPENDENCIES */
     @use '../../assets/scss/styles/display';
     @use '../../assets/scss/styles/font';
-    @use '../../assets/scss/styles/media';
 
     /* --MEDIA */
+    @use '../../assets/scss/styles/media';
 
 
 /* #\-VARIABLES-\ */
@@ -178,11 +182,6 @@ lang="scss"
     $line-h: var(--line-height, 3rem);
 
     $font-size: map.get(font.$font-sizes, s3);
-
-
-/* #\-GLOBAL-\ */
-
-    /* --* */
 
 
 /* #\-THIS-\ */
@@ -195,12 +194,10 @@ lang="scss"
 
     display: flex;
 
-    width: 100%;
-    height: $line-h;
+    width:      100%;
+    height:     $line-h;
     min-height: $line-h;
     max-height: $line-h;
-
-    :global * { font: inherit;  }
 
     .id, .content
     {
@@ -215,7 +212,7 @@ lang="scss"
 
         width: 4rem;
 
-        color: $primary;
+        color:     $primary;
         font-size: $font-size;
     }
 
@@ -225,11 +222,9 @@ lang="scss"
 
         width: 100%;
 
-        box-sizing: border-box;
-
         user-select: text;
 
-        color: $light;
+        color:     $light;
         font-size: map.get(font.$font-sizes, s2);
     }
 
@@ -237,12 +232,9 @@ lang="scss"
     {
         --line-height: 5rem;
 
-        .content
-        {
-            padding-left: 1rem;
+        gap: 1rem;
 
-            font-size: $font-size;
-        }
+        .content { font-size: $font-size; }
     }
 }
 

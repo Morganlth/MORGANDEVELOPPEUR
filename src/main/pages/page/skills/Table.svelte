@@ -104,6 +104,10 @@ on:outrostart={table_eOut}
     import Icon from '../../../../global/covers/Icon.svelte'
 
     import Cross from '../../../../global/icons/Cross.svelte'
+            
+//=======@STYLE|
+
+    // --*
 
 
 // #\-EXPORTS-\
@@ -252,11 +256,6 @@ lang="scss"
     /* --* */
     $a: polygon(0 0, 0 0, 0 100%, 0 100%);
     $b: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-
-
-/* #\-GLOBAL-\ */
-
-    /* --* */
 
 
 /* #\-THIS-\ */

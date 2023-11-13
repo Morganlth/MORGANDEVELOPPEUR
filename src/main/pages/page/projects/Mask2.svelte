@@ -54,6 +54,10 @@ style:--pe-after-clip="polygon({mask2_PE_AFTER_CLIP_POINTS})"
 //=======@COMPONENTS|
 
     // --*
+    
+//=======@STYLE|
+
+    // --*
 
 
 // #\-EXPORTS-\
@@ -179,11 +183,6 @@ lang="scss"
 
     /* --* */
     $duration: .8s;
-
-
-/* #\-GLOBAL-\ */
-
-    /* --* */
 
 
 /* #\-THIS-\ */

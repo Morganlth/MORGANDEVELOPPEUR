@@ -1,0 +1,54 @@
+/*----------------------------------------------- #||--features--|| */
+
+
+/* #\-USES-\ */
+
+    /* --SASS */
+
+    /* --GLOBAL */
+    @use './breakpoints' as *;
+
+    /* --APP */
+    @use '../app';
+
+    /* --DEPENDENCIES */
+
+    /* --MEDIA */
+    @use '../styles/media';
+
+
+/* #\-EXPORTS-\ */
+
+    /* --THIS */
+
+
+/* #\-VARIABLES-\ */
+
+    /* --* */
+
+
+/* #\-MIXIN-\ */
+
+    /* --* */
+
+
+/* #\-PLACEHOLDER-\ */
+
+    /* --* */
+
+
+/* #\-THIS-\ */
+
+.features
+{
+    .line
+    {
+        &, .content { box-sizing: border-box; }
+
+        padding-left: 2rem;
+
+        .content { padding-inline: 6% app.$gap-inline; }
+    }
+
+    @include media.min($ms4, $ms4) { .line .content { padding-left: 28%; } }
+}

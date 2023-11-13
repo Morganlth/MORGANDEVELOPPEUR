@@ -1,4 +1,4 @@
-/*----------------------------------------------- #||--breakpoints--|| */
+/*----------------------------------------------- #||--setter--|| */
 
 
 /* #\-USES-\ */
@@ -6,9 +6,9 @@
     /* --SASS */
 
     /* --GLOBAL */
-    @use '../global/breakpoints';
 
     /* --APP */
+    @use '../app';
 
     /* --DEPENDENCIES */
 
@@ -18,7 +18,6 @@
 /* #\-EXPORTS-\ */
 
     /* --THIS */
-    :export { @each $name, $point in breakpoints.$breakpoints { #{$name}: str-slice(#{$point}, 1, -3); } }
 
 
 /* #\-VARIABLES-\ */
@@ -37,4 +36,10 @@
 
 
 /* #\-THIS-\ */
-    
+
+html
+{
+    @extend %reset;
+    @extend %set;
+    @extend %fonts;
+}

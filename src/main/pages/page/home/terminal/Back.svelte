@@ -77,43 +77,54 @@ class="back"
             <br>
                 Cela nous donne la commande suivante:
 
-                <Cell
-                prop_TITLE={CELL_COMMAND_TITLE}
-                {prop_FOCUS}
-                on:click={cell_eClick.bind(null, `${TERMINAL_WORD_REFERENCE} ${DESC_EXEMPLE.command} ${DESC_EXEMPLE.params}`)}
+                <span
+                class="command"
                 >
-                    <span
-                    class="command-app"
+                    <Cell
+                    prop_TITLE={CELL_COMMAND_TITLE}
+                    {prop_FOCUS}
+                    on:click={cell_eClick.bind(null, `${TERMINAL_WORD_REFERENCE} ${DESC_EXEMPLE.command} ${DESC_EXEMPLE.params}`)}
                     >
-                        {TERMINAL_WORD_REFERENCE}
-                    </span>
-                    <span
-                    class="command-name"
-                    >
-                        {DESC_EXEMPLE.command}
-                    </span>
-                    <span>{DESC_EXEMPLE.params}</span>
-                </Cell>
+                        <span
+                        class="command-app"
+                        >
+                            {TERMINAL_WORD_REFERENCE}
+                        </span>
+
+                        <span
+                        class="command-name"
+                        >
+                            {DESC_EXEMPLE.command}
+                        </span>
+
+                        <span>{DESC_EXEMPLE.params}</span>
+                    </Cell>
+                </span>
             <br>
             <br>
                 Vous pouvez retrouver la liste des commandes avec la commande
 
-                <Cell
-                prop_TITLE={CELL_COMMAND_TITLE}
-                {prop_FOCUS}
-                on:click={cell_eClick.bind(null, TERMINAL_WORD_REFERENCE + ' commands')}
+                <span
+                class="command"
                 >
-                    <span
-                    class="command-app"
+                    <Cell
+                    prop_TITLE={CELL_COMMAND_TITLE}
+                    {prop_FOCUS}
+                    on:click={cell_eClick.bind(null, TERMINAL_WORD_REFERENCE + ' commands')}
                     >
-                        {TERMINAL_WORD_REFERENCE}
-                    </span>
-                    <span
-                    class="command-name"
-                    >
-                        commands
-                    </span>
-                </Cell>
+                        <span
+                        class="command-app"
+                        >
+                            {TERMINAL_WORD_REFERENCE}
+                        </span>
+
+                        <span
+                        class="command-name"
+                        >
+                            commands
+                        </span>
+                    </Cell>
+                </span>
             </p>
         </section>
 
@@ -124,34 +135,43 @@ class="back"
                 Le terminal agit comme une barre de recherche.
                 Tapez un mot-clé pour trouver une section correspondante, par exemple:
                 
-                <Cell
-                prop_TITLE="Clicker pour rejoindre la page de contact"
-                {prop_FOCUS}
-                on:click={cell_eClick.bind(null, 'contact')}
+                <span
+                class="command"
                 >
-                    "contact"
-                </Cell>
+                    <Cell
+                    prop_TITLE="Clicker pour rejoindre la page de contact"
+                    {prop_FOCUS}
+                    on:click={cell_eClick.bind(null, 'contact')}
+                    >
+                        "contact"
+                    </Cell>
+                </span>
                 .
             <br>
             <br>
                 Vous pouvez retrouver la liste des mots-clés avec la commande
 
-                <Cell
-                prop_TITLE={CELL_COMMAND_TITLE}
-                {prop_FOCUS}
-                on:click={cell_eClick.bind(null, TERMINAL_WORD_REFERENCE + ' keywords')}
+                <span
+                class="command"
                 >
-                    <span
-                    class="command-app"
+                    <Cell
+                    prop_TITLE={CELL_COMMAND_TITLE}
+                    {prop_FOCUS}
+                    on:click={cell_eClick.bind(null, TERMINAL_WORD_REFERENCE + ' keywords')}
                     >
-                        {TERMINAL_WORD_REFERENCE}
-                    </span>
-                    <span
-                    class="command-name"
-                    >
-                        keywords
-                    </span>
-                </Cell>
+                        <span
+                        class="command-app"
+                        >
+                            {TERMINAL_WORD_REFERENCE}
+                        </span>
+    
+                        <span
+                        class="command-name"
+                        >
+                            keywords
+                        </span>
+                    </Cell>
+                </span>
             </p>
         </section>
     </article>
@@ -183,6 +203,10 @@ class="back"
     import Icon from '../../../../../global/covers/Icon.svelte'
 
     import Cross from '../../../../../global/icons/Cross.svelte'
+    
+//=======@STYLE|
+
+    // --*
 
 
 // #\-EXPORTS-\
@@ -322,20 +346,15 @@ lang="scss"
     /* --* */
 
 
-/* #\-GLOBAL-\ */
-
-    /* --* */
-
-
 /* #\-THIS-\ */
 
 .back
 {
-    @include utils.placement(absolute, $top: 0, $right: 0, $bottom: 0);
-    
+    @include utils.placement(relative, $top: -100%);
+
     transform: rotateY(180deg);
 
-    height: 100%;
+    background-color: $dark;
 
     .desc
     {
@@ -343,19 +362,20 @@ lang="scss"
 
         @extend %scroll-bar;
 
-        overflow: clip scroll;
+        overflow: auto;
 
+        width:  100%;
         height: calc(100% - var(--cell-size) - $margin-top);
 
-        margin-top: $margin-top;
+        margin-top:     $margin-top;
         padding-bottom: 1rem;
-        padding-right: app.$gap-inline;
+        padding-right:  app.$gap-inline;
 
         background-color: $dark;
 
         box-sizing: border-box;
 
-        &>* { pointer-events: none; }
+        user-select: text;
 
         h3 { @include font.h-(4, $light, 1.4); }
 
@@ -368,17 +388,11 @@ lang="scss"
 
         p { @include font.text($color: $light, $font-size: map.get(font.$font-sizes, s2), $line-height: 1.2); }
 
-        span { user-select: text; }
-
-        :global .cell
+        .command
         {
-            padding-inline: 1rem;
+            padding-inline: .4rem;
 
-            border-bottom: solid $intermediate 1px;
-
-            color: inherit;
-            font: inherit;
-            text-align: left;
+            border-bottom: solid $primary 1px;
         }
 
         .command-app { color: $primary; }

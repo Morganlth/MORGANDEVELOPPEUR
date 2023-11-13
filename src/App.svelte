@@ -85,9 +85,14 @@ on:touchstart|once={app_eTouchStart}
     // --*
     import Warn from './warn/Warn.svelte'
 
-    import Header   from './header/Header.svelte'
-    import Main     from './main/Main.svelte'
-    import Footer   from './footer/Footer.svelte'
+    import Header from './header/Header.svelte'
+    import Main   from './main/Main.svelte'
+    import Footer from './footer/Footer.svelte'
+
+//=======@STYLE|
+
+    // --*
+    import './assets/scss/global/setter.scss'
 
 
 // #\-EXPORTS-\
@@ -173,10 +178,10 @@ on:touchstart|once={app_eTouchStart}
 
     function app_setCommands()
     {
-        COMMAND.command_add('app', app_c$App)
-        COMMAND.command_add('router', app_c$Router)
+        COMMAND.command_add('app',     app_c$App)
+        COMMAND.command_add('router',  app_c$Router)
         COMMAND.command_add('command', app_c$Command)
-        COMMAND.command_add('event', app_c$Event)
+        COMMAND.command_add('event',   app_c$Event)
     }
 
     function app_setContexts(charged)
@@ -197,7 +202,7 @@ on:touchstart|once={app_eTouchStart}
     async function warn_setVars()
     {
         const
-        SCORE = performance.now() - APP_PERFORMANCE,
+        SCORE            = performance.now() - APP_PERFORMANCE,
         OPTIMISE_STORAGE = APP.app_getOptimiseState()
 
         warn_ACTIVE = SCORE > 68 && !OPTIMISE_STORAGE
@@ -218,13 +223,13 @@ on:touchstart|once={app_eTouchStart}
 //=======@COMMANDS|
 
     // --*
-    function app_c$App()        { console.log(APP) }
+    function app_c$App()     { console.log(APP) }
 
-    function app_c$Router()     { console.log(ROUTER) }
+    function app_c$Router()  { console.log(ROUTER) }
 
-    function app_c$Command()    { console.log(COMMAND) }
+    function app_c$Command() { console.log(COMMAND) }
 
-    function app_c$Event()      { console.log(EVENT) }
+    function app_c$Event()   { console.log(EVENT) }
 
 
 //=======@EVENTS|
@@ -262,7 +267,6 @@ lang="scss"
     /* --SASS */
 
     /* --APP */
-    @use './assets/scss/app';
 
     /* --DEPENDENCIES */
     @use './assets/scss/styles/utils';
@@ -275,17 +279,6 @@ lang="scss"
     /* --* */
 
 
-/* #\-GLOBAL-\ */
-
-    /* --* */
-    :global
-    {
-        @extend %reset;
-        @extend %fonts;
-        @extend %html;
-    }
-
-
 /* #\-THIS-\ */
 
 #app
@@ -294,7 +287,7 @@ lang="scss"
 
     @extend %scroll-bar;
 
-    overflow: clip scroll;
+    overflow:            clip scroll;
     overscroll-behavior: none;
 
     background-color: $dark;

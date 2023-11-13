@@ -248,6 +248,10 @@ id="sophiebluel"
 //=======@COMPONENTS|
 
     // --*
+    
+//=======@STYLE|
+
+    // --*
 
 
 // #\-EXPORTS-\
@@ -407,11 +411,6 @@ lang="scss"
     /* --* */
     $primary-color:   #B1663C;
     $secondary-color: #1D6154;
-
-
-/* #\-GLOBAL-\ */
-
-    /* --* */
 
 
 /* #\-THIS-\ */

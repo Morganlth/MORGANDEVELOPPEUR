@@ -78,6 +78,11 @@ on:mouseleave={terminal_eMouseLeave}
     // --*
     import Face from './Face.svelte'
     import Back from './Back.svelte'
+    
+//=======@STYLE|
+
+    // --*
+    import '../../../../../assets/scss/global/terminal.scss'
 
 
 // #\-EXPORTS-\
@@ -291,15 +296,12 @@ lang="scss"
 /* #\-USES-\ */
 
     /* --SASS */
-    @use 'sass:map';
 
     /* --APP */
     @use '../../../../../assets/scss/app';
 
     /* --DEPENDENCIES */
     @use '../../../../../assets/scss/styles/utils';
-    @use '../../../../../assets/scss/styles/display';
-    @use '../../../../../assets/scss/styles/font';
 
     /* --MEDIA */
     @use '../../../../../assets/scss/styles/media';
@@ -310,14 +312,7 @@ lang="scss"
     /* --* */
     $r-y: var(--r-y, 18deg);
 
-    $width: calc(100vw - app.$gap-inline * 2);
-
     $cell-size: var(--icon-size, 2.4rem);
-
-
-/* #\-GLOBAL-\ */
-
-    /* --* */
 
 
 /* #\-THIS-\ */
@@ -326,15 +321,27 @@ lang="scss"
 {
     --icon-size: 2.4rem;
 
-    @include utils.placement(absolute, $right: app.$gap-inline, $bottom: 20%);
+    @include utils.placement(absolute, $right: app.$gap-inline, $bottom: 14%);
 
     perspective-origin: left;
-    perspective: 2000px;
+    perspective:        2000px;
 
     overflow: visible;
 
-    width: calc($width / var(--cos, 1));
+    width:  calc((100vw - app.$gap-inline * 2) / var(--cos, 1));
     height: 26vh;
+
+    &.focus
+    {
+        &.turn
+        {
+            z-index: 1;
+
+            .container { transform: rotateY(0) translateX(0); }
+        }
+
+        .container { transform: rotateY(calc($r-y * -1)) translateX(0); }
+    }
 
     .container
     {
@@ -343,81 +350,16 @@ lang="scss"
         @include utils.placement(absolute, 0, 0, 0, 0);
 
         transform-origin: right;
-        transform-style: preserve-3d;
-        transform: rotateY(calc($r-y * -1)) translateX(calc(101% + app.$gap-inline));
-
-        &, :global .face, :global .back { transition: transform var(--container-duration, .4s) ease-out; }
-
-        :global .face, :global .back
-        {
-            padding: 1.4rem 1.8rem;
-
-            background-color: $dark;
-            backface-visibility: hidden;
-
-            border: solid $light .1rem;
-
-            box-shadow: 0 0 .4rem $light;
-            box-sizing: border-box;
-        }
-
-        :global .back { width: $width; }
+        transform-style:  preserve-3d;
+        transform:        rotateY(calc($r-y * -1)) translateX(calc(101% + app.$gap-inline));
     }
 
     @include media.min($ms3)
     {
-        top: 44%;
-        bottom: auto;
-
-        width: max(56vw, 56vh);
+        width:  max(56vw, 56vh);
         height: min(46vw, 46vh);
 
-        .container
-        {
-            #{--cell-size}: $cell-size;
-
-            :global .back { width: 100%; }
-        }
-    }
-    @include media.min($ms4, $ms4)
-    {
-        top: 33%;
-
-        .container { :global .face, :global .back { padding: 2rem 4rem; } }
-    }
-}
-
-.terminal.focus
-{
-    &.turn
-    {
-        z-index: 1;
-
-        .container
-        {
-            transform: rotateY(0) translateX(0);
-
-            :global .face
-            {
-                transform: rotateY(-180deg);
-
-                pointer-events: none;
-            }
-
-            :global .back
-            {
-                transform: rotateY(0);
-
-                pointer-events: auto;
-             }
-        }
-    }
-
-    .container
-    {
-        transform: rotateY(calc($r-y * -1)) translateX(0);
-
-        :global .face { pointer-events: auto; }
+        .container { #{--cell-size}: $cell-size; }
     }
 }
 

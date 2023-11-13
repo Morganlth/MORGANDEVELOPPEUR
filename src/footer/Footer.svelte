@@ -66,6 +66,10 @@ class="footer"
 //=======@COMPONENTS|
 
     // --*
+    
+//=======@STYLE|
+
+    // --*
 
 
 // #\-EXPORTS-\
@@ -179,11 +183,6 @@ lang="scss"
 
     /* --* */
     $padding-block: .4rem;
-
-
-/* #\-GLOBAL-\ */
-
-    /* --* */
 
 
 /* #\-THIS-\ */

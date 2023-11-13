@@ -14,6 +14,11 @@
     /* --MEDIA */
 
 
+/* #\-EXPORTS-\ */
+
+    /* --THIS */
+
+
 /* #\-VARIABLES-\ */
 
     /* --* */
@@ -27,14 +32,17 @@
     {
         @if $width and $height
         {
-            @if $or { @media screen and (min-width: $width), screen and (min-height: $height)   { @content; }  }
-            @else   { @media screen and (min-width: $width) and (min-height: $height)           { @content; }  }
+            @if $or { @media screen and (min-width: $width), screen and (min-height: $height) { @content; }  }
+            @else   { @media screen and (min-width: $width) and (min-height: $height)         { @content; }  }
         }
-        @else if $width { @media screen and (min-width: $width)     { @content; } }
-        @else           { @media screen and (min-height: $height)   { @content; } }
+        @else if $width { @media screen and (min-width: $width)   { @content; } }
+        @else           { @media screen and (min-height: $height) { @content; } }
     }
 
 
 /* #\-PLACEHOLDER-\ */
 
     /* --* */
+
+
+/* #\-THIS-\ */

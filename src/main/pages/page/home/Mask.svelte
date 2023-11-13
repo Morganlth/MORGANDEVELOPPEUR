@@ -57,6 +57,10 @@ transition:transition_fade={{ duration: 1000 }}
 //=======@COMPONENTS|
 
     // --*
+    
+//=======@STYLE|
+
+    // --*
 
 
 // #\-EXPORTS-\
@@ -172,11 +176,6 @@ lang="scss"
 
     /* --* */
     $gradient: radial-gradient(circle at var(--mask-x, 50%) var(--mask-y, 50%), transparent var(--mask-transparent, 0), $dark var(--mask-dark, 100%));
-
-
-/* #\-GLOBAL-\ */
-
-    /* --* */
 
 
 /* #\-THIS-\ */

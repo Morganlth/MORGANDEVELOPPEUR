@@ -29,6 +29,7 @@ context="module"
 {#if $spring_$ON}
     <svg
     class="spring"
+    class:hide={spring_HIDE}
     class:true={$spring_$STATE === 1}
     class:false={$spring_$STATE === -1}
     >
@@ -50,13 +51,19 @@ context="module"
     // --DATA
 
     // --SVELTE
+    import { onDestroy } from 'svelte'
 
     // --LIB
+    import { wait_getDelay } from '$lib/wait'
 
     // --CONTEXTS
     import { SPRING } from '../App.svelte'
 
 //=======@COMPONENTS|
+
+    // --*
+    
+//=======@STYLE|
 
     // --*
 
@@ -77,6 +84,7 @@ context="module"
     // --OUTSIDE
 
     // --THIS
+    const SPRING_DELAY = wait_getDelay(24) // +- 400ms
 
     // --INSIDE
 
@@ -85,14 +93,19 @@ context="module"
 
     // --CONTEXTS
     let
-    spring_$ON      = SPRING.spring_$ON,
-    spring_$STATE   = SPRING.spring_$STATE,
-    spring_$COORDS  = SPRING.spring_$COORDS,
-    spring_$SIZE    = SPRING.spring_$SIZE
+    spring_$ON     = SPRING.spring_$ON,
+    spring_$STATE  = SPRING.spring_$STATE,
+    spring_$HIDE   = SPRING.spring_$HIDE,
+    spring_$COORDS = SPRING.spring_$COORDS,
+    spring_$SIZE   = SPRING.spring_$SIZE
 
     // --OUTSIDE
 
     // --THIS
+    let
+    spring_HIDE = false
+    ,
+    spring_TIMEOUT
 
     // --INSIDE
 
@@ -104,6 +117,7 @@ context="module"
     // --OUTSIDE
 
     // --THIS
+    $: spring_updateHide($spring_$HIDE)
 
     // --INSIDE
 
@@ -113,14 +127,24 @@ context="module"
 //=======@LIFE|
 
     // --SVELTE
+    onDestroy(spring_destroy)
 
     // --SET
 
     // --GET
 
     // --UPDATES
+    function spring_updateHide(hide)
+    {
+        spring_destroyTimeout()
+
+        spring_TIMEOUT = setTimeout(() => spring_HIDE = hide, hide ? SPRING_DELAY : 0)
+    }
 
     // --DESTROY
+    function spring_destroy() { spring_destroyTimeout() }
+
+    function spring_destroyTimeout() { clearTimeout(spring_TIMEOUT) }
 
 
 //=======@COMMANDS|
@@ -174,11 +198,6 @@ lang="scss"
     /* --* */
 
 
-/* #\-GLOBAL-\ */
-
-    /* --* */
-
-
 /* #\-THIS-\ */
 
 .spring
@@ -189,9 +208,12 @@ lang="scss"
 
     mix-blend-mode: difference;
 
+    &.hide { display: none !important; }
+
     &.true, &.false { mix-blend-mode: screen !important; }
 
-    &.true  circle { fill: $primary !important; }
+    &.true  circle { fill: $primary   !important; }
+
     &.false circle { fill: $indicator !important; }
 
     circle

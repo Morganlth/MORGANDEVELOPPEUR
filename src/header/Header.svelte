@@ -77,6 +77,10 @@ class="header"
     import Icon from '../global/covers/Icon.svelte'
 
     import Logo from '../global/icons/Logo.svelte'
+    
+//=======@STYLE|
+
+    // --*
 
 
 // #\-EXPORTS-\
@@ -186,11 +190,6 @@ lang="scss"
 
 
 /* #\-VARIABLES-\ */
-
-    /* --*  */
-
-
-/* #\-GLOBAL-\ */
 
     /* --*  */
 

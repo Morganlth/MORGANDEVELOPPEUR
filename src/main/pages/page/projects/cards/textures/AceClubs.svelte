@@ -74,7 +74,7 @@ class="aceclubs"
 
 <!-- #|-SCRIPT-| -->
 
-<script>
+<!-- <script>
 
 // #\-IMPORTS-\
 
@@ -87,6 +87,10 @@ class="aceclubs"
     // --CONTEXTS
 
 //=======@COMPONENTS|
+
+    // --*
+    
+//=======@STYLE|
 
     // --*
 
@@ -173,12 +177,12 @@ class="aceclubs"
     // --*
 
 
-</script>
+</script> -->
 
 
 <!-- #|-STYLE-| -->
 
-<style
+<!-- <style
 lang="scss"
 >
 
@@ -198,12 +202,7 @@ lang="scss"
     /* --* */
 
 
-/* #\-GLOBAL-\ */
-
-    /* --* */
-
-
 /* #\-THIS-\ */
 
 
-</style>
+</style> -->

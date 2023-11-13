@@ -1,0 +1,113 @@
+/*----------------------------------------------- #||--system--|| */
+
+
+/* #\-USES-\ */
+
+    /* --SASS */
+
+    /* --GLOBAL */
+    @use './colors' as *;
+
+    /* --APP */
+
+    /* --DEPENDENCIES */
+    @use '../styles/utils';
+    @use '../styles/display';
+
+    /* --MEDIA */
+
+
+/* #\-EXPORTS-\ */
+
+    /* --THIS */
+
+
+/* #\-VARIABLES-\ */
+
+    /* --* */
+    $r-x: var(--system-r-x, 0);
+    $r-y: var(--system-r-y, 0);
+
+
+/* #\-MIXIN-\ */
+
+    /* --* */
+
+
+/* #\-PLACEHOLDER-\ */
+
+    /* --* */
+
+
+/* #\-THIS-\ */
+
+.system
+{
+    .group, .cell { transition: transform .4s; }
+
+    .group
+    {
+        @include utils.placement(absolute, 0, 0, 0, 0);
+
+        @extend %f-center;
+        @extend %any-size;
+
+        transform-style: preserve-3d;
+        transform:       rotate3d($r-x, $r-y, 0, .016rad);
+    }
+
+    .cell
+    {
+        @include utils.placement(absolute, 51%, 10%);
+
+        transform: translate(calc($r-x * 6px), calc($r-y * 6px - 50%));
+    }
+
+    .tag
+    {
+        &::before
+        {
+            @include utils.placement(absolute, $right: -8rem, $bottom: 0, $pe: true);
+
+            transform: translateX(100%) scaleX(0);
+        
+            width:  150%;
+            height: 0;
+
+            pointer-events: none;
+
+            border-bottom: solid $intermediate 1px;
+
+            transition: transform 1s ease-out, border .6s ease-out;
+        }
+
+        transform: rotateY(16deg);
+
+        padding: 2rem;
+
+        &.focus::before { transform: translateX(0) scale(1); }
+
+        &:hover::before
+        {
+            transform: translateX(8%);
+        
+            border-bottom-color: $light;
+        }
+    }
+
+    .fragments>pre:not(.void)::before
+    {
+        @include utils.placement(absolute, $top: 50%, $left: 50%, $pe: true);
+
+        transform-origin: left;
+        
+        width:  100%;
+        height: 1px;
+
+        background-color: $light;
+
+        transform: rotate(calc(-90deg * var(--frag-sign, 1))) scaleX(var(--frag-y, 0));
+
+        transition: transform var(--frag-duration, .6s) ease-out;
+    }
+}

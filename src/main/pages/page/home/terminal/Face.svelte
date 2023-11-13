@@ -180,6 +180,10 @@ class="face"
 
     import Question    from '../../../../../global/icons/Question.svelte'
     import CommandLine from '../../../../../global/icons/CommandLine.svelte'
+    
+//=======@STYLE|
+
+    // --*
 
 
 // #\-EXPORTS-\
@@ -589,22 +593,17 @@ lang="scss"
     /* --* */
 
 
-/* #\-GLOBAL-\ */
-
-    /* --* */
-
-
 /* #\-THIS-\ */
 
 .face
 {
-    &, .input, .output { @extend %any-size; }
-
     &, .output { @extend %f-column; }
+
+    transform: rotateY(0);
 
     .header
     {
-        display: flex;
+        display:         flex;
         justify-content: space-between;
 
         margin-bottom: 2rem;
@@ -620,6 +619,8 @@ lang="scss"
             @include media.min($ms3) { font-size: map.get(font.$font-sizes, s2); }
         }
     }
+
+    .input, .output { @extend %any-size; }
 
     .input
     {
@@ -641,26 +642,22 @@ lang="scss"
 
     input
     {
+        &, &::selection { color: transparent; }
+    
         @include utils.placement(absolute, $top: 0, $right: 0, $bottom: 0);
 
-        color: transparent;
-
+        font: inherit;
         caret-color: $light;
 
-        &::selection
-        {
-            background-color: rgba($primary, .5);
-
-            color: transparent;
-        }
+        &::selection { background-color: rgba($primary, .5); }
     }
 
     .mirror 
     {
         color: $light;
 
-        &.app-available     >pre:nth-child(1) { color: $primary; }
-        &.command-available >pre:nth-child(2) { color: $indicator; }
+        &.app-available    >pre:nth-child(1) { color: $primary; }
+        &.command-available>pre:nth-child(2) { color: $indicator; }
     }
 
     .output
@@ -689,19 +686,6 @@ lang="scss"
         .success { color: $primary; }
 
         .placeholder { font-size: map.get(font.$font-sizes, s2); }
-
-        :global .cell
-        {
-            height: fit-content;
-    
-            padding: .2rem .6rem;
-
-            background-color: $light;
-
-            border: none;
-
-            color: $dark;
-        }
     }
 }
 

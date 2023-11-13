@@ -119,16 +119,20 @@ data-page-id={prop_ID}
 //=======@COMPONENTS|
 
     // --*
-    import GravityArea  from '../../../../global/covers/GravityArea.svelte'
-    import Group        from '../../../../global/covers/Group.svelte'
-    import Block        from '../../../../global/elements/Block.svelte'
+    import GravityArea from '../../../../global/covers/GravityArea.svelte'
+    import Group       from '../../../../global/covers/Group.svelte'
+    import Block       from '../../../../global/elements/Block.svelte'
 
-    import Snake        from './Snake.svelte'
-    import BlackBlocks  from './BlackBlocks.svelte'
-    import Mask         from './Mask.svelte'
-    import Slider       from './Slider.svelte'
-    import TicTacToe    from './TicTacToe.svelte'
-    import Terminal     from './terminal/Terminal.svelte'
+    import Snake       from './Snake.svelte'
+    import BlackBlocks from './BlackBlocks.svelte'
+    import Mask        from './Mask.svelte'
+    import Slider      from './Slider.svelte'
+    import TicTacToe   from './TicTacToe.svelte'
+    import Terminal    from './terminal/Terminal.svelte'
+    
+//=======@STYLE|
+
+    // --*
 
 
 // #\-EXPORTS-\
@@ -253,10 +257,10 @@ data-page-id={prop_ID}
     {
         switch (id)
         {
-            case 0 : snake_update(!snake_GAME)        ;break
-            case 1 : tictactoe_update(!tictactoe_ON)  ;break
-            case 2 : terminal_update(!terminal_ON)    ;break
-            default:                                  ;break
+            case 0 : snake_update(!snake_GAME)       ;break
+            case 1 : tictactoe_update(!tictactoe_ON) ;break
+            case 2 : terminal_update(!terminal_ON)   ;break
+            default:                                 ;break
         }
     }
 
@@ -280,10 +284,10 @@ data-page-id={prop_ID}
         {
             switch (str)
             {
-                case 'snake'    : snake_update(true)      ;break
-                case 'tictactoe': tictactoe_update(true)  ;break
-                case 'terminal' : terminal_update(true)   ;break
-                default         :                         ;break
+                case 'snake'    : snake_update(true)     ;break
+                case 'tictactoe': tictactoe_update(true) ;break
+                case 'terminal' : terminal_update(true)  ;break
+                default         :                        ;break
             }
         })
     }
@@ -311,11 +315,6 @@ lang="scss"
 
 
 /* #\-VARIABLES-\ */
-
-    /* --* */
-
-
-/* #\-GLOBAL-\ */
 
     /* --* */
 

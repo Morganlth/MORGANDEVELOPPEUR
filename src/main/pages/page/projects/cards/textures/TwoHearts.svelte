@@ -83,7 +83,7 @@ class="twohearts"
 
 <!-- #|-SCRIPT-| -->
 
-<script>
+<!-- <script>
 
 // #\-IMPORTS-\
 
@@ -96,6 +96,10 @@ class="twohearts"
     // --CONTEXTS
 
 //=======@COMPONENTS|
+
+    // --*
+    
+//=======@STYLE|
 
     // --*
 
@@ -182,12 +186,12 @@ class="twohearts"
     // --*
 
 
-</script>
+</script> -->
 
 
 <!-- #|-STYLE-| -->
 
-<style
+<!-- <style
 lang="scss"
 >
 
@@ -207,12 +211,7 @@ lang="scss"
     /* --* */
 
 
-/* #\-GLOBAL-\ */
-
-    /* --* */
-
-
 /* #\-THIS-\ */
 
 
-</style>
+</style> -->

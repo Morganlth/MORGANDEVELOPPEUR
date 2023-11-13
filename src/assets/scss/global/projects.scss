@@ -1,0 +1,54 @@
+/*----------------------------------------------- #||--projects--|| */
+
+
+/* #\-USES-\ */
+
+    /* --SASS */
+
+    /* --GLOBAL */
+
+    /* --APP */
+
+    /* --DEPENDENCIES */
+    @use '../styles/utils';
+
+    /* --MEDIA */
+
+
+/* #\-EXPORTS-\ */
+
+    /* --THIS */
+
+
+/* #\-VARIABLES-\ */
+
+    /* --* */
+
+
+/* #\-MIXIN-\ */
+
+    /* --* */
+
+
+/* #\-PLACEHOLDER-\ */
+
+    /* --* */
+
+
+/* #\-THIS-\ */
+
+.projects
+{
+    .particles { z-index: -1; }
+
+    .group { @include utils.fixed; }
+
+    .tag
+    {
+        @include utils.placement(absolute, $top: 0, $left: 0, $z: 2);
+
+        transform: translate(-50%, -100%);
+
+        pointer-events: none;
+    }
+}

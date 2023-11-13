@@ -88,6 +88,11 @@ bind:offsetHeight={title_HEIGHT}
 
     // --*
     import Fragments from '../../../global/elements/Fragments.svelte'
+            
+//=======@STYLE|
+
+    // --*
+    import '../../../assets/scss/global/title.scss'
 
 
 // #\-EXPORTS-\
@@ -304,7 +309,6 @@ lang="scss"
     /* --SASS */
 
     /* --APP */
-    @use '../../../assets/scss/app';
 
     /* --DEPENDENCIES */
     @use '../../../assets/scss/styles/utils';
@@ -316,12 +320,6 @@ lang="scss"
 
 
 /* #\-VARIABLES-\ */
-
-    /* --* */
-    $shadow: 0 0 2rem rgba($light, .1);
-
-
-/* #\-GLOBAL-\ */
 
     /* --* */
 
@@ -345,21 +343,7 @@ lang="scss"
 
     padding-bottom: 2rem;
 
-    :global .fragments
-    {
-        transform: translateX(calc(var(--fragments-t-x, 0) / (var(--fragments-id, 0) + 1)));
-
-        text-shadow: $shadow;
-
-        transition: transform .4s ease-out;
-    }
-
-    .element
-    {
-        transition: transform .8s ease-out;
-
-        :global &>* { filter: drop-shadow($shadow); }
-    }
+    .element { transition: transform .8s ease-out; }
 
     @include media.min($ms3, $ms3)
     {
@@ -388,12 +372,6 @@ lang="scss"
             clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
 
             transition-delay: $pe-duration;
-        }
-
-        :global .fragments
-        {
-            &:nth-child(1) { margin-left: calc(app.$gap-inline * 2); }
-            &:nth-child(2) { margin-left: app.$gap-inline; }
         }
     }
 }

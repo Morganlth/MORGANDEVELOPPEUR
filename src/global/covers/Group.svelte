@@ -57,6 +57,10 @@ style={prop_STYLE}
 //=======@COMPONENTS|
 
     // --*
+    
+//=======@STYLE|
+
+    // --*
 
 
 // #\-EXPORTS-\
@@ -213,17 +217,9 @@ lang="scss"
     /* --* */
 
 
-/* #\-GLOBAL-\ */
-
-    /* --* */
-
-
 /* #\-THIS-\ */
 
-.group
-{
-    pointer-events: none;
-}
+.group { pointer-events: none; }
 
 
 </style>

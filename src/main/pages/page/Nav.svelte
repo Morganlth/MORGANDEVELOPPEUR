@@ -94,6 +94,10 @@ style:--pe-color={nav_PE_COLOR}
 
     // --*
     import Icon from '../../../global/covers/Icon.svelte'
+            
+//=======@STYLE|
+
+    // --*
 
 
 // #\-EXPORTS-\
@@ -280,11 +284,6 @@ lang="scss"
 
     /* --* */
     $pe-transition: background-color .6s;
-
-
-/* #\-GLOBAL-\ */
-
-    /* --* */
 
 
 /* #\-THIS-\ */
