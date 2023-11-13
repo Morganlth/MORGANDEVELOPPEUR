@@ -46,7 +46,7 @@ on:mousemove={card_eMouseMove}
 on:mouseenter={card_eMouseEnter}
 on:mouseleave={card_eMouseLeave}
 on:mousedown={card_eMouseDown}
-on:touchstart={card_eTouchStart}
+on:touchstart|passive={card_eTouchStart}
 on:touchend={card_eTouchEnd}
 >
     <div
