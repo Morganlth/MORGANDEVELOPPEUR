@@ -31,7 +31,7 @@ context="module"
         <meta
         property="og:{meta.property}"
         content={meta.content}
-        />
+        >
         <meta
         name="twitter:{meta.property}"
         content={meta.content}
