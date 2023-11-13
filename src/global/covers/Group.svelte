@@ -125,7 +125,7 @@ style={prop_STYLE}
     // --SET
     function group_set() { group_setEvents() }
 
-    function group_setEvents() { EVENT.event_add(GROUP_EVENTS) }
+    function group_setEvents()  { EVENT.event_add(GROUP_EVENTS) }
 
     function group_setEvents2() { EVENT.event_add(GROUP_EVENTS_2) }
 
@@ -140,7 +140,7 @@ style={prop_STYLE}
         group_destroyEvents2()
     }
 
-    function group_destroyEvents() { EVENT.event_remove(GROUP_EVENTS) }
+    function group_destroyEvents()  { EVENT.event_remove(GROUP_EVENTS) }
 
     function group_destroyEvents2() { EVENT.event_remove(GROUP_EVENTS_2) }
 
@@ -173,7 +173,7 @@ style={prop_STYLE}
     // --*
     export function group_start() { group_setEvents2() }
 
-    export function group_stop()  { group_destroyEvents() }
+    export function group_stop()  { group_destroyEvents2() }
 
     function group_push(call)
     {
