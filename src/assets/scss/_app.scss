@@ -85,13 +85,13 @@
 
         body>div { transform: scale(1); } // fixed children
 
-        font-size: 31.25%;
+        font-size: 33.25%;
 
         @include media.min($ms4)
         {
             --app-g-inline: 5rem;
 
-            font-size: 46.875%;
+            font-size: 49.875%;
         }
         @include media.min($ms6) { font-size: 62.5%; }
     }
