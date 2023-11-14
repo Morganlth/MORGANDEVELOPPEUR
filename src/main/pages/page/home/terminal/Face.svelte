@@ -639,7 +639,12 @@ lang="scss"
         border-bottom: solid $primary 1px;
     }
 
-    input, .mirror { @extend %any-size; }
+    input, .mirror
+    {
+        @extend %any-size;
+
+        font: inherit;
+    }
 
     input
     {
@@ -649,7 +654,6 @@ lang="scss"
     
         @include utils.placement(absolute, $top: 0, $right: 0, $bottom: 0);
 
-        font:        inherit;
         caret-color: $light;
 
         &::selection { background-color: rgba($primary, .5); }

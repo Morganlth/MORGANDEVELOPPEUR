@@ -98,12 +98,17 @@
     %default-settings
     {
         font-display:            swap;
+        font-variant:            normal;
+        font-stretch:            100%;
         font-kerning:            normal;
         font-smooth:             antialiased;
         -webkit-font-smoothing:  antialiased;
         -moz-osx-font-smoothing: grayscale;
         font-optical-sizing:     auto;
+        font-feature-settings:   normal;
+        font-variation-settings: normal;
         text-rendering:          geometricPrecision;
+        text-indent:             0;
     }
 
 
