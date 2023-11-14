@@ -657,7 +657,7 @@ lang="scss"
     .mirror 
     {
         color:     $light;
-        font-size: map.get(font.$font-sizes, s3); /* iphone bug size */
+        font-size: map.get(font.$font-sizes, s3) !important; /* iphone bug size */
 
         &.app-available    >pre:nth-child(1) { color: $primary; }
         &.command-available>pre:nth-child(2) { color: $indicator; }
