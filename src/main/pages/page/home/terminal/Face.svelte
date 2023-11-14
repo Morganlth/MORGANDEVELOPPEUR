@@ -639,12 +639,9 @@ lang="scss"
         border-bottom: solid $primary 1px;
     }
 
-    input, .mirror
-    {
-        @extend %any-size;
+    input, .mirror, pre { font: inherit !important; }
 
-        font: inherit;
-    }
+    input, .mirror { @extend %any-size; }
 
     input
     {
@@ -663,6 +660,8 @@ lang="scss"
 
         &.app-available    >pre:nth-child(1) { color: $primary; }
         &.command-available>pre:nth-child(2) { color: $indicator; }
+
+        pre { white-space: nowrap; }
     }
 
     .output
