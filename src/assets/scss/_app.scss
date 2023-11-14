@@ -139,13 +139,6 @@
             url('/fonts/AnonymousPro/AnonymousPro.woff') format('woff'),
             url('/fonts/AnonymousPro/AnonymousPro.ttf') format('truetype');
         }
-
-        @font-face
-        {
-            font-family: 'Hack';
-            src: local('Hack-Regular'), local('Hack'),
-            url('/fonts/Hack/Hack-Regular.ttf') format('truetype');
-        }
     }
 
 
