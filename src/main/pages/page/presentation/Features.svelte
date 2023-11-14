@@ -306,7 +306,7 @@ lang="scss"
             @include utils.placement(relative, $top: $gap-y * -1);
             @include font.h-(3, $color: $intermediate, $line-height: $gap-y, $italic: true);
 
-            transform: translateX(-3rem);
+            transform: translateX(-3vw);
 
             padding-right: 1rem;
         }
@@ -317,7 +317,7 @@ lang="scss"
         
             &::before
             {
-                @include utils.placement(absolute, $top: 126%, $left: -6rem, $z: -1, $pe: attr(data-content));
+                @include utils.placement(absolute, $top: 126%, $left: -6vw, $z: -1, $pe: attr(data-content));
 
                 height: 100%;
     
