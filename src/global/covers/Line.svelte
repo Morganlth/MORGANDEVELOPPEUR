@@ -191,7 +191,7 @@ lang="scss"
 
     &, .content { @extend %f-a-center; }
 
-    @include font.text($regular: true, $font-size: map.get(font.$font-sizes, s2));
+    @include font.text($regular: true, $font-size: map.get(font.$font-sizes, s3));
 
     width:      100%;
     height:     $line-h;
