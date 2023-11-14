@@ -656,7 +656,7 @@ lang="scss"
         @include utils.placement(absolute, $top: 0, $right: 0, $bottom: 0);
 
         font: inherit;
-        font-size: map.get(font.$font-sizes, s2) !important; /* iphone bug size */
+        font-size: map.get(font.$font-sizes, s3) !important; /* iphone bug size */
         caret-color: $light;
 
         &::selection { background-color: rgba($primary, .5); }
