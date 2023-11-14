@@ -198,6 +198,8 @@ lang="scss"
     min-height: $line-h;
     max-height: $line-h;
 
+    .id, .content { font: inherit; }
+
     .id
     {
         flex-shrink: 0;
