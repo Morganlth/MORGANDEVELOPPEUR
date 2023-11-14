@@ -365,10 +365,6 @@ lang="scss"
 
                 transition: transform .4s ease-in;
             }
-
-            h3 { transform: translateX(-3vw); }
-            
-            .feature::before { left: -6vw; }
         }
     }
 }
