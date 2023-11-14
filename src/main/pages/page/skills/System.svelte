@@ -77,12 +77,12 @@ style:--system-r-y={system_ROTATE_Y}
     {#each prop_SYSTEM as item}
         <Cell
         prop_FOCUS={(item.focus ?? false) && !system_TARGET}
-        prop_TITLE={item.tag}
+        prop_TITLE={item.name}
         on:click={tag_eClick.bind(item)}
         >
             <Tag
             prop_FOCUS={item.focus ?? false}
-            prop_CONTENT={item.tag}
+            prop_CONTENT={item.name}
             prop_DURATION={TAG_DURATION}
             prop_STYLE={{ tag_style, fragments_style }}
             on:in={tag_eIn}

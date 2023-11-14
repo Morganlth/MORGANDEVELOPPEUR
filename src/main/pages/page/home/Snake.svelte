@@ -641,7 +641,7 @@ on:fullscreenchange={snake_eFullscreenChange}
 
     function snake_testEatenApple() { return snake_X === SNAKE_APPLE[0] && snake_Y === SNAKE_APPLE[1] }
 
-    function snake_testOutside() { console.log(snake_X, snake_Y); return snake_X < 0 || snake_X >= canvas_COLUMNS || snake_Y < 0 || snake_Y >= canvas_ROWS }
+    function snake_testOutside() { return snake_X < 0 || snake_X >= canvas_COLUMNS || snake_Y < 0 || snake_Y >= canvas_ROWS }
 
     function snake_testOverlay(x, y) { return x === snake_X && y === snake_Y  }
 

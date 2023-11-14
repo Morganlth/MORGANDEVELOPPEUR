@@ -26,8 +26,6 @@
     {
         name: 'games'
     ,
-        process: true
-    ,
         datas:
         [
             {

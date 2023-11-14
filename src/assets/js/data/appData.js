@@ -45,7 +45,7 @@
         {
             name: 'home',
             component: Home,
-            tags: ['landing', 'accueil'],
+            tag: 'accueil',
             overflow: false,
             h: 0
         ,
@@ -93,7 +93,7 @@
         {
             name: 'presentation',
             component: Presentation,
-            tags: ['caracteristique'],
+            tag: 'presentation',
             overflow: true,
             h: 6,
             gap: -1.4
@@ -146,7 +146,7 @@
         {
             name: 'skills',
             component: Skills,
-            tags: ['competences'],
+            tag: 'competences',
             overflow: true,
             h: 6
         ,
@@ -210,7 +210,7 @@
         {
             name: 'projects',
             component: Projects,
-            tags: ['projets'],
+            tag: 'projets',
             overflow: false,
             h: 3
         ,
@@ -273,8 +273,8 @@
 
         const [PROCESS, PROPS] = app_getChildrenData(page.children)
 
-        page.props   = Object.assign(PROPS, page.props)
-        page.process = Object.assign(PROCESS, app_getProcess([page.name, ...page.tags]))
+        page.props   = Object.assign(page.props, PROPS)
+        page.process = Object.assign({ [page.tag]: 'top' }, PROCESS)
 
         return page
     })
@@ -329,18 +329,15 @@
         {
             const CHILD_NAME = CHILD.name
 
-            if (CHILD.process)
+            if (CHILD.tag) PROCESS[CHILD.tag] = 'start'
+
+            if (CHILD.datas instanceof Array)
             {
-                PROCESS[CHILD_NAME] = 'start'
-
-                if (CHILD.datas instanceof Array)
+                for (const DATA of CHILD.datas)
                 {
-                    for (const DATA of CHILD.datas)
-                    {
-                        const TAGS = DATA.tags ?? []
+                    const TAGS = DATA.tags ?? []
 
-                        for (const TAG of TAGS) if (TAG !== '') PROCESS[TAG] = CHILD_NAME
-                    }
+                    for (const TAG of TAGS) if (TAG !== '') PROCESS[TAG] = CHILD_NAME
                 }
             }
 
@@ -348,15 +345,6 @@
         }
 
         return [PROCESS, PROPS]
-    }
-
-    function app_getProcess(tags = [])
-    {
-        const PROCESS = {}
-
-        for (const TAG of tags) PROCESS[TAG] = 'top'
-
-        return PROCESS
     }
 
     // --UPDATES

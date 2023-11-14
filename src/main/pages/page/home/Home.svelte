@@ -167,13 +167,13 @@ data-page-id={prop_ID}
     const SNAKE_COMMANDS =
     [
         {
-            name: 'snake',
-            callback: snake_c$,
+            name           : 'snake',
+            callback       : snake_c$,
             getCurrentValue: () => snake_ON,
-            params: { defaultValue: true, optimise: { value: false } },
-            tests: { testBoolean: true },
-            desc: 'Activer/Désactiver le serpent (p: \'t\' ou \'f\')',
-            storage: true
+            params         : { defaultValue: true, optimise: { value: false } },
+            tests          : { testBoolean: true },
+            desc           : 'Activer/Désactiver le serpent (p: \'t\' ou \'f\')',
+            storage        : true
         }
     ]
 

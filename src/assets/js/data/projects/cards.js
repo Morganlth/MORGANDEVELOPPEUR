@@ -27,8 +27,6 @@
     {
         name: 'cards'
     ,
-        process: true
-    ,
         datas:
         [
             {

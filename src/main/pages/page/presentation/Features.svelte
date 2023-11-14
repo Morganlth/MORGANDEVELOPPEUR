@@ -301,20 +301,36 @@ lang="scss"
 
         h3
         {
-            @include font.h-(3, $color: $intermediate, $line-height: .4, $italic: true);
+            @include font.h-(3, $color: $intermediate, $italic: true);
 
-            transform: translateX(-3rem);
+            position: absolute;
+
+            transform: translate(-3rem, -100%);
 
             padding-right: 1rem;
         }
 
         .feature
         {
+            &::before, & { width: fit-content; }
+        
+            &::before
+            {
+                @include utils.placement(absolute, $top: 126%, $left: -12vw, $z: -1, $pe: attr(data-content));
+
+                height: 100%;
+    
+                padding-inline: .8rem;
+            
+                background-color: $dark;
+                mix-blend-mode:   overlay;
+
+                white-space: nowrap;
+            }
+    
             position: relative;
 
             display: block;
-
-            width: fit-content;
         }
 
         a
@@ -349,24 +365,7 @@ lang="scss"
                 transition: transform .4s ease-in;
             }
 
-            h3 { transform: translateX(-10rem); }
-
-            .feature::before
-            {
-                @include utils.placement(absolute, $top: 90%, $left: -12vw, $z: -1, $pe: attr(data-content));
-
-                width:  fit-content;
-                height: 100%;
-    
-                padding-inline: .8rem;
-            
-                background-color: $dark;
-                mix-blend-mode:   overlay;
-
-                white-space: nowrap;
-            }
-
-            
+            h3 { transform: translate(-10rem, -100%); }
         }
     }
 }

@@ -205,7 +205,6 @@ lang="scss"
     @include utils.fixed($z: 3); /* > header */
 
     pointer-events: none;
-    touch-action:   none;
 
     mix-blend-mode: difference;
 

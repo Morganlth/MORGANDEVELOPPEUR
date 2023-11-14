@@ -23,12 +23,12 @@
     {
         name: 'features'
     ,
-        process: true
+        tag: 'caracteristique'
     ,
         datas:
         [
             {
-                tags: ['identity'],
+                tags: ['identite'],
                 contents:
                 [
                     {
@@ -46,7 +46,7 @@
                 ]
             },
             {
-                tags: ['locality'],
+                tags: ['localite'],
                 contents:
                 [
                     {
@@ -64,7 +64,7 @@
                 ]
             },
             {
-                tags: ['studies'],
+                tags: [],
                 contents:
                 [
                     {
@@ -82,7 +82,7 @@
                 ]
             },
             {
-                tags: ['job'],
+                tags: [],
                 contents:
                 [
                     {

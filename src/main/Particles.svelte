@@ -470,7 +470,6 @@ lang="scss"
     @extend %sticky;
 
     pointer-events: none;
-    touch-action:   none;
 }
 
 

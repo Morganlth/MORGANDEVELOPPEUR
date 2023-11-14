@@ -35,7 +35,7 @@ class="slider"
         {slider_CONTENT}
     </span>
 
-    <p>ACCUEIL PRÉSENTATION COMPÉTENCES PROJETS</p>
+    <span>ACCUEIL PRÉSENTATION COMPÉTENCES PROJETS</span>
 </div>
 
 
@@ -259,7 +259,7 @@ lang="scss"
     @include utils.placement(absolute, $bottom: 0, $left: 62%);
 
     transform-origin: bottom right;
-    transform: perspective(900px) rotateX(-.6rad) scale(.5);
+    transform: perspective(860px) rotateX(-.6rad) scale(.5);
 
     overflow: clip;
 
@@ -271,6 +271,7 @@ lang="scss"
 
     border-left: solid $intermediate 1px;
 
+    color: $intermediate;
     text-align: right;
     writing-mode: vertical-rl;
 
@@ -278,28 +279,23 @@ lang="scss"
     {
         height: 100%;
 
-        padding-bottom: 42vh;
+        padding-bottom: 44vh;
 
         box-sizing: border-box;
     }
 
-    span
+    span:nth-child(1)
     {
         #{--title-size}: calc(map.get(font.$font-sizes, s8) * 2);
 
-        @include font.h-($color: $intermediate, $line-height: 1.1, $italic: true);
+        @include font.h-($line-height: 1.1, $italic: true);
 
         display: block;
-
-        letter-spacing: -.6rem;
+    
+        letter-spacing: -.4rem;
     }
 
-    p
-    {
-        @include font.text($n: 0, $color: $intermediate, $regular: false, $font-size: map.get(font.$font-sizes, s3));
-
-        letter-spacing: 1px;
-    }
+    span:nth-child(2) { @include font.text($n: 0, $regular: false, $font-size: map.get(font.$font-sizes, s3)); }
 }
 
 

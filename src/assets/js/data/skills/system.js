@@ -24,13 +24,11 @@
     {
         name: 'system'
     ,
-        process: true
-    ,
         datas:
         [
             {
+                name: 'Html et Css',
                 tags: ['html', 'css'],
-                tag: 'Html Css',
                 props:
                 {
                     prop_ROTATE: MATH.toRad(150),
@@ -62,8 +60,8 @@
                 ]
             },
             {
+                name: 'Javascript',
                 tags: ['javascript'],
-                tag: 'JavaScript',
                 props:
                 {
                     prop_ROTATE: MATH.toRad(30),
@@ -113,8 +111,8 @@
                 ]
             },
             {
-                tags: ['node', 'nodejs'],
-                tag: 'Node JS',
+                name: 'Node JS',
+                tags: ['nodejs'],
                 props:
                 {
                     prop_ROTATE: MATH.toRad(60),
@@ -135,8 +133,8 @@
                 ]
             },
             {
+                name: 'Autres...',
                 tags: ['gestion', 'outils', 'adaptabilite'],
-                tag: 'Autres...',
                 props:
                 {
                     prop_ROTATE: MATH.toRad(90),
@@ -170,7 +168,7 @@
         ].map((item, i, array) =>
         {
             item.id = i
-            item.props.prop_TITLE = item.tag
+            item.props.prop_TITLE = item.name
             item.props.prop_OFFSET = 1 / (array.length + 1) * (i + 1)
     
             return item

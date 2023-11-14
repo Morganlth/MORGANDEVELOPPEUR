@@ -169,6 +169,7 @@ lang="scss"
     /* --APP */
 
     /* --DEPENDENCIES */
+    @use '../../assets/scss/styles/utils';
     @use '../../assets/scss/styles/display';
     @use '../../assets/scss/styles/font';
 
@@ -190,21 +191,14 @@ lang="scss"
 {
     --line-height: 3rem;
 
-    @include font.text($regular: true, $font-size: inherit);
+    &, .content { @extend %f-a-center; }
 
-    display: flex;
+    @include font.text($regular: true, $font-size: inherit);
 
     width:      100%;
     height:     $line-h;
     min-height: $line-h;
     max-height: $line-h;
-
-    .id, .content
-    {
-        @extend %f-a-center;
-
-        height: 100%;
-    }
 
     .id
     {
@@ -220,7 +214,7 @@ lang="scss"
     {
         flex: 1;
 
-        width: 100%;
+        @extend %any-size;
 
         user-select: text;
 

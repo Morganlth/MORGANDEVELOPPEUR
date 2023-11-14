@@ -131,8 +131,8 @@ bind:this={blackblocks}
     BLACKBLOCKS_FORCE_POSITION = .05,
     BLACKBLOCKS_FORCE_ROTATION = .01
     ,
-    BLACKBLOCKS_ROTATION_X = -MATH.toRad(20),
-    BLACKBLOCKS_ROTATION_Y = MATH.toRad(38)
+    BLACKBLOCKS_ROTATION_X = -MATH.toRad(18),
+    BLACKBLOCKS_ROTATION_Y = MATH.toRad(36)
     ,
     BLACKBLOCKS_MOUSE_RADIUS    = 3,
     BLACKBLOCKS_MOUSE_ANGLE     = .46,
@@ -142,26 +142,26 @@ bind:this={blackblocks}
     ,
     BLACKBLOCKS_SHADER_UNIFORMS =
     {
-        viewMatrixCamera: { value: new Matrix4() },
+        viewMatrixCamera      : { value: new Matrix4() },
         projectionMatrixCamera: { value: new Matrix4() },
-        projPosition: { value: new Vector3() },
-        projDirection: { value: new Vector3(0, 0, -1) },
-        projectedTexture: { value: '' },
-        widthScaled: { value: 0 },
-        heightScaled: { value: 0 },
-        textureOffset: { value: new Vector2(-.204, 0) }
+        projPosition          : { value: new Vector3() },
+        projDirection         : { value: new Vector3(0, 0, -1) },
+        projectedTexture      : { value: '' },
+        widthScaled           : { value: 0 },
+        heightScaled          : { value: 0 },
+        textureOffset         : { value: new Vector2(-.2, -.009) }
     }
     ,
     BLACKBLOCKS_COMMANDS =
     [
         {
-            name: 'blackblocks_optimise',
-            callback: blackblocks_c$Optimise,
+            name           : 'blackblocks_optimise',
+            callback       : blackblocks_c$Optimise,
             getCurrentValue: () => blackblocks_OPTIMISE,
-            params: { defaultValue: false, optimise: { value: true } },
-            tests: { testBoolean: true },
-            desc: 'Optimiser les blocks noirs (p: \'t\' ou \'f\')',
-            storage: true
+            params         : { defaultValue: false, optimise: { value: true } },
+            tests          : { testBoolean: true },
+            desc           : 'Optimiser les blocks noirs (p: \'t\' ou \'f\')',
+            storage        : true
         }
     ]
     ,
@@ -170,7 +170,7 @@ bind:this={blackblocks}
     {
         mouseMove: wait_throttle(blackblocks_e$MouseMove, 2),
         mouseDown: blackblocks_e$MouseDown,
-        mouseUp:   blackblocks_e$MouseUp,
+        mouseUp  : blackblocks_e$MouseUp,
         animation: blackblocks_e$Animation
     },
     BLACKBLOCKS_EVENTS_3 =
