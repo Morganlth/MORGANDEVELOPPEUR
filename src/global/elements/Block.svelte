@@ -234,12 +234,7 @@ lang="scss"
 
     transition: transform .4s ease-out;
 
-    &.focus .side
-    {
-        opacity: 1;
-
-        border-color: var(--block-color, $primary);
-    }
+    &.focus .side { border-color: var(--block-color, $primary); }
 
     &.hide { display: none !important; }
 
@@ -252,15 +247,13 @@ lang="scss"
 
         position: absolute;
 
-        opacity: .3;
-
         background-color: $dark;
 
         border: solid $intermediate calc($size * .05);
 
         box-sizing: border-box;
 
-        transition: border .4s ease-in, opacity .4s;
+        transition: border-color .4s ease-in;
     }
     .side:nth-child(1), .side:nth-child(2), .side:nth-child(3), .side:nth-child(4) { top: 0; }
     .side:nth-child(1), .side:nth-child(4), .side:nth-child(5), .side:nth-child(6) { left: 0; }

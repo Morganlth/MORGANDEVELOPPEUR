@@ -255,8 +255,6 @@ lang="scss"
 
     .container
     {
-        $content-gap-x: -3rem;
-    
         margin-bottom: 4rem;
 
         border-top: solid transparent .6rem;
@@ -303,11 +301,12 @@ lang="scss"
 
         h3
         {
-            @include font.h-(3, $color: $intermediate, $italic: true);
+            $gap-y: 1.6rem;
+        
+            @include utils.placement(relative, $top: $gap-y * -1);
+            @include font.h-(3, $color: $intermediate, $line-height: $gap-y, $italic: true);
 
-            position: absolute;
-
-            transform: translate($content-gap-x, -100%);
+            transform: translateX(-3rem);
 
             padding-right: 1rem;
         }
@@ -318,7 +317,7 @@ lang="scss"
         
             &::before
             {
-                @include utils.placement(absolute, $top: 126%, $left: $content-gap-x, $z: -1, $pe: attr(data-content));
+                @include utils.placement(absolute, $top: 126%, $left: -6rem, $z: -1, $pe: attr(data-content));
 
                 height: 100%;
     
@@ -344,8 +343,6 @@ lang="scss"
 
         @include media.min($ms4, $ms4)
         {
-            $content-gap-x: -6vw;
-    
             &.show>div::after
             {
                 transform: scaleY(1.24);
@@ -369,9 +366,9 @@ lang="scss"
                 transition: transform .4s ease-in;
             }
 
-            h3 { transform: translate($content-gap-x, -100%); }
+            h3 { transform: translateX(-3vw); }
             
-            .feature::before { left: $content-gap-x; }
+            .feature::before { left: -6vw; }
         }
     }
 }
