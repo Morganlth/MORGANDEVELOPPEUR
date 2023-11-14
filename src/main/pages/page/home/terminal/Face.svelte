@@ -639,12 +639,7 @@ lang="scss"
         border-bottom: solid $primary 1px;
     }
 
-    input, .mirror
-    {
-        @extend %any-size;
-
-        font: inherit;
-    }
+    input, .mirror { @extend %any-size; }
 
     input
     {
@@ -652,7 +647,8 @@ lang="scss"
     
         @include utils.placement(absolute, $top: 0, $right: 0, $bottom: 0);
 
-        font:        inherit;
+        font: inherit;
+        font-size: map.get(font.$font-sizes, s3); /* iphone bug size */
         caret-color: $light;
 
         &::selection { background-color: rgba($primary, .5); }
