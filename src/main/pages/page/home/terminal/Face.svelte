@@ -648,7 +648,7 @@ lang="scss"
 
     input
     {
-        &, &::selection { color: transparent; }
+        &, &::selection { color: $intermediate; }
     
         @include utils.placement(absolute, $top: 0, $right: 0, $bottom: 0);
 
