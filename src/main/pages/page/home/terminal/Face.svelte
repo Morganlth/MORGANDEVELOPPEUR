@@ -307,8 +307,11 @@ class="face"
 
         output_setVars()
 
-        COMMAND.command_COMMANDS.log(window.getComputedStyle(input_FIELD).getPropertyValue('font-size'))
-        COMMAND.command_COMMANDS.log(window.getComputedStyle(mirror).getPropertyValue('font-size'))
+        setTimeout(() =>
+        {
+            COMMAND.command_COMMANDS.log(window.getComputedStyle(input_FIELD).getPropertyValue('font-size'))
+            COMMAND.command_COMMANDS.log(window.getComputedStyle(mirror).getPropertyValue('font-size'))
+        }, 1000)
     }
 
     function face_setCommands() { for (const CMD of FACE_COMMANDS) COMMAND.command_add(CMD.name, CMD.callback, CMD.desc, CMD.args) }
