@@ -14,6 +14,7 @@
 //=======@COMPONENTS|
 
     // --*
+    import Contact from '../../../../main/pages/page/presentation/Contact.svelte'
 
 
 // #\-EXPORTS-\
@@ -75,7 +76,7 @@
                     },
                     {
                         topic: 'FORMATIONS',
-                        html: 'strong',
+                        html: 'p',
                         props: {},
                         data: 'Développeur Web, OpenClassrooms'
                     }
@@ -105,9 +106,10 @@
                 [
                     {
                         topic: 'EMAIL',
-                        html: 'strong',
+                        html: 'p',
                         props: {},
-                        data: 'Email: lethuaut.morgan@gmail.com'
+                        data: 'Email: lethuaut.morgan@gmail.com',
+                        child: Contact
                     },
                     {
                         topic: 'LINKEDIN',

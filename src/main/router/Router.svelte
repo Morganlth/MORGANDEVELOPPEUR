@@ -45,7 +45,7 @@ on:mouseleave={router_eMouseLeave}
                         prop_COLOR={COLORS.intermediate}
                         prop_SPRING={false}
                         >
-                            <Arrow
+                            <Indicator
                             prop_FOCUS={route.on}
                             />
                         </Icon>
@@ -87,7 +87,7 @@ on:mouseleave={router_eMouseLeave}
     // --*
     import Icon from '../../global/covers/Icon.svelte'
 
-    import Arrow from '../../global/icons/Arrow.svelte'
+    import Indicator from '../../global/icons/Indicator.svelte'
 
     import Route from './Route.svelte'
             

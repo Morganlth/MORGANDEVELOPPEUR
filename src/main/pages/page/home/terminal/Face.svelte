@@ -74,6 +74,7 @@ class="face"
         >
             <input
             type="text"
+            inputmode="text"
             maxlength={input_MAX_LENGTH}
             aria-label="command line"
             tabindex={prop_FOCUS ? 0 : -1}

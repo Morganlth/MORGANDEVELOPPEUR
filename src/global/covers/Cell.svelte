@@ -31,7 +31,7 @@ class="cell"
 class:focus={prop_FOCUS}
 class:container={prop_CONTAINER}
 class:center={prop_CENTER || prop_CONTAINER}
-type="button"
+type={prop_TYPE}
 title={prop_TITLE}
 tabindex={prop_FOCUS ? 0 : -1}
 on:click={cell_eClick}
@@ -71,7 +71,8 @@ on:click={cell_eClick}
     prop_CONTAINER = false,
     prop_CENTER    = false
     ,
-    prop_TITLE = ''
+    prop_TITLE = '',
+    prop_TYPE  = 'button'
 
     // --BINDING
 

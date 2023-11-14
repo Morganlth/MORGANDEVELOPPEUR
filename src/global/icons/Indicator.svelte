@@ -2,8 +2,8 @@
 
 
 <!-- #|-CONTEXT-| -->
-
-<!--<script
+<!--
+<script
 context="module"
 >
 
@@ -21,24 +21,24 @@ context="module"
     // --CONTEXTS
 
 
-</script>-->
-
+</script>
+-->
 
 <!-- #|-HTML-| -->
-
+    
 <svg
 class="arrow"
-class:turn={prop_TURN}
-viewBox="0 0 90 90"
+style:opacity={prop_FOCUS ? 1 : 0}
+viewBox="0 0 30 26"
 fill="none"
 xmlns="http://www.w3.org/2000/svg"
 >
     <path
-    d="M57.3488 12.3488L24.6975 45L57.3488 77.6513L62.6513 72.3487L35.3025 45L62.6513 17.6513L57.3488 12.3488Z"
+    d="M30 13L0 25.9904L3 13L0 0.00961304L30 13Z"
     fill="var(--icon-color, #FFF)"
     />
-</svg>    
-    
+</svg>
+
 
 <!-- #|-SCRIPT-| -->
 
@@ -57,7 +57,7 @@ xmlns="http://www.w3.org/2000/svg"
 //=======@COMPONENTS|
 
     // --*
-
+    
 //=======@STYLE|
 
     // --*
@@ -66,7 +66,7 @@ xmlns="http://www.w3.org/2000/svg"
 // #\-EXPORTS-\
 
     // --PROPS
-    export let prop_TURN = false
+    export let prop_FOCUS = false
 
     // --BINDING
 
@@ -162,7 +162,6 @@ lang="scss"
     /* --APP */
 
     /* --DEPENDENCIES */
-    @use '../../assets/scss/styles/utils';
 
     /* --MEDIA */
 
@@ -176,11 +175,9 @@ lang="scss"
 
 .arrow
 {
-    @extend %any-size;
+    width: 100%;
 
-    transition: transform .4s;
-
-    &.turn { transform: scaleX(-1); }
+    transition: opacity .2s;
 }
 
 

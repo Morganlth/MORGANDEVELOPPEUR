@@ -30,12 +30,12 @@ context="module"
 class="features"
 style:transform="translateY({features_TRANSLATE_Y}%)"
 >
-    {#each prop_FEATURES as feature}
+    {#each prop_FEATURES as group}
         <div
         class="container"
-        class:show={feature.show}
+        class:show={group.show}
         >
-            {#each feature.contents as content, j}
+            {#each group.contents as feature, j}
                 <div
                 style:--feature-direction={j % 2 ? -1 : 1}
                 style:--feature-delay="{.2 * j}s"
@@ -51,22 +51,28 @@ style:transform="translateY({features_TRANSLATE_Y}%)"
                         slot="content"
                         >
                             <h3
-                            data-topic={content.topic}
+                            data-topic={feature.topic}
                             >
-                                {content.topic}
+                                {feature.topic}
                             </h3>
 
                             <svelte:element
-                            this={content.html ?? 'p'}
+                            this={feature.html ?? 'p'}
                             class="feature"
-                            {...content.props}
-                            data-content={content.data}
-                            tabindex={content.html === 'a' && prop_FOCUS ? 0 : -1}
+                            {...feature.props}
+                            data-content={feature.data}
+                            tabindex={feature.html === 'a' && prop_FOCUS ? 0 : -1}
                             >
-                                {content.data}
+                                {feature.data}
                             </svelte:element>
                         </section>
                     </Line>
+
+                    {#if feature.child}
+                        <svelte:component
+                        this={feature.child}
+                        />
+                    {/if}
                 </div>
             {/each}
         </div>
@@ -284,9 +290,7 @@ lang="scss"
                 mix-blend-mode: darken;
             }
         
-            @extend %f-column;
-        
-            justify-content: center;
+            @extend %f-a-center;
 
             transform: translate(calc(100% * var(--feature-direction, 1)), 100%);
 

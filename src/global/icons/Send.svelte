@@ -1,4 +1,4 @@
-<!----------------------------------------------- #||--arrow--|| -->
+<!----------------------------------------------- #||--send--|| -->
 
 
 <!-- #|-CONTEXT-| -->
@@ -27,18 +27,17 @@ context="module"
 <!-- #|-HTML-| -->
 
 <svg
-class="arrow"
-class:turn={prop_TURN}
+class="send"
 viewBox="0 0 90 90"
 fill="none"
 xmlns="http://www.w3.org/2000/svg"
 >
     <path
-    d="M57.3488 12.3488L24.6975 45L57.3488 77.6513L62.6513 72.3487L35.3025 45L62.6513 17.6513L57.3488 12.3488Z"
+    d="M12.3488 42.3487L17.6513 47.6512L41.25 24.0525V75H48.75V24.0525L72.3488 47.6512L77.6513 42.3487L45 9.69749L12.3488 42.3487Z"
     fill="var(--icon-color, #FFF)"
     />
 </svg>    
-    
+
 
 <!-- #|-SCRIPT-| -->
 
@@ -66,7 +65,6 @@ xmlns="http://www.w3.org/2000/svg"
 // #\-EXPORTS-\
 
     // --PROPS
-    export let prop_TURN = false
 
     // --BINDING
 
@@ -174,14 +172,7 @@ lang="scss"
 
 /* #\-THIS-\ */
 
-.arrow
-{
-    @extend %any-size;
-
-    transition: transform .4s;
-
-    &.turn { transform: scaleX(-1); }
-}
+.send { @extend %any-size; }
 
 
 </style>
