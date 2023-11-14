@@ -182,8 +182,6 @@ lang="scss"
     /* --* */
     $line-h: var(--line-height, 3rem);
 
-    $font-size: map.get(font.$font-sizes, s3);
-
 
 /* #\-THIS-\ */
 
@@ -193,7 +191,7 @@ lang="scss"
 
     &, .content { @extend %f-a-center; }
 
-    @include font.text($regular: true, $font-size: inherit);
+    @include font.text($regular: true, $font-size: map.get(font.$font-sizes, s3));
 
     width:      100%;
     height:     $line-h;
@@ -206,8 +204,7 @@ lang="scss"
 
         width: 4rem;
 
-        color:     $primary;
-        font-size: $font-size;
+        color: $primary;
     }
 
     .content
@@ -218,8 +215,7 @@ lang="scss"
 
         user-select: text;
 
-        color:     $light;
-        font-size: map.get(font.$font-sizes, s2);
+        color: $light;
     }
 
     @include media.min($ms3)
@@ -227,8 +223,6 @@ lang="scss"
         --line-height: 5rem;
 
         gap: 1rem;
-
-        .content { font-size: $font-size; }
     }
 }
 

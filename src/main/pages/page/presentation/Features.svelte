@@ -339,6 +339,11 @@ lang="scss"
             @extend %a-text;
 
             color: inherit;
+            text-decoration: underline;
+
+            transition: color .4s;
+
+            &:hover { color: $dark; }
         }
 
         @include media.min($ms4, $ms4)

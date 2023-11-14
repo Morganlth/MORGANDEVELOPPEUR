@@ -118,7 +118,7 @@
                             alt: 'Profil LinkedIn de LE THUAUT Morgan',
                             target: '_blank',
                         },
-                        data: 'LinkedIn: '
+                        data: 'LinkedIn'
                     }
                 ]
             },
@@ -130,11 +130,7 @@
             {
                 for (const TOPIC of CONTENT.topic.split(/\s/g)) if (TOPIC.length > 2) feature.tags.push(TOPIC.toLowerCase())
 
-                if (CONTENT.html === 'a')
-                {
-                    CONTENT.data += CONTENT.props.href
-                    CONTENT.props['data-content'] = CONTENT.data
-                }
+                if (CONTENT.html === 'a') CONTENT.props['data-content'] = CONTENT.data
             }
     
             return feature
