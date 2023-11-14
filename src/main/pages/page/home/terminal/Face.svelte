@@ -91,6 +91,7 @@ class="face"
             class="mirror"
             class:app-available={mirror_APP_AVAILABLE}
             class:command-available={mirror_COMMAND_AVAILABLE}
+            bind:this={mirror}
             >
                 {#each [0, 1, 2] as i}
                     <pre
@@ -266,6 +267,7 @@ class="face"
     input_cancel = () => {}
 
     let
+    mirror,
     mirror_APP_AVAILABLE     = false,
     mirror_COMMAND_AVAILABLE = false
 
@@ -304,6 +306,9 @@ class="face"
         input_setVars()
 
         output_setVars()
+
+        COMMAND.command_COMMANDS.log(window.getComputedStyle(input_FIELD).getPropertyValue('font-size'))
+        COMMAND.command_COMMANDS.log(window.getComputedStyle(mirror).getPropertyValue('font-size'))
     }
 
     function face_setCommands() { for (const CMD of FACE_COMMANDS) COMMAND.command_add(CMD.name, CMD.callback, CMD.desc, CMD.args) }
