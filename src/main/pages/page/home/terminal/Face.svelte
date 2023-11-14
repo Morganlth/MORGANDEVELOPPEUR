@@ -660,8 +660,6 @@ lang="scss"
 
         &.app-available    >pre:nth-child(1) { color: $primary; }
         &.command-available>pre:nth-child(2) { color: $indicator; }
-
-        pre { white-space: nowrap; }
     }
 
     .output
