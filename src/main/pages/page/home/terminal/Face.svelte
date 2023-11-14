@@ -657,7 +657,6 @@ lang="scss"
 
         font: inherit;
         font-family: font.$family-text;
-        font-size: map.get(font.$font-sizes, s3) !important; /* iphone bug size */
         caret-color: $light;
 
         &::selection { background-color: rgba($primary, .5); }
@@ -665,8 +664,7 @@ lang="scss"
 
     .mirror 
     {
-        color:     $light;
-        font-size: map.get(font.$font-sizes, s3) !important; /* iphone bug size */
+        color: $light;
 
         &.app-available    >pre:nth-child(1) { color: $primary; }
         &.command-available>pre:nth-child(2) { color: $indicator; }
