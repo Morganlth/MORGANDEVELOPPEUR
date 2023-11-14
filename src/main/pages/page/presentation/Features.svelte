@@ -236,6 +236,8 @@ lang="scss"
     /* --* */
     $duration: .8s;
 
+    $content-gap-x: -6vw;
+
 
 /* #\-THIS-\ */
 
@@ -316,7 +318,7 @@ lang="scss"
         
             &::before
             {
-                @include utils.placement(absolute, $top: 126%, $left: -12vw, $z: -1, $pe: attr(data-content));
+                @include utils.placement(absolute, $top: 126%, $left: $content-gap-x, $z: -1, $pe: attr(data-content));
 
                 height: 100%;
     
@@ -365,7 +367,7 @@ lang="scss"
                 transition: transform .4s ease-in;
             }
 
-            h3 { transform: translate(-10rem, -100%); }
+            h3 { transform: translate($content-gap-x, -100%); }
         }
     }
 }

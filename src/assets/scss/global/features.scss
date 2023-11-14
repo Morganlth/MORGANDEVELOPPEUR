@@ -50,5 +50,5 @@
         .content { padding-inline: 6% app.$gap-inline; }
     }
 
-    @include media.min($ms4, $ms4) { .line .content { padding-left: 28%; } }
+    @include media.min($ms4, $ms4) { .line .content { padding-left: 24%; } }
 }
