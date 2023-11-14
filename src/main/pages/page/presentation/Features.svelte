@@ -280,7 +280,7 @@ lang="scss"
 
                 opacity: .4;
         
-                background: url('/images/feature_bg.jpg') center / cover no-repeat;
+                background:     url('/images/feature_bg.jpg') center / cover no-repeat;
                 mix-blend-mode: darken;
             }
         
@@ -338,7 +338,7 @@ lang="scss"
         {
             @extend %a-text;
 
-            color: inherit;
+            color:           inherit;
             text-decoration: underline;
 
             transition: color .4s;
