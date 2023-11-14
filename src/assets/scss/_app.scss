@@ -104,6 +104,7 @@
             src: local('CodeNext-Trial-Black'),
             url('/fonts/CodeNext/CodeNext-Trial-Black.ttf') format('truetype'),
             url('/fonts/CodeNext/CodeNext-Trial-Black.otf') format('opentype');
+            font-display: swap;
         }
         @font-face
         {
@@ -111,6 +112,7 @@
             src: local('CodeNext-Trial-BlackItalic'),
             url('/fonts/CodeNext/CodeNext-Trial-BlackItalic.ttf') format('truetype'),
             url('/fonts/CodeNext/CodeNext-Trial-BlackItalic.otf') format('opentype');
+            font-display: swap;
         }
         @font-face
         {
@@ -118,6 +120,7 @@
             src: local('CodeNext-ExtraBold'),
             url('/fonts/CodeNext/CodeNext-ExtraBold.ttf') format('truetype'),
             url('/fonts/CodeNext/CodeNext-ExtraBold.otf') format('opentype');
+            font-display: swap;
         }
         @font-face
         {
@@ -128,6 +131,7 @@
             url('/fonts/AnonymousPro/AnonymousPro-Bold.woff2') format('woff2'),
             url('/fonts/AnonymousPro/AnonymousPro-Bold.woff') format('woff'),
             url('/fonts/AnonymousPro/AnonymousPro-Bold.ttf') format('truetype');
+            font-display: swap;
         }
         @font-face
         {
@@ -138,6 +142,7 @@
             url('/fonts/AnonymousPro/AnonymousPro.woff2') format('woff2'),
             url('/fonts/AnonymousPro/AnonymousPro.woff') format('woff'),
             url('/fonts/AnonymousPro/AnonymousPro.ttf') format('truetype');
+            font-display: swap;
         }
     }
 
