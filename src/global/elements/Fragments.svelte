@@ -28,7 +28,7 @@ context="module"
 
 <span
 class="fragments"
-style:--fragments-id={prop_ID}
+style:--fragments-direction={prop_DIRECTION}
 >
     {#each prop_FRAGS.value as char, i}
         <pre
@@ -91,7 +91,7 @@ style:--fragments-id={prop_ID}
 
     // --PROPS
     export let
-    prop_ID = 0
+    prop_DIRECTION = 0
     ,
     prop_FRAGS  = { children: [], value: '' },
     prop_TAGS   = { children: [], value: '' }
