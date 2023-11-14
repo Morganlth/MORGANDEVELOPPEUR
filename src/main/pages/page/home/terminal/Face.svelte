@@ -91,7 +91,6 @@ class="face"
             class="mirror"
             class:app-available={mirror_APP_AVAILABLE}
             class:command-available={mirror_COMMAND_AVAILABLE}
-            bind:this={mirror}
             >
                 {#each [0, 1, 2] as i}
                     <pre
@@ -213,24 +212,24 @@ class="face"
     FACE_COMMANDS =
     [
         {
-            name: 'write',
+            name    : 'write',
             callback: input_c$Write,
-            desc: 'Écrire une commande (p: commande)',
-            args: true
+            desc    : 'Écrire une commande (p: commande)',
+            args    : true
         }
     ,
         {
-            name: 'log',
+            name    : 'log',
             callback: output_c$Log,
-            desc: 'Afficher un message (p: message)',
-            args: true
+            desc    : 'Afficher un message (p: message)',
+            args    : true
         }
     ,
         {
-            name: 'clear',
+            name    : 'clear',
             callback: output_c$Clear,
-            desc: 'Nettoyer le Terminal',
-            args: false
+            desc    : 'Nettoyer le Terminal',
+            args    : false
         }
     ]
     ,
@@ -267,7 +266,6 @@ class="face"
     input_cancel = () => {}
 
     let
-    mirror,
     mirror_APP_AVAILABLE     = false,
     mirror_COMMAND_AVAILABLE = false
 
@@ -306,12 +304,6 @@ class="face"
         input_setVars()
 
         output_setVars()
-
-        setTimeout(() =>
-        {
-            COMMAND.command_COMMANDS.log(window.getComputedStyle(input_FIELD).getPropertyValue('font-size'))
-            COMMAND.command_COMMANDS.log(window.getComputedStyle(mirror).getPropertyValue('font-size'))
-        }, 1000)
     }
 
     function face_setCommands() { for (const CMD of FACE_COMMANDS) COMMAND.command_add(CMD.name, CMD.callback, CMD.desc, CMD.args) }
@@ -651,12 +643,11 @@ lang="scss"
 
     input
     {
-        &, &::selection { color: $intermediate; }
+        &, &::selection { color: transparent; }
     
         @include utils.placement(absolute, $top: 0, $right: 0, $bottom: 0);
 
-        font: inherit;
-        font-family: font.$family-text;
+        font:        inherit;
         caret-color: $light;
 
         &::selection { background-color: rgba($primary, .5); }
