@@ -381,7 +381,7 @@ lang="scss"
 
         h3
         {
-            @include font.text($n: 1, $color: $light, $regular: false, $font-size: map.get(font.$font-sizes, s3));
+            @include font.text($color: $light, $regular: false, $font-size: map.get(font.$font-sizes, s3));
 
             margin-block: 2.4rem 1.2rem;
         }

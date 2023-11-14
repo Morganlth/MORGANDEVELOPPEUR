@@ -295,7 +295,7 @@ lang="scss"
         letter-spacing: -.4rem;
     }
 
-    span:nth-child(2) { @include font.text($n: 0, $regular: false, $font-size: map.get(font.$font-sizes, s3)); }
+    span:nth-child(2) { @include font.text($regular: false, $font-size: map.get(font.$font-sizes, s3)); }
 }
 
 

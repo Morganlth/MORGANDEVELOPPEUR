@@ -339,6 +339,8 @@ lang="scss"
 
         .line
         {
+            $font-size: map.get(font.$font-sizes, s3);
+    
             &::before, &>* { animation: .6s ease-out forwards; }
 
             &::before
@@ -373,16 +375,16 @@ lang="scss"
 
             h4
             {
-                color: $primary;
+                color:       $primary;
                 font-family: font.$family-subtitle;
-                font-size: map.get(font.$font-sizes, s2);
+                font-size:   $font-size;
             }
     
-            p { @include font.text($n: 1, $color: $light); }
+            p { @include font.text($color: $light, $font-size: $font-size); }
         }
 
         @keyframes a-0 { from { transform: translateX(100%); } to { transform: translateX(0%); } }
-        @keyframes a-1 { from { transform: translateX(0%); } to { transform: translateX(100%); } }
+        @keyframes a-1 { from { transform: translateX(0%); }   to { transform: translateX(100%); } }
     }
 }
 

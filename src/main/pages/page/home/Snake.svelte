@@ -852,7 +852,7 @@ lang="scss"
             {
                 @include font.text($color: $light);
 
-                span { font-family: map.get(font.$family-text-bold-map, t0) !important; }
+                span { font-family: font.$family-text-bold !important; }
             }
         }
     }

@@ -302,7 +302,7 @@ lang="scss"
 
     .content
     {
-        @include font.text($n: 1, $line-height: 1.4);
+        @include font.text($line-height: 1.4);
 
         @extend %scroll-bar;
 

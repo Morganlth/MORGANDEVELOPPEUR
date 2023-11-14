@@ -53,11 +53,7 @@ on:mouseleave={EVENT.event_mouseUp.bind(EVENT)}
 on:touchmove|passive={EVENT.event_touchMove.bind(EVENT)}
 on:touchstart|once={app_eTouchStart}
 >
-    {#if warn_ACTIVE}
-        <Warn
-        bind:warn_ACTIVE
-        />
-    {:else if app_FONTS_CHARGED}
+    {#if app_FONTS_CHARGED}
         <Header />
         <Main
         bind:main_CHARGED
@@ -83,8 +79,6 @@ on:touchstart|once={app_eTouchStart}
 //=======@COMPONENTS|
 
     // --*
-    import Warn from './warn/Warn.svelte'
-
     import Header from './header/Header.svelte'
     import Main   from './main/Main.svelte'
     import Footer from './footer/Footer.svelte'
@@ -115,7 +109,6 @@ on:touchstart|once={app_eTouchStart}
     // --OUTSIDE
 
     // --THIS
-    const APP_PERFORMANCE = performance.now()
 
     // --INSIDE
 
@@ -134,8 +127,6 @@ on:touchstart|once={app_eTouchStart}
     app_FONTS_CHARGED = false
 
     // --INSIDE
-    let warn_ACTIVE = false
-
     let main_CHARGED = false
 
 
@@ -163,8 +154,6 @@ on:touchstart|once={app_eTouchStart}
     {
         app_setVars()
         app_setCommands()
-
-        warn_setVars()
     }
 
     function app_setVars()
@@ -197,15 +186,6 @@ on:touchstart|once={app_eTouchStart}
 
             app_setContexts = () => {}
         }
-    }
-
-    async function warn_setVars()
-    {
-        const
-        SCORE            = performance.now() - APP_PERFORMANCE,
-        OPTIMISE_STORAGE = APP.app_getOptimiseState()
-
-        warn_ACTIVE = SCORE > 68 && !OPTIMISE_STORAGE
     }
 
     // --GET

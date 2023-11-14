@@ -343,7 +343,7 @@ lang="scss"
 
     li button
     {
-        @include font.text($n: 0, $color: var(--item-color, $light));
+        @include font.text($color: var(--item-color, $light));
 
         padding: .8rem 1.8rem;
 

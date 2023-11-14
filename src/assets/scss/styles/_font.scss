@@ -30,9 +30,9 @@
     $family-title-italic: 'CodeNext-BLACK-ITALIC', 'CodeNext-BLACK', 'CodeNext', 'sans-serif', 'arial';
     $family-subtitle:     'CodeNext', 'CodeNext-BLACK', 'sans-serif', 'arial';
 
-    $family-text-default:       'Courier New';
-    $family-text-map:      (t0: 'AnonymousPro', t1: 'Hack', t2: 'JetBrainsMono');
-    $family-text-bold-map: (t0: 'AnonymousPro-Bold', t1: 'Hack-Bold', t2: 'JetBrainsMono-Bold');
+    $family-text-default: 'Hack, Courier New';
+    $family-text:         'AnonymousPro';
+    $family-text-bold:    'AnonymousPro-Bold';
 
     // 0 - 12 - 18 - 24 - 36 - 48 - 60 - 72 - 88
     $font-sizes:        (s0: 0rem, s1: 1.2rem, s2: 1.8rem, s3: 2.4rem, s4: 3.6rem, s5: 4.8rem, s6: 6rem, s7: 7.2rem, s8: 9.6rem);
@@ -51,12 +51,12 @@
         @if $italic
         {
             font-family: $family-title-italic;
-            font-style: italic;
+            font-style:  italic;
         }
         @else { font-family: $family-title; }
 
-        color: $color;
-        font-size: var(--title-size, map.get($font-sizes, s3));
+        color:       $color;
+        font-size:   var(--title-size, map.get($font-sizes, s3));
         line-height: $line-height;
 
         @if $n
@@ -65,29 +65,29 @@
 
             #{--title-size}: $default-size;
 
-            @include media.min($ms2, $ms3)  { #{--title-size}: map.get($font-sizes, 's#{$font-sizes-length - $n - 1}'); }
-            @include media.min($ms3, $ms3)  { #{--title-size}: map.get($font-sizes, 's#{$font-sizes-length - $n - 0}'); }
+            @include media.min($ms2, $ms3) { #{--title-size}: map.get($font-sizes, 's#{$font-sizes-length - $n - 1}'); }
+            @include media.min($ms3, $ms3) { #{--title-size}: map.get($font-sizes, 's#{$font-sizes-length - $n - 0}'); }
         }
     }
 
-    @mixin text($n: 0, $color: inherit, $regular: true, $font-size: map.get($font-sizes, s2), $line-height: 1)
+    @mixin text($color: inherit, $regular: true, $font-size: map.get($font-sizes, s2), $line-height: 1)
     {
         @extend %default-settings;
     
         @if $regular
         {
-            font-family: map.get($family-text-map, 't#{$n}'), $family-text-default;
+            font-family: $family-text, $family-text-default;
             font-weight: normal;
         }
         @else
         {
-            font-family: map.get($family-text-bold-map, 't#{$n}'), $family-text-default;
-            font-weight: bold;
+            font-family:           $family-text-bold, $family-text-default;
+            font-weight:           bold;
             font-synthesis-weight: auto;
         }
     
-        color: $color;
-        font-size: $font-size;
+        color:       $color;
+        font-size:   $font-size;
         line-height: $line-height;
     }
 
@@ -97,13 +97,13 @@
     /* --* */
     %default-settings
     {
-        font-display: swap;
-        font-kerning: normal;
-        font-smooth: antialiased;
-        -webkit-font-smoothing: antialiased;
+        font-display:            swap;
+        font-kerning:            normal;
+        font-smooth:             antialiased;
+        -webkit-font-smoothing:  antialiased;
         -moz-osx-font-smoothing: grayscale;
-        font-optical-sizing: auto;
-        text-rendering: geometricPrecision;
+        font-optical-sizing:     auto;
+        text-rendering:          geometricPrecision;
     }
 
 
