@@ -182,8 +182,6 @@ lang="scss"
     /* --* */
     $line-h: var(--line-height, 3rem);
 
-    $font-size: map.get(font.$font-sizes, s3);
-
 
 /* #\-THIS-\ */
 
@@ -193,7 +191,7 @@ lang="scss"
 
     &, .content { @extend %f-a-center; }
 
-    @include font.text($regular: true, $font-size: $font-size);
+    @include font.text($regular: true, $font-size: map.get(font.$font-sizes, s3));
 
     width:      100%;
     height:     $line-h;
@@ -220,7 +218,6 @@ lang="scss"
         user-select: text;
 
         color: $light;
-        font:  $font-size;
     }
 
     @include media.min($ms3)
