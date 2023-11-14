@@ -236,8 +236,6 @@ lang="scss"
     /* --* */
     $duration: .8s;
 
-    $content-gap-x: -6vw;
-
 
 /* #\-THIS-\ */
 
@@ -257,6 +255,8 @@ lang="scss"
 
     .container
     {
+        $content-gap-x: -3rem;
+    
         margin-bottom: 4rem;
 
         border-top: solid transparent .6rem;
@@ -307,7 +307,7 @@ lang="scss"
 
             position: absolute;
 
-            transform: translate(-3rem, -100%);
+            transform: translate($content-gap-x, -100%);
 
             padding-right: 1rem;
         }
@@ -344,6 +344,8 @@ lang="scss"
 
         @include media.min($ms4, $ms4)
         {
+            $content-gap-x: -6vw;
+    
             &.show>div::after
             {
                 transform: scaleY(1.24);
@@ -368,6 +370,8 @@ lang="scss"
             }
 
             h3 { transform: translate($content-gap-x, -100%); }
+            
+            .feature::before { left: $content-gap-x; }
         }
     }
 }
