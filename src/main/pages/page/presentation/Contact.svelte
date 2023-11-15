@@ -31,8 +31,8 @@ class="contact"
 class:focus={contact_FOCUS}
 >
     <form
-    action="/"
-    on:submit|preventDefault
+    method="post"
+    on:submit|preventDefault={form_eSubmit}
     >
         <Cell
         prop_FOCUS={true}
@@ -49,12 +49,22 @@ class:focus={contact_FOCUS}
             </Icon>
         </Cell>
 
-        <textarea
-        name="contact"
-        placeholder="Votre message..."
-        required
-        bind:this={textarea}
-        ></textarea>
+        <fieldset>
+            <input
+            type="email"
+            aria-label="email"
+            placeholder="Votre email..."
+            required
+            bind:this={input}
+            />
+
+            <textarea
+            name="contact"
+            placeholder="Votre message..."
+            required
+            bind:this={textarea}
+            ></textarea>
+        </fieldset>
     </form>
 
     <Cell
@@ -141,6 +151,8 @@ class:focus={contact_FOCUS}
     let contact_FOCUS = false
 
     // --INSIDE
+    let input
+
     let
     textarea
     ,
@@ -185,6 +197,33 @@ class:focus={contact_FOCUS}
 //=======@EVENTS|
 
     // --*
+    async function form_eSubmit()
+    {
+        const
+        EMAIL = input.value,
+        MSG   = textarea.value
+
+        try
+        {
+            const RESPONSE = await fetch('/contact',
+            {
+                method: 'post',
+                headers:
+                {
+                    'Content-type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams(
+                {
+                    email: EMAIL,
+                    msg  : MSG
+                }).toString()
+            })
+
+            console.log(RESPONSE)
+        }
+        catch {}
+    }
+
     function cell_e$Click()
     {
         textarea_destroyTimeout()
@@ -263,32 +302,50 @@ lang="scss"
 
     form
     {
-        &, textarea { flex: 1; }
+        &, fieldset { flex: 1; }
 
         height: 100%;
 
-        textarea
+        fieldset, textarea { @extend %scroll-bar; }
+
+        fieldset
         {
+            @extend %f-column;
+
             @include font.text($color: $light, $font-size: map.get(font.$font-sizes, s3));
 
-            @extend %scroll-bar;
-    
-            overflow: clip auto;
+            overflow: clip scroll;
+
+            gap: 2rem;
 
             height: calc(100% - app.$gap-block * 2);
 
             margin-block:   app.$gap-block;
             padding-inline: app.$gap-inline;
 
-            background-color: transparent;
-
-            border: none;
-
             box-sizing: border-box;
 
-            resize: none;
+            ::placeholder { color: $intermediate; }
+        }
 
-            &::placeholder { color: $intermediate; }
+        input, textarea
+        {
+            width: 100%;
+        
+            color: inherit;
+            font:  inherit;
+        }
+
+        input
+        {
+            padding-block: app.$gap-block;
+
+            border-bottom: solid $intermediate 2px;
+        }
+
+        textarea
+        {
+            min-height: 50vh;
         }
     }
 }

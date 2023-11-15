@@ -234,7 +234,6 @@ lang="scss"
     @use '../../../../assets/scss/styles/animation';
 
     /* --MEDIA */
-    @use '../../../../assets/scss/styles/media';
 
 
 /* #\-VARIABLES-\ */
@@ -284,7 +283,7 @@ lang="scss"
 
                 @extend %any-size;
 
-                opacity: .4;
+                opacity: .3;
         
                 background:     url('/images/feature_bg.jpg') center / cover no-repeat;
                 mix-blend-mode: darken;
@@ -294,7 +293,9 @@ lang="scss"
 
             transform: translate(calc(100% * var(--feature-direction, 1)), 100%);
 
-            height: 24vh;
+            overflow: clip;
+
+            height: 28vh;
 
             background-color: rgba($dark, .8);
 
@@ -305,14 +306,19 @@ lang="scss"
 
         h3
         {
-            $gap-y: 1.6rem;
+            --title-size: 50rem;
         
-            @include utils.placement(relative, $top: $gap-y * -1);
-            @include font.h-(3, $color: $intermediate, $line-height: $gap-y, $italic: true);
+            @include utils.placement(absolute, $top: -40%, $left: 6%, $z: 1);
+            @include font.h-($color: $dark, $italic: true);
 
-            transform: translateX(-3vw);
+            transform-origin: left;
+            transform: rotate(3deg);
 
-            padding-right: 1rem;
+            -webkit-text-stroke: 1px $light;
+
+            mix-blend-mode: saturation;
+
+            white-space: nowrap;
         }
 
         .feature
@@ -321,15 +327,18 @@ lang="scss"
         
             &::before
             {
+                $height: 120%;
+        
                 @include utils.placement(absolute, $top: 126%, $left: -6vw, $z: -1, $pe: attr(data-content));
 
-                height: 100%;
+                height: $height;
     
                 padding-inline: .8rem;
             
                 background-color: $dark;
-                mix-blend-mode:   overlay;
+                mix-blend-mode:   hue;
 
+                font-size: $height;
                 white-space: nowrap;
             }
     
@@ -348,32 +357,6 @@ lang="scss"
             transition: color .4s;
 
             &:hover { color: $dark; }
-        }
-
-        @include media.min($ms4, $ms4)
-        {
-            &.show>div::after
-            {
-                transform: scaleY(1.24);
-
-                transition-delay: calc($duration + var(--feature-delay, 0));
-            }
-    
-            &>div::after
-            {
-                @include utils.placement(absolute, $top: 0, $left: 16%, $pe: true);
-
-                transform: scaleY(1);
-
-                width:  0;
-                height: 100%;
-
-                mix-blend-mode: soft-light;
-
-                border-left: solid $light 1px;
-
-                transition: transform .4s ease-in;
-            }
         }
     }
 }

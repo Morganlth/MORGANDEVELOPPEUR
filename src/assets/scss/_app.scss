@@ -41,8 +41,8 @@
     /* --* */
     %reset
     {
-        body, h1, h2, h3, h4, h5, h6, ul, p, figure, blockquote, pre { margin: 0; }
-        ul, button, input, input[type="text"], textarea              { padding: 0; }
+        body, h1, h2, h3, h4, h5, h6, ul, p, figure, blockquote, pre, fieldset { margin: 0; }
+        ul, fieldset, button, input, textarea                                  { padding: 0; }
 
         li { list-style: none; }
 
@@ -50,12 +50,9 @@
 
         a { text-decoration: none; }
 
-        button, input
-        {
-            background-color: transparent;
+        fieldset, button, input, textarea { border: none; }
 
-            border: none;
-        }
+        button, input, textarea { background-color: transparent; }
 
         button { cursor: pointer; }
 

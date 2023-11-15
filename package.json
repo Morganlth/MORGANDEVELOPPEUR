@@ -19,6 +19,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"nodemailer": "^6.9.7",
 		"three": "^0.155.0"
 	}
 }
