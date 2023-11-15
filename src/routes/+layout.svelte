@@ -1,9 +1,9 @@
-<!----------------------------------------------- #||--/home--|| -->
+<!----------------------------------------------- #||--layout--|| -->
 
 
 <!-- #|-CONTEXT-| -->
-<!--
-<script
+
+<!--<script
 context="module"
 >
 
@@ -21,14 +21,12 @@ context="module"
     // --CONTEXTS
 
 
-</script>
--->
+</script>-->
+
 
 <!-- #|-HTML-| -->
 
-<App
-prop_PAGE_ID={0}
-/>
+<slot />
 
 
 <!-- #|-SCRIPT-| -->
@@ -48,8 +46,7 @@ prop_PAGE_ID={0}
 //=======@COMPONENTS|
 
     // --*
-    import App from '../../App.svelte'
-    
+
 //=======@STYLE|
 
     // --*
@@ -163,6 +160,11 @@ lang="scss"
 
 
 /* #\-THIS-\ */
+
+.layout
+{
+
+}
 
 
 </style> -->

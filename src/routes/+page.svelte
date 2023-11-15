@@ -2,8 +2,8 @@
 
 
 <!-- #|-CONTEXT-| -->
-<!--
-<script
+
+<!--<script
 context="module"
 >
 
@@ -21,8 +21,8 @@ context="module"
     // --CONTEXTS
 
 
-</script>
--->
+</script>-->
+
 
 <!-- #|-HTML-| -->
 
@@ -47,7 +47,7 @@ context="module"
 
     // --*
     import App from '../App.svelte'
-    
+
 //=======@STYLE|
 
     // --*
@@ -161,6 +161,11 @@ lang="scss"
 
 
 /* #\-THIS-\ */
+
+./
+{
+
+}
 
 
 </style> -->

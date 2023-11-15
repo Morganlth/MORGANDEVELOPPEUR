@@ -1,9 +1,9 @@
-<!----------------------------------------------- #||--/projects/sophiebluel--|| -->
+<!----------------------------------------------- #||--page--|| -->
 
 
 <!-- #|-CONTEXT-| -->
-<!--
-<script
+
+<!--<script
 context="module"
 >
 
@@ -21,14 +21,13 @@ context="module"
     // --CONTEXTS
 
 
-</script>
--->
+</script>-->
+
 
 <!-- #|-HTML-| -->
 
 <App
-prop_PAGE_ID={3}
-prop_SUBPATH="sophiebluel"
+prop_PAGE_ID={page_ID}
 />
 
 
@@ -49,8 +48,8 @@ prop_SUBPATH="sophiebluel"
 //=======@COMPONENTS|
 
     // --*
-    import App from '../../../App.svelte'
-    
+    import App from '../../App.svelte'
+
 //=======@STYLE|
 
     // --*
@@ -59,6 +58,7 @@ prop_SUBPATH="sophiebluel"
 // #\-EXPORTS-\
 
     // --PROPS
+    export let data
 
     // --BINDING
 
@@ -83,6 +83,7 @@ prop_SUBPATH="sophiebluel"
     // --OUTSIDE
 
     // --THIS
+    let page_ID = 0
 
     // --INSIDE
 
@@ -105,8 +106,21 @@ prop_SUBPATH="sophiebluel"
     // --SVELTE
 
     // --SET
+    ;(function page_set() { page_setVars() })()
+
+    function page_setVars() { page_ID = page_getId() }
 
     // --GET
+    function page_getId()
+    {
+        switch (data.page)
+        {
+            case 'presentation': return 1
+            case 'skills'      : return 2
+            case 'projects'    : return 3
+            default            : return 0
+        }
+    }
 
     // --UPDATES
 
@@ -164,6 +178,11 @@ lang="scss"
 
 
 /* #\-THIS-\ */
+
+.page
+{
+
+}
 
 
 </style> -->
