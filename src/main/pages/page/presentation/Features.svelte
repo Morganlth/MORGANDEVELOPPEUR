@@ -312,12 +312,13 @@ lang="scss"
             @include font.h-($color: $dark, $italic: true);
 
             transform-origin: left;
-            transform: rotate(3deg);
+            transform:        rotate(3deg);
 
             -webkit-text-stroke: 1px $light;
 
             mix-blend-mode: saturation;
 
+            user-select: none;
             white-space: nowrap;
         }
 
