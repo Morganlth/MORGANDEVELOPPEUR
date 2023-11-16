@@ -297,6 +297,8 @@ lang="scss"
         
             @extend %f-a-center;
 
+            isolation: isolate;
+
             transform: translate(calc(100% * var(--feature-direction, 1)), 100%);
 
             overflow: clip;
@@ -316,8 +318,6 @@ lang="scss"
         
             @include font.h-($color: $dark, $line-height: 0, $italic: true);
 
-            isolation: isolate;
-    
             transform-origin: left;
             transform:        rotate(2deg);
 
