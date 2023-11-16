@@ -51,11 +51,11 @@ style:transform="translateY({features_TRANSLATE_Y}%)"
                         <section
                         slot="content"
                         >
-                            <h3
-                            data-topic={feature.topic}
+                            <div
+                            class="topic"
                             >
-                                {feature.topic}
-                            </h3>
+                                <h3>{feature.topic}</h3>
+                            </div>
 
                             <svelte:element
                             this={feature.html ?? 'p'}
@@ -296,8 +296,6 @@ lang="scss"
             }
         
             @extend %f-a-center;
-
-            isolation: isolate;
 
             transform: translate(calc(100% * var(--feature-direction, 1)), 100%);
 
