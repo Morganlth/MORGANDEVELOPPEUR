@@ -310,18 +310,21 @@ lang="scss"
             transition: transform $duration var(--feature-delay, 0) ease-in-out;
         }
 
-        .topic, .feature { white-space: nowrap; }
+        .topic, .feature::before
+        {
+            mix-blend-mode: hue;
+    
+            white-space: nowrap;
+        }
 
         .topic
         {
             --title-size: 50rem;
         
-            @include font.h-($color: $dark, $line-height: 0, $italic: true);
+            @include font.h-($color: $dark, $line-height: 0);
 
             transform-origin: left;
             transform:        rotate(2deg);
-
-            mix-blend-mode: color;
 
             text-shadow:
              1px  1px $light,
@@ -345,7 +348,6 @@ lang="scss"
                 padding-inline: .8rem;
             
                 background-color: $dark;
-                mix-blend-mode:   hue;
 
                 font-size: $height;
             }

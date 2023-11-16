@@ -285,7 +285,7 @@ lang="scss"
 {
     &, form { display: flex; }
 
-    @include utils.placement(absolute, 0, 0, 0, 0, 1);
+    @include utils.fixed($z: 1);
 
     @extend %any-size;
 
