@@ -92,7 +92,6 @@ style:transform="translateY({features_TRANSLATE_Y}%)"
     // --SVELTE
 
     // --LIB
-    import { wait_throttle } from '$lib/wait'
 
     // --CONTEXTS
 
