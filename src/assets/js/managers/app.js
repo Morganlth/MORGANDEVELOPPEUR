@@ -18,7 +18,7 @@ class App
     // --THIS
     #app
 
-    #app_$HIDE         = writable(false)
+    #app_$HIDE         = writable(true)
     #app_$MOBILE       = writable(false)
     #app_$FREEZE       = { value: false, setter: function ({target}) { this.target = target }, optionalparameters: { target: null } }
     #app_$OPTIMISE     = { value: false }
@@ -112,6 +112,8 @@ class App
     // --SET
     app_set(app)
     {
+        this.app_hide()
+
         this.#app_setVars(app)
         this.#app_setCommands()
 

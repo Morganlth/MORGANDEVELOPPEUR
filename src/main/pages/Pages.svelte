@@ -293,9 +293,9 @@ lang="scss"
 
     transform: scale(1); /* fixed and page z-index */
 
-    transition: filter .4s ease-in-out;
+    transition: filter .6s;
 
-    &.hide { filter: blur(10rem) hue-rotate(30deg); }
+    &.hide { filter: blur(100px) hue-rotate(30deg); }
 }
 
 
