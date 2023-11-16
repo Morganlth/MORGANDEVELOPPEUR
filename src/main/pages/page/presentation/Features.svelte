@@ -328,7 +328,7 @@ lang="scss"
         
             &::before
             {
-                $height: 120%;
+                $height: 118%;
         
                 @include utils.placement(absolute, $top: 126%, $left: -6vw, $z: -1, $pe: attr(data-content));
 
