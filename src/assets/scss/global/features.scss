@@ -42,8 +42,6 @@
 {
     &, .content { box-sizing: border-box; }
 
-    flex: 1;
-
     padding-left: 2rem;
 
     .content { padding-inline: 6% app.$gap-inline; }

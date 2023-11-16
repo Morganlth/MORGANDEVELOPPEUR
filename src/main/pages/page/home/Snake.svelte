@@ -88,7 +88,10 @@ on:fullscreenchange={snake_eFullscreenChange}
             </ul>
             
             <Cell
-            prop_CONTAINER={true}
+            prop_FOCUS={true}
+            prop_ICON_WRAPPER={true}
+            prop_CENTER={true}
+            prop_TITLE="fermer"
             on:click={cell_eClick}
             >
                 <Icon

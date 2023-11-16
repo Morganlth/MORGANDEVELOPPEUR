@@ -69,10 +69,18 @@ style:transform="translateY({features_TRANSLATE_Y}%)"
                         </section>
                     </Line>
 
-                    {#if feature.child}
-                        <svelte:component
-                        this={feature.child}
-                        />
+                    {#if feature.contact}
+                        <div
+                        class="contact-me"
+                        >
+                            <Cell
+                            prop_TEXT_WRAPPER={true}
+                            prop_TITLE="Me contacter"
+                            {prop_FOCUS}
+                            >
+                                Me contacter
+                            </Cell>
+                        </div>
                     {/if}
                 </div>
             {/each}
@@ -373,6 +381,13 @@ lang="scss"
             transition: color .4s;
 
             &:hover { color: $dark; }
+        }
+
+        .contact-me
+        {
+            @include utils.placement(absolute, $top: 50%, $right: 10%);
+
+            transform: translateY(-50%);
         }
 
         @include media.min($ms4, $ms4)

@@ -41,29 +41,18 @@ style:--pe-color={nav_PE_COLOR}
     style:opacity={items_OPACITY}
     >
         {#each prop_ITEMS as item}
-            <li>
-                <button
-                style:--item-color={item.color ?? COLORS.light}
-                type="button"
-                title={item.title ?? (item.value ?? '')}
-                tabindex={prop_FOCUS ? 0 : -1}
-                on:mouseenter={nav_eMouseEnter}
-                on:mouseleave={nav_eMouseLeave}
-                on:click={nav_eClick.bind(null, item.id)}
+            <li
+            class="item"
+            style:--item-color={item.color ?? COLORS.light}
+            >
+                <Cell
+                prop_TEXT_WRAPPER={true}
+                prop_TITLE={item.title ?? (item.value ?? 'compétence')}
+                {prop_FOCUS}
+                on:click={cell_eClick.bind(null, item.id)}
                 >
-                    {#if item.component}
-                        <Icon
-                        prop_COLOR="var(--item-color, {COLORS.light})"
-                        prop_SPRING={false}
-                        >
-                            <svelte:component
-                            this={item.component}
-                            />
-                        </Icon>
-                    {/if}
-                    
                     {item.value ?? ''}
-                </button>
+                </Cell>
             </li>
         {/each}
     </ul>
@@ -88,12 +77,11 @@ style:--pe-color={nav_PE_COLOR}
     import { animation }     from '$lib/animation'
 
     // --CONTEXTS
-    import { SPRING } from '../../../App.svelte'
 
 //=======@COMPONENTS|
 
     // --*
-    import Icon from '../../../global/covers/Icon.svelte'
+    import Cell from '../../../global/covers/Cell.svelte'
             
 //=======@STYLE|
 
@@ -176,12 +164,6 @@ style:--pe-color={nav_PE_COLOR}
     // --GET
 
     // --UPDATES
-    function spring_update(state, size)
-    {
-        SPRING.spring_$STATE = state
-        SPRING.spring_$SIZE = size
-    }
-
     function nav_update(focus)
     {
         nav_cancel()
@@ -190,12 +172,7 @@ style:--pe-color={nav_PE_COLOR}
     }
 
     // --DESTROY
-    function nav_destroy()
-    {
-        nav_cancel()
-
-        nav_eMouseLeave()
-    }
+    function nav_destroy() { nav_cancel() }
 
 
 //=======@COMMANDS|
@@ -206,11 +183,7 @@ style:--pe-color={nav_PE_COLOR}
 //=======@EVENTS|
 
     // --*
-    function nav_eMouseEnter() { spring_update(1, SPRING.spring_D_SIZE * 3) }
-    
-    function nav_eMouseLeave() { spring_update(0, SPRING.spring_D_SIZE) }
-
-    async function nav_eClick(id) { SVELTE_DISPATCH('click', { id: id, item: prop_ITEMS[id] }) }
+    function cell_eClick(id) { SVELTE_DISPATCH('click', { id: id, item: prop_ITEMS[id] }) }
 
 
 //=======@TRANSITIONS|
@@ -267,17 +240,14 @@ lang="scss"
 /* #\-USES-\ */
 
     /* --SASS */
-    @use 'sass:map';
 
     /* --APP */
 
     /* --DEPENDENCIES */
     @use '../../../assets/scss/styles/utils';
     @use '../../../assets/scss/styles/display';
-    @use '../../../assets/scss/styles/font';
 
     /* --MEDIA */
-    @use '../../../assets/scss/styles/media';
 
 
 /* #\-VARIABLES-\ */
@@ -326,8 +296,6 @@ lang="scss"
 
             transform: translateY(var(--nav-t-y, -300%));
         }
-
-        li button { pointer-events: auto; }
     }
 
     .items
@@ -339,19 +307,6 @@ lang="scss"
         justify-content: flex-start;
         flex-wrap: wrap;
         gap: .8rem;
-    }
-
-    li button
-    {
-        @include font.text($color: var(--item-color, $light));
-
-        padding: .8rem 1.8rem;
-
-        pointer-events: none;
-
-        background-color: $dark;
-
-        border: solid $intermediate 1px;
     }
 }
 

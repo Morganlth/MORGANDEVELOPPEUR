@@ -30,7 +30,7 @@ context="module"
 class="back"
 >
     <Cell
-    prop_CONTAINER={true}
+    prop_ICON_WRAPPER={true}
     prop_TITLE="fermer"
     {prop_FOCUS}
     on:click={prop_turn.bind(null, false)}

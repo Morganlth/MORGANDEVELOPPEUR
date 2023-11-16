@@ -14,7 +14,6 @@
 //=======@COMPONENTS|
 
     // --*
-    import Contact from '../../../../main/pages/page/presentation/Contact.svelte'
 
 
 // #\-EXPORTS-\
@@ -109,7 +108,7 @@
                         html: 'p',
                         props: {},
                         data: 'Email: morganlethuaut@gmail.com',
-                        child: Contact
+                        contact: true
                     },
                     {
                         topic: 'LINKEDIN',

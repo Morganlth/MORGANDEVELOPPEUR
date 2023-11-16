@@ -29,11 +29,13 @@ context="module"
 <button
 class="cell"
 class:focus={prop_FOCUS}
-class:container={prop_CONTAINER}
-class:center={prop_CENTER || prop_CONTAINER}
+class:icon-wrapper={prop_ICON_WRAPPER}
+class:text-wrapper={prop_TEXT_WRAPPER}
+class:center={prop_CENTER}
 type={prop_TYPE}
 title={prop_TITLE}
 tabindex={prop_FOCUS ? 0 : -1}
+bind:this={cell}
 on:click={cell_eClick}
 >
     <slot />
@@ -48,11 +50,12 @@ on:click={cell_eClick}
     // --DATA
 
     // --SVELTE
-    import { createEventDispatcher } from 'svelte'
+    import { onMount, onDestroy, createEventDispatcher } from 'svelte'
 
     // --LIB
 
     // --CONTEXTS
+    import { SPRING } from '../../App.svelte'
 
 //=======@COMPONENTS|
 
@@ -67,9 +70,10 @@ on:click={cell_eClick}
 
     // --PROPS
     export let
-    prop_FOCUS     = true,
-    prop_CONTAINER = false,
-    prop_CENTER    = false
+    prop_FOCUS        = true,
+    prop_ICON_WRAPPER = false,
+    prop_TEXT_WRAPPER = false,
+    prop_CENTER       = false
     ,
     prop_TITLE = '',
     prop_TYPE  = 'button'
@@ -98,6 +102,7 @@ on:click={cell_eClick}
     // --OUTSIDE
 
     // --THIS
+    let cell
 
     // --INSIDE
 
@@ -118,14 +123,41 @@ on:click={cell_eClick}
 //=======@LIFE|
 
     // --SVELTE
+    onMount(cell_set), onDestroy(cell_destroy)
 
     // --SET
+    function cell_set() { cell_setEvents() }
+
+    function cell_setEvents()
+    {
+        if (prop_TEXT_WRAPPER)
+        {
+            cell.addEventListener('mouseenter', cell_eMouseEnter)
+            cell.addEventListener('mouseleave', cell_eMouseLeave)
+        }
+    }
 
     // --GET
 
     // --UPDATES
+    function spring_update(state, size)
+    {
+        SPRING.spring_$STATE = state
+        SPRING.spring_$SIZE = size
+    }
 
     // --DESTROY
+    function cell_destroy()
+    {
+        cell_destroyEvents()
+        cell_eMouseLeave()
+    }
+
+    function cell_destroyEvents()
+    {
+        cell.removeEventListener('mouseenter', cell_eMouseEnter)
+        cell.removeEventListener('mouseleave', cell_eMouseLeave)
+    }
 
 
 //=======@COMMANDS|
@@ -137,6 +169,10 @@ on:click={cell_eClick}
 
     // --*
     function cell_eClick(e) { SVELTE_DISPATCH('click', { event: e }) }
+
+    function cell_eMouseEnter() { spring_update(1, SPRING.spring_D_SIZE * 3) }
+    
+    function cell_eMouseLeave() { spring_update(0, SPRING.spring_D_SIZE) }
 
 
 //=======@TRANSITIONS|
@@ -193,7 +229,9 @@ lang="scss"
 
     &.focus { pointer-events: auto; }
 
-    &.container
+    &.icon-wrapper, &.text-wrapper { background-color: $dark; }
+
+    &.icon-wrapper
     {
         $size: var(--cell-size, map.get(font.$font-sizes, s5));
     
@@ -205,6 +243,15 @@ lang="scss"
         border: solid $light .2rem;
 
         box-sizing: content-box;
+    }
+
+    &.text-wrapper
+    {
+        @include font.text($color: var(--item-color, $light));
+
+        padding: .8rem 1.8rem;
+
+        border: solid $intermediate 1px;
     }
 
     &.center { @extend %f-center; }

@@ -45,7 +45,8 @@ on:outrostart={table_eOut}
     >
         <Cell
         prop_FOCUS={true}
-        prop_CONTAINER={true}
+        prop_ICON_WRAPPER={true}
+        prop_CENTER={true}
         prop_TITLE="fermer"
         on:click={cell_eClick}
         >

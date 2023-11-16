@@ -33,7 +33,7 @@ class="face"
     class="header"
     >
         <Cell
-        prop_CONTAINER={true}
+        prop_ICON_WRAPPER={true}
         prop_TITLE="Description du Terminal"
         {prop_FOCUS}
         on:click={prop_turn.bind(null, true)}
