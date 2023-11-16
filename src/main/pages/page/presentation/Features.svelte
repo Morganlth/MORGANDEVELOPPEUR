@@ -153,7 +153,7 @@ style:transform="translateY({features_TRANSLATE_Y}%)"
     // --OUTSIDE
 
     // --THIS
-    $: wait_throttle(features_update, 3, 4)(prop_RATIO) // +- 50ms, +- 70ms
+    $: wait_throttle(features_update, 4, 6)(prop_RATIO) // +- 50ms, +- 70ms
 
     // --INSIDE
 
@@ -255,7 +255,7 @@ lang="scss"
 
     @include utils.placement(absolute, $top: 50%, $right: 0, $left: 0);
 
-    transition: transform .8s ease-out;
+    transition: transform $duration ease-out;
 
     &.focus, .show { will-change: transform; }
 
