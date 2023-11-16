@@ -383,7 +383,7 @@ lang="scss"
                 background-color: $dark;
                 mix-blend-mode:   hue;
 
-                border-block: solid $primary 1.6rem;
+                border-block: solid $primary 1.2rem;
 
                 writing-mode: vertical-rl;
                 white-space:  nowrap;
