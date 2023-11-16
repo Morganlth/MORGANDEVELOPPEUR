@@ -298,7 +298,7 @@ lang="scss"
 
             transform: translate(calc(100% * var(--feature-direction, 1)), 100%);
 
-            overflow: hidden;
+            /* overflow: hidden; */
 
             height: 30vh;
 
