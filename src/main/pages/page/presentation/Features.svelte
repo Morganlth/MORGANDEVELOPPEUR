@@ -363,7 +363,7 @@ lang="scss"
 
             transform: translateY(-3rem);
 
-            width: 10%;
+            width: 6%;
 
             padding-inline: 4rem;
         }
@@ -437,15 +437,15 @@ lang="scss"
                     transform:        rotate(2deg);
 
                     text-shadow:
-                    1px  1px $light,
+                     1px  1px $light,
                     -1px  1px $light,
                     -1px -1px $light,
-                    1px -1px $light;
+                     1px -1px $light;
                 }
 
                 transform: none;
 
-                width: 30%;
+                width: 28%;
     
                 mix-blend-mode: hue;
             }
