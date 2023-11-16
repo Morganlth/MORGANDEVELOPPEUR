@@ -311,11 +311,11 @@ lang="scss"
         {
             --title-size: 50rem;
         
-            @include utils.placement(absolute, $top: 32%, $left: 6%, $z: 1);
+            @include utils.placement(absolute, $top: 40%, $left: 6%, $z: 1);
             @include font.h-($color: $dark, $line-height: 0, $italic: true);
 
             transform-origin: left;
-            transform:        rotate(3deg);
+            transform:        rotate(2deg);
 
             mix-blend-mode: saturation;
 
