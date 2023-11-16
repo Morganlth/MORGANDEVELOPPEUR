@@ -300,7 +300,7 @@ lang="scss"
         {
             --title-size: 50rem;
         
-            @include utils.placement(absolute, $top: 40%, $left: 6%, $z: 1);
+            @include utils.placement(absolute, $top: 40%, $left: 6%);
             @include font.h-($color: $dark, $line-height: 0, $italic: true);
 
             transform-origin: left;
