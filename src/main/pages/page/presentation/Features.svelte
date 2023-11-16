@@ -362,6 +362,8 @@ lang="scss"
             position: relative;
 
             width: 16vw;
+
+            padding-inline: 1rem;
         }
 
         .feature
