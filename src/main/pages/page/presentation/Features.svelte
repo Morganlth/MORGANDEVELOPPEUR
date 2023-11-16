@@ -153,7 +153,7 @@ style:transform="translateY({features_TRANSLATE_Y}%)"
     // --OUTSIDE
 
     // --THIS
-    $: wait_throttle(features_update, 2, 3)(prop_RATIO) // +- 70ms, +- 100ms
+    $: wait_throttle(features_update, 2, 4)(prop_RATIO) // +- 30ms, +- 70ms
 
     // --INSIDE
 
