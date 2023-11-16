@@ -38,11 +38,18 @@
 
 /* #\-THIS-\ */
 
-.features .line
+.features
 {
-    &, .content { box-sizing: border-box; }
+    .line
+    {
+        &, .content { box-sizing: border-box; }
 
-    padding-left: 2rem;
+        flex: 1;
 
-    .content { padding-inline: 6% app.$gap-inline; }
+        padding-left: 2rem;
+
+        .content { padding-left: 6%; }
+    }
+
+    .contact-me .cell { gap: 1.2rem; }
 }

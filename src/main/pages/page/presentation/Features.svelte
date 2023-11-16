@@ -75,9 +75,20 @@ style:transform="translateY({features_TRANSLATE_Y}%)"
                         >
                             <Cell
                             prop_TEXT_WRAPPER={true}
+                            prop_CENTER={true}
                             prop_TITLE="Me contacter"
                             {prop_FOCUS}
                             >
+                                <Icon
+                                prop_SPRING={false}
+                                prop_SIZE="1.8rem"
+                                prop_COLOR={COLORS.light}
+                                >
+                                    <Arrow
+                                    prop_TURN={contact_ON}
+                                    />
+                                </Icon>
+    
                                 Me contacter
                             </Cell>
                         </div>
@@ -104,6 +115,7 @@ style:transform="translateY({features_TRANSLATE_Y}%)"
     // --SVELTE
 
     // --LIB
+    import COLORS from '$lib/colors'
 
     // --CONTEXTS
 
@@ -111,7 +123,10 @@ style:transform="translateY({features_TRANSLATE_Y}%)"
 
     // --*
     import Cell from '../../../../global/covers/Cell.svelte'
+    import Icon from '../../../../global/covers/Icon.svelte'
     import Line from '../../../../global/covers/Line.svelte'
+
+    import Arrow from '../../../../global/icons/Arrow.svelte'
 
     import Contact from './Contact.svelte'
     
@@ -319,14 +334,18 @@ lang="scss"
 
             height: 30vh;
 
+            padding-right: app.$gap-inline;
+
             background-color: rgba($dark, .8);
 
             border-bottom: solid $intermediate .4rem;
 
+            box-sizing: border-box;
+
             transition: transform $duration var(--feature-delay, 0) ease-in-out;
         }
 
-        .topic, .feature::before { white-space: nowrap; }
+        .topic, .feature::before, .contact-me { white-space: nowrap; }
 
         .topic
         {
@@ -381,13 +400,6 @@ lang="scss"
             transition: color .4s;
 
             &:hover { color: $dark; }
-        }
-
-        .contact-me
-        {
-            @include utils.placement(absolute, $top: 50%, $right: 10%);
-
-            transform: translateY(-50%);
         }
 
         @include media.min($ms4, $ms4)

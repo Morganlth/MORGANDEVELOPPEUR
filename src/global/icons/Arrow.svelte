@@ -29,15 +29,14 @@ context="module"
 <svg
 class="arrow"
 class:turn={prop_TURN}
-viewBox="0 0 90 90"
-fill="none"
 xmlns="http://www.w3.org/2000/svg"
+viewBox="0 0 32 32"
 >
     <path
-    d="M57.3488 12.3488L24.6975 45L57.3488 77.6513L62.6513 72.3487L35.3025 45L62.6513 17.6513L57.3488 12.3488Z"
+    d="m31.71 15.29-10-10-1.42 1.42 8.3 8.29H0v2h28.59l-8.29 8.29 1.41 1.41 10-10a1 1 0 0 0 0-1.41z"
     fill="var(--icon-color, #FFF)"
     />
-</svg>    
+</svg>
     
 
 <!-- #|-SCRIPT-| -->
