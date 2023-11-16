@@ -261,7 +261,7 @@ lang="scss"
 
     &.focus
     {
-        &, .show { will-change: transform; }
+        will-change: transform, contents;
 
         .show
         {
