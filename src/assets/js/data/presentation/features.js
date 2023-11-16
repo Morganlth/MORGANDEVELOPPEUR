@@ -108,7 +108,7 @@
                         topic: 'EMAIL',
                         html: 'p',
                         props: {},
-                        data: 'Email: lethuaut.morgan@gmail.com',
+                        data: 'Email: morganlethuaut@gmail.com',
                         child: Contact
                     },
                     {
