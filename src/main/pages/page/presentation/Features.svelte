@@ -296,6 +296,8 @@ lang="scss"
         
             @extend %f-a-center;
 
+            isolation: isolate;
+
             transform: translate(calc(100% * var(--feature-direction, 1)), 100%);
 
             overflow: clip;
@@ -319,7 +321,7 @@ lang="scss"
             transform-origin: left;
             transform:        rotate(2deg);
 
-            /* mix-blend-mode: saturation; */
+            mix-blend-mode: saturation;
 
             text-shadow:
              1px  1px $light,
