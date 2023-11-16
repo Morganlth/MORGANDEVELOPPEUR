@@ -265,18 +265,9 @@ lang="scss"
     {
         margin-bottom: 4rem;
 
-        border-top: solid transparent .6rem;
+        &.show>div { transform: translate(0, 0); }
 
-        transition: border-color .4s;
-
-        &.show
-        {
-            border-top-color: $primary;
-
-            transition-delay: .4s; 
-
-            &>div { transform: translate(0, 0); }
-        }
+        &>div:nth-child(1) { border-top: solid $primary .8rem; }
 
         &>div
         {
