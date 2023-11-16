@@ -342,21 +342,26 @@ lang="scss"
             transition: transform $duration var(--feature-delay, 0) ease-in-out;
         }
 
-        section, .feature { width: 100%; }
+        section
+        {
+            display: flex;
+
+            gap: 4rem;
+    
+            width: 100%;
+        }
 
         .topic, .contact-me { white-space: nowrap; }
 
         .topic
         {
-            $top: 4rem;
-    
             #{--title-size}: map.get(font.$font-sizes, s6);
 
             &::before
             {
                 --title-size: 50rem;
 
-                @include utils.placement(absolute, $z: -1, $top: $top, $pe: attr(data-topic));
+                @include utils.placement(absolute, $z: -1, $pe: attr(data-topic));
                 @include font.h-($color: $dark, $line-height: 0, $italic: true);
 
                 transform-origin: left;
@@ -371,7 +376,9 @@ lang="scss"
         
             @include font.h-($n: 2, $color: $primary, $line-height: 0, $italic: true);
 
-            transform: translateY($top * -1);
+            position: relative;
+
+            width: 18vw;
         }
 
         .feature
@@ -403,7 +410,7 @@ lang="scss"
     
             position: relative;
 
-            display: block;
+            flex: 1;
         }
 
         a
@@ -430,13 +437,6 @@ lang="scss"
         @include media.min($ms4, $ms4)
         {
             .topic { mix-blend-mode: hue; }
-
-            .feature
-            {
-                padding-left: 18vw;
-
-                box-sizing: border-box;
-            }
         }
     }
 }
