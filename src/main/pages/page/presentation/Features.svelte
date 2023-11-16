@@ -406,7 +406,12 @@ lang="scss"
             &:hover { color: $dark; }
         }
 
-        .contact-me { padding-right: app.$gap-inline; }
+        .contact-me
+        {
+            #{--cell-border-color}: $primary;
+
+            padding-right: app.$gap-inline;
+        }
 
         @include media.min($ms4, $ms4)
         {

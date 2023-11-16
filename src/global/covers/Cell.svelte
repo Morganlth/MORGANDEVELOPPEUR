@@ -251,7 +251,7 @@ lang="scss"
 
         padding: .8rem 1.8rem;
 
-        border: solid $intermediate 1px;
+        border: solid var(--cell-border-color, $intermediate) 1px;
     }
 
     &.center { @extend %f-center; }
