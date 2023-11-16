@@ -265,7 +265,7 @@ lang="scss"
 
         .show
         {
-            animation: a-rgb 2s alternate infinite;
+            animation: a-rgb 3s alternate infinite;
 
             @keyframes a-rgb { from { filter: hue-rotate(0deg); } to { filter: hue-rotate(30deg); } }
         }
