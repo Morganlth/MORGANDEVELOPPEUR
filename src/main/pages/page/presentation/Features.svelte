@@ -321,7 +321,7 @@ lang="scss"
             transform-origin: left;
             transform:        rotate(2deg);
 
-            mix-blend-mode: saturation;
+            mix-blend-mode: color;
 
             text-shadow:
              1px  1px $light,
