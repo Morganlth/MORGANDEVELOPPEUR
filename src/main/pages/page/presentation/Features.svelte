@@ -363,7 +363,7 @@ lang="scss"
 
             transform: translateY(-3rem);
 
-            width: 6%;
+            width: 0;
 
             padding-inline: 4rem;
         }
