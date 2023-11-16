@@ -297,6 +297,8 @@ lang="scss"
         
             @extend %f-a-center;
 
+            isolation: isolate;
+    
             transform: translate(calc(100% * var(--feature-direction, 1)), 100%);
 
             overflow: clip;
