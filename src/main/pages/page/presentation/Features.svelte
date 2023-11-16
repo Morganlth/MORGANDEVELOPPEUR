@@ -53,6 +53,7 @@ style:transform="translateY({features_TRANSLATE_Y}%)"
                         >
                             <h3
                             class="topic"
+                            data-topic={feature.topic}
                             >
                                 {feature.topic}
                             </h3>
@@ -347,17 +348,30 @@ lang="scss"
 
         .topic
         {
+            $top: 4rem;
+    
             #{--title-size}: map.get(font.$font-sizes, s6);
+
+            &::before
+            {
+                --title-size: 50rem;
+
+                @include utils.placement(absolute, $z: -1, $top: $top, $pe: attr(data-topic));
+                @include font.h-($color: $dark, $line-height: 0, $italic: true);
+
+                transform-origin: left;
+                transform:        rotate(2deg);
+
+                text-shadow:
+                 1px  1px $light,
+                -1px  1px $light,
+                -1px -1px $light,
+                 1px -1px $light;
+            }
         
-            @include font.h-($color: $dark, $line-height: 0, $italic: true);
+            @include font.h-($n: 2, $color: $primary, $line-height: 0, $italic: true);
 
-            transform: translateY(calc(var(--title-size, 6rem) / -2));
-
-            text-shadow:
-             1px  1px $light,
-            -1px  1px $light,
-            -1px -1px $light,
-             1px -1px $light;
+            transform: translateY($top * -1);
         }
 
         .feature
@@ -415,15 +429,7 @@ lang="scss"
 
         @include media.min($ms4, $ms4)
         {
-            .topic
-            {
-                --title-size: 50rem;
-
-                transform-origin: left;
-                transform:        rotate(2deg);
-    
-                mix-blend-mode: hue;
-            }
+            .topic { mix-blend-mode: hue; }
 
             .feature
             {

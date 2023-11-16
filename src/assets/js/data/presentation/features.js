@@ -95,7 +95,7 @@
                         topic: 'OBJECTIFS',
                         html: 'p',
                         props: {},
-                        data: 'Objectifs: dev FULLSTACK, dev MOBILE & DESIGNER'
+                        data: 'FULLSTACK, MOBILE & DESIGNER'
                     }
                 ]
             },
@@ -107,7 +107,7 @@
                         topic: 'EMAIL',
                         html: 'p',
                         props: {},
-                        data: 'Email: morganlethuaut@gmail.com',
+                        data: 'morganlethuaut@gmail.com',
                         contact: true
                     },
                     {
