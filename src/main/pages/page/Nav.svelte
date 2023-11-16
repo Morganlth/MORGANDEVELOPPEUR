@@ -194,9 +194,9 @@ style:--pe-color={nav_PE_COLOR}
 //=======@ANIMATIONS|
 
     // --*
-    function nav_a(invert = false)
+    async function nav_a(invert = false)
     {
-        nav_cancel = animation(t =>
+        let {cancel, promise} = animation(t =>
         {
             nav_T = t
 
@@ -219,7 +219,11 @@ style:--pe-color={nav_PE_COLOR}
                 nav_PE_COLOR = COLORS.intermediate
             }
         },
-        NAV_DURATION, nav_T, invert).cancel
+        NAV_DURATION, nav_T, invert)
+
+        nav_cancel = cancel
+
+        try { await promise, nav_PE_COLOR = 'transparent' } catch {}
     }
 
 
@@ -290,12 +294,7 @@ lang="scss"
             transition: $pe-transition;
         }
 
-        &.top
-        {
-            &::before { background-color: transparent !important; }
-
-            transform: translateY(var(--nav-t-y, -300%));
-        }
+        &.top { transform: translateY(var(--nav-t-y, -300%)); }
     }
 
     .items
