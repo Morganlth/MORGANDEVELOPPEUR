@@ -255,9 +255,7 @@ lang="scss"
 
     @include utils.placement(absolute, $top: 50%, $right: 0, $left: 0);
 
-    pointer-events: auto;
-
-    transition: transform .4s ease-out;
+    transition: transform .8s ease-out;
 
     &.focus, .show { will-change: transform; }
 
@@ -322,6 +320,8 @@ lang="scss"
         .feature
         {
             &::before, & { width: fit-content; }
+
+            pointer-events: auto;
         
             &::before
             {
