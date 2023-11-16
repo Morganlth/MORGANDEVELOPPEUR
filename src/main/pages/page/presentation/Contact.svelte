@@ -295,7 +295,7 @@ lang="scss"
         @extend %f-column;
         @extend %a-rgb;
 
-        gap: 1.4rem;
+        gap: 1.8rem;
 
         min-width:  40vw;
         max-width:  90vw;
