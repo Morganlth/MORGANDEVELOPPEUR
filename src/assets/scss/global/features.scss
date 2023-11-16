@@ -38,16 +38,13 @@
 
 /* #\-THIS-\ */
 
-.features
+.features .line
 {
-    .line
-    {
-        &, .content { box-sizing: border-box; }
+    &, .content { box-sizing: border-box; }
 
-        flex: 1;
+    flex: 1;
 
-        padding-left: 2rem;
+    padding-left: 2rem;
 
-        .content { padding-inline: 6% app.$gap-inline; }
-    }
+    .content { padding-inline: 6% app.$gap-inline; }
 }
