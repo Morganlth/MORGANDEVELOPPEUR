@@ -78,6 +78,10 @@ style:transform="translateY({features_TRANSLATE_Y}%)"
             {/each}
         </div>
     {/each}
+
+    {#if contact_ON}
+        <Contact />
+    {/if}
 </div>
 
 
@@ -98,7 +102,10 @@ style:transform="translateY({features_TRANSLATE_Y}%)"
 //=======@COMPONENTS|
 
     // --*
+    import Cell from '../../../../global/covers/Cell.svelte'
     import Line from '../../../../global/covers/Line.svelte'
+
+    import Contact from './Contact.svelte'
     
 //=======@STYLE|
 
@@ -143,6 +150,7 @@ style:transform="translateY({features_TRANSLATE_Y}%)"
     let features_TRANSLATE_Y = 0
 
     // --INSIDE
+    let contact_ON = false
 
 
 // #\-REATIVES-\
@@ -310,18 +318,13 @@ lang="scss"
             transition: transform $duration var(--feature-delay, 0) ease-in-out;
         }
 
-        .topic, .feature::before
-        {
-            mix-blend-mode: hue;
-    
-            white-space: nowrap;
-        }
+        .topic, .feature::before { white-space: nowrap; }
 
         .topic
         {
             --title-size: 50rem;
         
-            @include font.h-($color: $dark, $line-height: 0);
+            @include font.h-($color: $dark, $line-height: 0, $italic: true);
 
             transform-origin: left;
             transform:        rotate(2deg);
@@ -348,6 +351,7 @@ lang="scss"
                 padding-inline: .8rem;
             
                 background-color: $dark;
+                mix-blend-mode:   hue;
 
                 font-size: $height;
             }
@@ -355,8 +359,6 @@ lang="scss"
             position: relative;
 
             display: block;
-
-            @include media.min($ms4, $ms4) { margin-left: 18vw; }
         }
 
         a
@@ -371,6 +373,13 @@ lang="scss"
             transition: color .4s;
 
             &:hover { color: $dark; }
+        }
+
+        @include media.min($ms4, $ms4)
+        {
+            .topic { mix-blend-mode: hue; }
+
+            .feature { margin-left: 18vw; }
         }
     }
 }
