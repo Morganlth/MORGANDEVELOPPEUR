@@ -179,6 +179,8 @@ style:transform="translateY({features_TRANSLATE_Y}%)"
             SHOW    = ratio >= FEATURE.id * prop_FRACTION
         
             prop_FEATURES[i] = { ...FEATURE, show: SHOW }
+
+            if (SHOW) break
         }
     }
 
