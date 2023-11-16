@@ -345,8 +345,6 @@ lang="scss"
         section
         {
             display: flex;
-
-            gap: 4rem;
     
             width: 100%;
         }
@@ -363,7 +361,7 @@ lang="scss"
 
             position: relative;
 
-            width: 18vw;
+            width: 16vw;
         }
 
         .feature
