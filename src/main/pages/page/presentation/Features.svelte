@@ -78,6 +78,7 @@ style:transform="translateY({features_TRANSLATE_Y}%)"
                             prop_CENTER={true}
                             prop_TITLE="Me contacter"
                             {prop_FOCUS}
+                            on:click={cell_eClick}
                             >
                                 <Icon
                                 prop_SPRING={false}
@@ -226,6 +227,7 @@ style:transform="translateY({features_TRANSLATE_Y}%)"
 //=======@EVENTS|
 
     // --*
+    function cell_eClick() { contact_ON = !contact_ON }
 
 
 //=======@TRANSITIONS|
@@ -255,6 +257,7 @@ lang="scss"
 /* #\-USES-\ */
 
     /* --SASS */
+    @use 'sass:map';
     @use 'sass:math';
 
     /* --APP */
@@ -344,12 +347,11 @@ lang="scss"
 
         .topic
         {
-            --title-size: map.get(font.$font-sizes, s6);
+            #{--title-size}: map.get(font.$font-sizes, s6);
         
             @include font.h-($color: $dark, $line-height: 0, $italic: true);
 
-            transform-origin: left;
-            transform:        rotate(2deg);
+            transform: translateY(calc(var(--title-size, 6rem) / -2));
 
             text-shadow:
              1px  1px $light,
@@ -411,6 +413,9 @@ lang="scss"
             .topic
             {
                 --title-size: 50rem;
+
+                transform-origin: left;
+                transform:        rotate(2deg);
     
                 mix-blend-mode: hue;
             }
