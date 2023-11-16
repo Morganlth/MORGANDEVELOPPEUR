@@ -236,6 +236,7 @@ lang="scss"
     @use '../../../../assets/scss/styles/animation';
 
     /* --MEDIA */
+    @use '../../../../assets/scss/styles/media';
 
 
 /* #\-VARIABLES-\ */
@@ -315,7 +316,6 @@ lang="scss"
         {
             --title-size: 50rem;
         
-            @include utils.placement(absolute, $top: 40%, $left: 6%);
             @include font.h-($color: $dark, $line-height: 0, $italic: true);
 
             transform-origin: left;
@@ -356,6 +356,8 @@ lang="scss"
             position: relative;
 
             display: block;
+
+            @include media.min($ms4, $ms4) { margin-left: 18vw; }
         }
 
         a
