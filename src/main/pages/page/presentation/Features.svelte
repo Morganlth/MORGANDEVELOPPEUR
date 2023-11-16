@@ -28,6 +28,7 @@ context="module"
 
 <div
 class="features"
+class:focus={prop_FOCUS}
 style:transform="translateY({features_TRANSLATE_Y}%)"
 >
     {#each prop_FEATURES as group}
@@ -258,6 +259,8 @@ lang="scss"
 
     transition: transform .4s ease-out;
 
+    &.focus, .show { will-change: transform; }
+
     .container
     {
         margin-bottom: 4rem;
@@ -308,8 +311,8 @@ lang="scss"
         {
             --title-size: 50rem;
         
-            @include utils.placement(absolute, $top: -40%, $left: 6%, $z: 1);
-            @include font.h-($color: $dark, $italic: true);
+            @include utils.placement(absolute, $top: 32%, $left: 6%, $z: 1);
+            @include font.h-($color: $dark, $line-height: 0, $italic: true);
 
             transform-origin: left;
             transform:        rotate(3deg);
