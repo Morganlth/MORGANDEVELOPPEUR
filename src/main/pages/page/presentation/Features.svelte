@@ -357,22 +357,7 @@ lang="scss"
         {
             #{--title-size}: map.get(font.$font-sizes, s6);
 
-            &::before
-            {
-                --title-size: 50rem;
-
-                @include utils.placement(absolute, $z: -1, $pe: attr(data-topic));
-                @include font.h-($color: $dark, $line-height: 0, $italic: true);
-
-                transform-origin: left;
-                transform:        rotate(2deg);
-
-                text-shadow:
-                 1px  1px $light,
-                -1px  1px $light,
-                -1px -1px $light,
-                 1px -1px $light;
-            }
+            &::before { @include font.h-($color: $dark, $line-height: 0, $italic: true); }
         
             @include font.h-($n: 2, $color: $primary, $line-height: 0, $italic: true);
 
@@ -436,7 +421,26 @@ lang="scss"
 
         @include media.min($ms4, $ms4)
         {
-            .topic { mix-blend-mode: hue; }
+            .topic
+            {
+                &::before
+                {
+                    --title-size: 50rem;
+
+                    @include utils.placement(absolute, $z: -1, $pe: attr(data-topic));
+
+                    transform-origin: left;
+                    transform:        rotate(2deg);
+
+                    text-shadow:
+                    1px  1px $light,
+                    -1px  1px $light,
+                    -1px -1px $light,
+                    1px -1px $light;
+                }
+    
+                mix-blend-mode: hue;
+            }
         }
     }
 }
