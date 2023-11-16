@@ -414,7 +414,9 @@ lang="scss"
         {
             #{--cell-border-color}: $primary;
 
-            padding-right: app.$gap-inline;
+            @include utils.placement(absolute, $top: 25%, $right: app.$gap-inline);
+
+            transform: translateY(-50%);
         }
 
         @include media.min($ms4, $ms4)
@@ -439,6 +441,8 @@ lang="scss"
     
                 mix-blend-mode: hue;
             }
+
+            .contact-me { top: 50%; }
         }
     }
 }
