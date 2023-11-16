@@ -28,6 +28,7 @@ context="module"
 
 <div
 class="contact"
+bind:this={contact}
 >
     <section>
         <div>
@@ -96,7 +97,7 @@ class="contact"
     // --DATA
 
     // --SVELTE
-    import { onMount } from 'svelte'
+    import { onMount, onDestroy } from 'svelte'
 
     // --LIB
     import COLORS from '$lib/colors'
@@ -143,8 +144,10 @@ class="contact"
     // --CONTEXTS
 
     // --OUTSIDE
+    let particles
 
     // --THIS
+    let contact
 
     // --INSIDE
     let input
@@ -168,16 +171,24 @@ class="contact"
 //=======@LIFE|
 
     // --SVELTE
-    onMount(contact_set)
+    onMount(contact_set), onDestroy(contact_destroy)
 
     // --SET
-    function contact_set() { input?.focus() }
+    function contact_set()
+    {
+        particles_set()
+    
+        input?.focus()
+    }
+
+    function particles_set() { (particles ??= document.querySelector('.particles'))?.moveTo(contact) }
 
     // --GET
 
     // --UPDATES
 
     // --DESTROY
+    function contact_destroy() { particles?.moveTo() }
 
 
 //=======@COMMANDS|
@@ -273,8 +284,6 @@ lang="scss"
 
     @include utils.fixed($z: 1);
 
-    @extend %f-center;
-
     pointer-events: auto;
 
     background-color: $dark;
@@ -283,6 +292,8 @@ lang="scss"
 
     section
     {
+        @include utils.absolute-center();
+    
         @extend %f-column;
         @extend %a-rgb;
 
