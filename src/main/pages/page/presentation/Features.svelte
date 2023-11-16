@@ -314,10 +314,13 @@ lang="scss"
             transform-origin: left;
             transform:        rotate(3deg);
 
-            -webkit-text-stroke: 1px $light;
-
             mix-blend-mode: saturation;
 
+            text-shadow:
+             1px  1px $light,
+            -1px  1px $light,
+            -1px -1px $light,
+             1px -1px $light;
             user-select: none;
             white-space: nowrap;
         }
