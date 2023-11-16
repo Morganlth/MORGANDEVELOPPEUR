@@ -99,10 +99,6 @@ style:transform="translateY({features_TRANSLATE_Y}%)"
             {/each}
         </div>
     {/each}
-
-    {#if contact_ON}
-        <Contact />
-    {/if}
 </div>
 
 
@@ -129,8 +125,6 @@ style:transform="translateY({features_TRANSLATE_Y}%)"
     import Line from '../../../../global/covers/Line.svelte'
 
     import Arrow from '../../../../global/icons/Arrow.svelte'
-
-    import Contact from './Contact.svelte'
     
 //=======@STYLE|
 
@@ -150,6 +144,7 @@ style:transform="translateY({features_TRANSLATE_Y}%)"
     prop_FEATURES
 
     // --BINDING
+    export let contact_ON = false
 
 
 // #\-CONSTANTES-\
@@ -175,7 +170,6 @@ style:transform="translateY({features_TRANSLATE_Y}%)"
     let features_TRANSLATE_Y = 0
 
     // --INSIDE
-    let contact_ON = false
 
 
 // #\-REATIVES-\
@@ -294,12 +288,7 @@ lang="scss"
 
     transition: transform $duration ease-out;
 
-    &.focus
-    {
-        animation: a-rgb 3s alternate infinite;
-
-        @keyframes a-rgb { from { filter: hue-rotate(0deg); } to { filter: hue-rotate(30deg); } }
-    }
+    &.focus { @extend %a-rgb; }
 
     .container
     {

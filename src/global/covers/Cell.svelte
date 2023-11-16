@@ -240,9 +240,9 @@ lang="scss"
         width:  $size;
         height: $size;
 
-        border: solid $light .2rem;
+        border: solid var(--cell-border-color, $light) .2rem;
 
-        box-sizing: content-box;
+        box-sizing: border-box;
     }
 
     &.text-wrapper

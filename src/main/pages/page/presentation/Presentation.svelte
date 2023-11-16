@@ -35,7 +35,14 @@ data-page-id={prop_ID}
     {prop_FOCUS}
     {prop_RATIO}
     {prop_FEATURES}
+    bind:contact_ON
     />
+
+    {#if contact_ON}
+        <Contact
+        bind:contact_ON
+        />
+    {/if}
 </div>
 
 
@@ -59,6 +66,7 @@ data-page-id={prop_ID}
 
     // --*
     import Features from './Features.svelte'
+    import Contact  from './Contact.svelte'
     
 //=======@STYLE|
 
@@ -110,6 +118,7 @@ data-page-id={prop_ID}
     // --THIS
 
     // --INSIDE
+    let contact_ON = false
 
 
 // #\-REATIVES-\

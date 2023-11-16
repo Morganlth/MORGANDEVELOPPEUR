@@ -28,61 +28,62 @@ context="module"
 
 <div
 class="contact"
-class:focus={contact_FOCUS}
 >
-    <form
-    method="post"
-    on:submit|preventDefault={form_eSubmit}
-    >
-        <Cell
-        prop_FOCUS={true}
-        prop_CENTER={true}
-        prop_TITLE="Me contacter"
-        prop_TYPE="submit"
-        >
-            <Icon
-            prop_SPRING={false}
-            prop_COLOR={COLORS.light}
-            prop_SIZE={ICON_SIZE}
+    <section>
+        <div>
+            <Cell
+            prop_FOCUS={true}
+            prop_ICON_WRAPPER={true}
+            prop_CENTER={true}
+            prop_TITLE="fermer"
+            on:click={cell_e$Click}
             >
-                <Send />
-            </Icon>
-        </Cell>
+                <Icon
+                prop_SPRING={false}
+                prop_COLOR={COLORS.light}
+                >
+                    <Cross />
+                </Icon>
+            </Cell>
 
-        <fieldset>
+            <h3>Message</h3>
+        </div>
+
+        <form
+        method="post"
+        on:submit|preventDefault={form_eSubmit}
+        >
             <input
             type="email"
             aria-label="email"
-            placeholder="Votre email..."
+            placeholder="Email"
             required
             bind:this={input}
             />
 
+            <Cell
+            prop_FOCUS={true}
+            prop_ICON_WRAPPER={true}
+            prop_CENTER={true}
+            prop_TITLE="Me contacter"
+            prop_TYPE="submit"
+            >
+                <Icon
+                prop_SPRING={false}
+                prop_COLOR={COLORS.light}
+                >
+                    <Send />
+                </Icon>
+            </Cell>
+
             <textarea
             name="contact"
-            placeholder="Votre message..."
+            placeholder="Message"
             required
             bind:this={textarea}
             ></textarea>
-        </fieldset>
-    </form>
-
-    <Cell
-    prop_FOCUS={true}
-    prop_CENTER={true}
-    prop_TITLE="Me contacter"
-    on:click={cell_e$Click}
-    >
-        <Icon
-        prop_SPRING={false}
-        prop_COLOR={COLORS.light}
-        prop_SIZE={ICON_SIZE}
-        >
-            <Arrow
-            prop_TURN={contact_FOCUS}
-            />
-        </Icon>
-    </Cell>
+        </form>
+    </section>
 </div>
 
 
@@ -95,11 +96,10 @@ class:focus={contact_FOCUS}
     // --DATA
 
     // --SVELTE
-    import { onDestroy } from 'svelte'
+    import { onMount } from 'svelte'
 
     // --LIB
-    import COLORS            from '$lib/colors'
-    import { wait_getDelay } from '$lib/wait'
+    import COLORS from '$lib/colors'
 
     // --CONTEXTS
 
@@ -109,13 +109,12 @@ class:focus={contact_FOCUS}
     import Cell from '../../../../global/covers/Cell.svelte'
     import Icon from '../../../../global/covers/Icon.svelte'
 
+    import Cross from '../../../../global/icons/Cross.svelte'
     import Send  from '../../../../global/icons/Send.svelte'
-    import Arrow from '../../../../global/icons/Arrow.svelte'
 
 //=======@STYLE|
 
     // --*
-    import '../../../../assets/scss/global/contact.scss'
 
 
 // #\-EXPORTS-\
@@ -123,6 +122,7 @@ class:focus={contact_FOCUS}
     // --PROPS
 
     // --BINDING
+    export let contact_ON = true
 
 
 // #\-CONSTANTES-\
@@ -136,9 +136,6 @@ class:focus={contact_FOCUS}
     // --THIS
 
     // --INSIDE
-    const ICON_SIZE = '4.2rem'
-
-    const TEXTAREA_DELAY = wait_getDelay(24) // +- 400ms
 
 
 // #\-VARIABLES-\
@@ -148,15 +145,11 @@ class:focus={contact_FOCUS}
     // --OUTSIDE
 
     // --THIS
-    let contact_FOCUS = false
 
     // --INSIDE
     let input
 
-    let
-    textarea
-    ,
-    textarea_TIMEOUT
+    let textarea
 
 
 // #\-REATIVES-\
@@ -175,18 +168,16 @@ class:focus={contact_FOCUS}
 //=======@LIFE|
 
     // --SVELTE
-    onDestroy(contact_destroy)
+    onMount(contact_set)
 
     // --SET
+    function contact_set() { input?.focus() }
 
     // --GET
 
     // --UPDATES
 
     // --DESTROY
-    function contact_destroy() { textarea_destroyTimeout() }
-    
-    function textarea_destroyTimeout() { clearTimeout(textarea_TIMEOUT) }
 
 
 //=======@COMMANDS|
@@ -224,14 +215,7 @@ class:focus={contact_FOCUS}
         catch {}
     }
 
-    function cell_e$Click()
-    {
-        textarea_destroyTimeout()
-
-        contact_FOCUS = !contact_FOCUS
-
-        if (contact_FOCUS) textarea_TIMEOUT = setTimeout(() => { if (textarea instanceof HTMLElement) textarea.focus() }, TEXTAREA_DELAY)
-    }
+    function cell_e$Click() { contact_ON = false }
 
 
 //=======@TRANSITIONS|
@@ -270,6 +254,7 @@ lang="scss"
     @use '../../../../assets/scss/styles/utils';
     @use '../../../../assets/scss/styles/display';
     @use '../../../../assets/scss/styles/font';
+    @use '../../../../assets/scss/styles/animation';
 
     /* --MEDIA */
 
@@ -277,75 +262,80 @@ lang="scss"
 /* #\-VARIABLES-\ */
 
     /* --* */
+    $color: rgba($primary, .4);
 
 
 /* #\-THIS-\ */
 
 .contact
 {
-    &, form { display: flex; }
+    #{--cell-border-color}: $primary;
 
     @include utils.fixed($z: 1);
 
-    @extend %any-size;
+    @extend %f-center;
 
-    clip-path: polygon(94% 0, 100% 0, 100% 100%, 94% 100%);
+    pointer-events: auto;
 
-    transition: clip-path .4s ease-in, background-color .4s;
+    background-color: $dark;
 
-    &.focus
+    section>div, form { gap: .8rem; }
+
+    section
     {
-        clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+        @extend %f-column;
+        @extend %a-rgb;
 
-        background-color: $dark;
+        gap: 1.4rem;
+
+        min-width:  40vw;
+        max-width:  90vw;
+        min-height: 44vh;
+        max-height: 90vh;
+
+        &>div
+        {
+            #{--cell-size}: 2.4rem;
+
+            display: flex;
+            align-items: flex-end;
+        }
+
+        h3
+        {
+            @include font.h-($n: 3, $color: $color);
+        }
     }
 
     form
     {
-        &, fieldset { flex: 1; }
+        $height: 4.8rem;
 
-        height: 100%;
+        #{--cell-size}: $height;
+    
+        @include display.grid($width: (1fr $height), $height: ($height 1fr));
 
-        fieldset, textarea { @extend %scroll-bar; }
-
-        fieldset
-        {
-            @extend %f-column;
-
-            @include font.text($color: $light, $font-size: map.get(font.$font-sizes, s3));
-
-            overflow: clip scroll;
-
-            gap: 2rem;
-
-            height: calc(100% - app.$gap-block * 2);
-
-            margin-block:   app.$gap-block;
-            padding-inline: app.$gap-inline;
-
-            box-sizing: border-box;
-
-            ::placeholder { color: $intermediate; }
-        }
+        flex: 1;
 
         input, textarea
         {
-            width: 100%;
-        
-            color: inherit;
-            font:  inherit;
-        }
+            @include font.text($color: $light, $font-size: map.get(font.$font-sizes, s3));
 
-        input
-        {
-            padding-block: app.$gap-block;
+            padding: .8rem 1.4rem;
+    
+            border: solid $color 1px;
 
-            border-bottom: solid $intermediate 2px;
+            box-sizing: border-box;
+
+            &::placeholder { color: $intermediate; }
         }
 
         textarea
         {
-            min-height: 50vh;
+            @extend %scroll-bar;
+    
+            grid-column: 1 / 3;
+            grid-row: 2;
         }
     }
 }

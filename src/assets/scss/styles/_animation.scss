@@ -64,5 +64,12 @@
         }
     }
 
+    %a-rgb
+    {
+        animation: a-rgb 3s alternate infinite;
+
+        @keyframes a-rgb { from { filter: hue-rotate(0deg); } to { filter: hue-rotate(30deg); } }
+    }
+
 
 /* #\-THIS-\ */
