@@ -361,7 +361,9 @@ lang="scss"
 
             position: relative;
 
-            width: 16vw;
+            transform: translateY(-3rem);
+
+            width: 10vw;
 
             padding-inline: 4rem;
         }
@@ -440,6 +442,8 @@ lang="scss"
                     -1px -1px $light,
                     1px -1px $light;
                 }
+
+                transform: none;
     
                 mix-blend-mode: hue;
             }
