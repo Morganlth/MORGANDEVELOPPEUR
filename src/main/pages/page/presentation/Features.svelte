@@ -363,7 +363,7 @@ lang="scss"
 
             width: 16vw;
 
-            padding-inline: 1rem;
+            padding-inline: 2rem;
         }
 
         .feature
