@@ -40,7 +40,6 @@ bind:this={contact}
             on:click={cell_e$Click}
             >
                 <Icon
-                prop_SPRING={false}
                 prop_COLOR={COLORS.light}
                 >
                     <Cross />
@@ -70,7 +69,6 @@ bind:this={contact}
             prop_TYPE="submit"
             >
                 <Icon
-                prop_SPRING={false}
                 prop_COLOR={COLORS.light}
                 >
                     <Send />
