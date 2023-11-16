@@ -257,8 +257,6 @@ lang="scss"
 
     @include utils.placement(absolute, $top: 50%, $right: 0, $left: 0);
 
-    pointer-events: auto;
-
     transition: transform $duration ease-out;
 
     &.focus
@@ -363,6 +361,8 @@ lang="scss"
         a
         {
             @extend %a-text;
+
+            pointer-events: auto;
 
             color:           inherit;
             text-decoration: underline;
