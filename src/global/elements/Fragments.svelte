@@ -224,7 +224,7 @@ lang="scss"
 
         li
         {
-            @include font.text($color: $primary, $regular: false, $line-height: font.$line-height-title-min);
+            @include font.text($color: $primary, $regular: false, $line-height: font.$line-height-min);
 
             white-space: nowrap;
         }

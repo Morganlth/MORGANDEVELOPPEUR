@@ -42,13 +42,18 @@
 {
     .line
     {
-        &, .content { box-sizing: border-box; }
+        --line-height: 100%;
 
-        flex: 1;
+        &, .content { box-sizing: border-box; }
 
         padding-left: 2rem;
 
-        .content { padding-left: 6%; }
+        .content
+        {
+            overflow: clip;
+    
+            padding-left: 4%;
+        }
     }
 
     .contact-me .cell { gap: 1.2rem; }

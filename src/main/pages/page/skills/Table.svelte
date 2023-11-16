@@ -309,7 +309,7 @@ lang="scss"
 
     .head
     {
-        #{--cell-size}: calc(var(--title-size) * font.$line-height-title-min);
+        #{--cell-size}: calc(var(--title-size) * font.$line-height-min);
 
         @include utils.placement(absolute, $z: 1);
         @include font.h-(4, $light, 1);

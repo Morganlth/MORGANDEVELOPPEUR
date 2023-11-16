@@ -31,6 +31,7 @@ class="back"
 >
     <Cell
     prop_ICON_WRAPPER={true}
+    prop_CENTER={true}
     prop_TITLE="fermer"
     {prop_FOCUS}
     on:click={prop_turn.bind(null, false)}
@@ -77,54 +78,48 @@ class="back"
             <br>
                 Cela nous donne la commande suivante:
 
-                <span
-                class="command"
+                <Cell
+                prop_TEXT_WRAPPER={true}
+                prop_TITLE={CELL_COMMAND_TITLE}
+                {prop_FOCUS}
+                on:click={cell_eClick.bind(null, `${TERMINAL_WORD_REFERENCE} ${DESC_EXEMPLE.command} ${DESC_EXEMPLE.params}`)}
                 >
-                    <Cell
-                    prop_TITLE={CELL_COMMAND_TITLE}
-                    {prop_FOCUS}
-                    on:click={cell_eClick.bind(null, `${TERMINAL_WORD_REFERENCE} ${DESC_EXEMPLE.command} ${DESC_EXEMPLE.params}`)}
+                    <span
+                    class="command-app"
                     >
-                        <span
-                        class="command-app"
-                        >
-                            {TERMINAL_WORD_REFERENCE}
-                        </span>
+                        {TERMINAL_WORD_REFERENCE}
+                    </span>
 
-                        <span
-                        class="command-name"
-                        >
-                            {DESC_EXEMPLE.command}
-                        </span>
+                    <span
+                    class="command-name"
+                    >
+                        {DESC_EXEMPLE.command}
+                    </span>
 
-                        <span>{DESC_EXEMPLE.params}</span>
-                    </Cell>
-                </span>
+                    <span>{DESC_EXEMPLE.params}</span>
+                </Cell>
             <br>
             <br>
                 Vous pouvez retrouver la liste des commandes avec la commande
 
-                <span
-                class="command"
+                <Cell
+                prop_TEXT_WRAPPER={true}
+                prop_TITLE={CELL_COMMAND_TITLE}
+                {prop_FOCUS}
+                on:click={cell_eClick.bind(null, TERMINAL_WORD_REFERENCE + ' commands')}
                 >
-                    <Cell
-                    prop_TITLE={CELL_COMMAND_TITLE}
-                    {prop_FOCUS}
-                    on:click={cell_eClick.bind(null, TERMINAL_WORD_REFERENCE + ' commands')}
+                    <span
+                    class="command-app"
                     >
-                        <span
-                        class="command-app"
-                        >
-                            {TERMINAL_WORD_REFERENCE}
-                        </span>
+                        {TERMINAL_WORD_REFERENCE}
+                    </span>
 
-                        <span
-                        class="command-name"
-                        >
-                            commands
-                        </span>
-                    </Cell>
-                </span>
+                    <span
+                    class="command-name"
+                    >
+                        commands
+                    </span>
+                </Cell>
             </p>
         </section>
 
@@ -135,43 +130,37 @@ class="back"
                 Le terminal agit comme une barre de recherche.
                 Tapez un mot-clé pour trouver une section correspondante, par exemple:
                 
-                <span
-                class="command"
+                <Cell
+                prop_TEXT_WRAPPER={true}
+                prop_TITLE="Clicker pour rejoindre la page de contact"
+                {prop_FOCUS}
+                on:click={cell_eClick.bind(null, 'contact')}
                 >
-                    <Cell
-                    prop_TITLE="Clicker pour rejoindre la page de contact"
-                    {prop_FOCUS}
-                    on:click={cell_eClick.bind(null, 'contact')}
-                    >
-                        "contact"
-                    </Cell>
-                </span>
+                    "contact"
+                </Cell>
                 .
             <br>
             <br>
                 Vous pouvez retrouver la liste des mots-clés avec la commande
 
-                <span
-                class="command"
+                <Cell
+                prop_TEXT_WRAPPER={true}
+                prop_TITLE={CELL_COMMAND_TITLE}
+                {prop_FOCUS}
+                on:click={cell_eClick.bind(null, TERMINAL_WORD_REFERENCE + ' keywords')}
                 >
-                    <Cell
-                    prop_TITLE={CELL_COMMAND_TITLE}
-                    {prop_FOCUS}
-                    on:click={cell_eClick.bind(null, TERMINAL_WORD_REFERENCE + ' keywords')}
+                    <span
+                    class="command-app"
                     >
-                        <span
-                        class="command-app"
-                        >
-                            {TERMINAL_WORD_REFERENCE}
-                        </span>
-    
-                        <span
-                        class="command-name"
-                        >
-                            keywords
-                        </span>
-                    </Cell>
-                </span>
+                        {TERMINAL_WORD_REFERENCE}
+                    </span>
+
+                    <span
+                    class="command-name"
+                    >
+                        keywords
+                    </span>
+                </Cell>
             </p>
         </section>
     </article>
@@ -387,13 +376,6 @@ lang="scss"
         }
 
         p { @include font.text($color: $light, $font-size: map.get(font.$font-sizes, s2), $line-height: 1.2); }
-
-        .command
-        {
-            padding-inline: .4rem;
-
-            border-bottom: solid $primary 1px;
-        }
 
         .command-app { color: $primary; }
 

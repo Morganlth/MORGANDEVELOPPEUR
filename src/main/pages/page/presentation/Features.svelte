@@ -61,7 +61,7 @@ style:transform="translateY({features_TRANSLATE_Y}%)"
                             this={feature.html ?? 'p'}
                             class="feature"
                             {...feature.props}
-                            data-content={feature.data}
+                            data-content={feature.data.toUpperCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")}
                             tabindex={feature.html === 'a' && prop_FOCUS ? 0 : -1}
                             >
                                 {feature.data}
@@ -292,18 +292,15 @@ lang="scss"
 
     &.focus
     {
-        will-change: transform, contents;
+        animation: a-rgb 3s alternate infinite;
 
-        .show
-        {
-            animation: a-rgb 3s alternate infinite;
-
-            @keyframes a-rgb { from { filter: hue-rotate(0deg); } to { filter: hue-rotate(30deg); } }
-        }
+        @keyframes a-rgb { from { filter: hue-rotate(0deg); } to { filter: hue-rotate(30deg); } }
     }
 
     .container
     {
+        $height: 30vh;
+
         margin-bottom: 4rem;
 
         &.show>div { transform: translate(0, 0); }
@@ -330,26 +327,24 @@ lang="scss"
     
             transform: translate(calc(100% * var(--feature-direction, 1)), 100%);
 
-            overflow: clip;
-
-            height: 30vh;
-
-            padding-right: app.$gap-inline;
+            height: $height;
 
             background-color: rgba($dark, .8);
 
-            border-bottom: solid $intermediate .4rem;
+            border-bottom: solid $intermediate 1px;
 
             box-sizing: border-box;
 
             transition: transform $duration var(--feature-delay, 0) ease-in-out;
         }
 
-        .topic, .feature::before, .contact-me { white-space: nowrap; }
+        section, .feature { width: 100%; }
+
+        .topic, .contact-me { white-space: nowrap; }
 
         .topic
         {
-            --title-size: 50rem;
+            --title-size: map.get(font.$font-sizes, s6);
         
             @include font.h-($color: $dark, $line-height: 0, $italic: true);
 
@@ -365,22 +360,29 @@ lang="scss"
 
         .feature
         {
-            &::before, & { width: fit-content; }
-        
             &::before
             {
-                $height: 118%;
-        
-                @include utils.placement(absolute, $top: 126%, $left: -6vw, $z: -1, $pe: attr(data-content));
+                @include utils.placement(absolute, $top: 50%, $right: calc(app.$gap-inline * 2), $z: -1, $pe: attr(data-content));
+                @include font.h-(1, $color: $primary);
 
+                transform: translateY(-50%);
+
+                overflow: clip;
+
+                width:  fit-content;
                 height: $height;
     
-                padding-inline: .8rem;
+                padding: 2.4rem .8rem;
             
                 background-color: $dark;
                 mix-blend-mode:   hue;
 
-                font-size: $height;
+                border-block: solid $primary 1.6rem;
+
+                writing-mode: vertical-rl;
+                white-space:  nowrap;
+
+                box-sizing: border-box;
             }
     
             position: relative;
@@ -402,11 +404,23 @@ lang="scss"
             &:hover { color: $dark; }
         }
 
+        .contact-me { padding-right: app.$gap-inline; }
+
         @include media.min($ms4, $ms4)
         {
-            .topic { mix-blend-mode: hue; }
+            .topic
+            {
+                --title-size: 50rem;
+    
+                mix-blend-mode: hue;
+            }
 
-            .feature { margin-left: 18vw; }
+            .feature
+            {
+                padding-left: 18vw;
+
+                box-sizing: border-box;
+            }
         }
     }
 }

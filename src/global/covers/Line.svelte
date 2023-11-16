@@ -187,8 +187,6 @@ lang="scss"
 
 .line
 {
-    --line-height: 3rem;
-
     &, .content { @extend %f-a-center; }
 
     @include font.text($regular: true, $font-size: map.get(font.$font-sizes, s3));
@@ -220,12 +218,7 @@ lang="scss"
         color: $light;
     }
 
-    @include media.min($ms3)
-    {
-        --line-height: 5rem;
-
-        gap: 1rem;
-    }
+    @include media.min($ms3) { gap: 1rem; }
 }
 
 

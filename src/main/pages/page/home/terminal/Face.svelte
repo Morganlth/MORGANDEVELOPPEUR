@@ -34,6 +34,7 @@ class="face"
     >
         <Cell
         prop_ICON_WRAPPER={true}
+        prop_CENTER={true}
         prop_TITLE="Description du Terminal"
         {prop_FOCUS}
         on:click={prop_turn.bind(null, true)}
@@ -599,6 +600,8 @@ lang="scss"
 
 .face
 {
+    --line-height: 3rem;
+
     &, .output { @extend %f-column; }
 
     transform: rotateY(0);
@@ -617,8 +620,6 @@ lang="scss"
             text-align: right;
             
             span { color: $primary; }
-
-            @include media.min($ms3) { font-size: map.get(font.$font-sizes, s2); }
         }
     }
 
@@ -689,6 +690,13 @@ lang="scss"
         .success { color: $primary; }
 
         .placeholder { font-size: map.get(font.$font-sizes, s2); }
+    }
+
+    @include media.min($ms3)
+    {
+        --line-height: 5rem;
+
+        .header p { font-size: map.get(font.$font-sizes, s2); }
     }
 }
 

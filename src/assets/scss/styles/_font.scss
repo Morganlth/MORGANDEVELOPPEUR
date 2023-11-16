@@ -38,13 +38,13 @@
     $font-sizes:        (s0: 0rem, s1: 1.2rem, s2: 1.8rem, s3: 2.4rem, s4: 3.6rem, s5: 4.8rem, s6: 6rem, s7: 7.2rem, s8: 9.6rem);
     $font-sizes-length: list.length($font-sizes);
 
-    $line-height-title-min: .76;
+    $line-height-min: .76;
 
 
 /* #\-MIXIN-\ */
 
     /* --* */
-    @mixin h-($n: false, $color: inherit, $line-height: $line-height-title-min, $italic: false)
+    @mixin h-($n: false, $color: inherit, $line-height: $line-height-min, $italic: false)
     {
         @extend %default-settings;
 
