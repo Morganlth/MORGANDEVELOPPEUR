@@ -51,11 +51,11 @@ style:transform="translateY({features_TRANSLATE_Y}%)"
                         <section
                         slot="content"
                         >
-                            <div
+                            <h3
                             class="topic"
                             >
-                                <h3>{feature.topic}</h3>
-                            </div>
+                                {feature.topic}
+                            </h3>
 
                             <svelte:element
                             this={feature.html ?? 'p'}
@@ -310,9 +310,9 @@ lang="scss"
             transition: transform $duration var(--feature-delay, 0) ease-in-out;
         }
 
-        h3, .feature { white-space: nowrap; }
+        .topic, .feature { white-space: nowrap; }
 
-        h3
+        .topic
         {
             --title-size: 50rem;
         
