@@ -363,7 +363,7 @@ lang="scss"
 
             transform: translateY(-3rem);
 
-            width: 10vw;
+            width: 10%;
 
             padding-inline: 4rem;
         }
@@ -444,6 +444,8 @@ lang="scss"
                 }
 
                 transform: none;
+
+                width: 30%;
     
                 mix-blend-mode: hue;
             }
