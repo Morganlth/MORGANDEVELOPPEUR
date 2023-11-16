@@ -257,24 +257,25 @@ lang="scss"
 
     transition: transform $duration ease-out;
 
-    &.focus, .show { will-change: transform; }
+    &.focus
+    {
+        &, .show { will-change: transform; }
+
+        .show
+        {
+            animation: a-rgb 2s alternate infinite;
+
+            @keyframes a-rgb { from { filter: hue-rotate(0deg); } to { filter: hue-rotate(30deg); } }
+        }
+    }
 
     .container
     {
         margin-bottom: 4rem;
 
-        filter: none;
+        &.show>div { transform: translate(0, 0); }
 
-        transition: filter 1.8s;
-
-        &.show
-        {
-            filter: hue-rotate(360deg);
-    
-            &>div { transform: translate(0, 0); }
-        }
-
-        &>div:nth-child(1) { border-top: solid $primary .8rem; }
+        &>div:nth-child(1) { border-top: solid $primary 1rem; }
 
         &>div
         {
