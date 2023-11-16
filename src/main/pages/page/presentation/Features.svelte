@@ -153,7 +153,7 @@ style:transform="translateY({features_TRANSLATE_Y}%)"
     // --OUTSIDE
 
     // --THIS
-    $: wait_throttle(features_update, 4, 6)(prop_RATIO) // +- 70ms, +- 100ms
+    $: wait_throttle(features_update, 2, 3)(prop_RATIO) // +- 70ms, +- 100ms
 
     // --INSIDE
 
@@ -263,7 +263,16 @@ lang="scss"
     {
         margin-bottom: 4rem;
 
-        &.show>div { transform: translate(0, 0); }
+        filter: none;
+
+        transition: filter 1.8s;
+
+        &.show
+        {
+            filter: hue-rotate(360deg);
+    
+            &>div { transform: translate(0, 0); }
+        }
 
         &>div:nth-child(1) { border-top: solid $primary .8rem; }
 
