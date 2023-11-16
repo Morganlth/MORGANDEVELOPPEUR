@@ -310,6 +310,8 @@ lang="scss"
             transition: transform $duration var(--feature-delay, 0) ease-in-out;
         }
 
+        h3, .feature { white-space: nowrap; }
+
         h3
         {
             --title-size: 50rem;
@@ -326,8 +328,6 @@ lang="scss"
             -1px  1px $light,
             -1px -1px $light,
              1px -1px $light;
-            user-select: none;
-            white-space: nowrap;
         }
 
         .feature
@@ -348,7 +348,6 @@ lang="scss"
                 mix-blend-mode:   hue;
 
                 font-size: $height;
-                white-space: nowrap;
             }
     
             position: relative;
