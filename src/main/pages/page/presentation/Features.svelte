@@ -295,7 +295,7 @@ lang="scss"
 
             overflow: clip;
 
-            height: 28vh;
+            height: 30vh;
 
             background-color: rgba($dark, .8);
 
