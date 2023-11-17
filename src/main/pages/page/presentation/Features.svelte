@@ -390,7 +390,7 @@ lang="scss"
         {
             #{--cell-border-color}: $primary;
 
-            @include utils.placement(absolute, $top: 20%, $right: app.$gap-inline);
+            @include utils.placement(absolute, $top: 18%, $right: app.$gap-inline);
 
             transform: translateY(-50%);
         }
