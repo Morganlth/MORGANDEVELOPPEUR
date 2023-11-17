@@ -363,7 +363,7 @@ lang="scss"
 
                 transform: translateY(-50%);
 
-                width:  8rem;
+                width:  10rem;
                 height: $height;
     
                 padding-top: 2.4rem;
@@ -406,13 +406,13 @@ lang="scss"
 
         @include media.min($ms4, $ms4)
         {
-            section { gap: 6rem; }
+            section { gap: 8rem; }
     
             .topic
             {
                 &::before
                 {
-                    --title-size: 50rem;
+                    --title-size: 54rem;
 
                     @include utils.placement(absolute, $z: -1, $pe: attr(data-topic));
 
