@@ -27,7 +27,7 @@ context="module"
 <!-- #|-HTML-| -->
 
 <App
-prop_PAGE_ID={data.page_ID ?? 3}
+prop_PAGE_ID={data.page_ID ?? 0}
 prop_SUBPATH={data.subpath}
 />
 

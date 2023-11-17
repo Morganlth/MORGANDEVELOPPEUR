@@ -4,7 +4,6 @@
 // #\-IMPORTS-\
 
     // --SVELTE
-    import { redirect } from '@sveltejs/kit'
 
     // --LIB
 
@@ -24,8 +23,7 @@
     {
         const PAGE_ID = pages_getId(page)
     
-        if (PAGE_ID != null) return { page_ID: PAGE_ID }
-        else                 throw redirect('308', '/')
+        return { page_ID: PAGE_ID }
     }
 
 

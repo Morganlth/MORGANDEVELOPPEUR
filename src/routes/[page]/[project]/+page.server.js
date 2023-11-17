@@ -4,7 +4,6 @@
 // #\-IMPORTS-\
 
     // --SVELTE
-    import { redirect } from '@sveltejs/kit'
 
     // --LIB
 
@@ -20,11 +19,7 @@
 // #\-EXPORTS-\
 
     // --THIS
-    export function load({ params: {page, project} })
-    {
-        if (page === 'projects') return { page_ID: 3, subpath: page_getSubpath(project) }
-        else                     throw redirect('308', '/' + page)
-    }
+    export function load({ params: {page, project} }) { return page === 'projects' ? { page_ID: 3, subpath: page_getSubpath(project) } : { page_ID: null } }
 
 
 // #\-CONSTANTES-\
