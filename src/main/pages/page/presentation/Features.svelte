@@ -194,17 +194,19 @@ style:transform="translateY({features_TRANSLATE_Y}%)"
     // --UPDATES
     function features_update(ratio)
     {
+        let last_SHOW = false
+    
         features_TRANSLATE_Y = -100 * ratio
 
         for (let i = prop_FEATURES.length - 1; i >= 0; i--)
         {
             const
             FEATURE = prop_FEATURES[i],
-            SHOW    = ratio >= FEATURE.id * prop_FRACTION
+            SHOW    = last_SHOW ? last_SHOW : ratio >= FEATURE.id * prop_FRACTION
         
             prop_FEATURES[i] = { ...FEATURE, show: SHOW }
 
-            if (SHOW) break
+            if (SHOW) last_SHOW = true
         }
     }
 
