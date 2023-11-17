@@ -361,8 +361,6 @@ lang="scss"
 
         .topic
         {
-            #{--title-size}: map.get(font.$font-sizes, s6);
-
             &::before { @include font.h-($color: $dark, $line-height: 0, $italic: true); }
         
             @include font.h-($n: 2, $color: $primary, $line-height: 0);
