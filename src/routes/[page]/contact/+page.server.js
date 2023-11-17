@@ -52,7 +52,7 @@
 
                 return await contact_send(MESSAGE)
             }
-            catch { return fail(501, contact_getResponse({ server: 'server failed.' })) }
+            catch { return fail(500, contact_getResponse({ server: 'server failed.' })) }
         }
     }
 

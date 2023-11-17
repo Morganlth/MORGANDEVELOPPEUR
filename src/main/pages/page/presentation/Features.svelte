@@ -365,7 +365,7 @@ lang="scss"
         
             @include font.h-($n: 2, $color: $primary, $line-height: 0);
 
-            transform: translateY(-.5rem);
+            transform: translateY(-3rem);
 
             width: 0;
         }
@@ -418,6 +418,8 @@ lang="scss"
                     -1px -1px $light,
                      1px -1px $light;
                 }
+
+                transform: translateY(-.5rem);
 
                 margin-left: app.$gap-inline;
 
