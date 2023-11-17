@@ -293,7 +293,7 @@ lang="scss"
         @include utils.absolute-center();
     
         @extend %f-column;
-        @extend %a-rgb;
+        @extend %a-hue-30;
 
         gap: 1.8rem;
 

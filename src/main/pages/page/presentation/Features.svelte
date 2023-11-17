@@ -286,7 +286,7 @@ lang="scss"
 
     transition: transform .2s ease-out;
 
-    &.focus { @extend %a-rgb; }
+    &.focus { @extend %a-hue-30; }
 
     .container
     {

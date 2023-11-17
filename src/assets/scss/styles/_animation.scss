@@ -64,11 +64,11 @@
         }
     }
 
-    %a-rgb
+    %a-hue-30
     {
-        animation: a-rgb 3s alternate infinite;
+        animation: a-hue-30 3s alternate infinite;
 
-        @keyframes a-rgb { from { filter: hue-rotate(0deg); } to { filter: hue-rotate(30deg); } }
+        @keyframes a-hue-30 { from { filter: hue-rotate(0deg); } to { filter: hue-rotate(30deg); } }
     }
 
 
