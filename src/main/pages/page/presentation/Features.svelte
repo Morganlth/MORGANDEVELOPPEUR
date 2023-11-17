@@ -284,7 +284,7 @@ lang="scss"
 
     @include utils.placement(absolute, $top: 50%, $right: 0, $left: 0);
 
-    transition: transform .2s;
+    transition: transform .4s ease-out;
 
     &.focus { @extend %a-hue-30; }
 
@@ -398,8 +398,7 @@ lang="scss"
 
     @include media.min($ms4, $ms4)
     {
-        transition-duration:        $duration;
-        transition-timing-function: ease-out;
+        transition-duration: $duration;
 
         .container
         {
