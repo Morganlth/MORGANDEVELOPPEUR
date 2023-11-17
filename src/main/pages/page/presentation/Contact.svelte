@@ -281,7 +281,7 @@ lang="scss"
 {
     #{--cell-border-color}: $primary;
 
-    @include utils.fixed($z: 1);
+    @include utils.fixed($z: 2); /* label & title */
 
     pointer-events: auto;
 
@@ -298,11 +298,11 @@ lang="scss"
 
         gap: 1.8rem;
 
-        min-width:  40vw;
+        min-width:  44vw;
         width:      100%;
         max-width:  calc(100vw - app.$gap-inline * 2);
-        min-height: 44vh;
-        max-height: 90vh;
+        min-height: 52vh;
+        max-height: 88vh;
 
         &>div
         {
