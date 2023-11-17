@@ -289,6 +289,8 @@ lang="scss"
 
     section>div, form { gap: .8rem; }
 
+    section h3, form input, form textarea { animation: a-intro .4s forwards; }
+
     section
     {
         @include utils.absolute-center();
@@ -314,7 +316,9 @@ lang="scss"
 
         h3
         {
-            @include font.h-($n: 3, $color: $color);
+            @include font.h-($n: 3, $color: $light);
+
+            clip-path: polygon(0 0, 0 0, 0 100%, 0 100%);
         }
     }
 
@@ -332,6 +336,8 @@ lang="scss"
         input, textarea
         {
             padding: 1.4rem 1.8rem;
+
+            clip-path: polygon(100% 0, 100% 0, 100% 0, 100% 0);
     
             border: solid $color 1px;
 
@@ -340,12 +346,8 @@ lang="scss"
 
             box-sizing: border-box;
 
-            animation: a-intro .4s forwards;
-
             &::placeholder { color: $color; }
         }
-
-        input { clip-path: polygon(0 0, 0 0, 0 100%, 0% 100%); }
 
         textarea
         {
@@ -353,11 +355,7 @@ lang="scss"
     
             grid-column: 1 / 3;
             grid-row:    2;
-
-            clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
         }
-
-        @keyframes a-intro { to { clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%); } }
     }
 
     @include media.min($ms4, $ms4)
@@ -366,6 +364,8 @@ lang="scss"
 
         form { font-size: map.get(font.$font-sizes, s3); }
     }
+
+    @keyframes a-intro { to { clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%); } }
 }
 
 
