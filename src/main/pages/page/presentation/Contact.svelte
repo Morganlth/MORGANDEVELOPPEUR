@@ -331,7 +331,7 @@ lang="scss"
 
         input, textarea
         {
-            padding: .8rem 1.4rem;
+            padding: 1.4rem 1.8rem;
     
             border: solid $color 1px;
 
