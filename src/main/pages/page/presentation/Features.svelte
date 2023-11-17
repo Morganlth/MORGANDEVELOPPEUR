@@ -284,8 +284,6 @@ lang="scss"
 
     @include utils.placement(absolute, $top: 50%, $right: 0, $left: 0);
 
-    transition: transform $duration ease-out;
-
     &.focus { @extend %a-rgb; }
 
     .container
@@ -397,6 +395,8 @@ lang="scss"
 
         @include media.min($ms4, $ms4)
         {
+            transition: transform $duration ease-out;
+
             section { gap: 10%; }
     
             .topic
