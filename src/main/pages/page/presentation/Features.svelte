@@ -62,7 +62,6 @@ style:transform="translateY({features_TRANSLATE_Y}%)"
                             this={feature.html ?? 'p'}
                             class="feature"
                             {...feature.props}
-                            data-content={feature.data.toUpperCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")}
                             tabindex={feature.html === 'a' && prop_FOCUS ? 0 : -1}
                             >
                                 {feature.data}
@@ -253,7 +252,6 @@ lang="scss"
 
     /* --SASS */
     @use 'sass:map';
-    @use 'sass:math';
 
     /* --APP */
     @use '../../../../assets/scss/app';
@@ -354,32 +352,26 @@ lang="scss"
 
             width: 0;
 
-            padding-inline: 4rem;
+            padding-inline: 6rem;
         }
 
         .feature
         {
             &::before
             {
-                @include utils.placement(absolute, $top: 50%, $right: calc(app.$gap-inline * 2), $z: -1, $pe: attr(data-content));
-                @include font.h-(1, $color: $primary);
+                @include utils.placement(absolute, $top: 50%, $right: calc(app.$gap-inline * 2), $z: -1, $pe: true);
 
                 transform: translateY(-50%);
 
-                overflow: clip;
-
-                width:  fit-content;
+                width:  8rem;
                 height: $height;
     
-                padding: 2.4rem .8rem;
+                padding-top: 2.4rem;
             
                 background-color: $dark;
                 mix-blend-mode:   hue;
 
-                border-block: solid $primary 1.2rem;
-
-                writing-mode: vertical-rl;
-                white-space:  nowrap;
+                border-inline: solid $primary 1rem;
 
                 box-sizing: border-box;
             }
@@ -414,6 +406,8 @@ lang="scss"
 
         @include media.min($ms4, $ms4)
         {
+            section { gap: 6rem; }
+    
             .topic
             {
                 &::before
@@ -431,10 +425,6 @@ lang="scss"
                     -1px -1px $light,
                      1px -1px $light;
                 }
-
-                transform: none;
-
-                width: 28%;
     
                 mix-blend-mode: hue;
             }

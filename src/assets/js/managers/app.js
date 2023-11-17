@@ -151,7 +151,7 @@ class App
     {
         this.app_WIDTH             = window.innerWidth
         this.app_HEIGHT            = window.innerHeight
-        this.app_PAGE_INTRO_HEIGHT = Math.floor(this.app_HEIGHT * 1.2)
+        this.app_PAGE_INTRO_HEIGHT = this.app_HEIGHT
     }
 
     app_updateSmallScreen()

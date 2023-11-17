@@ -28,14 +28,15 @@ context="module"
 
 <div
 class="slider"
+class:focus={prop_FOCUS}
 >
-    <span
+    <div
     style:transform="translateY({slider_TRANSLATE_Y}%)"
     >
         {slider_CONTENT}
-    </span>
+    </div>
 
-    <span>ACCUEIL PRÉSENTATION COMPÉTENCES PROJETS</span>
+    <div>ACCUEIL PRÉSENTATION COMPÉTENCES PROJETS</div>
 </div>
 
 
@@ -259,21 +260,19 @@ lang="scss"
     @include utils.placement(absolute, $bottom: 0, $left: 62%);
 
     transform-origin: bottom right;
-    transform: perspective(860px) rotateX(-.6rad) scale(.5);
+    transform:        perspective(860px) rotateX(-.6rad) scale(.5);
 
     overflow: clip;
 
-    width: fit-content;
+    width:  fit-content;
     height: 200vh;
     height: 200svh;
 
-    padding-left: 4rem;
-
-    border-left: solid $intermediate 1px;
-
-    color: $intermediate;
-    text-align: right;
+    color:        $intermediate;
+    text-align:   right;
     writing-mode: vertical-rl;
+
+    &.focus div:nth-child(2) { transform: translateY(0); }
 
     &>*
     {
@@ -284,18 +283,27 @@ lang="scss"
         box-sizing: border-box;
     }
 
-    span:nth-child(1)
+    div:nth-child(1)
     {
         #{--title-size}: calc(map.get(font.$font-sizes, s8) * 2);
 
         @include font.h-($line-height: 1.1, $italic: true);
-
-        display: block;
     
         letter-spacing: -.4rem;
     }
 
-    span:nth-child(2) { @include font.text($regular: false, $font-size: map.get(font.$font-sizes, s3)); }
+    div:nth-child(2)
+    {
+        @include font.text($regular: false, $font-size: map.get(font.$font-sizes, s3));
+
+        transform: translateY(-100%);
+
+        padding-left: 4rem;
+
+        border-left: solid $intermediate 1px;
+
+        transition: transform .8s .2s ease-in;
+    }
 }
 
 

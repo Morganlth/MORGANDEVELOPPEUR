@@ -306,7 +306,7 @@ lang="scss"
         {
             #{--cell-size}: 2.4rem;
 
-            display: flex;
+            display:     flex;
             align-items: flex-end;
         }
 
