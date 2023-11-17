@@ -4,6 +4,7 @@
 // #\-IMPORTS-\
 
     // --SVELTE
+    import { error } from '@sveltejs/kit'
 
     // --LIB
 
@@ -22,7 +23,9 @@
     export function load({ params: {page} })
     {
         const PAGE_ID = pages_getId(page)
-    
+
+        if (PAGE_ID == null) throw error(404, 'La page n\'existe pas.')
+        
         return { page_ID: PAGE_ID }
     }
 

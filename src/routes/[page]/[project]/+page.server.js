@@ -4,6 +4,7 @@
 // #\-IMPORTS-\
 
     // --SVELTE
+    import { error } from '@sveltejs/kit'
 
     // --LIB
 
@@ -19,7 +20,14 @@
 // #\-EXPORTS-\
 
     // --THIS
-    export function load({ params: {page, project} }) { return page === 'projects' ? { page_ID: 3, subpath: page_getSubpath(project) } : { page_ID: null } }
+    export function load({ params: {page, project} })
+    {
+        const SUBPATH = page_getSubpath(project)
+
+        if (page !== 'projects' || SUBPATH == null) throw error(404, 'La page n\'existe pas.')
+
+        return { page_ID: 3, subpath: SUBPATH }
+    }
 
 
 // #\-CONSTANTES-\
