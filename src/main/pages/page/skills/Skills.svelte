@@ -41,7 +41,7 @@ data-page-id={prop_ID}
 
     {#if system_TARGET}
         <Table
-        prop_TITLE={system_TARGET.tag}
+        prop_TITLE={system_TARGET.name}
         prop_LINES={system_TARGET.skills}
         bind:head_HEIGHT={PAGE_NAV.offset}
         on:click={table_eClick}

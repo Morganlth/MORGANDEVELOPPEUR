@@ -19,7 +19,8 @@ class Router
 
     #router_PAGES = []
 
-    #router_SUBPATH = null
+    #router_SUBPATH
+    #router_RESPONSE
 
 
 // #\-PUBLICS-\
@@ -45,6 +46,8 @@ class Router
         if (!CURRENT_TARGET || CURRENT_TARGET === target) this.#router_$HIDE.set(value, { target: value ? target : null })
     }
 
+    set router_RESPONSE(value) { this.#router_RESPONSE = value }
+
 
 //=======@GETTER|
 
@@ -55,21 +58,27 @@ class Router
 
     get router_SUBPATH() { return this.#router_SUBPATH }
 
+    get router_RESPONSE() { return this.#router_RESPONSE }
+
 
 //=======@LIFE|
 
     // --SET
-    router_set(id, subPath)
+    router_set(id, subPath, res)
     {
+        this.#router_setVars(res)
+    
         this.router_updateSubPath(id, subPath)
         this.router_update(id, true)
     }
 
     #router_setStores()
     {
-        this.#router_$ID    = store_custom(this.#router_$ID)
-        this.#router_$HIDE  = store_custom(this.#router_$HIDE)
+        this.#router_$ID   = store_custom(this.#router_$ID)
+        this.#router_$HIDE = store_custom(this.#router_$HIDE)
     }
+
+    #router_setVars(res) { this.#router_RESPONSE = res }
 
     // --GET
     router_getInstant(top) { return Math.abs(APP.app_SCROLLTOP - top) > APP.app_HEIGHT * 2 }

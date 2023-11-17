@@ -252,7 +252,8 @@ class Event
 
         function event_scrollToCallback(scrollTop)
         {
-            if (scrollTop === top || +new Date + 100 > START)
+                 if (+new Date() > START + 800) this.event_remove(EVENT)
+            else if (scrollTop === top)
             {
                 this.event_remove(EVENT)
         
@@ -266,6 +267,8 @@ class Event
     async event_scrollTo(top, instant = false, hide = true, callback)
     {
         const APP_$FREEZE = APP.app_$FREEZE
+
+        top = Math.floor(top)
 
         if (top !== APP.app_SCROLLTOP)
         {

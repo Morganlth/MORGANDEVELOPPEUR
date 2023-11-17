@@ -32,7 +32,7 @@ class:focus={prop_FOCUS}
 class:icon-wrapper={prop_ICON_WRAPPER}
 class:text-wrapper={prop_TEXT_WRAPPER}
 class:center={prop_CENTER}
-type={prop_TYPE}
+type={prop_SUBMIT ? 'submit' : 'button'}
 title={prop_TITLE}
 tabindex={prop_FOCUS ? 0 : -1}
 bind:this={cell}
@@ -73,10 +73,10 @@ on:click={cell_eClick}
     prop_FOCUS        = true,
     prop_ICON_WRAPPER = false,
     prop_TEXT_WRAPPER = false,
-    prop_CENTER       = false
+    prop_CENTER       = false,
+    prop_SUBMIT       = false
     ,
-    prop_TITLE = '',
-    prop_TYPE  = 'button'
+    prop_TITLE = ''
 
     // --BINDING
 

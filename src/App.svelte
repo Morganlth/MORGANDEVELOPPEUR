@@ -95,7 +95,8 @@ on:touchstart|once={app_eTouchStart}
     export let
     prop_PAGE_ID = 0
     ,
-    prop_SUBPATH = void ''
+    prop_SUBPATH  = void '',
+    prop_RESPONSE = void ''
 
     // --BINDING
 
@@ -177,7 +178,7 @@ on:touchstart|once={app_eTouchStart}
     {
         if (charged)
         {
-            ROUTER.router_set(prop_PAGE_ID, prop_SUBPATH)
+            ROUTER.router_set(prop_PAGE_ID, prop_SUBPATH, prop_RESPONSE)
             EVENT.event_set()
             PROCESS.process_set()
             SPRING.spring_set()

@@ -60,7 +60,7 @@ data-page-id={prop_ID}
     // --LIB
 
     // --CONTEXTS
-    import { ROUTER, EVENT } from '../../../../App.svelte'
+    import { APP, ROUTER, EVENT } from '../../../../App.svelte'
 
 //=======@COMPONENTS|
 
@@ -100,6 +100,7 @@ data-page-id={prop_ID}
     // --SVELTE
 
     // --CONTEXTS
+    const APP_$FREEZE = APP.app_$FREEZE
 
     // --OUTSIDE
 
@@ -124,12 +125,14 @@ data-page-id={prop_ID}
 // #\-REATIVES-\
 
     // --CONTEXTS
+    $: !$APP_$FREEZE ? contact_ON = false : void 0
 
     // --OUTSIDE
 
     // --THIS
 
     // --INSIDE
+    $: presentation_update(contact_ON)
 
 
 // #\-FUNCTIONS-\
@@ -140,12 +143,40 @@ data-page-id={prop_ID}
     onMount(presentation_set)
 
     // --SET
-    function presentation_set() { page_CHARGED = true }
+    function presentation_set()
+    {
+        APP.app_WAITING_LOADING.push(() => contact_ON = ROUTER.router_SUBPATH === 'contact')
+
+        page_CHARGED = true
+    }
 
     // --GET
     function features_getTarget(target) { return prop_FEATURES.find(feature => feature.tags.includes(target)) }
 
     // --UPDATES
+    function app_updateFreeze(value) { APP.app_$FREEZE = { value, target: prop_ID } }
+
+    function router_updatePaths()
+    {
+        ROUTER.router_updateSubPath(prop_ID, contact_ON ? 'contact' : null)
+        ROUTER.router_updatePath(prop_ID)
+    }
+
+    function presentation_update()
+    {
+        if (page_CHARGED)
+        {
+            router_updatePaths()
+            presentation_updateScrollPosition()
+        }
+    }
+
+    function presentation_updateScrollPosition()
+    {
+        contact_ON
+        ? presentation_goTo(features_getTarget('contact')?.id ?? prop_FEATURES.length - 1, true, false, app_updateFreeze.bind(null, true))
+        : app_updateFreeze(false)
+    }
 
     // --DESTROY
 
@@ -193,11 +224,11 @@ data-page-id={prop_ID}
         }
     }
 
-    function presentation_goTo(id = 0)
+    function presentation_goTo(id = 0, instant, hide, callback)
     {
         const TOP = prop_START + id * FEATURES_FRACTION * prop_DIF + prop_DIF * FEATURES_FRACTION / 2
 
-        EVENT.event_scrollTo(TOP, ROUTER.router_getInstant(TOP))
+        EVENT.event_scrollTo(TOP, instant ?? ROUTER.router_getInstant(TOP), hide, callback)
     }
 
 

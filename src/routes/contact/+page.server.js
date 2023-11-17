@@ -22,7 +22,7 @@
 // #\-EXPORTS-\
 
     // --THIS
-    export function load() { throw redirect(308, '/presentation') }
+    export function load(e) { console.log('ici'); throw redirect(308, '/presentation') }
 
     export const actions =
     {
@@ -47,11 +47,13 @@
 
             try
             {
+                throw new Error()
+        
                 await (async () => await new Promise((resolve, reject) => transporter.sendMail(MESSAGE, (err, info) => err ? reject(err) : resolve(info))))()
 
-                return { success: 'email sent !' }
+                return { success: true }
             }
-            catch { return { error: 'email not sent.' }}
+            catch { return { success: false }}
         }
     }
 

@@ -31,7 +31,9 @@ class="contact"
 bind:this={contact}
 >
     <section>
-        <div>
+        <div
+        class="head"
+        >
             <Cell
             prop_FOCUS={true}
             prop_ICON_WRAPPER={true}
@@ -47,26 +49,39 @@ bind:this={contact}
             </Cell>
 
             <h3>Message</h3>
+
+            <div
+            class="response"
+            class:success={response_SUCCESS}
+            class:error={response_ERROR}
+            >
+                {response_VALUE}
+            </div>
         </div>
 
         <form
         method="post"
-        on:submit|preventDefault={form_eSubmit}
+        action="/presentation/contact"
+        on:submit={form_eSubmit}
         >
             <input
+            class:valid={input_VALID}
             type="email"
-            aria-label="email"
+            name="email"
+            aria-label="contact email"
             placeholder="Email"
             required
             bind:this={input}
+            bind:value={input_VALUE}
+            on:input={input_eInput}
             />
 
             <Cell
             prop_FOCUS={true}
             prop_ICON_WRAPPER={true}
             prop_CENTER={true}
+            prop_SUBMIT={cell_SUBMIT}
             prop_TITLE="Me contacter"
-            prop_TYPE="submit"
             >
                 <Icon
                 prop_COLOR={COLORS.light}
@@ -76,10 +91,15 @@ bind:this={contact}
             </Cell>
 
             <textarea
-            name="contact"
-            placeholder="Message"
+            class:valid={textarea_VALID}
+            name="message"
+            aria-label="contact message"
+            placeholder="Message (min {FORM_MSG_MIN} - max {FORM_MSG_MAX} caractères)"
+            minlength={FORM_MSG_MIN}
+            maxlength={FORM_MSG_MAX}
             required
-            bind:this={textarea}
+            bind:value={textarea_VALUE}
+            on:input={textarea_eInput}
             ></textarea>
         </form>
     </section>
@@ -98,9 +118,11 @@ bind:this={contact}
     import { onMount, onDestroy } from 'svelte'
 
     // --LIB
-    import COLORS from '$lib/colors'
+    import COLORS                                                                   from '$lib/colors'
+    import { FORM_MSG_MIN, FORM_MSG_MAX, form_testEmail, form_testMsg } from '$lib/form'
 
     // --CONTEXTS
+    import { ROUTER } from '../../../../App.svelte'
 
 //=======@COMPONENTS|
 
@@ -148,9 +170,25 @@ bind:this={contact}
     let contact
 
     // --INSIDE
-    let input
+    let
+    response_SUCCESS = false,
+    response_ERROR   = false
+    ,
+    response_VALUE = ''
 
-    let textarea
+    let
+    input
+    ,
+    input_VALID = false
+    ,
+    input_VALUE = ''
+
+    let cell_SUBMIT = true
+
+    let
+    textarea_VALID = false
+    ,
+    textarea_VALUE = ''
 
 
 // #\-REATIVES-\
@@ -175,18 +213,52 @@ bind:this={contact}
     function contact_set()
     {
         particles_set()
+
+        response_setVars()
     
         input?.focus()
     }
 
     function particles_set() { (particles ??= document.querySelector('.particles'))?.moveTo(contact) }
 
+    function response_setVars()
+    {
+        const RESPONSE = ROUTER.router_RESPONSE
+
+        if (RESPONSE?.author === 'contact')
+        {
+            if (RESPONSE.success) response_setSuccess()
+            else                  response_setError(RESPONSE.error ?? 'Une erreur est survenue, tentez de recharger la page.')
+        }
+    }
+
+    function response_setSuccess()
+    {
+        response_SUCCESS = true
+        response_VALUE   = 'Message envoyé.'
+    }
+
+    function response_setError(error)
+    {
+        response_ERROR = true
+
+             if (error.server) response_VALUE = error.server
+        else if (error.email)  response_VALUE = error.email
+        else if (error.msg)    response_VALUE = error.msg
+        else                   response_VALUE = 'une erreur est survenue.'
+    }
+
     // --GET
 
     // --UPDATES
 
     // --DESTROY
-    function contact_destroy() { particles?.moveTo() }
+    function contact_destroy()
+    {
+        particles?.moveTo()
+
+        ROUTER.router_RESPONSE = ''
+    }
 
 
 //=======@COMMANDS|
@@ -196,35 +268,14 @@ bind:this={contact}
 
 //=======@EVENTS|
 
-    // --*
-    async function form_eSubmit()
-    {
-        const
-        EMAIL = input.value,
-        MSG   = textarea.value
+    // --* 
+    function form_eSubmit() { cell_SUBMIT = false }
 
-        try
-        {
-            const RESPONSE = await fetch('/contact',
-            {
-                method: 'post',
-                headers:
-                {
-                    'Content-type': 'application/x-www-form-urlencoded'
-                },
-                body: new URLSearchParams(
-                {
-                    email: EMAIL,
-                    msg  : MSG
-                }).toString()
-            })
-
-            console.log(RESPONSE)
-        }
-        catch {}
-    }
+    function input_eInput() { input_VALID = form_testEmail(input_VALUE.trim()) }
 
     function cell_e$Click() { contact_ON = false }
+
+    function textarea_eInput() { textarea_VALID = form_testMsg(textarea_VALUE.trim()) }
 
 
 //=======@TRANSITIONS|
@@ -287,7 +338,7 @@ lang="scss"
 
     background-color: $dark;
 
-    section>div, form { gap: .8rem; }
+    section>div, form { gap: 1rem; }
 
     section h3, form input, form textarea { animation: a-intro .4s forwards; }
 
@@ -300,7 +351,7 @@ lang="scss"
 
         gap: 1.8rem;
 
-        min-width:  44vw;
+        min-width:  48vw;
         width:      100%;
         max-width:  calc(100vw - app.$gap-inline * 2);
         min-height: 52vh;
@@ -312,13 +363,31 @@ lang="scss"
 
             display:     flex;
             align-items: flex-end;
+            flex-wrap:   wrap;
         }
 
         h3
         {
-            @include font.h-($n: 3, $color: $light);
+            @include font.h-($n: 3, $color: $light, $line-height: 1);
 
             clip-path: polygon(0 0, 0 0, 0 100%, 0 100%);
+
+            text-decoration: underline;
+        }
+
+        .response
+        {
+            @include font.text($regular: false);
+
+            flex: 1;
+
+            padding-left: 1rem;
+
+            box-sizing: border-box;
+
+            &.success { color: $primary; }
+
+            &.error   { color: $indicator; }
         }
     }
 
@@ -346,7 +415,22 @@ lang="scss"
 
             box-sizing: border-box;
 
+            &.valid
+            {
+                border-color: $primary;
+                border-block-width: 2px;
+            }
+
             &::placeholder { color: $color; }
+        }
+
+        input:-internal-autofill-selected
+        {
+            appearance: initial;
+
+            background-color: transparent !important;
+
+            color: $color !important;
         }
 
         textarea
@@ -365,7 +449,7 @@ lang="scss"
         form { font-size: map.get(font.$font-sizes, s3); }
     }
 
-    @keyframes a-intro { to { clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%); } }
+    @keyframes a-intro { to { clip-path: polygon(-1% -1%, 101% -1%, 101% 101%, -1% 101%); } }
 }
 
 

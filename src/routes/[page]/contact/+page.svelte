@@ -1,4 +1,4 @@
-<!----------------------------------------------- #||--page--|| -->
+<!----------------------------------------------- #||--contact--|| -->
 
 
 <!-- #|-CONTEXT-| -->
@@ -27,7 +27,9 @@ context="module"
 <!-- #|-HTML-| -->
 
 <App
-prop_PAGE_ID={data.page_ID ?? 0}
+prop_PAGE_ID={data.page_ID ?? 1}
+prop_SUBPATH={data.subpath}
+prop_RESPONSE={form}
 />
 
 
@@ -48,7 +50,7 @@ prop_PAGE_ID={data.page_ID ?? 0}
 //=======@COMPONENTS|
 
     // --*
-    import App from '../../App.svelte'
+    import App from '../../../App.svelte'
 
 //=======@STYLE|
 
@@ -59,6 +61,7 @@ prop_PAGE_ID={data.page_ID ?? 0}
 
     // --PROPS
     export let data = {}
+    export let form
 
     // --BINDING
 
@@ -165,7 +168,7 @@ lang="scss"
 
 /* #\-THIS-\ */
 
-.page
+.contact
 {
 
 }

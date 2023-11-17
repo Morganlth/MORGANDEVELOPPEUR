@@ -85,9 +85,7 @@ style:transform="translateY({features_TRANSLATE_Y}%)"
                                 prop_SIZE="1.8rem"
                                 prop_COLOR={COLORS.light}
                                 >
-                                    <Arrow
-                                    prop_TURN={contact_ON}
-                                    />
+                                    <Arrow />
                                 </Icon>
     
                                 Me contacter
