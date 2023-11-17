@@ -415,6 +415,8 @@ lang="scss"
                     -1px -1px $light,
                      1px -1px $light;
                 }
+
+                margin-left: app.$gap-inline;
     
                 mix-blend-mode: hue;
             }
