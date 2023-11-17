@@ -266,6 +266,7 @@ lang="scss"
     @use '../../../../assets/scss/styles/animation';
 
     /* --MEDIA */
+    @use '../../../../assets/scss/styles/media';
 
 
 /* #\-VARIABLES-\ */
@@ -298,7 +299,8 @@ lang="scss"
         gap: 1.8rem;
 
         min-width:  40vw;
-        max-width:  90vw;
+        width:      100%;
+        max-width:  calc(100vw - app.$gap-inline * 2);
         min-height: 44vh;
         max-height: 90vh;
 
@@ -323,29 +325,46 @@ lang="scss"
         #{--cell-size}: $height;
     
         @include display.grid($width: (1fr $height), $height: ($height 1fr));
+        @include font.text($color: $light);
 
         flex: 1;
 
         input, textarea
         {
-            @include font.text($color: $light, $font-size: map.get(font.$font-sizes, s3));
-
             padding: .8rem 1.4rem;
     
             border: solid $color 1px;
 
+            color: inherit;
+            font:  inherit;
+
             box-sizing: border-box;
 
-            &::placeholder { color: $intermediate; }
+            animation: a-intro .4s forwards;
+
+            &::placeholder { color: $color; }
         }
+
+        input { clip-path: polygon(0 0, 0 0, 0 100%, 0% 100%); }
 
         textarea
         {
             @extend %scroll-bar;
     
             grid-column: 1 / 3;
-            grid-row: 2;
+            grid-row:    2;
+
+            clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
         }
+
+        @keyframes a-intro { to { clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%); } }
+    }
+
+    @include media.min($ms4, $ms4)
+    {
+        section { width: auto; }
+
+        form { font-size: map.get(font.$font-sizes, s3); }
     }
 }
 

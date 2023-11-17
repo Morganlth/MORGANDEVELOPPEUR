@@ -27,7 +27,7 @@ context="module"
 <!-- #|-HTML-| -->
     
 <svg
-class="arrow"
+class="indicator"
 style:opacity={prop_FOCUS ? 1 : 0}
 viewBox="0 0 30 26"
 fill="none"
@@ -173,7 +173,7 @@ lang="scss"
 
 /* #\-THIS-\ */
 
-.arrow
+.indicator
 {
     width: 100%;
 

@@ -58,7 +58,7 @@
             clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
 
             color: $primary;
-            font: inherit;
+            font:  inherit;
 
             transition: clip-path .4s ease-out;
         }

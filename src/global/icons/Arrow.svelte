@@ -28,7 +28,6 @@ context="module"
 
 <svg
 class="arrow"
-class:turn={prop_TURN}
 xmlns="http://www.w3.org/2000/svg"
 viewBox="0 0 32 32"
 >
@@ -65,7 +64,6 @@ viewBox="0 0 32 32"
 // #\-EXPORTS-\
 
     // --PROPS
-    export let prop_TURN = false
 
     // --BINDING
 
@@ -173,14 +171,7 @@ lang="scss"
 
 /* #\-THIS-\ */
 
-.arrow
-{
-    @extend %any-size;
-
-    transition: transform .4s;
-
-    &.turn { transform: scaleX(-1); }
-}
+.arrow { @extend %any-size; }
 
 
 </style>

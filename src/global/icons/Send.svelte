@@ -161,6 +161,7 @@ lang="scss"
 
     /* --DEPENDENCIES */
     @use '../../assets/scss/styles/utils';
+    @use '../../assets/scss/styles/animation';
 
     /* --MEDIA */
 
@@ -172,7 +173,11 @@ lang="scss"
 
 /* #\-THIS-\ */
 
-.send { @extend %any-size; }
+.send
+{
+    @extend %any-size;
+    @extend %a-scaled;
+}
 
 
 </style>
