@@ -119,7 +119,7 @@ data-page-id={prop_ID}
     // --THIS
 
     // --INSIDE
-    let contact_ON = false
+    let contact_ON = true
 
 
 // #\-REATIVES-\
