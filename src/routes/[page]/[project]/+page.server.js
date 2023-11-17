@@ -24,7 +24,8 @@
     {
         const SUBPATH = page_getSubpath(project)
 
-        if (page !== 'projects' || SUBPATH == null) throw error(404, 'La page n\'existe pas.')
+             if (page !== 'projects') throw error(404, `La page ${page} n'existe pas.`)
+        else if (SUBPATH == null)     throw error(404, `Le projet ${project} n'existe pas.`)
 
         return { page_ID: 3, subpath: SUBPATH }
     }

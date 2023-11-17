@@ -24,7 +24,7 @@
     {
         const PAGE_ID = pages_getId(page)
 
-        if (PAGE_ID == null) throw error(404, 'La page n\'existe pas.')
+        if (PAGE_ID == null) throw error(404, `La page ${page} n'existe pas.`)
         
         return { page_ID: PAGE_ID }
     }
