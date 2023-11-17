@@ -365,7 +365,7 @@ lang="scss"
         
             @include font.h-($n: 2, $color: $primary, $line-height: 0);
 
-            transform: translateY(-3rem);
+            transform: translateY(-.5rem);
 
             width: 0;
         }
@@ -413,10 +413,10 @@ lang="scss"
                     @include utils.placement(absolute, $z: -1, $top: 3rem, $pe: attr(data-topic));
 
                     text-shadow:
-                        1px  1px $light,
+                     1px  1px $light,
                     -1px  1px $light,
                     -1px -1px $light,
-                        1px -1px $light;
+                     1px -1px $light;
                 }
 
                 margin-left: app.$gap-inline;
