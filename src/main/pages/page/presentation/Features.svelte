@@ -329,33 +329,9 @@ lang="scss"
             transition: transform $duration var(--feature-delay, 0) ease-in-out;
         }
 
+        section, .feature { position: relative; }
+
         section
-        {
-            display: flex;
-    
-            width: 100%;
-        }
-
-        .topic, .contact-me { white-space: nowrap; }
-
-        .topic
-        {
-            #{--title-size}: map.get(font.$font-sizes, s6);
-
-            &::before { @include font.h-($color: $dark, $line-height: 0, $italic: true); }
-        
-            @include font.h-($n: 2, $color: $primary, $line-height: 0, $italic: true);
-
-            position: relative;
-
-            transform: translateY(-3rem);
-
-            width: 0;
-
-            padding-inline: 6rem;
-        }
-
-        .feature
         {
             &::before
             {
@@ -375,11 +351,30 @@ lang="scss"
 
                 box-sizing: border-box;
             }
+        
+            display: flex;
     
-            position: relative;
-
-            flex: 1;
+            width: 100%;
         }
+
+        .topic, .contact-me { white-space: nowrap; }
+
+        .topic
+        {
+            #{--title-size}: map.get(font.$font-sizes, s6);
+
+            &::before { @include font.h-($color: $dark, $line-height: 0, $italic: true); }
+        
+            @include font.h-($n: 2, $color: $primary, $line-height: 0, $italic: true);
+
+            transform: translateY(-3rem);
+
+            width: 0;
+
+            padding-inline: 6rem;
+        }
+
+        .feature { width: fit-content; }
 
         a
         {
