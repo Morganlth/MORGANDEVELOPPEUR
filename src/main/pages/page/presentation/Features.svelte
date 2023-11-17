@@ -392,13 +392,16 @@ lang="scss"
 
             transform: translateY(-50%);
         }
+    }
 
-        @include media.min($ms4, $ms4)
+    @include media.min($ms4, $ms4)
+    {
+        transition: transform $duration ease-out;
+
+        .container
         {
-            transition: transform $duration ease-out;
-
             section { gap: 10%; }
-    
+
             .topic
             {
                 &::before
@@ -408,14 +411,14 @@ lang="scss"
                     @include utils.placement(absolute, $z: -1, $top: 3rem, $pe: attr(data-topic));
 
                     text-shadow:
-                     1px  1px $light,
+                        1px  1px $light,
                     -1px  1px $light,
                     -1px -1px $light,
-                     1px -1px $light;
+                        1px -1px $light;
                 }
 
                 margin-left: app.$gap-inline;
-    
+
                 mix-blend-mode: hue;
             }
 
