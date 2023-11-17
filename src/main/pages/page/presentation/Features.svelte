@@ -365,13 +365,11 @@ lang="scss"
 
             &::before { @include font.h-($color: $dark, $line-height: 0, $italic: true); }
         
-            @include font.h-($n: 2, $color: $primary, $line-height: 0, $italic: true);
+            @include font.h-($n: 2, $color: $primary, $line-height: 0);
 
             transform: translateY(-3rem);
 
             width: 0;
-
-            padding-inline: 6rem;
         }
 
         .feature { width: fit-content; }
@@ -401,7 +399,7 @@ lang="scss"
 
         @include media.min($ms4, $ms4)
         {
-            section { gap: 8rem; }
+            section { gap: 10%; }
     
             .topic
             {
@@ -409,10 +407,7 @@ lang="scss"
                 {
                     --title-size: 54rem;
 
-                    @include utils.placement(absolute, $z: -1, $pe: attr(data-topic));
-
-                    transform-origin: left;
-                    transform:        rotate(2deg);
+                    @include utils.placement(absolute, $z: -1, $top: 3rem, $pe: attr(data-topic));
 
                     text-shadow:
                      1px  1px $light,
