@@ -313,6 +313,10 @@ lang="scss"
 
     &, .canvas { @include utils.placement(absolute, 0, 0, 0, 0); }
 
+    padding: 6rem app.$gap-inline;
+
+    box-sizing: border-box;
+
     .content
     {
         $gap-border:         1rem;
@@ -325,10 +329,6 @@ lang="scss"
         @extend %f-column;
 
         overflow: clip auto;
-
-        padding: 6rem app.$gap-inline;
-
-        box-sizing: border-box;
 
         text-align: justify;
 
