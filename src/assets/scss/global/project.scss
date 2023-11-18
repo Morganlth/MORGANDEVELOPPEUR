@@ -42,6 +42,4 @@
     @include utils.placement(absolute, $top: 0, $left: 0, $z: 1);
 
     transform: translate(-50%, -100%);
-
-    pointer-events: none;
 }
