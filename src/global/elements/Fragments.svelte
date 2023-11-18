@@ -28,14 +28,19 @@ context="module"
 
 <span
 class="fragments"
+class:inline={!prop_WORD_COLUMN}
 style:--fragments-direction={prop_DIRECTION}
 >
     {#each prop_FRAGS.value as char, i}
-        <pre
-        class:void={char === ' '}
-        style={prop_STYLE(i)}
-        bind:this={prop_FRAGS.children[prop_FRAGS.children.length]}
-        >{char}</pre>
+        {#if prop_WORD_COLUMN && char === ' '}
+            <br>
+        {:else}
+            <pre
+            class:void={char === ' '}
+            style={prop_STYLE(i)}
+            bind:this={prop_FRAGS.children[prop_FRAGS.children.length]}
+            >{char}</pre>
+        {/if}
     {/each}
 
     {#if prop_TAGS.value instanceof Array}
@@ -91,10 +96,12 @@ style:--fragments-direction={prop_DIRECTION}
 
     // --PROPS
     export let
+    prop_WORD_COLUMN = false
+    ,
     prop_DIRECTION = 0
     ,
-    prop_FRAGS  = { children: [], value: '' },
-    prop_TAGS   = { children: [], value: '' }
+    prop_FRAGS = { children: [], value: '' },
+    prop_TAGS  = { children: [], value: '' }
     ,
     prop_STYLE = () => {}
 
@@ -208,11 +215,11 @@ lang="scss"
 {
     &, pre { font: inherit; }
 
-    &, ul { display: flex; }
-
-    align-items: flex-end;
+    &.inline, ul { display: flex; }
 
     transform-style: preserve-3d;
+
+    &.inline { align-items: flex-end; }
 
     pre { display: inline-block; }
 

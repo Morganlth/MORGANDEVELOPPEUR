@@ -33,6 +33,7 @@ style={prop_STYLE.tag_style()}
 bind:this={tag}
 >
     <Fragments
+    prop_WORD_COLUMN={true}
     prop_FRAGS={{ children: TAG_FRAGS, value: prop_CONTENT }}
     prop_STYLE={prop_STYLE.fragments_style}
     />
@@ -211,6 +212,8 @@ lang="scss"
 
     width:  fit-content;
     height: fit-content;
+
+    text-align: right;
 
     transition: opacity var(--frag-duration, .4s);
 
