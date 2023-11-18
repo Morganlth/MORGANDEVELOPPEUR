@@ -344,6 +344,8 @@ lang="scss"
 
         width:  100%;
         height: fit-content;
+
+        background-color: crimson;
     }
 }
 
