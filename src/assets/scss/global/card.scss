@@ -10,6 +10,7 @@
     /* --APP */
 
     /* --DEPENDENCIES */
+    @use '../styles/utils';
 
     /* --MEDIA */
 
@@ -38,9 +39,14 @@
 
 .card
 {
-    &, .texture, .icon { position: absolute; }
+    @include utils.placement(absolute, $top: 0, $left: 0);
 
-    .texture, .icon { backface-visibility: hidden; }
+    .texture, .icon
+    {
+        position: absolute;
+
+        backface-visibility: hidden;
+    }
 
     .icon { transform: rotateY(180deg); }
 }

@@ -1,4 +1,4 @@
-/*----------------------------------------------- #||--projects--|| */
+/*----------------------------------------------- #||--project--|| */
 
 
 /* #\-USES-\ */
@@ -37,9 +37,11 @@
 
 /* #\-THIS-\ */
 
-.projects .group
+.project .tag
 {
-    @include utils.placement(absolute, 0, 0, 0, 0);
+    @include utils.placement(absolute, $top: 0, $left: 0, $z: 1);
 
-    @extend %any-size;
+    transform: translate(-50%, -100%);
+
+    pointer-events: none;
 }

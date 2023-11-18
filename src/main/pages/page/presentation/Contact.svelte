@@ -39,7 +39,7 @@ bind:this={contact}
             prop_ICON_WRAPPER={true}
             prop_CENTER={true}
             prop_TITLE="fermer"
-            on:click={cell_e$Click}
+            on:click={cell_eClick}
             >
                 <Icon
                 prop_COLOR={COLORS.light}
@@ -273,7 +273,7 @@ bind:this={contact}
 
     function input_eInput() { input_VALID = form_testEmail(input_VALUE.trim()) }
 
-    function cell_e$Click() { contact_ON = false }
+    function cell_eClick() { contact_ON = false }
 
     function textarea_eInput() { textarea_VALID = form_testMsg(textarea_VALUE.trim()) }
 

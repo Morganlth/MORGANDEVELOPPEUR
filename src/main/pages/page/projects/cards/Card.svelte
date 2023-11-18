@@ -30,12 +30,12 @@ context="module"
 class="card"
 class:focus={card_ON}
 data-id={prop_ID}
-title={prop_CONTENT}
+title={prop_TITLE}
 style:transform="
 translate3d(
 {card_TRANSLATE_X}px,
 {card_TRANSLATE_Y}px,
-{(prop_ID - (prop_CARD_HOVER ?? prop_ID)) * 50}px)
+{(prop_ID - (prop__CARD_HOVER ?? prop_ID)) * 50}px)
 perspective({CARD_PERSPECTIVE}px)
 rotateX({card_ROTATE_X}rad)
 rotateY({card_ROTATE_Y}rad)
@@ -47,7 +47,7 @@ on:mousemove={card_eMouseMove}
 on:mouseenter={card_eMouseEnter}
 on:mouseleave={card_eMouseLeave}
 on:mousedown={card_eMouseDown}
-on:touchstart|passive={card_eTouchStart}
+on:touchstart={card_eTouchStart}
 on:touchend={card_eTouchEnd}
 >
     <div
@@ -89,17 +89,6 @@ on:touchend={card_eTouchEnd}
     </div>
 </button>
 
-<Tag
-prop_FOCUS={prop_ON && (tag_FOCUS || prop_TARGET === 1)}
-prop_DURATION={TAG_DURATION}
-prop_STYLE={{ tag_style: () => '', fragments_style }}
-{prop_CONTENT}
---tag-x="{tag_TRANSLATE_X}px"
---tag-y="{tag_TRANSLATE_Y}px"
-on:in={tag_eIn}
-on:out={tag_eOut}
-/>
-
 
 <!-- #|-SCRIPT-| -->
 
@@ -126,8 +115,6 @@ on:out={tag_eOut}
     // --*
     import Icon from '../../../../../global/covers/Icon.svelte'
 
-    import Tag from '../../../../../global/elements/Tag.svelte'
-
     import Logo from '../../../../../global/icons/Logo.svelte'
     
 //=======@STYLE|
@@ -140,19 +127,25 @@ on:out={tag_eOut}
 
     // --PROPS
     export let
-    prop_$RESIZE = {}
+    prop__$RESIZE = {}
     ,
-    prop_CARD_HOVER = void 0 // hovering card id
+    prop__CARD_HOVER = void 0 // hovering card id
     ,
-    prop_ON = false
+    prop_FOCUS = false
     ,
     prop_ID     = void 0,
     prop_TARGET = 0  // -1 | 0 | 1
     ,
-    prop_CONTENT = '',
-    prop_COLOR   = '#FFF'
+    prop_TITLE = '',
+    prop_COLOR = COLORS.light
 
     // --BINDING
+    export let
+    card_TRANSLATE_X = 0,
+    card_TRANSLATE_Y = 0
+    ,
+    card_HALF_WIDTH  = 0,
+    card_HALF_HEIGHT = 0
 
 
 // #\-CONSTANTES-\
@@ -163,7 +156,6 @@ on:out={tag_eOut}
     // --CONTEXTS
 
     // --OUTSIDE
-    const TAG_DURATION = wait_getDelay(18) // +- 300ms
 
     // --THIS
     const
@@ -188,13 +180,6 @@ on:out={tag_eOut}
     // --CONTEXTS
 
     // --OUTSIDE
-    let
-    tag_FOCUS = false
-    ,
-    tag_TRANSLATE_X = 0,
-    tag_TRANSLATE_Y = 0
-    ,
-    tag_DELAY
 
     // --THIS
     let
@@ -204,17 +189,11 @@ on:out={tag_eOut}
     card_GRABBING = false,
     card_START    = true
     ,
-    card_TRANSLATE_X = 0,
-    card_TRANSLATE_Y = 0
-    ,
     card_ROTATE_X = 0,
     card_ROTATE_Y = 0,
     card_ROTATE_Z = 0
     ,
     card_TRANSITION_DURATION = 0
-    ,
-    card_HALF_WIDTH  = 0,
-    card_HALF_HEIGHT = 0
     ,
     card_LAST = +new Date()
     ,
@@ -239,7 +218,7 @@ on:out={tag_eOut}
     // --OUTSIDE
 
     // --THIS
-    $: card_update(prop_ON, prop_TARGET)
+    $: card_update(prop_FOCUS, prop_TARGET)
 
     // --INSIDE
 
@@ -256,9 +235,7 @@ on:out={tag_eOut}
     {
         card_setVars()
 
-        tag_setVars()
-
-        prop_$RESIZE.push(card_e$Resize)
+        prop__$RESIZE.push(card_e$Resize)
     }
 
     function card_setVars()
@@ -267,7 +244,7 @@ on:out={tag_eOut}
         card_HALF_HEIGHT = card.offsetHeight / 2
     
         card_TRANSLATE_X = card_getTranslateX()
-        card_TRANSLATE_Y =  card_getTranslateY() + (card_ON ? 0 : APP.app_HEIGHT)
+        card_TRANSLATE_Y = card_getTranslateY() + (card_ON ? 0 : APP.app_HEIGHT)
 
         card_ROTATE_X = (card_ROTATE_Y = 0)
         card_ROTATE_Z = card_getRotateZ()
@@ -279,12 +256,6 @@ on:out={tag_eOut}
 
     function card_setTransition(value) { card_TRANSITION_DURATION = value }
 
-    function tag_setVars()
-    {
-        tag_TRANSLATE_X = card_TRANSLATE_X + card_HALF_WIDTH
-        tag_TRANSLATE_Y = card_getTranslateY() + card_HALF_HEIGHT
-    }
-
     // --GET
     function card_getTranslateX() { return APP.app_WIDTH * .5 - APP.app_WIDTH * .05 * prop_ID }
 
@@ -292,12 +263,10 @@ on:out={tag_eOut}
 
     function card_getRotateZ() { return 10 - 10 * prop_ID }
 
-    function tag_getTransform(x, y, scale) { return `translate(${x}, ${y}) scale(${scale})` }
-
     // --UPDATES
-    function card_update(on, target /* -1 | 0 | 1 */)
+    function card_update(focus, target /* -1 | 0 | 1 */)
     {
-        const ON = ~target && on
+        const ON = ~target && focus
 
         if (card && ON != card_ON)
         {
@@ -305,7 +274,7 @@ on:out={tag_eOut}
            
             ;(card_ON = ON) ? card_aIn() : card_aOut()
 
-            if (!on) card_START = true
+            if (!focus) card_START = true
         }
     }
 
@@ -321,35 +290,13 @@ on:out={tag_eOut}
         card_ROTATE_Y = x / -card_HALF_WIDTH * .3
     }
 
-    function tag_update(frags, style)
-    {
-        for (let i = 0; i < frags.length; i++)
-        {
-            const FRAG = frags[i]
-
-            if (FRAG)
-            {
-                clearTimeout(FRAG.timeout)
-
-                FRAG.timeout = setTimeout(() => FRAG.style.transform = style, tag_DELAY * i)
-            }
-            else return
-        }
-    }
-
-    function tag_updateTranslate(x, y)
-    {
-        tag_TRANSLATE_X = x
-        tag_TRANSLATE_Y = y
-    }
-
     // --DESTROY
     function card_destroy()
     {
         card_destroyAnimations()
         card_destroyEvents()
 
-        prop_$RESIZE.splice(card_e$Resize)
+        prop__$RESIZE.splice(card_e$Resize)
     }
 
     function card_destroyAnimations()
@@ -389,15 +336,10 @@ on:out={tag_eOut}
     {
         card_updateTranslate(clientX, clientY)
 
-        tag_updateTranslate(clientX, clientY)
+        card_dispatchMouseAndTouch(clientX, clientY)
     }
 
-    async function card_e$Resize()
-    {
-        card_setVars()
-
-        tag_setVars()
-    }
+    async function card_e$Resize() { card_setVars() }
 
     function card_eClick() { SVELTE_DISPATCH('click', { id: prop_ID }) }
 
@@ -405,14 +347,12 @@ on:out={tag_eOut}
     {
         if (offsetX && offsetY) card_updateRotate(offsetX - card_HALF_WIDTH, offsetY - card_HALF_HEIGHT)
 
-        tag_updateTranslate(clientX, clientY)
+        card_dispatchMouseAndTouch(clientX, clientY)
     },
     6, 7) // +- 100ms, +- 120ms
 
     function card_eMouseEnter()
     {
-        tag_FOCUS = true
-
         card_cancel2()
 
         SVELTE_DISPATCH('mouseenter', { id: prop_ID })
@@ -420,8 +360,6 @@ on:out={tag_eOut}
 
     function card_eMouseLeave()
     {
-        tag_FOCUS = false
-    
         card_a()
 
         SVELTE_DISPATCH('mouseleave')
@@ -436,32 +374,9 @@ on:out={tag_eOut}
         card_GRABBING = true
     }
 
-    function card_eTouchStart({touches})
-    {
-        const TOUCHE = touches[0]
-    
-        card_setEvents2()
+    function card_eTouchStart() { card_setEvents2() }
 
-        tag_updateTranslate(TOUCHE.clientX, TOUCHE.clientY)
-    }
-
-    function card_eTouchEnd() { card_destroyEvents2() }
-
-    function tag_eIn({detail: {frags}})
-    {
-        tag_DELAY ??= TAG_DURATION / frags.length
-
-        const STYLE = tag_getTransform('var(--tag-x, 25%)', 'var(--tag-y, 45%)', 1)
-    
-        tag_update(frags, STYLE, 0)
-    }
-
-    function tag_eOut({detail: {frags}})
-    {
-        const STYLE = tag_getTransform(`calc(var(--tag-x, ${tag_TRANSLATE_X}px) + 200%)`, `calc(var(--tag-y, ${tag_TRANSLATE_Y}px) + 100%)`, 0)
-
-        tag_update(frags, STYLE)
-    }
+    function card_eTouchEnd()   { card_destroyEvents2() }
 
 
 //=======@TRANSITIONS|
@@ -560,17 +475,7 @@ on:out={tag_eOut}
 //=======@UTILS|
 
     // --*
-    function fragments_style()
-    {
-        const
-        TRANSFORM = tag_getTransform(`calc(var(--tag-x, ${tag_TRANSLATE_X}px) - 200%)`, `calc(var(--tag-y, ${tag_TRANSLATE_Y}px) - 100%)`, 0),
-        DURATION  = Math.random() * TAG_DURATION + TAG_DURATION + 'ms'
-    
-        return `
-        --frag-duration: ${DURATION};
-        transform: ${TRANSFORM};
-        transition: transform var(--frag-duration, ${DURATION}) ease-out;`
-    }
+    function card_dispatchMouseAndTouch(x, y) { SVELTE_DISPATCH('mouseandtouchmove', {x, y}) }
 
 
 </script>
@@ -599,7 +504,10 @@ lang="scss"
 /* #\-VARIABLES-\ */
 
     /* --* */
-    $card-ratio: math.div(333, 234);
+    $width:  234;
+    $height: 333;
+
+    $card-ratio: math.div($height, $width);
 
     $size: max(14vw, 14vh);
 
@@ -615,7 +523,7 @@ lang="scss"
     contain:   layout size;
     isolation: isolate;
 
-    aspect-ratio: 234 / 333;
+    aspect-ratio: $width / $height;
 
     width:  $size;
     height: calc($size * $card-ratio);

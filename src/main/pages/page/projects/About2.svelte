@@ -28,33 +28,27 @@ context="module"
 
 <div
 class="about"
-style:--about-transition-duration="{about_TRANSITION_DURATION}ms"
 bind:this={about}
 transition:transition_fade={{ duration: 200 }}
 >
     <div
     class="content"
-    style:--x="{prop_X}px"
-    style:--y="{prop_Y}px"
-    style:--w="{prop_W}px"
-    style:--h="{prop_H}px"
     >
-        <div
-        class="void"
-        >
-        </div>
-
-        <p
-        class="global"
-        >
-            {prop_GLOBAL}
-        </p>
-
-        <p
-        class="this"
-        >
-            {prop_THIS}
-        </p>
+        {#each prop_CONTENT as content}
+            <p>
+                {#each content as p, i}
+                    {#if p === ''}
+                        <br>
+                    {:else}
+                        <span
+                        style:--about-text-delay="{i * .5}s"
+                        >
+                            {p}
+                        </span>
+                    {/if}
+                {/each}
+            </p>
+        {/each}
     </div>
 
     <canvas
@@ -96,14 +90,7 @@ transition:transition_fade={{ duration: 200 }}
 // #\-EXPORTS-\
 
     // --PROPS
-    export let
-    prop_GLOBAL = void '',
-    prop_THIS   = void ''
-    ,
-    prop_X = 0,
-    prop_Y = 0,
-    prop_W = 0,
-    prop_H = 0
+    export let prop_CONTENT = []
 
     // --BINDING
 
@@ -133,10 +120,7 @@ transition:transition_fade={{ duration: 200 }}
     // --OUTSIDE
 
     // --THIS
-    let
-    about
-    ,
-    about_TRANSITION_DURATION = 0
+    let about
 
     // --INSIDE
     let
@@ -173,16 +157,12 @@ transition:transition_fade={{ duration: 200 }}
     // --SET
     function about_set()
     {
-        about_setVars()
-    
         canvas_setVars()
         canvas_setMatrix()
         canvas_setEvents()
         canvas_drawBackground()
         canvas_a()
     }
-
-    function about_setVars() { about_TRANSITION_DURATION = navigator.userAgent.match(/(Chrome|Safari|Edg)/i) ? 100 : 0 }
 
     function canvas_setVars()
     {
@@ -298,82 +278,63 @@ lang="scss"
     @use '../../../../assets/scss/styles/font';
 
     /* --MEDIA */
+    @use '../../../../assets/scss/styles/media';
 
 
 /* #\-VARIABLES-\ */
 
     /* --* */
-    $transition-duration: var(--about-transition-duration, 0ms);
+    $top: 14rem;
 
 
 /* #\-THIS-\ */
 
 .about
 {
-    &, .content, .canvas { @extend %any-size; }
+    @include utils.placement(fixed, $top, $right: app.$gap-inline);
 
-    &, .canvas { @include utils.placement(absolute, 0, 0, 0, 0); }
+    width:  calc(100% - app.$gap-inline * 2);
+    height: calc(100% - $top);
+
+    pointer-events: none;
+
+    .content, .canvas { @extend %any-size; }
 
     .content
     {
-        $gap-border:         2rem;
-        $gap-center-element: 12rem;
- 
-        @include display.grid($width: (auto 1fr), $height: (auto 1fr auto));
         @include font.text($line-height: 1.4);
 
-        padding: 6rem app.$gap-inline;
+        @extend %scroll-bar;
+
+        overflow: clip auto;
+
+        padding-inline: 3rem;
 
         box-sizing: border-box;
 
-        text-align: justify;
-
-        .void, .global, .this { isolation: isolate; }
-
-        .void
+        p
         {
-            grid-column: 1 / 4; 
-
-            height: var(--y);
-
-            transition: height $transition-duration;
-        }
-
-        .global, .this
-        {
-            @extend %scroll-bar;
-
-            grid-row: 2 / 3;
-
-            overflow: clip auto;
-
-            box-sizing: border-box;
-
-            transition: width $transition-duration;
-        }
-
-        .global
-        {
-            width: var(--x);
-
-            padding-inline: $gap-border $gap-center-element;
-
-            color: $light;
-        }
-    
-        .this
-        {
-            grid-column: 3 / 4;
+            padding-block: 2rem;
         
-            width: calc(100vw - var(--x) - var(--w));
+            text-align: justify;
 
-            padding-inline: $gap-center-element $gap-border;
-
-            color: $primary;
+            span { margin-left: 2rem; }
         }
+
+        p:nth-child(1) { color: $light; }
+
+        p:not(:nth-child(1)) { color: $primary; }
     }
 
-    .canvas { pointer-events: none; }
+    .canvas { @include utils.placement(absolute, 0, 0, 0, 0); }
+
+    @include media.min($ms2)
+    {
+        width:  min(42rem, calc(100vw - app.$gap-inline * 2));
+        height: calc(100% - $top * 2);
+        
+        .content { pointer-events: auto; }
+    }
 }
 
 

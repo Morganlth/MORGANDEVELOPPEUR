@@ -21,7 +21,6 @@
 
     import PROJECTS_ABOUT    from './projects/about'
     import PROJECTS_PROJECTS from './projects/projects'
-    import PROJECTS_CARDS    from './projects/cards'
 
 //=======@COMPONENTS|
 
@@ -252,7 +251,7 @@
         ,
             quote: { value: 'Le code est un moyen de matérialiser nos idées créatives.' }
         ,
-            children: [PROJECTS_ABOUT, PROJECTS_PROJECTS, PROJECTS_CARDS]
+            children: [PROJECTS_ABOUT, PROJECTS_PROJECTS]
         ,
             props:
             {

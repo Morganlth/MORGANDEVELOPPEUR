@@ -28,53 +28,26 @@ context="module"
 
 <div
 class="projects"
-class:scroller={projects_TARGET}
 data-page-id={prop_ID}
-bind:this={projects}
 >
-    {#if projects_TARGET}
-        <About
-        prop_CONTENT={[prop_ABOUT, (projects_TARGET.about ?? [])]}
-        />
-    {/if}
-
     <Group
     let:resize
     >
-        {#each prop_CARDS as card}
-            <Card
-            prop_$RESIZE={resize}
-            prop_CARD_HOVER={card_HOVER}
-            prop_ON={card$_ON}
-            prop_ID={card.id}
-            prop_TARGET={projects_TARGET ? projects_TARGET.id === card.id ? 1 : -1 : 0}
-            prop_CONTENT={card.value}
-            prop_COLOR={card.color}
-            on:click={card_eClick}
+        {#each prop_PROJECTS as project}
+            <Project
+            prop__$RESIZE={resize}
+            prop__TARGET={project__TARGET}
+            prop__CARD_HOVER={card__HOVER}
+            prop_FOCUS={project$_FOCUS}
+            prop_TARGET={project__TARGET === project.id}
+            prop_PROJECT={project}
+            prop_ABOUT_GLOBAL={prop_ABOUT_GLOBAL}
             on:mouseenter={card_eMouseEnter}
             on:mouseleave={card_eMouseLeave}
-            >
-                <svelte:component
-                this={card.texture}
-                />
-            </Card>
+            on:click={card_eClick}
+            />
         {/each}
     </Group>
-
-    <Mask2
-    prop_DESTROY={!projects_TARGET}
-    />
-
-    {#if projects_TARGET}
-        <div
-        class="project"
-        >
-            <svelte:component
-            this={projects_TARGET.component}
-            prop_DATAS={projects_TARGET.datas}
-            />
-        </div>
-    {/if}
 </div>
 
 
@@ -87,7 +60,7 @@ bind:this={projects}
     // --DATA
 
     // --SVELTE
-    import { onMount, onDestroy, tick } from 'svelte'
+    import { onMount } from 'svelte'
 
     // --LIB
 
@@ -99,9 +72,7 @@ bind:this={projects}
     // --*
     import Group from '../../../../global/covers/Group.svelte'
 
-    import Card  from './cards/Card.svelte'
-    import Mask2 from './Mask2.svelte'
-    import About from './About.svelte'
+    import Project from './Project.svelte'
         
 //=======@STYLE|
 
@@ -118,9 +89,8 @@ bind:this={projects}
     prop_FOCUS = false,
     prop_INTRO = false
     ,
-    prop_ABOUT    = [],
-    prop_PROJECTS = [],
-    prop_CARDS    = []
+    prop_ABOUT_GLOBAL = [],
+    prop_PROJECTS     = []
     ,
     prop_TOP   = 0,
     prop_START = 0
@@ -150,16 +120,13 @@ bind:this={projects}
     // --CONTEXTS
 
     // --OUTSIDE
-    let particles
 
     // --THIS
-    let
-    projects
-    ,
-    projects_TARGET
 
     // --INSIDE
-    let card_HOVER
+    let project__TARGET
+
+    let card__HOVER
 
 
 // #\-REATIVES-\
@@ -172,7 +139,7 @@ bind:this={projects}
     $: !$APP_$FREEZE ? projects_setProject(null) : void 0
 
     // --INSIDE
-    $: card$_ON = prop_FOCUS && !prop_INTRO
+    $: project$_FOCUS = prop_FOCUS && !prop_INTRO
 
 
 // #\-FUNCTIONS-\
@@ -180,7 +147,7 @@ bind:this={projects}
 //=======@LIFE|
 
     // --SVELTE
-    onMount(projects_set), onDestroy(projects_destroy)
+    onMount(projects_set)
 
     // --SET
     function projects_set()
@@ -192,7 +159,7 @@ bind:this={projects}
 
     async function projects_setProject(id)
     {
-        if (page_CHARGED && (id != null || projects_TARGET))
+        if (page_CHARGED && (id != null || project__TARGET != null))
         {
             router_updatePaths(id)
 
@@ -201,62 +168,43 @@ bind:this={projects}
     }
 
     // --GET
-    function card_get(name) { return prop_CARDS.find(card => card.name === name) ?? null }
+    function projects_getProject(name) { return prop_PROJECTS.find(project => project.name === name) ?? null }
 
     // --UPDATES
     function app_updateFreeze(value) { APP.app_$FREEZE = { value, target: prop_ID } }
 
     function router_updatePaths(id)
     {
-        const VALUE = projects_TARGET?.id === id ? null : id
+        const VALUE = project__TARGET === id ? null : id
 
-        ROUTER.router_updateSubPath(prop_ID, VALUE == null ? null : prop_CARDS[id].name)
+        ROUTER.router_updateSubPath(prop_ID, VALUE == null ? null : prop_PROJECTS[id].name)
         ROUTER.router_updatePath(prop_ID)
     }
 
     async function projects_update()
     {
-        const LAST_TARGET = projects_TARGET
+        const LAST_TARGET = project__TARGET
     
         projects_updateTarget()
         projects_updateScrollPosition(LAST_TARGET)
-        projects_updateParticles()
     }
 
     function projects_updateTarget()
     {
-        const CARD = card_get(ROUTER.router_SUBPATH)
+        const PROJECT = projects_getProject(ROUTER.router_SUBPATH)
 
-        projects_TARGET = CARD ? prop_PROJECTS[CARD.id] : null
+        project__TARGET = PROJECT?.id
     }
 
     function projects_updateScrollPosition(last_TARGET)
     {
-        if (last_TARGET == null && projects_TARGET) EVENT.event_scrollTo(prop_START, true, false, app_updateFreeze.bind(null, true))
-        else
-        {
-            projects?.scrollTo({ top: 0 })
-
-            if (last_TARGET && !projects_TARGET) app_updateFreeze(false)
-        }
+             if (last_TARGET == null && project__TARGET != null) EVENT.event_scrollTo(prop_START, true, false, app_updateFreeze.bind(null, true))
+        else if (last_TARGET != null && project__TARGET == null) app_updateFreeze(false)
     }
 
-    async function projects_updateParticles()
-    {
-        await tick() // set about and project
-
-        ;(particles ??= document.querySelector('.particles'))?.moveTo(projects_TARGET ? projects : null)
-    }
-
-    function card_updateCardHover(id) { card_HOVER = id }
+    function card_updateCardHover(id) { card__HOVER = id }
 
     // --DESTROY
-    function projects_destroy()
-    {
-        projects_TARGET = null
-
-        projects_updateParticles()
-    }
 
 
 //=======@COMMANDS|
@@ -269,9 +217,9 @@ bind:this={projects}
     // --*
     function card_eMouseEnter({detail: {id}}) { card_updateCardHover(id) }
 
-    function card_eMouseLeave() { card_updateCardHover(null) }
+    function card_eMouseLeave()               { card_updateCardHover(null) }
 
-    function card_eClick({detail: {id}}) { projects_setProject(id) }
+    function card_eClick({detail: {id}})      { projects_setProject(id) }
 
     export function nav_e$Click({id}) { projects_setProject(id) }
 
@@ -293,10 +241,10 @@ bind:this={projects}
     {
         switch (target)
         {
-            case 'top'  : EVENT.event_scrollTo(prop_TOP, true)   ;break
-            case 'start': EVENT.event_scrollTo(prop_START, true) ;break
-            case 'cards': projects_setProject(card_get(str)?.id) ;break
-            default     :                                        ;break
+            case 'top'     : EVENT.event_scrollTo(prop_TOP, true)              ;break
+            case 'start'   : EVENT.event_scrollTo(prop_START, true)            ;break
+            case 'projects': projects_setProject(projects_getProject(str)?.id) ;break
+            default        :                                                   ;break
         }
     }
 
@@ -334,34 +282,6 @@ lang="scss"
     @include utils.placement(absolute, 0, 0, 0, 0);
 
     @extend %any-size;
-
-    overflow: clip;
-
-    &.scroller
-    {
-        @extend %scroll-bar;
-
-        will-change: scroll-position;
-
-        z-index: 2; /* label & nav */
-
-        overflow-y:          scroll;
-        overscroll-behavior: none;
-
-        max-height: 100svh;
-
-        pointer-events: auto;
-    }
-
-    .project
-    {
-        @include utils.placement(relative, $top: 100vh);
-
-        top: 100svh;
-
-        width:  100%;
-        height: fit-content;
-    }
 }
 
 

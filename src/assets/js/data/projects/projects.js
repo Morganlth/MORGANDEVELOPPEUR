@@ -6,6 +6,7 @@
     // --SVELTE
 
     // --LIB
+    import COLORS from '$lib/colors'
 
     // --CONTEXTS
 
@@ -18,6 +19,10 @@
     import SophieBluel  from '../../../../main/pages/page/projects/projects/SophieBluel.svelte'
     import NinaCarducci from '../../../../main/pages/page/projects/projects/NinaCarducci.svelte'
 
+    import AceClubs      from '../../../../main/pages/page/projects/cards/textures/AceClubs.svelte'
+    import TwoHearts     from '../../../../main/pages/page/projects/cards/textures/TwoHearts.svelte'
+    import ThreeDiamonds from '../../../../main/pages/page/projects/cards/textures/ThreeDiamonds.svelte'
+
 
 // #\-EXPORTS-\
 
@@ -29,20 +34,20 @@
         datas:
         [
             {
-                id: 0,
-                component: Booki
+                name: 'booki',
+                title: 'BOOKI',
+                component: Booki,
+                cardTexture: ThreeDiamonds,
+                color: COLORS.indicator
             ,
-                about:
-                [
-                    'Booki est le premier projet de la formation.',
-                    'Il sert de base.',
-                    'HTML et CSS sont les deux thèmes principaux.',
-                    'Ceci explique sa simplicité.',
-                    'Pour le contexte, Booki est un site de recherche d\'hébergements et d\'activités.',
-                    'On y retrouve une single-page contenant une barre de recherche (non fonctionnelle), des filtres (non fonctionnels) et des exemples d\'hébergements et d\'activités.',
-                    'Bref, on est plus sur une maquette qu\'un réel site web.',
-                    'Néanmoins, rappelez-vous que ceci est un projet pour apprendre les bases du développement web.'
-                ]
+                about: `Booki est le premier projet de la formation.
+                    Il sert de base.
+                    HTML et CSS sont les deux thèmes principaux.
+                    Ceci explique sa simplicité.
+                    Pour le contexte, Booki est un site de recherche d\'hébergements et d\'activités.
+                    On y retrouve une single-page contenant une barre de recherche (non fonctionnelle), des filtres (non fonctionnels) et des exemples d\'hébergements et d\'activités.
+                    Bref, on est plus sur une maquette qu\'un réel site web.
+                    Néanmoins, rappelez-vous que ceci est un projet pour apprendre les bases du développement web.`
             ,
                 datas:
                 {
@@ -179,16 +184,16 @@
                 }
             },
             {
-                id: 1,
-                component: SophieBluel
+                name: 'sophiebluel',
+                title: 'SOPHIE BLUEL',
+                component: SophieBluel,
+                cardTexture: TwoHearts,
+                color: COLORS.indicator
             ,
-                about:
-                [
-                    'Sophie Bluel est une designeuse d\'espace.',
-                    'Son site web intègre quelques notions de Javascript, comme par exemple une page de login, des modifications dans le DOM ou bien des requêtes vers une base de données.',
-                    'Dans ce projet, vous retrouverez une copie du travail original.',
-                    'Malheureusement les fonctionnalités principales ne sont pas disponibles (comme la page de login).'
-                ]
+                about: `Sophie Bluel est une designeuse d\'espace.
+                    Son site web intègre quelques notions de Javascript, comme par exemple une page de login, des modifications dans le DOM ou bien des requêtes vers une base de données.
+                    Dans ce projet, vous retrouverez une copie du travail original.
+                    Malheureusement les fonctionnalités principales ne sont pas disponibles (comme la page de login).`
             ,
                 datas:
                 {
@@ -277,18 +282,18 @@
                 }
             },
             {
-                id: 2,
-                component: NinaCarducci
+                name: 'ninacarducci',
+                title: 'NINA CARDUCCI',
+                component: NinaCarducci,
+                cardTexture: AceClubs,
+                color: COLORS.primary
             ,
-                about:
-                [
-                    'Nina Carducci est une photographe exceptionnelle!',
-                    'Ses clichés sont représentés par une galerie construite à l\'aide de Javascript.',
-                    'De plus, le site est mis sur le devant de la scène grace aux schéma.org, aux balises metas et aux optimisations apportés sur l\'ensemble de la page.',
-                    'Ce projet a pour but de travailler le référencement et l\'optimisation.',
-                    'Dans le code original (disponible sur mon github) Bootsrap était intégré par défaut.',
-                    'Dans cette version j\'ai entièrement supprimé le framework pour retirer tout le superflu.'
-                ]
+                about: `Nina Carducci est une photographe exceptionnelle!
+                    Ses clichés sont représentés par une galerie construite à l\'aide de Javascript.
+                    De plus, le site est mis sur le devant de la scène grace aux schéma.org, aux balises metas et aux optimisations apportés sur l\'ensemble de la page.
+                    Ce projet a pour but de travailler le référencement et l\'optimisation.
+                    Dans le code original (disponible sur mon github) Bootsrap était intégré par défaut.
+                    Dans cette version j\'ai entièrement supprimé le framework pour retirer tout le superflu.`
             ,
                 datas:
                 {
@@ -429,7 +434,13 @@
                     ]
                 }
             }
-        ]
+        ].map((project, id) =>
+        {
+            project.id   = id
+            project.tags = [project.name]
+
+            return project
+        })
     }
 
 
