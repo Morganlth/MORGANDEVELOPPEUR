@@ -271,6 +271,8 @@ lang="scss"
     overflow:            clip scroll;
     overscroll-behavior: none;
 
+    touch-action: none;
+
     background-color: $dark;
 
     &.freeze { overflow: clip !important; }
