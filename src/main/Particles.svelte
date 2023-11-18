@@ -28,11 +28,12 @@ context="module"
 
 <div
 class="particles"
+bind:this={particles}
 >
     <canvas
-    style:width={particles_WIDTH}
-    style:height={particles_HEIGHT}
-    bind:this={particles}
+    style:width="{canvas_WIDTH}px"
+    style:height="{canvas_HEIGHT}px"
+    bind:this={canvas}
     >
     </canvas>
 </div>
@@ -156,13 +157,8 @@ class="particles"
     ,
     particles_ON = true
     ,
-    particles_WIDTH,
-    particles_HEIGHT
-    ,
     particles_ANGLE_X = 0,
     particles_ANGLE_Y = 0
-    ,
-    particles_CONTEXT
     ,
     particles_PARTICLES
     ,
@@ -177,6 +173,13 @@ class="particles"
     particles_cancel = () => {}
 
     // --INSIDE
+    let
+    canvas
+    ,
+    canvas_CONTEXT
+    ,
+    canvas_WIDTH  = 0,
+    canvas_HEIGHT = 0
 
 
 // #\-REATIVES-\
@@ -203,6 +206,8 @@ class="particles"
     // --SET
     function particles_set()
     {
+        canvas_setVars()
+    
         particles_updateArray()
         particles_setVars()
         particles_setCommands()
@@ -213,15 +218,10 @@ class="particles"
 
     function particles_setVars()
     {
-        particles_PARENT ??= particles.parentElement
-    
-        particles.width  = (particles_WIDTH  = APP.app_WIDTH)
-        particles.height = (particles_HEIGHT = APP.app_HEIGHT)
+        particles_PARENT ??= particles?.parentElement
 
-        particles_ANGLE_X = Math.atan(PARTICLES_DEFAULT_MOUSE_RADIUS / particles_HEIGHT)
-        particles_ANGLE_Y = Math.atan(PARTICLES_DEFAULT_MOUSE_RADIUS / particles_WIDTH)
-
-        particles_CONTEXT = particles_CONTEXT ?? particles.getContext('2d')
+        particles_ANGLE_X = Math.atan(PARTICLES_DEFAULT_MOUSE_RADIUS / canvas_HEIGHT)
+        particles_ANGLE_Y = Math.atan(PARTICLES_DEFAULT_MOUSE_RADIUS / canvas_WIDTH)
     }
 
     function particles_setCommands() { COMMAND.command_setCommands(PARTICLES_COMMANDS) }
@@ -244,12 +244,21 @@ class="particles"
         particles_I += LENGTH
     }
 
+    function canvas_setVars()
+    {
+        canvas.width  = (canvas_WIDTH  = APP.app_WIDTH)
+        canvas.height = (canvas_HEIGHT = APP.app_HEIGHT)
+    
+        canvas_CONTEXT ??= canvas.getContext('2d')
+    }
+
     // --GET
     function particles_getDistances(x, y)
     {
         const
-        [DISTANCE_X, DISTANCE_Y] = [x - event_CLIENT_X, y - event_CLIENT_Y],
-        DISTANCE                 = Math.sqrt(DISTANCE_X ** 2 + DISTANCE_Y ** 2)
+        DISTANCE_X = x - event_CLIENT_X,
+        DISTANCE_Y = y - event_CLIENT_Y,
+        DISTANCE   = Math.sqrt(DISTANCE_X ** 2 + DISTANCE_Y ** 2)
 
         return [DISTANCE, DISTANCE_X, DISTANCE_Y]
     }
@@ -375,7 +384,11 @@ class="particles"
         particles_MOUSE_RADIUS = PARTICLES_DEFAULT_MOUSE_RADIUS
     }
 
-    async function particles_e$Resize() { if (particles instanceof HTMLElement) particles_setVars() }
+    async function particles_e$Resize()
+    {
+        canvas_setVars()
+        particles_setVars()
+    }
 
     async function particles_e$Animation()
     {
@@ -420,19 +433,19 @@ class="particles"
 
     function particles_draw(x, y, size_X, size_Y, color)
     {
-        particles_CONTEXT.fillStyle = color
-        particles_CONTEXT.fillRect(x, y, size_X, size_Y)
-        particles_CONTEXT.fill()
+        canvas_CONTEXT.fillStyle = color
+        canvas_CONTEXT.fillRect(x, y, size_X, size_Y)
+        canvas_CONTEXT.fill()
     }
 
     function particles_drawBackground()
     {
-        particles_CONTEXT.fillStyle = PARTICLES_BACKGROUND_COLOR
-        particles_CONTEXT.fillRect(0, 0, particles_WIDTH, particles_HEIGHT)
+        canvas_CONTEXT.fillStyle = PARTICLES_BACKGROUND_COLOR
+        canvas_CONTEXT.fillRect(0, 0, canvas_WIDTH, canvas_HEIGHT)
     }
     
 
-    function particles_clear() { particles_CONTEXT.clearRect(0, 0, particles_WIDTH, particles_HEIGHT) }
+    function particles_clear() { canvas_CONTEXT.clearRect(0, 0, canvas_WIDTH, canvas_HEIGHT) }
 
     function particles_moveTo(parent)
     {
