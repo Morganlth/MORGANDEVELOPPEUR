@@ -341,6 +341,8 @@ lang="scss"
     {
         @extend %scroll-bar;
 
+        will-change: scroll-position;
+
         z-index: 2; /* label & nav */
 
         overflow-y:          scroll;
