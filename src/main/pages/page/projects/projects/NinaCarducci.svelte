@@ -658,7 +658,7 @@ id="ninacarducci"
     // --DATA
 
     // --SVELTE
-    import { onMount } from 'svelte'
+    import { onMount, onDestroy } from 'svelte'
 
     // --LIB
     import BREAKPOINTS         from '$lib/breakpoints'
@@ -738,7 +738,7 @@ id="ninacarducci"
 //=======@LIFE|
 
     // --SVELTE
-    onMount(ninacarducci_set)
+    onMount(ninacarducci_set), onDestroy(ninacarducci_destroy)
 
     // --SET
     function ninacarducci_set()
@@ -853,6 +853,8 @@ id="ninacarducci"
     }
 
     // --DESTROY
+    function ninacarducci_destroy() { slider_destroyInterval() }
+
     function slider_destroyInterval() { clearInterval(slider_INTERVAL) }
 
 
