@@ -347,6 +347,8 @@ lang="scss"
 
             overflow: clip auto;
 
+            min-width: max(10vw, 10vh);
+
             box-sizing: border-box;
 
             transition: width $transition-duration;
