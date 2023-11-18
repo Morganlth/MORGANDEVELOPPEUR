@@ -318,7 +318,7 @@ lang="scss"
         $gap-border:         1rem;
         $gap-center-element: 14%;
  
-        @include font.text($line-height: 1.2);
+        @include font.text($font-size: map.get(font.$font-sizes, s3), $line-height: 1.2);
 
         @extend %f-column;
 
@@ -363,8 +363,6 @@ lang="scss"
         @include media.min($ms4, $ms4)
         {
             @include display.grid($width: (auto 1fr), $height: (auto 1fr auto));
-
-            font-size: map.get(font.$font-sizes, s3);
 
             .void
             {
