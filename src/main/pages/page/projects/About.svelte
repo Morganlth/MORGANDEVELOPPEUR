@@ -317,10 +317,14 @@ lang="scss"
     {
         $gap-border:         1rem;
         $gap-center-element: 14%;
+
+        &, .global, .this { @extend %scroll-bar; }
  
         @include font.text($font-size: map.get(font.$font-sizes, s3), $line-height: 1.2);
 
         @extend %f-column;
+
+        overflow: clip auto;
 
         padding: 6rem app.$gap-inline;
 
@@ -330,19 +334,12 @@ lang="scss"
 
         .void, .global, .this { isolation: isolate; }
 
-        .void
-        {
-            min-height: 4vh;
-        }
+        .void { min-height: 4vh; }
 
         .global, .this
         {
-            @extend %scroll-bar;
-
-            overflow: clip auto;
-
             min-width: max(10vw, 10vh);
-
+    
             box-sizing: border-box;
         }
 
@@ -364,6 +361,8 @@ lang="scss"
         {
             @include display.grid($width: (auto 1fr), $height: (auto 1fr auto));
 
+            overflow-y: clip;
+
             .void
             {
                 grid-column: 1 / 4; 
@@ -376,6 +375,8 @@ lang="scss"
             .global, .this
             {
                 grid-row: 2 / 3;
+
+                overflow: clip auto;
 
                 transition: width $transition-duration;
             }
