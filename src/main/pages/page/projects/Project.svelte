@@ -363,8 +363,6 @@ lang="scss"
         overscroll-behavior: none;
 
         max-height: 100svh;
-
-        pointer-events: auto;
     }
 
     .content

@@ -349,6 +349,8 @@ lang="scss"
 
             min-width: max(10vw, 10vh);
 
+            pointer-events: auto;
+
             box-sizing: border-box;
 
             transition: width $transition-duration;
