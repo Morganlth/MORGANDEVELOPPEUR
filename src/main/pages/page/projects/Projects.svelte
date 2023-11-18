@@ -342,7 +342,9 @@ lang="scss"
 
     .project
     {
-        @include utils.placement(absolute, $top: 100svh, $right: 0, $left: 0, $z: 1);
+        @include utils.placement(relative, $top: 100vh, $z: 1);
+
+        top: 100svh;
 
         width:  100%;
         height: fit-content;
