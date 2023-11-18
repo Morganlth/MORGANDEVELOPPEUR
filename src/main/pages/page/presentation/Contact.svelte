@@ -394,7 +394,7 @@ lang="scss"
 
         #{--cell-size}: $height;
     
-        @include display.grid($width: ($height 1fr $height), $height: ($height 1fr));
+        @include display.grid($width: (1fr $height), $height: ($height 1fr));
         @include font.text($color: $light);
 
         flex: 1;
@@ -418,13 +418,11 @@ lang="scss"
             &::placeholder { color: $intermediate; }
         }
 
-        input { grid-column: 1 / 3; }
-
         textarea
         {
             @extend %scroll-bar;
     
-            grid-column: 2 / 4;
+            grid-column: 1 / 3;
         }
     }
 
