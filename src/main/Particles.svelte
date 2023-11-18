@@ -26,11 +26,16 @@ context="module"
 
 <!-- #|-HTML-| -->
 
-<canvas
+<div
 class="particles"
-bind:this={particles}
 >
-</canvas>
+    <canvas
+    style:width={particles_WIDTH}
+    style:height={particles_HEIGHT}
+    bind:this={particles}
+    >
+    </canvas>
+</div>
 
 
 <!-- #|-SCRIPT-| -->
@@ -468,6 +473,8 @@ lang="scss"
 .particles
 {
     @extend %sticky;
+
+    overflow: clip;
 
     pointer-events: none;
 }
