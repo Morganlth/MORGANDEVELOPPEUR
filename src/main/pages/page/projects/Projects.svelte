@@ -330,7 +330,10 @@ lang="scss"
 
         z-index: 2; /* label & nav */
 
-        overflow-y: scroll;
+        overflow-y:          scroll;
+        overscroll-behavior: none;
+
+        max-height: 100svh;
 
         pointer-events: auto;
     }
