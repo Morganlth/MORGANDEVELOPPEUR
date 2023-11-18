@@ -336,6 +336,8 @@ lang="scss"
         max-height: 100svh;
 
         pointer-events: auto;
+
+        background-color: gray;
     }
 
     .project
