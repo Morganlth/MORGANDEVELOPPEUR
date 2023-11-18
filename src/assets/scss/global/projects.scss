@@ -39,8 +39,6 @@
 
 .projects
 {
-    .particles { z-index: -1; }
-
     .group { @include utils.fixed; }
 
     .tag

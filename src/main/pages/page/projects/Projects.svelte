@@ -36,15 +36,6 @@ bind:this={projects}
         <About
         prop_CONTENT={[prop_ABOUT, (projects_TARGET.about ?? [])]}
         />
-
-        <div
-        class="project"
-        >
-            <svelte:component
-            this={projects_TARGET.component}
-            prop_DATAS={projects_TARGET.datas}
-            />
-        </div>
     {/if}
 
     <Group
@@ -73,6 +64,17 @@ bind:this={projects}
     <Mask2
     prop_DESTROY={!projects_TARGET}
     />
+
+    {#if projects_TARGET}
+        <div
+        class="project"
+        >
+            <svelte:component
+            this={projects_TARGET.component}
+            prop_DATAS={projects_TARGET.datas}
+            />
+        </div>
+    {/if}
 </div>
 
 
@@ -85,7 +87,7 @@ bind:this={projects}
     // --DATA
 
     // --SVELTE
-    import { onMount } from 'svelte'
+    import { onMount, onDestroy, tick } from 'svelte'
 
     // --LIB
 
@@ -178,7 +180,7 @@ bind:this={projects}
 //=======@LIFE|
 
     // --SVELTE
-    onMount(projects_set)
+    onMount(projects_set), onDestroy(projects_destroy)
 
     // --SET
     function projects_set()
@@ -239,11 +241,22 @@ bind:this={projects}
         }
     }
 
-    function projects_updateParticles() { (particles ??= document.querySelector('.particles'))?.moveTo(projects_TARGET ? projects : null) }
+    async function projects_updateParticles()
+    {
+        await tick() // set about and project
+
+        ;(particles ??= document.querySelector('.particles'))?.moveTo(projects_TARGET ? projects : null)
+    }
 
     function card_updateCardHover(id) { card_HOVER = id }
 
     // --DESTROY
+    function projects_destroy()
+    {
+        projects_TARGET = null
+
+        projects_updateParticles()
+    }
 
 
 //=======@COMMANDS|
@@ -336,20 +349,16 @@ lang="scss"
         max-height: 100svh;
 
         pointer-events: auto;
-
-        background-color: gray;
     }
 
     .project
     {
-        @include utils.placement(relative, $top: 100vh, $z: 1);
+        @include utils.placement(relative, $top: 100vh);
 
         top: 100svh;
 
         width:  100%;
         height: fit-content;
-
-        background-color: crimson;
     }
 }
 
