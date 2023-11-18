@@ -374,7 +374,12 @@ on:touchend={card_eTouchEnd}
         card_GRABBING = true
     }
 
-    function card_eTouchStart() { card_setEvents2() }
+    function card_eTouchStart()
+    {
+        card_setEvents2()
+
+        card_dispatchMouseAndTouch(...EVENT.event_CLIENT_XY)
+    }
 
     function card_eTouchEnd()   { card_destroyEvents2() }
 
