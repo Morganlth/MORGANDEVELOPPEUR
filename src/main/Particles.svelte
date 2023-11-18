@@ -83,7 +83,7 @@ bind:this={particles}
     // --THIS
     const
     PARTICLES_COLORS           = [COLORS.indicator, COLORS.primary, COLORS.light],
-    PARTICLES_BACKGROUND_COLOR = color_rgba(COLORS.dark, .2)
+    PARTICLES_BACKGROUND_COLOR = color_rgba(COLORS.dark, .24)
     ,
     PARTICLES_MAX                  = 20,
     PARTICLES_DEFAULT_MOUSE_RADIUS = 100,

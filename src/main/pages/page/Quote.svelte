@@ -205,8 +205,6 @@ lang="scss"
         transition: clip-path .4s ease-in;
     }
 
-    blockquote, q { background-color: $dark; }
-
     figcaption { margin-top: 1rem; }
 
     q::before, q::after { content: '' }
