@@ -41,16 +41,15 @@ class Event
     
     #event_MANAGER =
     {
-        scroll: [],
+        scroll   : [],
         mouseMove: [],
         mouseDown: [],
-        mouseUp: [],
-        resize: [],
+        mouseUp  : [],
+        resize   : [],
         touchMove: [],
         animation: []
     }
     #event_FRAMES  = {}
-    #event_HISTORY = []
 
     #event_ANIMATION
 
@@ -195,12 +194,7 @@ class Event
         {
             const E = events[CATEGORY]
 
-            if (this.event_contain(CATEGORY, E) === -1)
-            {
-                this.#event_MANAGER[CATEGORY].push(E)
-    
-                this.#event_HISTORY.push(`++ADD:    ${E.callback_NAME ?? E.name}`)
-            }
+            if (this.event_contain(CATEGORY, E) === -1) this.#event_MANAGER[CATEGORY].push(E)
         }
     }
 
@@ -210,14 +204,7 @@ class Event
         {
             const INDEX = this.event_contain(CATEGORY, events[CATEGORY])
 
-            if (~INDEX)
-            {
-                const E = events[CATEGORY]
-        
-                this.#event_MANAGER[CATEGORY].splice(INDEX, 1)
-
-                this.#event_HISTORY.push(`--REMOVE: ${E.callback_NAME ?? E.name}`)
-            }
+            if (~INDEX) this.#event_MANAGER[CATEGORY].splice(INDEX, 1)
         }
     }
 
