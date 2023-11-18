@@ -69,6 +69,8 @@
     /* --* */
     %scroll-bar
     {
+        overscroll-behavior: none;
+    
         &::-webkit-scrollbar, &::-webkit-scrollbar-thumb { pointer-events: auto !important; }
     
         &::-webkit-scrollbar { width: $scroll-bar-width; }

@@ -268,8 +268,7 @@ lang="scss"
 
     @extend %scroll-bar;
 
-    overflow:            clip scroll;
-    overscroll-behavior: none;
+    overflow: clip scroll;
 
     touch-action: none;
 
