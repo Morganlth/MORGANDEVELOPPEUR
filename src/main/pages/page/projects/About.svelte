@@ -182,7 +182,7 @@ transition:transition_fade={{ duration: 200 }}
         canvas_a()
     }
 
-    function about_setVars() { about_TRANSITION_DURATION = navigator.userAgent.match(/(Chrome|Safari|Edg)/i) ? 100 : 0 }
+    function about_setVars() { about_TRANSITION_DURATION = navigator.userAgent.match(/(Chrome|Safari|Edg)/i) ? 200 : 0 }
 
     function canvas_setVars()
     {
