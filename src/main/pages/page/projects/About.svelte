@@ -296,6 +296,7 @@ lang="scss"
     @use '../../../../assets/scss/styles/font';
 
     /* --MEDIA */
+    @use '../../../../assets/scss/styles/media';
 
 
 /* #\-VARIABLES-\ */
@@ -317,8 +318,9 @@ lang="scss"
         $gap-border:         1rem;
         $gap-center-element: 14%;
  
-        @include display.grid($width: (auto 1fr), $height: (auto 1fr auto));
         @include font.text($line-height: 1.4);
+
+        @extend %f-column;
 
         padding: 6rem app.$gap-inline;
 
@@ -330,32 +332,22 @@ lang="scss"
 
         .void
         {
-            grid-column: 1 / 4; 
-
-            height: var(--y, $gap-center-element);
-
-            transition: height $transition-duration;
+            min-height: 4vh;
         }
 
         .global, .this
         {
             @extend %scroll-bar;
 
-            grid-row: 2 / 3;
-
             overflow: clip auto;
 
             min-width: max(10vw, 10vh);
 
             box-sizing: border-box;
-
-            transition: width $transition-duration;
         }
 
         .global
         {
-            width: var(--x, 50vw);
-
             padding-inline: $gap-border $gap-center-element;
 
             color: $light;
@@ -363,13 +355,39 @@ lang="scss"
     
         .this
         {
-            grid-column: 3 / 4;
-        
-            width: calc(100vw - var(--x, 50vw) - var(--w, 0));
-
             padding-inline: $gap-center-element $gap-border;
 
             color: $primary;
+        }
+
+        @include media.min($ms4, $ms4)
+        {
+            @include display.grid($width: (auto 1fr), $height: (auto 1fr auto));
+
+            .void
+            {
+                grid-column: 1 / 4; 
+
+                height: var(--y, $gap-center-element);
+
+                transition: height $transition-duration;
+            }
+
+            .global, .this
+            {
+                grid-row: 2 / 3;
+
+                transition: width $transition-duration;
+            }
+
+            .global { width: var(--x, 50vw); }
+
+            .this
+            {
+                grid-column: 3 / 4;
+
+                width: calc(100vw - var(--x, 50vw) - var(--w, 0));
+            }
         }
     }
 
