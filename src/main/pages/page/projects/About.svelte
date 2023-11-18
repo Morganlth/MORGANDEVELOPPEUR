@@ -37,7 +37,6 @@ transition:transition_fade={{ duration: 200 }}
     style:--x="{prop_X}px"
     style:--y="{prop_Y}px"
     style:--w="{prop_W}px"
-    style:--h="{prop_H}px"
     >
         <div
         class="void"
@@ -102,8 +101,7 @@ transition:transition_fade={{ duration: 200 }}
     ,
     prop_X = 0,
     prop_Y = 0,
-    prop_W = 0,
-    prop_H = 0
+    prop_W = 0
 
     // --BINDING
 
@@ -317,7 +315,7 @@ lang="scss"
     .content
     {
         $gap-border:         1rem;
-        $gap-center-element: 18%;
+        $gap-center-element: 14%;
  
         @include display.grid($width: (auto 1fr), $height: (auto 1fr auto));
         @include font.text($line-height: 1.4);
@@ -334,7 +332,7 @@ lang="scss"
         {
             grid-column: 1 / 4; 
 
-            height: var(--y);
+            height: var(--y, $gap-center-element);
 
             transition: height $transition-duration;
         }
@@ -356,7 +354,7 @@ lang="scss"
 
         .global
         {
-            width: var(--x);
+            width: var(--x, 50vw);
 
             padding-inline: $gap-border $gap-center-element;
 
@@ -367,7 +365,7 @@ lang="scss"
         {
             grid-column: 3 / 4;
         
-            width: calc(100vw - var(--x) - var(--w));
+            width: calc(100vw - var(--x, 50vw) - var(--w, 0));
 
             padding-inline: $gap-center-element $gap-border;
 

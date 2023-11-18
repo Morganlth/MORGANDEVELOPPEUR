@@ -49,7 +49,6 @@ bind:this={project}
         prop_X={card_TRANSLATE_X}
         prop_Y={card_TRANSLATE_Y}
         prop_W={card_HALF_WIDTH  * 2}
-        prop_H={card_HALF_HEIGHT * 2}
         />
     {/if}
 
@@ -64,7 +63,6 @@ bind:this={project}
     bind:card_TRANSLATE_X
     bind:card_TRANSLATE_Y
     bind:card_HALF_WIDTH
-    bind:card_HALF_HEIGHT
     on:mouseandtouchmove={card_eMouseAndTouchMove}
     on:mouseenter={card_eMouseEnter}
     on:mouseleave={card_eMouseLeave}
@@ -180,8 +178,7 @@ bind:this={project}
     card_TRANSLATE_X = 0,
     card_TRANSLATE_Y = 0
     ,
-    card_HALF_WIDTH  = 0,
-    card_HALF_HEIGHT = 0
+    card_HALF_WIDTH  = 0
 
 
 // #\-REATIVES-\
