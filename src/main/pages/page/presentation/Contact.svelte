@@ -323,7 +323,6 @@ lang="scss"
 /* #\-VARIABLES-\ */
 
     /* --* */
-    $color: rgba($primary, .4);
 
 
 /* #\-THIS-\ */
@@ -338,20 +337,17 @@ lang="scss"
 
     background-color: $dark;
 
-    section>div, form { gap: 1rem; }
-
     section h3, form input, form textarea { animation: a-intro .4s forwards; }
 
     section
     {
-        @include utils.absolute-center();
+        @include utils.absolute-center;
     
         @extend %f-column;
-        @extend %a-hue-30;
 
-        gap: 1.8rem;
+        gap: 2.4rem;
 
-        min-width:  48vw;
+        min-width:  46vw;
         width:      100%;
         max-width:  calc(100vw - app.$gap-inline * 2);
         min-height: 52vh;
@@ -364,6 +360,7 @@ lang="scss"
             display:     flex;
             align-items: flex-end;
             flex-wrap:   wrap;
+            gap:         4rem;
         }
 
         h3
@@ -397,10 +394,11 @@ lang="scss"
 
         #{--cell-size}: $height;
     
-        @include display.grid($width: (1fr $height), $height: ($height 1fr));
+        @include display.grid($width: ($height 1fr $height), $height: ($height 1fr));
         @include font.text($color: $light);
 
         flex: 1;
+        gap:  1.2rem;
 
         input, textarea
         {
@@ -408,37 +406,25 @@ lang="scss"
 
             clip-path: polygon(100% 0, 100% 0, 100% 0, 100% 0);
     
-            border: solid $color 1px;
+            border: solid $intermediate 2px;
 
             color: inherit;
             font:  inherit;
 
             box-sizing: border-box;
 
-            &.valid
-            {
-                border-color: $primary;
-                border-block-width: 2px;
-            }
+            &.valid { border-color: $primary; }
 
-            &::placeholder { color: $color; }
+            &::placeholder { color: $intermediate; }
         }
 
-        input:-internal-autofill-selected
-        {
-            appearance: initial;
-
-            background-color: transparent !important;
-
-            color: $color !important;
-        }
+        input { grid-column: 1 / 3; }
 
         textarea
         {
             @extend %scroll-bar;
     
-            grid-column: 1 / 3;
-            grid-row:    2;
+            grid-column: 2 / 4;
         }
     }
 

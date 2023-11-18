@@ -286,8 +286,6 @@ lang="scss"
 
     transition: transform .4s ease-out;
 
-    &.focus { @extend %a-hue-30; }
-
     .container
     {
         $height: 30vh;
