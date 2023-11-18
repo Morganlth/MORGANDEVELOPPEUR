@@ -317,7 +317,7 @@ lang="scss"
     .content
     {
         $gap-border:         1rem;
-        $gap-center-element: 14%;
+        $gap-center-element: 18%;
  
         @include display.grid($width: (auto 1fr), $height: (auto 1fr auto));
         @include font.text($line-height: 1.4);
