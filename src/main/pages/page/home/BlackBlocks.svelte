@@ -895,7 +895,11 @@ lang="scss"
 
 .blackblocks
 {
-    @include utils.placement(absolute, $top: 0, $left: 0);
+    @include utils.placement(absolute, 0, 0, 0, 0);
+
+    @extend %any-size;
+
+    overflow: clip;
 
     &.hide { visibility: hidden; }
 }

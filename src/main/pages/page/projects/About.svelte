@@ -58,6 +58,7 @@ transition:transition_fade={{ duration: 200 }}
 
     <canvas
     class="canvas"
+    style:opacity={canvas_OPACITY}
     bind:this={canvas}
     >
     </canvas>
@@ -146,6 +147,8 @@ transition:transition_fade={{ duration: 200 }}
     canvas_ROWS    = 0
     ,
     canvas_MATRIX
+    ,
+    canvas_OPACITY = 1
     ,
     canvas_TIMEOUT
 
@@ -259,7 +262,7 @@ transition:transition_fade={{ duration: 200 }}
             }
         }
 
-        if (++n < 10) canvas_TIMEOUT = setTimeout(() => canvas_a(n), CANVAS_DELAY)
+        ++n < 10 ? canvas_TIMEOUT = setTimeout(() => canvas_a(n), CANVAS_DELAY) : canvas_OPACITY = 0
     }
 
 
@@ -392,7 +395,12 @@ lang="scss"
         }
     }
 
-    .canvas { pointer-events: none; }
+    .canvas
+    {
+        pointer-events: none;
+
+        transition: opacity .2s;
+    }
 }
 
 
