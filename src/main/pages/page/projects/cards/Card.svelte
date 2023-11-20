@@ -528,7 +528,7 @@ lang="scss"
     contain:   layout size;
     isolation: isolate;
 
-    aspect-ratio: $width / $height;
+    aspect-ratio: #{$width} / #{$height};
 
     width:  $size;
     height: calc($size * $card-ratio);
