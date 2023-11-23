@@ -33,7 +33,7 @@ style:--tag-x="{tag_TRANSLATE_X}px"
 style:--tag-y="{tag_TRANSLATE_Y}px"
 bind:this={project}
 >
-    <!-- <Tag
+    <Tag
     prop_FOCUS={prop_FOCUS && (tag_FOCUS || prop_TARGET)}
     prop_CONTENT={prop_PROJECT.title}
     prop_DURATION={TAG_DURATION}
@@ -42,6 +42,7 @@ bind:this={project}
     on:out={tag_eOut}
     />
 
+    <!--
     {#if prop_TARGET}
         <About
         prop_GLOBAL={prop_ABOUT_GLOBAL}
@@ -367,11 +368,7 @@ lang="scss"
 
     .content
     {
-        @include utils.placement(absolute, $top: 100vh, $left: 0, $right: 0);
-
-        top: 100svh;
-
-        /* position: relative; */
+        position: relative;
 
         width:  100%;
         height: fit-content;
