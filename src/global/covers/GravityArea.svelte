@@ -533,16 +533,14 @@ lang="scss"
     {
         @include utils.placement(absolute, $pe: true);
 
-        transform: scale(0);
+        @extend %full-screen;
 
-        width:  100vw;
-        height: 100vh;
-        height: 100svh;
+        transform: scale(0);
     }
 
     @extend %f-center;
 
-    contain: layout size;
+    contain:   layout size;
     isolation: isolate;
 
     position: absolute;
@@ -553,6 +551,7 @@ lang="scss"
     height: $size;
 
     pointer-events: auto;
+    touch-action:   none;
 
     border-radius: 50%;
 
