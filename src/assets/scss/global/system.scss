@@ -50,22 +50,16 @@
         @extend %any-size;
     }
 
-    // overflow: clip;
-
     .group, .cell { transition: transform .4s; }
 
     .group
     {
         @extend %f-center;
 
-        isolation: isolate;
-
         perspective: var(--system-perspective, 1000px);
 
         transform-style: preserve-3d;
         transform:       rotate3d($r-x, $r-y, 0, .016rad);
-
-        // overflow: hidden;
     }
 
     .cell
