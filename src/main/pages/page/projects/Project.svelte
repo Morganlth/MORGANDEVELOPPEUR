@@ -30,23 +30,22 @@ context="module"
 class="project"
 class:scroller={prop_TARGET}
 style:--tag-x="{tag_TRANSLATE_X}px"
-style:--tag-y="{tag_TRANSLATE_Y + project_SCROLL_TOP}px"
+style:--tag-y="{tag_TRANSLATE_Y}px"
 bind:this={project}
-on:scroll={project_eScroll}
 >
-    <Tag
-    prop_FOCUS={prop_FOCUS && (tag_FOCUS || prop_TARGET)}
-    prop_CONTENT={prop_PROJECT.title}
-    prop_DURATION={TAG_DURATION}
-    prop_getFragmentsStyle={fragments_getStyle}
-    on:in={tag_eIn}
-    on:out={tag_eOut}
-    />
-
     <div
     class="head"
     bind:this={head}
     >
+        <Tag
+        prop_FOCUS={prop_FOCUS && (tag_FOCUS || prop_TARGET)}
+        prop_CONTENT={prop_PROJECT.title}
+        prop_DURATION={TAG_DURATION}
+        prop_getFragmentsStyle={fragments_getStyle}
+        on:in={tag_eIn}
+        on:out={tag_eOut}
+        />
+    
         {#if prop_TARGET}
             <About
             prop_GLOBAL={prop_ABOUT_GLOBAL}
@@ -106,7 +105,7 @@ on:scroll={project_eScroll}
     // --DATA
 
     // --SVELTE
-    import { onMount, onDestroy, createEventDispatcher, tick } from 'svelte'
+    import { onMount, onDestroy, createEventDispatcher } from 'svelte'
 
     // --LIB
     import { wait_throttle, wait_getDelay } from '$lib/wait'
@@ -170,10 +169,7 @@ on:scroll={project_eScroll}
     let particles
 
     // --THIS
-    let
-    project
-    ,
-    project_SCROLL_TOP = 0
+    let project
 
     // --INSIDE
     let head
@@ -238,12 +234,7 @@ on:scroll={project_eScroll}
     }
 
     // --UPDATES
-    async function particles_update(target)
-    {
-        if (target) await tick() // wait about load
-    
-        ;(particles ??= document.querySelector('.particles'))?.moveTo(target ? head : null)
-    }
+    async function particles_update(target) { (particles ??= document.querySelector('.particles'))?.moveTo(target ? head : null) }
 
     function project_update(target)
     {
@@ -286,8 +277,6 @@ on:scroll={project_eScroll}
 //=======@EVENTS|
 
     // --*
-    const project_eScroll = wait_throttle(async function project_eScroll() { project_SCROLL_TOP = project.scrollTop }, 2, 4) // +- 30ms - 70ms
-
     async function card_eMouseAndTouchMove({ detail: {x, y} }) { tag_updateTranslate(x, y) }
 
     function card_eMouseEnter({detail})
@@ -384,13 +373,13 @@ lang="scss"
         max-height: 100svh;
 
         pointer-events: auto;
-    }
 
-    .head
-    {
-        @extend %sticky;
+        .head
+        {
+            @extend %sticky;
 
-        transform-style: flat;
+            transform-style: flat;
+        }
     }
 
     .content
