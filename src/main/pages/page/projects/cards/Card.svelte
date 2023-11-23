@@ -250,7 +250,6 @@ bind:this={card}
     }
 
     function card_setEvents()  { EVENT.event_add(CARD_EVENTS) }
-
     function card_setEvents2() { EVENT.event_add(CARD_EVENTS_2) }
 
     function card_setTransition(value) { card_TRANSITION_DURATION = value }
@@ -308,7 +307,6 @@ bind:this={card}
     function card_destroyTimeout() { clearTimeout(card_TIMEOUT) }
 
     function card_destroyEvents()  { EVENT.event_remove(CARD_EVENTS) }
-
     function card_destroyEvents2() { EVENT.event_remove(CARD_EVENTS_2) }
 
 
@@ -380,7 +378,7 @@ bind:this={card}
         card_dispatchMouseAndTouch(...EVENT.event_CLIENT_XY)
     }
 
-    function card_eTouchEnd()   { card_destroyEvents2() }
+    function card_eTouchEnd() { card_destroyEvents2() }
 
 
 //=======@TRANSITIONS|

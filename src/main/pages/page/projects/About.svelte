@@ -39,8 +39,21 @@ transition:transition_fade={{ duration: 200 }}
     style:--w="{prop_W}px"
     >
         <div
-        class="void"
+        class="sup"
         >
+            <Cell
+            prop_FOCUS={true}
+            prop_ICON_WRAPPER={true}
+            prop_CENTER={true}
+            prop_TITLE="fermer"
+            on:click={cell_eClick}
+            >
+                <Icon
+                prop_COLOR={COLORS.light}
+                >
+                    <Cross />
+                </Icon>
+            </Cell>
         </div>
 
         <p
@@ -74,7 +87,7 @@ transition:transition_fade={{ duration: 200 }}
     // --DATA
 
     // --SVELTE
-    import { onDestroy, onMount } from 'svelte'
+    import { onDestroy, onMount, createEventDispatcher } from 'svelte'
 
     // --LIB
     import COLORS              from '$lib/colors'
@@ -86,6 +99,10 @@ transition:transition_fade={{ duration: 200 }}
 //=======@COMPONENTS|
 
     // --*
+    import Cell from '../../../../global/covers/Cell.svelte'
+    import Icon from '../../../../global/covers/Icon.svelte'
+
+    import Cross from '../../../../global/icons/Cross.svelte'
     
 //=======@STYLE|
 
@@ -96,6 +113,8 @@ transition:transition_fade={{ duration: 200 }}
 
     // --PROPS
     export let
+    prop_ID = 0
+    ,
     prop_GLOBAL = void '',
     prop_THIS   = void ''
     ,
@@ -109,6 +128,7 @@ transition:transition_fade={{ duration: 200 }}
 // #\-CONSTANTES-\
 
     // --SVELTE
+    const SVELTE_DISPATCH = createEventDispatcher()
 
     // --CONTEXTS
 
@@ -221,6 +241,7 @@ transition:transition_fade={{ duration: 200 }}
 //=======@EVENTS|
 
     // --*
+    function cell_eClick() { SVELTE_DISPATCH('click', { id: prop_ID })}
 
 
 //=======@TRANSITIONS|
@@ -299,7 +320,7 @@ lang="scss"
 
     &, .canvas { @include utils.placement(absolute, 0, 0, 0, 0); }
 
-    padding: 6rem app.$gap-inline;
+    padding: 8rem app.$gap-inline;
 
     box-sizing: border-box;
 
@@ -320,9 +341,14 @@ lang="scss"
 
         text-align: justify;
 
-        .void, .global, .this { isolation: isolate; }
+        .sup, .global, .this { isolation: isolate; }
 
-        .void { min-height: 4vh; }
+        .sup
+        {
+            #{--cell-size}: map.get(font.$font-sizes, s4);
+        
+            min-height: var(--cell-size, fit-content);
+        }
 
         .global, .this
         {
@@ -351,7 +377,7 @@ lang="scss"
         
             overflow-y: clip;
 
-            .void
+            .sup
             {
                 grid-column: 1 / 4; 
 

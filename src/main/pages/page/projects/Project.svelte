@@ -48,11 +48,13 @@ bind:this={project}
     
         {#if prop_TARGET}
             <About
+            prop_ID={prop_PROJECT.id}
             prop_GLOBAL={prop_ABOUT_GLOBAL}
             prop_THIS={prop_PROJECT.about}
             prop_X={card_TRANSLATE_X}
             prop_Y={card_TRANSLATE_Y}
             prop_W={card_HALF_WIDTH  * 2}
+            on:click
             />
         {/if}
 
