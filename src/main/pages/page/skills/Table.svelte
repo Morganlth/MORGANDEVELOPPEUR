@@ -177,6 +177,7 @@ on:outrostart={table_eOut}
     function table_set()
     {
         table_setVars()
+        return
         table_setParticles()
     }
 
@@ -303,7 +304,7 @@ lang="scss"
         @extend %any-size;
     }
 
-    .background { background-color: $dark; }
+    .background { background-color: crimson; }
 
     .head, .line { width: 100%; }
 
