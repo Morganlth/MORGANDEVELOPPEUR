@@ -50,8 +50,6 @@
         @extend %any-size;
     }
 
-@extend %f-center;
-
     .group, .cell { transition: transform .4s; }
 
     .group
@@ -65,7 +63,7 @@
         transform-style: preserve-3d;
         transform:       rotate3d($r-x, $r-y, 0, .016rad);
 
-        overflow: clip;
+        overflow: hidden;
     }
 
     .cell
