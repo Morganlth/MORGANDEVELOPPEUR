@@ -33,51 +33,56 @@ style:--tag-x="{tag_TRANSLATE_X}px"
 style:--tag-y="{tag_TRANSLATE_Y}px"
 bind:this={project}
 >
-    <Tag
-    prop_FOCUS={prop_FOCUS && (tag_FOCUS || prop_TARGET)}
-    prop_CONTENT={prop_PROJECT.title}
-    prop_DURATION={TAG_DURATION}
-    prop_getFragmentsStyle={fragments_getStyle}
-    on:in={tag_eIn}
-    on:out={tag_eOut}
-    />
-
-    {#if prop_TARGET}
-        <About
-        prop_GLOBAL={prop_ABOUT_GLOBAL}
-        prop_THIS={prop_PROJECT.about}
-        prop_X={card_TRANSLATE_X}
-        prop_Y={card_TRANSLATE_Y}
-        prop_W={card_HALF_WIDTH  * 2}
+    <!-- <div
+    class="head"
+    > -->
+        <Tag
+        prop_FOCUS={prop_FOCUS && (tag_FOCUS || prop_TARGET)}
+        prop_CONTENT={prop_PROJECT.title}
+        prop_DURATION={TAG_DURATION}
+        prop_getFragmentsStyle={fragments_getStyle}
+        on:in={tag_eIn}
+        on:out={tag_eOut}
         />
-    {/if}
 
-    <!--
+        {#if prop_TARGET}
+            <About
+            prop_GLOBAL={prop_ABOUT_GLOBAL}
+            prop_THIS={prop_PROJECT.about}
+            prop_X={card_TRANSLATE_X}
+            prop_Y={card_TRANSLATE_Y}
+            prop_W={card_HALF_WIDTH  * 2}
+            />
+        {/if}
 
-    <Card
-    prop_ID={prop_PROJECT.id}
-    prop_TARGET={card$_TARGET}
-    prop_TITLE={prop_PROJECT.title}
-    prop_COLOR={prop_PROJECT.color}
-    {prop__$RESIZE}
-    {prop__CARD_HOVER}
-    {prop_FOCUS}
-    bind:card_TRANSLATE_X
-    bind:card_TRANSLATE_Y
-    bind:card_HALF_WIDTH
-    on:mouseandtouchmove={card_eMouseAndTouchMove}
-    on:mouseenter={card_eMouseEnter}
-    on:mouseleave={card_eMouseLeave}
-    on:click
-    >
-        <svelte:component
-        this={prop_PROJECT.cardTexture}
-        />
-    </Card>
+        <Card
+        prop_ID={prop_PROJECT.id}
+        prop_TARGET={card$_TARGET}
+        prop_TITLE={prop_PROJECT.title}
+        prop_COLOR={prop_PROJECT.color}
+        {prop__$RESIZE}
+        {prop__CARD_HOVER}
+        {prop_FOCUS}
+        bind:card_TRANSLATE_X
+        bind:card_TRANSLATE_Y
+        bind:card_HALF_WIDTH
+        on:mouseandtouchmove={card_eMouseAndTouchMove}
+        on:mouseenter={card_eMouseEnter}
+        on:mouseleave={card_eMouseLeave}
+        on:click
+        >
+            <svelte:component
+            this={prop_PROJECT.cardTexture}
+            />
+        </Card>
 
-    <Mask2
-    prop_DESTROY={!prop_TARGET}
-    /> -->
+        <!--
+
+        <Mask2
+        prop_DESTROY={!prop_TARGET}
+        /> -->
+    <!-- </div> -->
+    
 
     {#if prop_TARGET}
         <div
