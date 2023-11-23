@@ -50,13 +50,15 @@
         @extend %any-size;
     }
 
+    // overflow: clip;
+
     .group, .cell { transition: transform .4s; }
 
     .group
     {
         @extend %f-center;
 
-        // isolation: isolate;
+        isolation: isolate;
 
         perspective: var(--system-perspective, 1000px);
 
