@@ -326,11 +326,11 @@ bind:this={card}
 
     function card_e$MouseUp()
     {
+        app_updateFreeze(false)
+
         if (+new Date() < card_LAST + CARD_DELAY) card_eClick()
 
         card_destroyEvents()
-
-        app_updateFreeze(false)
         
         card_GRABBING = false
     }

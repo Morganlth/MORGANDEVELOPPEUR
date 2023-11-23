@@ -37,6 +37,10 @@ bind:this={project}
     class="head"
     bind:this={head}
     >
+        <Mask2
+        prop_DESTROY={!prop_TARGET}
+        />
+
         <Tag
         prop_FOCUS={prop_FOCUS && (tag_FOCUS || prop_TARGET)}
         prop_CONTENT={prop_PROJECT.title}
@@ -78,10 +82,6 @@ bind:this={project}
             this={prop_PROJECT.cardTexture}
             />
         </Card>
-
-        <Mask2
-        prop_DESTROY={!prop_TARGET}
-        />
     </div>
     
 
