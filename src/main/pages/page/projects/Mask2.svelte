@@ -177,6 +177,7 @@ lang="scss"
     @use '../../../../assets/scss/styles/utils';
 
     /* --MEDIA */
+    /* @use '../../../../assets/scss/styles/media'; */
 
 
 /* #\-VARIABLES-\ */
@@ -213,6 +214,10 @@ lang="scss"
 
     /* mix-blend-mode: color-dodge; */
     opacity: .5 !important;
+
+    border: solid $light 10px;
+
+    box-sizing: border-box;
 
     transition: opacity 1s;
 
