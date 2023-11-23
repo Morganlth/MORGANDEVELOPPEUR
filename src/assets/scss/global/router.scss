@@ -24,7 +24,9 @@
 /* #\-VARIABLES-\ */
 
     /* --* */
-    $route-default-clip: polygon(-10% -10%, 110% -10%, 110% 110%, -10% 110%);
+    $route-default-clip:       polygon(-10% -10%, 110% -10%, 110% 110%, -10% 110%);
+    $route-duration:           .4s;
+    $route-default-transition: clip-path $route-duration var(--route-t-delay, 0s) ease-out;
 
 
 /* #\-MIXIN-\ */
@@ -45,14 +47,23 @@
     {
         pointer-events: none !important;
     
-        .route { clip-path: polygon(-20% 0, -20% 0, -20% 100%, -20% 100%); }
+        .route
+        {
+            opacity: 0;
+    
+            clip-path: polygon(-20% 0, -20% 0, -20% 100%, -20% 100%);
+
+            transition: $route-default-transition, opacity 0s calc($route-duration + var(--route-t-delay, 0s));
+        }
     }
 
     .route
     {
+        opacity: 1;
+
         clip-path: $route-default-clip;
 
-        transition: clip-path .4s var(--route-t-delay, 0s) ease-out;
+        transition: $route-default-transition;
     }
 
     @include media.min($ms4, $ms4)
