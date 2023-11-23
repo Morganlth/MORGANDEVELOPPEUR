@@ -574,7 +574,7 @@ lang="scss"
 
         input, textarea
         {
-            border: none;
+            border: solid #000 1px;
     
             box-shadow: 0px .4rem 1.4rem rgba(0, 0, 0, .1);
         }
@@ -651,7 +651,12 @@ lang="scss"
 
         #sophiebluel-projects .gallery { grid-template-columns: 1fr 1fr 1fr; }
 
-        #sophiebluel-contact { width: 50%; }
+        #sophiebluel-contact
+        {
+            width: 50%;
+
+            input, textarea { border: none; }
+        }
     }
 }
 
