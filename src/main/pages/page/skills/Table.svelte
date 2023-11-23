@@ -177,7 +177,6 @@ on:outrostart={table_eOut}
     function table_set()
     {
         table_setVars()
-        return
         table_setParticles()
     }
 
@@ -264,9 +263,6 @@ lang="scss"
 
 .table
 {
-    @include utils.placement(absolute, 0, 0, 0, 0, $z: 10);
-
-@extend %any-size;
     &, .lines { @extend %f-column; }
 
     gap: 1rem;
@@ -307,7 +303,7 @@ lang="scss"
         @extend %any-size;
     }
 
-    .background { background-color: crimson; }
+    .background { background-color: $dark; }
 
     .head, .line { width: 100%; }
 

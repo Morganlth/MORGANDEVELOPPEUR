@@ -38,7 +38,7 @@ style:--system-r-y={system_ROTATE_Y}
     bind:group_start
     bind:group_stop
     >
-        <Moon
+        <!-- <Moon
         {prop_FOCUS}
         />
 
@@ -72,7 +72,7 @@ style:--system-r-y={system_ROTATE_Y}
                     />
                 </GravityArea>
             {/each}
-        {/if}
+        {/if} -->
     </Group>
 
     {#each prop_SYSTEM as item}
