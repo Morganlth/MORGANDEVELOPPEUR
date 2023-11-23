@@ -264,6 +264,9 @@ lang="scss"
 
 .table
 {
+    @include utils.placement(absolute, 0, 0, 0, 0);
+
+@extend %any-size;
     &, .lines { @extend %f-column; }
 
     gap: 1rem;
