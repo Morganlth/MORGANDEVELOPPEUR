@@ -263,6 +263,15 @@ lang="scss"
 
 .table
 {
+    &::before
+    {
+        @include utils.placement(absolute, 0, 0, 0, 0, $pe: true);
+
+        @extend %any-size;
+
+        background-color: $dark;
+    }
+
     &, .lines { @extend %f-column; }
 
     gap: 1rem;
