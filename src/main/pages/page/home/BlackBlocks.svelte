@@ -150,7 +150,7 @@ bind:this={blackblocks}
         projectedTexture      : { value: '' },
         widthScaled           : { value: 0 },
         heightScaled          : { value: 0 },
-        textureOffset         : { value: new Vector2(-.18, 0) }
+        textureOffset         : { value: new Vector2(-.19, -.02) }
     }
     ,
     BLACKBLOCKS_COMMANDS =
