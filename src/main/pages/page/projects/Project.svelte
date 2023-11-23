@@ -37,7 +37,7 @@ bind:this={project}
     prop_FOCUS={prop_FOCUS && (tag_FOCUS || prop_TARGET)}
     prop_CONTENT={prop_PROJECT.title}
     prop_DURATION={TAG_DURATION}
-    prop_STYLE={{ tag_style: () => '', fragments_style }}
+    prop_getFragmentsStyle={fragments_getStyle}
     on:in={tag_eIn}
     on:out={tag_eOut}
     />
@@ -213,6 +213,18 @@ bind:this={project}
     // --GET
     function tag_getTransform(x, y, scale) { return `translate(${x}, ${y}) scale(${scale})` }
 
+    function fragments_getStyle()
+    {
+        const
+        TRANSFORM = tag_getTransform(`calc(var(--tag-x, ${tag_TRANSLATE_X}px) - 200%)`, `calc(var(--tag-y, ${tag_TRANSLATE_Y}px) - 100%)`, 0),
+        DURATION  = Math.random() * TAG_DURATION + TAG_DURATION + 'ms'
+    
+        return `
+        --frag-duration: ${DURATION};
+        transform: ${TRANSFORM};
+        transition: transform var(--frag-duration, ${DURATION}) ease-out;`
+    }
+
     // --UPDATES
     function particles_update(target) { (particles ??= document.querySelector('.particles'))?.moveTo(target ? project : null) }
 
@@ -301,17 +313,6 @@ bind:this={project}
 //=======@UTILS|
 
     // --*
-    function fragments_style()
-    {
-        const
-        TRANSFORM = tag_getTransform(`calc(var(--tag-x, ${tag_TRANSLATE_X}px) - 200%)`, `calc(var(--tag-y, ${tag_TRANSLATE_Y}px) - 100%)`, 0),
-        DURATION  = Math.random() * TAG_DURATION + TAG_DURATION + 'ms'
-    
-        return `
-        --frag-duration: ${DURATION};
-        transform: ${TRANSFORM};
-        transition: transform var(--frag-duration, ${DURATION}) ease-out;`
-    }
 
 
 </script>

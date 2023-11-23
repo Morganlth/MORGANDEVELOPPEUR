@@ -9,7 +9,7 @@
     ,
         toDeg: (a) => a / Math.PI * 180
     ,
-        headsOrTails: () => Math.round(Math.random())
+        headsOrTails: (n = 1) => Math.round(Math.random() * n)
     }
 
 // #EXPORT

@@ -64,9 +64,9 @@ class Router
 //=======@LIFE|
 
     // --SET
-    router_set(id, subPath, res)
+    router_set(id, subPath, response)
     {
-        this.#router_setVars(res)
+        this.#router_setVars(response)
     
         this.router_updateSubPath(id, subPath)
         this.router_update(id, true)
@@ -78,7 +78,7 @@ class Router
         this.#router_$HIDE = store_custom(this.#router_$HIDE)
     }
 
-    #router_setVars(res) { this.#router_RESPONSE = res }
+    #router_setVars(response) { this.#router_RESPONSE = response }
 
     // --GET
     router_getInstant(top) { return Math.abs(APP.app_SCROLLTOP - top) > APP.app_HEIGHT * 2 }

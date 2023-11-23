@@ -84,7 +84,8 @@ style:--system-r-y={system_ROTATE_Y}
             prop_FOCUS={item.focus ?? false}
             prop_CONTENT={item.name}
             prop_DURATION={TAG_DURATION}
-            prop_STYLE={{ tag_style, fragments_style }}
+            prop_getTagStyle={tag_getStyle}
+            prop_getFragmentsStyle={fragments_getStyle}
             on:in={tag_eIn}
             on:out={tag_eOut}
             />
@@ -260,6 +261,24 @@ style:--system-r-y={system_ROTATE_Y}
 
     function tag_getY() { return Math.random() * 600 + 100 + '%' }
 
+    function tag_getStyle()
+    {
+        return `
+        --frag-scale: 0;
+        --frag-duration: ${TAG_DURATION}ms;`
+    }
+
+    function fragments_getStyle()
+    {
+        return `
+        --frag-y: ${tag_getY()};
+        --frag-sign: ${MATH.headsOrTails() ? 1 : -1};
+        transform: translateY(calc(var(--frag-y, 0) * var(--frag-sign, 1))) scale(var(--frag-scale, 1));
+        transition: transform ease-out, opacity;
+        transition-duration: var(--frag-duration, ${TAG_DURATION}ms);
+        `
+    }
+
     // --UPDATES
     function system_updateTarget(target)
     {
@@ -399,24 +418,6 @@ style:--system-r-y={system_ROTATE_Y}
         group_updateFocus()
         
         if (group_stop instanceof Function) group_stop()
-    }
-
-    function tag_style()
-    {
-        return `
-        --frag-scale: 0;
-        --frag-duration: ${TAG_DURATION}ms;`
-    }
-
-    function fragments_style()
-    {
-        return `
-        --frag-y: ${tag_getY()};
-        --frag-sign: ${MATH.headsOrTails() ? 1 : -1};
-        transform: translateY(calc(var(--frag-y, 0) * var(--frag-sign, 1))) scale(var(--frag-scale, 1));
-        transition: transform ease-out, opacity;
-        transition-duration: var(--frag-duration, ${TAG_DURATION}ms);
-        `
     }
 
 

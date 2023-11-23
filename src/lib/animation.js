@@ -31,10 +31,10 @@
                 else t = TIME / duration
 
                 t = t_INITIAL + (invert ? -t : t)
-        
-                callback(t)
 
                 resolved ? resolve() : frameId = requestAnimationFrame(frame)
+
+                callback(t)
             })()
 
             cancel = () =>
@@ -45,7 +45,7 @@
             }
         })
 
-        PROMISE.catch(() => void null)
+        PROMISE.catch(() => {})
 
         return { cancel, promise: PROMISE }
     }

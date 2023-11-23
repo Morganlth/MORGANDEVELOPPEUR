@@ -26,7 +26,7 @@ context="module"
 
 <!-- #|-HTML-| -->
 
-<span
+<div
 class="fragments"
 class:inline={!prop_WORD_COLUMN}
 style:--fragments-direction={prop_DIRECTION}
@@ -37,7 +37,7 @@ style:--fragments-direction={prop_DIRECTION}
         {:else}
             <pre
             class:void={char === ' '}
-            style={prop_STYLE(i)}
+            style={prop_getStyle(i)}
             bind:this={prop_FRAGS.children[prop_FRAGS.children.length]}
             >{char}</pre>
         {/if}
@@ -66,7 +66,7 @@ style:--fragments-direction={prop_DIRECTION}
             >&nbsp;</pre>
         {/each}
     {/if}
-</span>
+    </div>
 
 
 <!-- #|-SCRIPT-| -->
@@ -103,7 +103,7 @@ style:--fragments-direction={prop_DIRECTION}
     prop_FRAGS = { children: [], value: '' },
     prop_TAGS  = { children: [], value: '' }
     ,
-    prop_STYLE = () => {}
+    prop_getStyle = () => ''
 
     // --BINDING
 

@@ -180,11 +180,16 @@ lang="scss"
     width: 34%;
     height: 34%;
 
-    fill: $intermediate;
+    fill: $light;
 
-    transition: transform .8s ease-in-out;
+    transition: transform .8s ease-in-out, opacity .8s ease-in-out;
 
-    &.focus { transform: translate(0, 0) scale(1); }
+    &.focus
+    {
+        transform: translate(0, 0) scale(1);
+
+        opacity: .2;
+    }
 }
 
 

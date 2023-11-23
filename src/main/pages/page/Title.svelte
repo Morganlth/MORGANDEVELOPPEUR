@@ -39,7 +39,7 @@ bind:this={title}
         prop_DIRECTION={i % 2 ? -1 : 1}
         prop_FRAGS={{ children: FRAGMENTS_FRAGS, value: fragments.frags ?? '' }}
         prop_TAGS={{ children: FRAGMENTS_TAGS, value: fragments.tags }}
-        prop_STYLE={fragments_getStyle}
+        prop_getStyle={fragments_getStyle}
         />
     {/each}
 

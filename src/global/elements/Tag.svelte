@@ -29,13 +29,13 @@ context="module"
 <h3
 class="tag"
 class:focus={tag_FOCUS}
-style={prop_STYLE.tag_style()}
+style={prop_getTagStyle()}
 bind:this={tag}
 >
     <Fragments
     prop_WORD_COLUMN={true}
     prop_FRAGS={{ children: TAG_FRAGS, value: prop_CONTENT }}
-    prop_STYLE={prop_STYLE.fragments_style}
+    prop_getStyle={prop_getFragmentsStyle}
     />
 </h3>
 
@@ -74,7 +74,8 @@ bind:this={tag}
     prop_CONTENT  = '',
     prop_DURATION = 0
     ,
-    prop_STYLE = { tag_style: () => '', fragments_style: () => '' }
+    prop_getTagStyle       = () => '',
+    prop_getFragmentsStyle = () => ''
 
     // --BINDING
 
