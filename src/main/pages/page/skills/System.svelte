@@ -32,15 +32,15 @@ style:--system-perspective="{gravityarea_ORBIT_RADIUS * 2}px"
 style:--system-r-x={system_ROTATE_X}
 style:--system-r-y={system_ROTATE_Y}
 >
-    <Group
+    <!-- <Group
     let:resize
     let:animation
     bind:group_start
     bind:group_stop
     >
-        <!-- <Moon
+        <Moon
         {prop_FOCUS}
-        /> -->
+        />
 
         {#if !system_OPTIMISE}
             {#each prop_SYSTEM as item}
@@ -73,7 +73,7 @@ style:--system-r-y={system_ROTATE_Y}
                 </GravityArea>
             {/each}
         {/if}
-    </Group>
+    </Group> -->
 
     {#each prop_SYSTEM as item}
         <Cell
@@ -427,7 +427,7 @@ style:--system-r-y={system_ROTATE_Y}
 
 <!-- #|-STYLE-| -->
 
-<!-- <style
+<style
 lang="scss"
 >
 
@@ -449,7 +449,7 @@ lang="scss"
 
 /* #\-THIS-\ */
 
-.system {}
+.system { background: url('./images/features_bg.jpg') center / cover no-repeat; }
 
 
-</style> -->
+</style>
