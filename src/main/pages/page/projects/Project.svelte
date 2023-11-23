@@ -33,19 +33,19 @@ style:--tag-x="{tag_TRANSLATE_X}px"
 style:--tag-y="{tag_TRANSLATE_Y}px"
 bind:this={project}
 >
+    <Tag
+    prop_FOCUS={prop_FOCUS && (tag_FOCUS || prop_TARGET)}
+    prop_CONTENT={prop_PROJECT.title}
+    prop_DURATION={TAG_DURATION}
+    prop_getFragmentsStyle={fragments_getStyle}
+    on:in={tag_eIn}
+    on:out={tag_eOut}
+    />
+
     <div
     class="head"
     bind:this={head}
     >
-        <Tag
-        prop_FOCUS={prop_FOCUS && (tag_FOCUS || prop_TARGET)}
-        prop_CONTENT={prop_PROJECT.title}
-        prop_DURATION={TAG_DURATION}
-        prop_getFragmentsStyle={fragments_getStyle}
-        on:in={tag_eIn}
-        on:out={tag_eOut}
-        />
-
         {#if prop_TARGET}
             <About
             prop_GLOBAL={prop_ABOUT_GLOBAL}
@@ -105,7 +105,7 @@ bind:this={project}
     // --DATA
 
     // --SVELTE
-    import { onMount, onDestroy, createEventDispatcher } from 'svelte'
+    import { onMount, onDestroy, createEventDispatcher, tick } from 'svelte'
 
     // --LIB
     import { wait_getDelay } from '$lib/wait'
@@ -234,7 +234,12 @@ bind:this={project}
     }
 
     // --UPDATES
-    function particles_update(target) { (particles ??= document.querySelector('.particles'))?.moveTo(target ? head : null) }
+    async function particles_update(target)
+    {
+        if (target) await tick() // wait about load
+    
+        ;(particles ??= document.querySelector('.particles'))?.moveTo(target ? head : null)
+    }
 
     function project_update(target)
     {
