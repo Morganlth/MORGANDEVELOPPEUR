@@ -263,14 +263,11 @@ lang="scss"
 
 .table
 {
-    &::before
-    {
-        @include utils.placement(absolute, 0, 0, 0, 0, $pe: true);
+    @include utils.placement(absolute, 0, 0, 0, 0);
 
-        @extend %any-size;
+    @extend %any-size;
 
-        background-color: $dark;
-    }
+    background-color: $dark;
 
     &, .lines { @extend %f-column; }
 
