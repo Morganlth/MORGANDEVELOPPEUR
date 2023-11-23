@@ -212,7 +212,7 @@ lang="scss"
     pointer-events: none;
 
     /* mix-blend-mode: color-dodge; */
-    opacity: .2;
+    opacity: .5 !important;
 
     transition: opacity 1s;
 
