@@ -42,7 +42,6 @@ bind:this={project}
     on:out={tag_eOut}
     />
 
-    <!--
     {#if prop_TARGET}
         <About
         prop_GLOBAL={prop_ABOUT_GLOBAL}
@@ -52,6 +51,8 @@ bind:this={project}
         prop_W={card_HALF_WIDTH  * 2}
         />
     {/if}
+
+    <!--
 
     <Card
     prop_ID={prop_PROJECT.id}
