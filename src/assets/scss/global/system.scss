@@ -50,6 +50,8 @@
         @extend %any-size;
     }
 
+@extend %f-center;
+
     .group, .cell { transition: transform .4s; }
 
     .group

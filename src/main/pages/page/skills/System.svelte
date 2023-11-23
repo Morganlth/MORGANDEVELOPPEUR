@@ -32,6 +32,9 @@ style:--system-perspective="{gravityarea_ORBIT_RADIUS * 2}px"
 style:--system-r-x={system_ROTATE_X}
 style:--system-r-y={system_ROTATE_Y}
 >
+    <Moon
+    {prop_FOCUS}
+    />
     <!-- <Group
     let:resize
     let:animation
@@ -427,7 +430,7 @@ style:--system-r-y={system_ROTATE_Y}
 
 <!-- #|-STYLE-| -->
 
-<style
+<!-- <style
 lang="scss"
 >
 
@@ -449,7 +452,7 @@ lang="scss"
 
 /* #\-THIS-\ */
 
-.system { background: url('./images/feature_bg.jpg') center / cover no-repeat; }
+.system {}
 
 
-</style>
+</style> -->
