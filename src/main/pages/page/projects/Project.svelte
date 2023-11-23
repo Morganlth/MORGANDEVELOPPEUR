@@ -76,11 +76,9 @@ bind:this={project}
             />
         </Card>
 
-        <!--
-
         <Mask2
         prop_DESTROY={!prop_TARGET}
-        /> -->
+        />
     <!-- </div> -->
     
 
