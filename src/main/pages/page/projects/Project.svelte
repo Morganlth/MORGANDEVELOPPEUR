@@ -30,7 +30,7 @@ context="module"
 class="project"
 class:scroller={prop_TARGET}
 style:--tag-x="{tag_TRANSLATE_X}px"
-style:--tag-y="{tag_TRANSLATE_Y}px"
+style:--tag-y="{tag_TRANSLATE_Y + project_SCROLL_TOP}px"
 bind:this={project}
 on:scroll={project_eScroll}
 >
@@ -109,7 +109,7 @@ on:scroll={project_eScroll}
     import { onMount, onDestroy, createEventDispatcher, tick } from 'svelte'
 
     // --LIB
-    import { wait_getDelay } from '$lib/wait'
+    import { wait_throttle, wait_getDelay } from '$lib/wait'
 
     // --CONTEXTS
     import { APP } from '../../../../App.svelte'
@@ -170,7 +170,10 @@ on:scroll={project_eScroll}
     let particles
 
     // --THIS
-    let project
+    let
+    project
+    ,
+    project_SCROLL_TOP = 0
 
     // --INSIDE
     let head
@@ -265,6 +268,12 @@ on:scroll={project_eScroll}
         }
     }
 
+    function tag_updateTranslate(x, y)
+    {
+        tag_TRANSLATE_X = x
+        tag_TRANSLATE_Y = y
+    }
+
     // --DESTROY
     function project_destroy() { particles_update(false) }
 
@@ -277,16 +286,9 @@ on:scroll={project_eScroll}
 //=======@EVENTS|
 
     // --*
-    async function project_eScroll(e)
-    {
+    const project_eScroll = wait_throttle(async function project_eScroll() { project_SCROLL_TOP = project.scrollTop }, 2, 4) // +- 30ms - 70ms
 
-    }
-
-    async function card_eMouseAndTouchMove({ detail: {x, y} })
-    {
-        tag_TRANSLATE_X = x
-        tag_TRANSLATE_Y = y
-    }
+    async function card_eMouseAndTouchMove({ detail: {x, y} }) { tag_updateTranslate(x, y) }
 
     function card_eMouseEnter({detail})
     {
@@ -393,7 +395,7 @@ lang="scss"
 
     .content
     {
-        position: relative;
+        @include utils.placement(relative, $z: 1);
 
         width:  100%;
         height: fit-content;
