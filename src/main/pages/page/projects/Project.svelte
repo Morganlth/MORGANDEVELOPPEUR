@@ -349,7 +349,8 @@ lang="scss"
 
     @extend %any-size;
 
-    overflow: clip;
+    overflow:            clip;
+    overscroll-behavior: none;
 
     &.scroller
     {

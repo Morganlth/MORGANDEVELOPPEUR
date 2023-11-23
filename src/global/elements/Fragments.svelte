@@ -215,6 +215,8 @@ lang="scss"
 {
     &, pre { font: inherit; }
 
+    &, ul li { white-space: nowrap; }
+
     &.inline, ul { display: flex; }
 
     transform-style: preserve-3d;
@@ -229,12 +231,7 @@ lang="scss"
 
         margin-left: 2rem;
 
-        li
-        {
-            @include font.text($color: $primary, $regular: false, $line-height: font.$line-height-min);
-
-            white-space: nowrap;
-        }
+        li { @include font.text($color: $primary, $regular: false, $line-height: font.$line-height-min); }
     }
 }
 

@@ -337,7 +337,8 @@ lang="scss"
     
         @extend %scroll-bar;
 
-        overflow: hidden scroll;
+        overflow:            hidden scroll;
+        overscroll-behavior: none;
 
         pointer-events: auto;
 

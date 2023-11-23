@@ -284,7 +284,7 @@ lang="scss"
 
     @include utils.placement(absolute, $top: 50%, $right: 0, $left: 0);
 
-    transition: transform .4s ease-out;
+    transition: transform .3s ease-out;
 
     .container
     {

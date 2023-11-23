@@ -670,7 +670,8 @@ lang="scss"
 
         align-items: flex-end;
 
-        overflow: auto scroll;
+        overflow:            auto scroll;
+        overscroll-behavior: none;
 
         max-height: 100%;
 

@@ -43,22 +43,28 @@
 
 .system
 {
+    &, .group
+    {
+        @include utils.placement(absolute, 0, 0, 0, 0);
+
+        @extend %any-size;
+    }
+
     .group, .cell { transition: transform .4s; }
 
     .group
     {
-        @include utils.placement(absolute, 0, 0, 0, 0);
-
         @extend %f-center;
-        @extend %any-size;
 
         transform-style: preserve-3d;
         transform:       rotate3d($r-x, $r-y, 0, .016rad);
+
+        overflow: clip;
     }
 
     .cell
     {
-        @include utils.placement(absolute, 51%, 10%);
+        @include utils.placement(absolute, $top: 51%, $left: 49%);
 
         transform: translate(calc($r-x * 6px), calc($r-y * 6px - 50%));
     }

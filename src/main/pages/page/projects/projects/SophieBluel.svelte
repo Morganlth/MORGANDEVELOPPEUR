@@ -404,6 +404,7 @@ lang="scss"
     @use '../../../../../assets/scss/styles/display';
 
     /* --MEDIA */
+    @use '../../../../../assets/scss/styles/media';
 
 
 /* #\-VARIABLES-\ */
@@ -419,23 +420,25 @@ lang="scss"
 {
     width: 100%;
 
-    padding: 5rem 0 2rem;
+    padding-block: 5rem 2rem;
 
     background-color: white;
 
     .body
     {
+        width:     auto;
         max-width: 1140px;
 
-        margin: auto;
+        margin:         auto;
+        padding-inline: 2rem;
 
         font-family: 'Work Sans';
-        font-size: 1.4rem;
+        font-size:   1.4rem;
     }
 
     header
     {
-        display: flex;
+        display:         flex;
         justify-content: space-between;
 
         margin-bottom: 5rem;
@@ -444,15 +447,15 @@ lang="scss"
         {
             @extend %f-column;
 
-            color: $primary-color;
+            color:       $primary-color;
             font-family: 'Syne';
-            font-size: 2.2rem;
+            font-size:   2.2rem;
             font-weight: 800;
 
             &>span
             {
-                font-family: 'Work Sans';
-                font-size: 1rem;
+                font-family:    'Work Sans';
+                font-size:      1rem;
                 letter-spacing: .1rem;
             }
         }
@@ -476,7 +479,10 @@ lang="scss"
 
     #sophiebluel-introduction
     {
-        @extend %f-a-center;
+        @extend %f-column;
+
+        align-items: center;
+        gap:         3rem;
     
         article, figure { flex: 1; }
         
@@ -508,13 +514,14 @@ lang="scss"
         {
             @extend %f-j-center;
 
-            gap: 0 1rem;
+            flex-wrap: wrap;
+            gap:       1rem;
 
             margin: 5rem 0;
     
             button
             {
-                font-size: 1.6rem;
+                font-size:   1.6rem;
                 font-weight: 700;
 
                 &.active
@@ -528,9 +535,9 @@ lang="scss"
 
         .gallery
         {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 2rem;
+            display:               grid;
+            grid-template-columns: 1fr;
+            gap:                   2rem;
 
             &, img { width: 100%; }
         }
@@ -538,7 +545,7 @@ lang="scss"
 
     #sophiebluel-contact
     {
-        width: 50%;
+        width: 100%;
 
         margin: auto;
         
@@ -560,7 +567,7 @@ lang="scss"
         input:not([type="submit"]), textarea
         {
             margin-top: 1rem;
-            padding: 1rem;
+            padding:    1rem;
 
             box-sizing: border-box;
         }
@@ -591,10 +598,10 @@ lang="scss"
 
             border-radius: 6rem;
 
-            color: #fff;
+            color:     #fff;
             font-family: 'Syne';
             font-weight: 700;
-            text-align: center;
+            text-align:  center;
 
             cursor: pointer;
         }
@@ -604,10 +611,10 @@ lang="scss"
 
     h2
     {
-        color: $secondary-color;
+        color:       $secondary-color;
         font-family: 'Syne';
-        font-weight: 700;
-        font-size: 3rem;
+        font-weight:  700;
+        font-size:    3rem;
     }
 
     button
@@ -616,7 +623,7 @@ lang="scss"
 
         background-color: transparent;
 
-        border: solid $secondary-color 1px;
+        border:        solid $secondary-color 1px;
         border-radius: 6rem;
 
         color: $secondary-color;
@@ -628,10 +635,23 @@ lang="scss"
 
     footer nav ul
     {
-        display: flex;
+        display:         flex;
         justify-content: flex-end;
 
         margin-top: 2rem;
+    }
+
+    @include media.min($ms3)
+    {
+        #sophiebluel-introduction
+        {
+            flex-direction: row;
+            gap:            0;
+        }
+
+        #sophiebluel-projects .gallery { grid-template-columns: 1fr 1fr 1fr; }
+
+        #sophiebluel-contact { width: 50%; }
     }
 }
 

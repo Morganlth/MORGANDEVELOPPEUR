@@ -424,6 +424,8 @@ lang="scss"
             @extend %scroll-bar;
     
             grid-column: 1 / 3;
+
+            overscroll-behavior: none;
         }
     }
 

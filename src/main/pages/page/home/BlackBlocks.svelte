@@ -335,7 +335,7 @@ bind:this={blackblocks}
         blackblocks_SCENE.add(BLACKBLOCKS_LINES)
         blackblocks_SCENE.add(BLACKBLOCKS_BLOCKS)
 
-        blackblocks_setBlocksPosition()
+        blackblocks_setBlocksPosition(0)
     }
 
     function blackblocks_setLight()
@@ -412,15 +412,15 @@ bind:this={blackblocks}
         block.rotation.x  = BLACKBLOCKS_ROTATION_X
         block.rotation.y  = BLACKBLOCKS_ROTATION_Y
     }
-    function blackblocks_setBlocksPosition()
+    function blackblocks_setBlocksPosition(p = 4)
     {
         blackblocks_e$Animation2() // render
 
-        const [P, T, Z] = blackblocks_CHARGED ? [4, 1, 2] : [0, 0, -2]
+        const [Z, T] = p ? [2, 1] : [-2, 0]
 
         for (const BLOCK of BLACKBLOCKS_BLOCKS.children)
         {
-            let {x, y} = BLOCK.checkPoints[P]
+            let {x, y} = BLOCK.checkPoints[p]
 
             BLOCK.position.set(x, y, Z)
             BLOCK.t = T

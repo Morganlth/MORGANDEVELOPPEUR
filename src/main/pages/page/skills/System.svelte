@@ -426,7 +426,7 @@ style:--system-r-y={system_ROTATE_Y}
 
 <!-- #|-STYLE-| -->
 
-<style
+<!-- <style
 lang="scss"
 >
 
@@ -437,7 +437,6 @@ lang="scss"
     /* --APP */
 
     /* --DEPENDENCIES */
-    @use '../../../../assets/scss/styles/utils';
 
     /* --MEDIA */
 
@@ -449,15 +448,7 @@ lang="scss"
 
 /* #\-THIS-\ */
 
-.system
-{
-    @include utils.placement(absolute, $top: 0, $left: 50%);
-
-    transform: translateX(-50%);
-
-    width:  50vw;
-    height: 100%;
-}
+.system {}
 
 
-</style>
+</style> -->

@@ -351,7 +351,8 @@ lang="scss"
 
         @extend %scroll-bar;
 
-        overflow: auto;
+        overflow:            auto;
+        overscroll-behavior: none;
 
         width:  100%;
         height: calc(100% - var(--cell-size) - $margin-top);

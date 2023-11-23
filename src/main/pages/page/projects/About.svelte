@@ -331,6 +331,8 @@ lang="scss"
 
         @extend %f-column;
 
+        gap: 2rem;
+
         overflow: clip auto;
 
         text-align: justify;
@@ -363,7 +365,7 @@ lang="scss"
         @include media.min($ms4, $ms4)
         {
             @include display.grid($width: (auto 1fr), $height: (auto 1fr auto));
-
+        
             overflow-y: clip;
 
             .void
