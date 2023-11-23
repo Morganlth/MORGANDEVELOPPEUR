@@ -159,6 +159,8 @@ bind:this={card}
 
     // --THIS
     const
+    CARD_NAME = 'card'
+    ,
     CARD_DURATION    = wait_getDelay(36), // id * +- 600ms
     CARD_DURATION_2  = wait_getDelay(24), // id * +- 400ms
     CARD_DELAY       = wait_getDelay(18), // +- 300ms
@@ -262,6 +264,8 @@ bind:this={card}
     function card_getRotateZ() { return 10 - 10 * prop_ID }
 
     // --UPDATES
+    function app_updateFreeze(value) { APP.app_$FREEZE = { value, target: CARD_NAME } }
+
     function card_update(focus, target /* -1 | 0 | 1 */)
     {
         const ON = ~target && focus
@@ -325,6 +329,8 @@ bind:this={card}
         if (+new Date() < card_LAST + CARD_DELAY) card_eClick()
 
         card_destroyEvents()
+
+        app_updateFreeze(false)
         
         card_GRABBING = false
     }
@@ -367,6 +373,8 @@ bind:this={card}
         card_LAST = +new Date()
 
         card_setEvents()
+
+        app_updateFreeze(true)
 
         card_GRABBING = true
     }
