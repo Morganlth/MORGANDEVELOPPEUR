@@ -263,6 +263,8 @@ lang="scss"
 
 .table
 {
+    &, .background { background-color: $dark; }
+
     &, .lines { @extend %f-column; }
 
     gap: 1rem;
@@ -302,8 +304,6 @@ lang="scss"
     
         @extend %any-size;
     }
-
-    .background { background-color: $dark; }
 
     .head, .line { width: 100%; }
 
