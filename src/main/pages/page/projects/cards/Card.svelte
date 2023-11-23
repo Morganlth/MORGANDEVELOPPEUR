@@ -36,10 +36,10 @@ translate3d(
 {card_TRANSLATE_X}px,
 {card_TRANSLATE_Y}px,
 {(prop_ID - (prop__CARD_HOVER ?? prop_ID)) * 50}px)
-perspective({CARD_PERSPECTIVE}px)
 rotateX({card_ROTATE_X}rad)
 rotateY({card_ROTATE_Y}rad)
-rotateZ({card_ROTATE_Z}deg)"
+rotateZ({card_ROTATE_Z}deg)
+perspective({CARD_PERSPECTIVE}px)"
 style:transition-duration="{card_TRANSITION_DURATION}ms"
 tabindex={card_ON ? 0 : -1}
 bind:this={card}
