@@ -382,6 +382,11 @@ lang="scss"
         }
     }
 
+    .head
+    {
+        perspective: 3000;
+    }
+
     .content
     {
         @include utils.placement(relative, $z: 1);

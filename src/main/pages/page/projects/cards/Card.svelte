@@ -38,8 +38,7 @@ translate3d(
 {(prop_ID - (prop__CARD_HOVER ?? prop_ID)) * 50}px)
 rotateX({card_ROTATE_X}rad)
 rotateY({card_ROTATE_Y}rad)
-rotateZ({card_ROTATE_Z}deg)
-perspective({CARD_PERSPECTIVE}px)"
+rotateZ({card_ROTATE_Z}deg)"
 style:transition-duration="{card_TRANSITION_DURATION}ms"
 tabindex={card_ON ? 0 : -1}
 bind:this={card}
@@ -162,8 +161,7 @@ on:touchend={card_eTouchEnd}
     CARD_DURATION    = wait_getDelay(36), // id * +- 600ms
     CARD_DURATION_2  = wait_getDelay(24), // id * +- 400ms
     CARD_DELAY       = wait_getDelay(18), // +- 300ms
-    CARD_DELAY_2     = (prop_ID ?? 0) * CARD_DURATION,
-    CARD_PERSPECTIVE = 3000
+    CARD_DELAY_2     = (prop_ID ?? 0) * CARD_DURATION
     ,
     CARD_EVENTS =
     {
