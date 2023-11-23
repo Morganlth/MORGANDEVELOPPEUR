@@ -449,7 +449,7 @@ lang="scss"
 
 /* #\-THIS-\ */
 
-.system { background: url('./images/features_bg.jpg') center / cover no-repeat; }
+.system { background: url('./images/feature_bg.jpg') center / cover no-repeat; }
 
 
 </style>
