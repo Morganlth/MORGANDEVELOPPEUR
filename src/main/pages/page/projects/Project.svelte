@@ -368,13 +368,15 @@ lang="scss"
         pointer-events: auto;
     }
 
-    .head
+    /* .head
     {
         @include utils.fixed;
-    }
+    } */
 
     .content
     {
+        isolation: isolate;
+
         position: relative;
 
         width:  100%;

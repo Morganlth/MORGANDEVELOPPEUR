@@ -211,7 +211,7 @@ lang="scss"
 
     pointer-events: none;
 
-    /* mix-blend-mode: color-dodge; */
+    mix-blend-mode: color-dodge;
 
     transition: opacity 1s;
 
