@@ -80,6 +80,11 @@
     {
         @include placement(sticky, $top: 0, $right: 0, $left: 0);
     
+        @extend %full-screen;
+    }
+
+    %full-screen
+    {
         width:  100%;
         height: 100vh;
         height: 100svh;

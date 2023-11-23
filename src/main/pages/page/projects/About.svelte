@@ -82,7 +82,6 @@ transition:transition_fade={{ duration: 200 }}
     import { transition_fade } from '$lib/transition'
 
     // --CONTEXTS
-    import { EVENT } from '../../../../App.svelte'
 
 //=======@COMPONENTS|
 
@@ -121,8 +120,6 @@ transition:transition_fade={{ duration: 200 }}
     const
     CANVAS_SQUARE_SIZE = 40,
     CANVAS_DELAY       = wait_getDelay(6) // +- 100ms
-    ,
-    CANVAS_EVENTS = { resize: canvas_e$Resize }
 
 
 // #\-VARIABLES-\
@@ -178,7 +175,6 @@ transition:transition_fade={{ duration: 200 }}
     
         canvas_setVars()
         canvas_setMatrix()
-        canvas_setEvents()
         canvas_drawBackground()
         canvas_a()
     }
@@ -207,22 +203,14 @@ transition:transition_fade={{ duration: 200 }}
         for (let i = 0; i < canvas_MATRIX.length; i++) canvas_MATRIX[i] = Math.floor(Math.random() * 10)
     }
 
-    function canvas_setEvents() { EVENT.event_add(CANVAS_EVENTS) }
-
     // --GET
 
     // --UPDATES
 
     // --DESTROY
-    function about_destroy()
-    {
-        canvas_destroyTimeout()
-        canvas_destroyEvents()
-    }
+    function about_destroy() { canvas_destroyTimeout() }
 
     function canvas_destroyTimeout() { clearTimeout(canvas_TIMEOUT) }
-
-    function canvas_destroyEvents() { EVENT.event_remove(CANVAS_EVENTS) }
 
 
 //=======@COMMANDS|
@@ -233,11 +221,6 @@ transition:transition_fade={{ duration: 200 }}
 //=======@EVENTS|
 
     // --*
-    async function canvas_e$Resize()
-    {
-        canvas_setVars()
-        canvas_setMatrix()
-    }
 
 
 //=======@TRANSITIONS|

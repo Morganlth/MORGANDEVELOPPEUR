@@ -33,9 +33,6 @@ style:--tag-x="{tag_TRANSLATE_X}px"
 style:--tag-y="{tag_TRANSLATE_Y}px"
 bind:this={project}
 >
-    <!-- <div
-    class="head"
-    > -->
         <Tag
         prop_FOCUS={prop_FOCUS && (tag_FOCUS || prop_TARGET)}
         prop_CONTENT={prop_PROJECT.title}
@@ -79,7 +76,6 @@ bind:this={project}
         <Mask2
         prop_DESTROY={!prop_TARGET}
         />
-    <!-- </div> -->
     
 
     {#if prop_TARGET}
@@ -354,6 +350,8 @@ lang="scss"
 
     @extend %any-size;
 
+    transform: scale(1); /* fixed */
+
     overflow:            clip;
     overscroll-behavior: none;
 
@@ -368,6 +366,11 @@ lang="scss"
         max-height: 100svh;
 
         pointer-events: auto;
+    }
+
+    .head
+    {
+        @include utils.fixed;
     }
 
     .content
