@@ -264,7 +264,7 @@ lang="scss"
 
 .table
 {
-    @include utils.placement(absolute, 0, 0, 0, 0);
+    @include utils.placement(absolute, 0, 0, 0, 0, $z: 10);
 
 @extend %any-size;
     &, .lines { @extend %f-column; }
