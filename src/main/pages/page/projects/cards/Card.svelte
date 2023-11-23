@@ -26,67 +26,68 @@ context="module"
 
 <!-- #|-HTML-| -->
 
-<button
+<div
 class="card"
 class:focus={card_ON}
 data-id={prop_ID}
-title={prop_TITLE}
-style:transform="
-translate3d(
-{card_TRANSLATE_X}px,
-{card_TRANSLATE_Y}px,
-{(prop_ID - (prop__CARD_HOVER ?? prop_ID)) * 50}px)
-rotateX({card_ROTATE_X}rad)
-rotateY({card_ROTATE_Y}rad)
-rotateZ({card_ROTATE_Z}deg)"
-style:transition-duration="{card_TRANSITION_DURATION}ms"
-tabindex={card_ON ? 0 : -1}
+style:--card-t-duration="{card_TRANSITION_DURATION}s"
+style:transform="translate({card_TRANSLATE_X}px, {card_TRANSLATE_Y}px)"
 bind:this={card}
-on:mousemove={card_eMouseMove}
-on:mouseenter={card_eMouseEnter}
-on:mouseleave={card_eMouseLeave}
-on:mousedown={card_eMouseDown}
-on:touchstart={card_eTouchStart}
-on:touchend={card_eTouchEnd}
 >
-    <div
-    class="decor"
-    class:hide={decor_HIDE}
-    style:transform="rotateY({decor_ROTATE_Y}deg) translateZ({decor_TRANSLATE_Z}px)"
+    <button
+    title={prop_TITLE}
+    style:transform="
+    translateZ({(prop_ID - (prop__CARD_HOVER ?? prop_ID)) * 50}px)
+    rotateX({card_ROTATE_X}rad)
+    rotateY({card_ROTATE_Y}rad)
+    rotateZ({card_ROTATE_Z}deg)"
+    tabindex={card_ON ? 0 : -1}
+    on:mousemove={card_eMouseMove}
+    on:mouseenter={card_eMouseEnter}
+    on:mouseleave={card_eMouseLeave}
+    on:mousedown={card_eMouseDown}
+    on:touchstart={card_eTouchStart}
+    on:touchend={card_eTouchEnd}
     >
-        <svg
-        class="background"
-        viewBox="0 0 234 333"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
+        <div
+        class="decor"
+        class:hide={decor_HIDE}
+        style:transform="rotateY({decor_ROTATE_Y}deg) translateZ({decor_TRANSLATE_Z}px)"
         >
-            <path
-            d="M8.91919 3.5H224.325C227.308 3.5 229.744 5.92832 229.744 8.94574V323.298C229.744 326.316 227.308 328.744 224.325 328.744H8.91919C5.93608 328.744 3.5 326.316 3.5
-            323.298V8.94574C3.5 5.92832 5.93605 3.5 8.91919 3.5Z"
-            fill={COLORS.dark}
-            stroke={COLORS.light}
-            stroke-width="1"
-            />
-        </svg>
+            <svg
+            class="background"
+            viewBox="0 0 234 333"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            >
+                <path
+                d="M8.91919 3.5H224.325C227.308 3.5 229.744 5.92832 229.744 8.94574V323.298C229.744 326.316 227.308 328.744 224.325 328.744H8.91919C5.93608 328.744 3.5 326.316 3.5
+                323.298V8.94574C3.5 5.92832 5.93605 3.5 8.91919 3.5Z"
+                fill={COLORS.dark}
+                stroke={COLORS.light}
+                stroke-width="1"
+                />
+            </svg>
 
-        <svg
-        class="texture"
-        viewBox="0 0 234 333"
-        fill={prop_COLOR}
-        xmlns="http://www.w3.org/2000/svg"
-        >
-            <slot />
-        </svg>
+            <svg
+            class="texture"
+            viewBox="0 0 234 333"
+            fill={prop_COLOR}
+            xmlns="http://www.w3.org/2000/svg"
+            >
+                <slot />
+            </svg>
 
-        <Icon
-        prop_COLOR={COLORS.light}
-        prop_SIZE="18%"
-        prop_SPRING={false}
-        >
-            <Logo />
-        </Icon>
-    </div>
-</button>
+            <Icon
+            prop_COLOR={COLORS.light}
+            prop_SIZE="18%"
+            prop_SPRING={false}
+            >
+                <Logo />
+            </Icon>
+        </div>
+    </button>
+</div>
 
 
 <!-- #|-SCRIPT-| -->
@@ -425,7 +426,7 @@ on:touchend={card_eTouchEnd}
             card_START  = false
             card_cancel = cancel
 
-            try { await promise, card_setTransition(400) } catch { card_setTransition(400) }
+            try { await promise, card_setTransition(.4) } catch { card_setTransition(.4) }
         },
         card_START ? CARD_DELAY_2 : 0)
     }
@@ -521,21 +522,25 @@ lang="scss"
 
 .card
 {
-    &, .decor, .texture { transform-style: preserve-3d; }
+    &, button { transition: transform var(--card-t-duration, .4s) ease-out; }
 
     contain:   layout size;
     isolation: isolate;
+
+    perspective: 3000px;
 
     aspect-ratio: #{$width} / #{$height};
 
     width:  $size;
     height: calc($size * $card-ratio);
 
-    pointer-events: auto;
+    &.focus button { will-change: transform; }
 
-    transition: transform ease-out;
+    button, .decor, .texture { transform-style: preserve-3d; }
 
-    &.focus { will-change: transform; }
+    button, .background { @extend %any-size; }
+
+    button { pointer-events: auto; }
 
     .decor
     {
@@ -544,8 +549,6 @@ lang="scss"
         pointer-events: none;
 
         &.hide { display: none !important; }
-
-        .background { @extend %any-size; }
 
         .texture
         {

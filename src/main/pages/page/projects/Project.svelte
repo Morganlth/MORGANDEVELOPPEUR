@@ -374,17 +374,7 @@ lang="scss"
 
         pointer-events: auto;
 
-        .head
-        {
-            @extend %sticky;
-
-            transform-style: flat;
-        }
-    }
-
-    .head
-    {
-        perspective: 3000;
+        .head { @extend %sticky; }
     }
 
     .content
