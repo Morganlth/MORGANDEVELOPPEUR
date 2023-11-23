@@ -381,6 +381,8 @@ lang="scss"
     .head
     {
         @extend %sticky;
+
+        isolation: isolate;
     }
 
     .content
