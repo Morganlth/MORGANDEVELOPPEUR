@@ -44,7 +44,7 @@ data-page-id={prop_ID}
             prop_ABOUT_GLOBAL={prop_ABOUT_GLOBAL}
             on:mouseenter={card_eMouseEnter}
             on:mouseleave={card_eMouseLeave}
-            on:click={card_eClick}
+            on:click={project_eClick}
             />
         {/each}
     </Group>
@@ -215,11 +215,11 @@ data-page-id={prop_ID}
 //=======@EVENTS|
 
     // --*
+    function project_eClick({detail: {id}})      { projects_setProject(id) }
+
     function card_eMouseEnter({detail: {id}}) { card_updateCardHover(id) }
 
     function card_eMouseLeave()               { card_updateCardHover(null) }
-
-    function card_eClick({detail: {id}})      { projects_setProject(id) }
 
     export function nav_e$Click({id}) { projects_setProject(id) }
 

@@ -159,8 +159,6 @@ bind:this={card}
 
     // --THIS
     const
-    CARD_NAME = 'card'
-    ,
     CARD_DURATION    = wait_getDelay(36), // id * +- 600ms
     CARD_DURATION_2  = wait_getDelay(24), // id * +- 400ms
     CARD_DELAY       = wait_getDelay(18), // +- 300ms
@@ -264,8 +262,6 @@ bind:this={card}
     function card_getRotateZ() { return 10 - 10 * prop_ID }
 
     // --UPDATES
-    function app_updateFreeze(value) { APP.app_$FREEZE = { value, target: CARD_NAME } }
-
     function card_update(focus, target /* -1 | 0 | 1 */)
     {
         const ON = ~target && focus
@@ -326,9 +322,7 @@ bind:this={card}
 
     function card_e$MouseUp()
     {
-        app_updateFreeze(false)
-
-        if (+new Date() < card_LAST + CARD_DELAY) card_eClick(), console.log('ok')
+        if (+new Date() < card_LAST + CARD_DELAY) card_eClick()
 
         card_destroyEvents()
         
@@ -370,8 +364,6 @@ bind:this={card}
 
     function card_eMouseDown()
     {
-        app_updateFreeze(true)
-    
         card_LAST = +new Date()
 
         card_setEvents()
@@ -381,19 +373,12 @@ bind:this={card}
 
     function card_eTouchStart()
     {
-        app_updateFreeze(true)
-    
         card_setEvents2()
 
         card_dispatchMouseAndTouch(...EVENT.event_CLIENT_XY)
     }
 
-    function card_eTouchEnd()
-    {
-        app_updateFreeze(false)
-
-        card_destroyEvents2()
-    }
+    function card_eTouchEnd() { card_destroyEvents2() }
 
 
 //=======@TRANSITIONS|
@@ -553,7 +538,11 @@ lang="scss"
 
     button, .background { @extend %any-size; }
 
-    button { pointer-events: auto; }
+    button
+    {
+        pointer-events: auto;
+        touch-action:   none;
+    }
 
     .decor
     {
