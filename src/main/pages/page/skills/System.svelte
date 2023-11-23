@@ -426,7 +426,7 @@ style:--system-r-y={system_ROTATE_Y}
 
 <!-- #|-STYLE-| -->
 
-<!-- <style
+<style
 lang="scss"
 >
 
@@ -448,7 +448,7 @@ lang="scss"
 
 /* #\-THIS-\ */
 
-.system {}
+.system { isolation: isolate; }
 
 
-</style> -->
+</style>
