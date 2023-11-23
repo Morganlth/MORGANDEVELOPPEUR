@@ -367,11 +367,11 @@ lang="scss"
 
     .content
     {
-        /* @include utils.placement(absolute, $top: 100vh, $left: 0, $right: 0); */
+        @include utils.placement(absolute, $top: 100vh, $left: 0, $right: 0);
 
-        /* top: 100svh; */
+        top: 100svh;
 
-        position: relative;
+        /* position: relative; */
 
         width:  100%;
         height: fit-content;
