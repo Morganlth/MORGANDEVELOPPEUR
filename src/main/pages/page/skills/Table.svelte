@@ -265,6 +265,8 @@ lang="scss"
 {
     &, .lines { @extend %f-column; }
 
+    isolation: isolate;
+
     gap: 1rem;
 
     &.build
