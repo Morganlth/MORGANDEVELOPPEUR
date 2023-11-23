@@ -210,15 +210,9 @@ lang="scss"
 
     @include utils.placement(absolute, 0, 0, 0, 0);
 
-    isolation: isolate;
-
     pointer-events: none;
 
     mix-blend-mode: color-dodge;
-
-    border: solid $light 10px;
-
-    box-sizing: border-box;
 
     transition: opacity 1s;
 
