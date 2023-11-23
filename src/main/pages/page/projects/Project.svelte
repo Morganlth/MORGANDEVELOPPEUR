@@ -32,6 +32,7 @@ class:scroller={prop_TARGET}
 style:--tag-x="{tag_TRANSLATE_X}px"
 style:--tag-y="{tag_TRANSLATE_Y}px"
 bind:this={project}
+on:scroll={project_eScroll}
 >
     <Tag
     prop_FOCUS={prop_FOCUS && (tag_FOCUS || prop_TARGET)}
@@ -382,7 +383,7 @@ lang="scss"
     {
         @extend %sticky;
 
-        isolation: isolate;
+        transform-style: flat;
     }
 
     .content
