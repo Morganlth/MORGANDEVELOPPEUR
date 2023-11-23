@@ -40,7 +40,7 @@ style:--system-r-y={system_ROTATE_Y}
     >
         <!-- <Moon
         {prop_FOCUS}
-        />
+        /> -->
 
         {#if !system_OPTIMISE}
             {#each prop_SYSTEM as item}
@@ -72,7 +72,7 @@ style:--system-r-y={system_ROTATE_Y}
                     />
                 </GravityArea>
             {/each}
-        {/if} -->
+        {/if}
     </Group>
 
     {#each prop_SYSTEM as item}
