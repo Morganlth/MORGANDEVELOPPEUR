@@ -38,9 +38,9 @@ style:--system-r-y={system_ROTATE_Y}
     bind:group_start
     bind:group_stop
     >
-        <!-- <Moon
+        <Moon
         {prop_FOCUS}
-        /> -->
+        />
 
         <!-- {#if !system_OPTIMISE}
             {#each prop_SYSTEM as item}
