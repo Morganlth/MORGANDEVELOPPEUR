@@ -208,7 +208,7 @@ lang="scss"
         transition-duration: $duration;
     }
 
-    @include utils.placement(fixed, 0, 0, 0, 0);
+    @include utils.placement(absolute, 0, 0, 0, 0);
 
     isolation: isolate;
 
