@@ -371,6 +371,8 @@ lang="scss"
 
         /* top: 100svh; */
 
+        position: relative;
+
         width:  100%;
         height: fit-content;
     }
