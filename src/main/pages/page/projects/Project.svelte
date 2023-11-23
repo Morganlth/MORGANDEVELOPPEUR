@@ -33,6 +33,10 @@ style:--tag-x="{tag_TRANSLATE_X}px"
 style:--tag-y="{tag_TRANSLATE_Y}px"
 bind:this={project}
 >
+    <div
+    class="head"
+    bind:this={head}
+    >
         <Tag
         prop_FOCUS={prop_FOCUS && (tag_FOCUS || prop_TARGET)}
         prop_CONTENT={prop_PROJECT.title}
@@ -76,6 +80,7 @@ bind:this={project}
         <Mask2
         prop_DESTROY={!prop_TARGET}
         />
+    </div>
     
 
     {#if prop_TARGET}
@@ -167,6 +172,8 @@ bind:this={project}
     let project
 
     // --INSIDE
+    let head
+
     let
     tag_FOCUS = false
     ,
@@ -227,7 +234,7 @@ bind:this={project}
     }
 
     // --UPDATES
-    function particles_update(target) { (particles ??= document.querySelector('.particles'))?.moveTo(target ? project : null) }
+    function particles_update(target) { (particles ??= document.querySelector('.particles'))?.moveTo(target ? head : null) }
 
     function project_update(target)
     {
@@ -350,8 +357,6 @@ lang="scss"
 
     @extend %any-size;
 
-    transform: scale(1); /* fixed */
-
     overflow:            clip;
     overscroll-behavior: none;
 
@@ -368,15 +373,13 @@ lang="scss"
         pointer-events: auto;
     }
 
-    /* .head
+    .head
     {
-        @include utils.fixed;
-    } */
+        @extend %sticky;
+    }
 
     .content
     {
-        isolation: isolate;
-
         position: relative;
 
         width:  100%;
