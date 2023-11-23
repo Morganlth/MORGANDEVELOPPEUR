@@ -328,7 +328,7 @@ bind:this={card}
     {
         app_updateFreeze(false)
 
-        if (+new Date() < card_LAST + CARD_DELAY) card_eClick()
+        if (+new Date() < card_LAST + CARD_DELAY) card_eClick(), console.log('ok')
 
         card_destroyEvents()
         
@@ -370,23 +370,30 @@ bind:this={card}
 
     function card_eMouseDown()
     {
+        app_updateFreeze(true)
+    
         card_LAST = +new Date()
 
         card_setEvents()
-
-        app_updateFreeze(true)
 
         card_GRABBING = true
     }
 
     function card_eTouchStart()
     {
+        app_updateFreeze(true)
+    
         card_setEvents2()
 
         card_dispatchMouseAndTouch(...EVENT.event_CLIENT_XY)
     }
 
-    function card_eTouchEnd() { card_destroyEvents2() }
+    function card_eTouchEnd()
+    {
+        app_updateFreeze(false)
+
+        card_destroyEvents2()
+    }
 
 
 //=======@TRANSITIONS|
