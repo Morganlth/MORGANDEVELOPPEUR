@@ -277,6 +277,11 @@ on:scroll={project_eScroll}
 //=======@EVENTS|
 
     // --*
+    async function project_eScroll(e)
+    {
+
+    }
+
     async function card_eMouseAndTouchMove({ detail: {x, y} })
     {
         tag_TRANSLATE_X = x
