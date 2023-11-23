@@ -108,7 +108,7 @@ bind:this={project}
     import { onMount, onDestroy, createEventDispatcher } from 'svelte'
 
     // --LIB
-    import { wait_throttle, wait_getDelay } from '$lib/wait'
+    import { wait_getDelay } from '$lib/wait'
 
     // --CONTEXTS
     import { APP } from '../../../../App.svelte'
