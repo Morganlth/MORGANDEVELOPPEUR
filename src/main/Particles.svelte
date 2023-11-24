@@ -31,12 +31,14 @@ class="particles"
 bind:this={particles}
 >
     <div>
-        <canvas
-        style:width="{canvas_WIDTH}px"
-        style:height="{canvas_HEIGHT}px"
-        bind:this={canvas}
-        >
-        </canvas>
+        <div>
+            <canvas
+            style:width="{canvas_WIDTH}px"
+            style:height="{canvas_HEIGHT}px"
+            bind:this={canvas}
+            >
+            </canvas>
+        </div>
     </div>
 </div>
 
@@ -498,14 +500,17 @@ lang="scss"
 
     isolation: isolate;
 
-    canvas
+    &>div>div
     {
         @extend %sticky;
 
         transform: scale(1);
 
         overflow: clip;
+    }
 
+    canvas
+    {
         border: solid $light 2px;
 
         box-sizing: border-box;
