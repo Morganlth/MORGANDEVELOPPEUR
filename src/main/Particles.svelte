@@ -501,6 +501,11 @@ lang="scss"
         radial-gradient(circle at 20% -20%,  $dark    40%, transparent 110%),
         radial-gradient(circle at 10% -100%, $primary 0%,  transparent 88%);
     }
+
+
+    border: solid $light 2px;
+
+    box-sizing: border-box;
 }
 
 
