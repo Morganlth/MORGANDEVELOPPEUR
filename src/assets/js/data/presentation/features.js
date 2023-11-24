@@ -32,13 +32,13 @@
                 contents:
                 [
                     {
-                        topic: 'NOM PRENOM',
+                        topic: 'NOM Prenom',
                         html: 'strong',
                         props: {},
                         data: 'LE THUAUT Morgan'
                     },
                     {
-                        topic: 'AGE',
+                        topic: 'Age',
                         html: 'p',
                         props: {},
                         data: '21 ans'
@@ -50,13 +50,13 @@
                 contents:
                 [
                     {
-                        topic: 'REGION',
+                        topic: 'Region',
                         html: 'p',
                         props: {},
                         data: 'Bretagne'
                     },
                     {
-                        topic: 'PAYS',
+                        topic: 'Pays',
                         html: 'strong',
                         props: {},
                         data: 'FRANCE'
@@ -68,13 +68,13 @@
                 contents:
                 [
                     {
-                        topic: 'ETUDES',
+                        topic: 'Etudes',
                         html: 'p',
                         props: {},
                         data: 'Bac S SVT spécialité MATHS, Lycée Jeanne d\'Arc Pontivy'
                     },
                     {
-                        topic: 'FORMATIONS',
+                        topic: 'Formations',
                         html: 'p',
                         props: {},
                         data: 'Développeur Web, OpenClassrooms'
@@ -86,13 +86,13 @@
                 contents:
                 [
                     {
-                        topic: 'PROFESSION',
+                        topic: 'Profesion',
                         html: 'strong',
                         props: {},
                         data: 'Développeur Web'
                     },
                     {
-                        topic: 'OBJECTIFS',
+                        topic: 'Objectifs',
                         html: 'p',
                         props: {},
                         data: 'FULLSTACK, MOBILE & DESIGNER'
@@ -104,14 +104,14 @@
                 contents:
                 [
                     {
-                        topic: 'EMAIL',
+                        topic: 'Email',
                         html: 'p',
                         props: {},
                         data: 'morganlethuaut@gmail.com',
                         contact: true
                     },
                     {
-                        topic: 'LINKEDIN',
+                        topic: 'LinkedIn',
                         html: 'a',
                         props:
                         {
@@ -120,6 +120,17 @@
                             target: '_blank',
                         },
                         data: 'LinkedIn'
+                    },
+                    {
+                        topic: 'Github',
+                        html: 'a',
+                        props:
+                        {
+                            href: 'https://github.com/Morganlth',
+                            alt: 'Profil Github de LE THUAUT Morgan',
+                            target: '_blank',
+                        },
+                        data: 'Github'
                     }
                 ]
             },

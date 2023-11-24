@@ -51,9 +51,14 @@ style:transform="translateY({features_TRANSLATE_Y}%)"
                         <section
                         slot="content"
                         >
+                            <div
+                            class="text-background"
+                            >
+                                {feature.topic.toUpperCase()}
+                            </div>
+                    
                             <h3
                             class="topic"
-                            data-topic={feature.topic}
                             >
                                 {feature.topic}
                             </h3>
@@ -284,7 +289,7 @@ lang="scss"
 
     @include utils.placement(absolute, $top: 50%, $right: 0, $left: 0);
 
-    transition: transform .3s ease-out;
+    transition: transform .2s ease-out;
 
     .container
     {
@@ -293,6 +298,8 @@ lang="scss"
         margin-bottom: 4rem;
 
         &.show>div { transform: translate(0, 0); }
+
+        &>div, section, .feature { box-sizing: border-box; }
 
         &>div:nth-child(1) { border-top: solid $primary 1rem; }
 
@@ -322,8 +329,6 @@ lang="scss"
 
             border-bottom: solid $intermediate 1px;
 
-            box-sizing: border-box;
-
             transition: transform $duration var(--feature-delay, 0) ease-in-out;
         }
 
@@ -337,38 +342,47 @@ lang="scss"
 
                 transform: translateY(-50%);
 
-                width:  10rem;
                 height: $height;
     
                 padding-top: 2.4rem;
             
-                background-color: $dark;
-                mix-blend-mode:   hue;
+                mix-blend-mode: hue;
 
-                border-inline: solid $primary 1rem;
-
-                box-sizing: border-box;
+                border-right: solid $primary 1rem;
             }
-        
-            display: flex;
     
             width: 100%;
         }
 
-        .topic, .contact-me { white-space: nowrap; }
-
-        .topic
+        .text-background
         {
-            &::before { @include font.h-($color: $dark, $line-height: 0, $italic: true); }
-        
-            @include font.h-($n: 2, $color: $primary, $line-height: 0);
+            --title-size: 54rem;
 
-            transform: translateY(-3rem);
+            @include utils.placement(absolute, $top: 50%, $left: 0, $z: -1, $pe: attr(data-topic));
+            @include font.h-($color: $dark, $line-height: 0, $italic: true);
 
-            width: 0;
+            text-shadow:
+             1px  1px $light,
+            -1px  1px $light,
+            -1px -1px $light,
+             1px -1px $light;
+
+            mix-blend-mode: hue;
         }
 
-        .feature { width: fit-content; }
+        .text-background, .contact-me { white-space: nowrap; }
+
+        .topic { @include font.h-($n: 2, $color: $light, $line-height: 1); }
+
+        .feature
+        {
+            display: inline;
+    
+            background-color: $intermediate;
+
+            padding-block: .2rem;
+            padding-left:  app.$gap-inline; 
+        }
 
         a
         {
@@ -400,30 +414,12 @@ lang="scss"
 
         .container
         {
-            section { gap: 10%; }
+            section { padding-left: 6%; }
 
-            .topic
-            {
-                &::before
-                {
-                    --title-size: 54rem;
+            .topic { line-height: 0; }
 
-                    @include utils.placement(absolute, $z: -1, $top: 3rem, $pe: attr(data-topic));
-
-                    text-shadow:
-                     1px  1px $light,
-                    -1px  1px $light,
-                    -1px -1px $light,
-                     1px -1px $light;
-                }
-
-                transform: translateY(-.5rem);
-
-                margin-left: app.$gap-inline;
-
-                mix-blend-mode: hue;
-            }
-
+            .feature { padding-left: 34%; }
+    
             .contact-me { top: 50%; }
         }
     }
