@@ -30,8 +30,6 @@ context="module"
 class="pages"
 class:hide={$app_$HIDE}
 >
-    <Particles />
-
     {#each prop_DATA as page (page.id)}
         <Page
         prop_ID={page.id}
@@ -71,8 +69,6 @@ class:hide={$app_$HIDE}
 //=======@COMPONENTS|
 
     // --*
-    import Particles from './Particles.svelte'
-
     import Page from './page/Page.svelte'
             
 //=======@STYLE|

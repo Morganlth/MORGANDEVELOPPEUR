@@ -58,9 +58,9 @@ bind:this={particles}
     import { animation }          from '$lib/animation'
 
     // --CONTEXTS
-    import { APP, COMMAND, EVENT } from '../../App.svelte'
+    import { APP, COMMAND, EVENT } from '../../../../App.svelte'
 
-    import { SNAKE_$ON, SNAKE_$BLOCKSIZE, GAMEOVER_$ON } from './page/home/Snake.svelte'
+    import { SNAKE_$ON, SNAKE_$BLOCKSIZE, GAMEOVER_$ON } from './Snake.svelte'
 
 //=======@COMPONENTS|
 
@@ -471,7 +471,7 @@ lang="scss"
     /* --APP */
 
     /* --DEPENDENCIES */
-    @use '../../assets/scss/styles/utils';
+    @use '../../../../assets/scss/styles/utils';
 
     /* --MEDIA */
 
@@ -485,7 +485,7 @@ lang="scss"
 
 .particles
 {
-    @extend %sticky;
+    /* @extend %sticky; */
 
     overflow: clip;
 

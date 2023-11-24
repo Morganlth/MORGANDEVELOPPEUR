@@ -30,6 +30,8 @@ context="module"
 class="home"
 data-page-id={prop_ID}
 >
+    <Particles />
+
     <Snake
     prop_ON={snake_ON && prop_FOCUS && !$app_$MOBILE}
     bind:snake_GAME
@@ -62,7 +64,7 @@ data-page-id={prop_ID}
     />
 
     <Group
-    prop_STYLE="width: 0; height: 0;"
+    prop_STYLE="position:absolute;top:0;left:0;width:0;height:0;"
     let:resize
     let:animation
     bind:group_start
@@ -123,6 +125,7 @@ data-page-id={prop_ID}
     import Group       from '../../../../global/covers/Group.svelte'
     import Block       from '../../../../global/elements/Block.svelte'
 
+    import Particles   from './Particles.svelte'
     import Snake       from './Snake.svelte'
     import BlackBlocks from './BlackBlocks.svelte'
     import Mask        from './Mask.svelte'
