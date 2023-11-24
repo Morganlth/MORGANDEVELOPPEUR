@@ -30,8 +30,6 @@ context="module"
 class="main"
 style:height="{MAIN_HEIGHT}%"
 >
-    <Particles />
-
     <Pages
     prop_DATA={DATA}
     bind:pages_e$Scroll
@@ -67,7 +65,6 @@ style:height="{MAIN_HEIGHT}%"
 //=======@COMPONENTS|
 
     // --*
-    import Particles from './Particles.svelte'
     import Pages     from './pages/Pages.svelte'
     import Router    from './router/Router.svelte'
     import Spring    from './Spring.svelte'
