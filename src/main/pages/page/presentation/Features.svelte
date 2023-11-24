@@ -354,7 +354,7 @@ lang="scss"
 
         .text-background
         {
-            --title-size: 54rem;
+            --title-size: 56rem;
 
             @include utils.placement(absolute, $top: 50%, $left: 0, $z: -1, $pe: attr(data-topic));
             @include font.h-($color: $dark, $line-height: 0, $italic: true);
