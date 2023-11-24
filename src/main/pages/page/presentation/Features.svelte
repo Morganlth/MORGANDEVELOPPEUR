@@ -293,7 +293,7 @@ lang="scss"
 
     .container
     {
-        $height: 30vh;
+        $height: 32vh;
 
         margin-bottom: 4rem;
 
@@ -343,12 +343,10 @@ lang="scss"
                 transform: translateY(-50%);
 
                 height: $height;
-    
-                padding-top: 2.4rem;
             
                 mix-blend-mode: hue;
 
-                border-right: solid $primary 1rem;
+                border-right: solid $primary 1.2rem;
             }
     
             width: 100%;
