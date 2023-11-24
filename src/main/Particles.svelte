@@ -516,6 +516,8 @@ lang="scss"
     {
         @extend %sticky;
 
+        overflow: clip;
+
         border: solid $primary 2px;
 
         box-sizing: border-box;
