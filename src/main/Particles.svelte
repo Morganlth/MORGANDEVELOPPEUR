@@ -487,7 +487,7 @@ lang="scss"
 {
     @extend %sticky;
 
-    isolation: isolate;
+    touch-action: none;
 
     /* overflow: clip; */
 
