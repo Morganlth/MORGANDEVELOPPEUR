@@ -487,6 +487,8 @@ lang="scss"
 {
     @extend %sticky;
 
+    isolation: isolate;
+
     overflow: clip;
 
     pointer-events: none;
