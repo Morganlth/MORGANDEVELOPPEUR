@@ -491,6 +491,8 @@ lang="scss"
     right: 0;
     bottom: 0;
 
+    isolation: isolate;
+
     width: 100%;
     height: 100%;
 
