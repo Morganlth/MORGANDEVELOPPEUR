@@ -89,7 +89,7 @@ bind:this={particles}
     // --THIS
     const
     PARTICLES_COLORS           = [COLORS.indicator, COLORS.primary, COLORS.light],
-    PARTICLES_BACKGROUND_COLOR = color_rgba(COLORS.dark, .24)
+    PARTICLES_BACKGROUND_COLOR = color_rgba(COLORS.dark, .1)
     ,
     PARTICLES_MAX                  = 20,
     PARTICLES_DEFAULT_MOUSE_RADIUS = 100,
@@ -490,6 +490,17 @@ lang="scss"
     overflow: clip;
 
     pointer-events: none;
+
+    &::after
+    {
+        @include utils.placement(absolute, 0, 0, 0, 0, $pe: true);
+
+        @extend %any-size;
+
+        background:
+        radial-gradient(circle at 18% -20%,  $dark    36%, transparent 110%),
+        radial-gradient(circle at 12% -100%, $primary 0%,  transparent 88%);
+    }
 }
 
 
