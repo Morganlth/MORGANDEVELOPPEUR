@@ -29,6 +29,7 @@ context="module"
 <h3
 class="tag"
 class:focus={tag_FOCUS}
+class:target={prop_TARGET}
 style={prop_getTagStyle()}
 bind:this={tag}
 >
@@ -78,6 +79,7 @@ bind:this={tag}
     // --PROPS
     export let
     prop_FOCUS  = false,
+    prop_TARGET = false,
     prop_IMG_ON = false
     ,
     prop_CONTENT  = '',
@@ -129,7 +131,7 @@ bind:this={tag}
     // --OUTSIDE
 
     // --THIS
-    $: tag_update(prop_FOCUS)
+    $: tag_update(prop_FOCUS || prop_TARGET)
 
     // --INSIDE
 
@@ -226,8 +228,6 @@ lang="scss"
     width:  fit-content;
     height: fit-content;
 
-    mix-blend-mode: screen;
-
     text-align: right;
 
     transition: opacity $duration;
@@ -246,6 +246,8 @@ lang="scss"
         }
     }
 
+    &.target { mix-blend-mode: screen; }
+
     img
     {
         @include utils.placement(absolute, $top: 50%, $left: 50%, $z: -1);
@@ -254,10 +256,14 @@ lang="scss"
 
         opacity: 0;
 
-        width:  min(28vw, 28vh);
-        height: auto;
+        width:      min(36vw, 36vh);
+        height:     auto;
+        max-height: min(24vw, 24vh);
 
         clip-path: polygon(0 50%, 0 50%, 0 50%, 0 50%);
+
+        object-fit:      cover;
+        object-position: top;
 
         transition: transform $duration, opacity 0s $duration, clip-path $duration;
     }

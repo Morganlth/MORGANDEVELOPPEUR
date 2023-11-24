@@ -42,12 +42,13 @@ bind:this={project}
         />
 
         <Tag
-        prop_FOCUS={prop_FOCUS && (tag_FOCUS || prop_TARGET)}
+        prop_FOCUS={prop_FOCUS && tag_FOCUS}
         prop_IMG_ON={tag_IMG_ON}
         prop_CONTENT={prop_PROJECT.title}
         prop_IMG={prop_PROJECT.img}
         prop_DURATION={TAG_DURATION}
         prop_getFragmentsStyle={fragments_getStyle}
+        {prop_TARGET}
         on:in={tag_eIn}
         on:out={tag_eOut}
         />
