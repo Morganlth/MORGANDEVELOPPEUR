@@ -44,6 +44,12 @@ class="footer"
             {/each}
         </ul>
     </nav>
+
+    <p>
+        lang:
+
+        <strong>fr</strong>
+    </p>
 </footer>
 
 
@@ -187,10 +193,15 @@ lang="scss"
 
 .footer
 {
+    &, ul { display: flex; }
+
     @include utils.placement(fixed, $right: 0, $bottom: 0, $z: 2);
 
     @extend %no-drag;
     @extend %a-scaled;
+
+    justify-content: space-between;
+    align-items: flex-end;
 
     width: 100%;
 
@@ -204,7 +215,6 @@ lang="scss"
 
     ul
     {
-        display:         flex;
         justify-content: flex-start;
 
         gap: app.$gap-block;
@@ -234,6 +244,13 @@ lang="scss"
 
             gap: 8rem;
         }
+    }
+
+    &>p
+    {
+        @include font.text($color: $light);
+
+        padding-bottom: $padding-block;
     }
 }
 
