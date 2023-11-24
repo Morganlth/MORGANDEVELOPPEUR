@@ -501,10 +501,10 @@ lang="scss"
 
         border: solid $light 2px;
 
-box-sizing: border-box;
+        box-sizing: border-box;
     }
 
-    &::after
+    /* &::after
     {
         @include utils.placement(absolute, 0, 0, 0, 0, $pe: true);
 
@@ -513,7 +513,11 @@ box-sizing: border-box;
         background:
         radial-gradient(circle at 20% -20%,  $dark    40%, transparent 110%),
         radial-gradient(circle at 10% -100%, $primary 0%,  transparent 88%);
-    }
+    } */
+
+    border: solid $primary 2px;
+
+        box-sizing: border-box;
 }
 
 
