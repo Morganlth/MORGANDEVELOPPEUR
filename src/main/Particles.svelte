@@ -489,6 +489,8 @@ lang="scss"
 
     @extend %any-size;
 
+    transform: scale(1);
+
     isolation: isolate;
 
     overflow: clip;
