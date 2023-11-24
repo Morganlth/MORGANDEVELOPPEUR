@@ -495,6 +495,8 @@ lang="scss"
 
     pointer-events: none;
 
+    background-color: $dark;
+
     canvas
     {
         @extend %sticky;
