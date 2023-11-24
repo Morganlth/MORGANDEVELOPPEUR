@@ -485,13 +485,20 @@ lang="scss"
 
 .particles
 {
-    @extend %sticky;
+    @include utils.placement(absolute, 0, 0, 0, 0);
+
+    @extend %any-size;
 
     isolation: isolate;
 
     overflow: clip;
 
     pointer-events: none;
+
+    canvas
+    {
+        @extend %sticky;
+    }
 
     &::after
     {
