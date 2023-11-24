@@ -491,6 +491,8 @@ lang="scss"
     right: 0;
     bottom: 0;
 
+    overflow: clip;
+
     isolation: isolate;
 
     width: 100%;
@@ -514,7 +516,10 @@ lang="scss"
 
     canvas
     {
-        @extend %sticky;
+        /* @extend %sticky; */
+
+        position: sticky;
+        top: 0;
 
         overflow: clip;
 
