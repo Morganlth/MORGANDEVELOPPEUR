@@ -243,6 +243,7 @@ lang="scss"
 
 .router
 {
+    display: none !important;
     &, ul, li
     {
         width:  fit-content;

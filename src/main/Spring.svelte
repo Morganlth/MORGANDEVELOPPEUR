@@ -202,6 +202,7 @@ lang="scss"
 
 .spring
 {
+    display: none !important;
     @include utils.fixed($z: 3); /* > header */
 
     pointer-events: none;
