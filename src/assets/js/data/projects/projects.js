@@ -49,6 +49,12 @@
                     Bref, on est plus sur une maquette qu\'un réel site web.
                     Néanmoins, rappelez-vous que ceci est un projet pour apprendre les bases du développement web.`
             ,
+                img:
+                {
+                    src: '/images/booki/logo/booki3x.png',
+                    alt: 'projet 1 Booki'
+                }
+            ,
                 datas:
                 {
                     nav:
@@ -195,6 +201,12 @@
                     Dans ce projet, vous retrouverez une copie du travail original.
                     Malheureusement les fonctionnalités principales ne sont pas disponibles (comme la page de login).`
             ,
+                img:
+                {
+                    src: '/images/sophiebluel/sophie-bluel.png',
+                    alt: 'projet 2 Sophie Bluel'
+                }
+            ,
                 datas:
                 {
                     nav:
@@ -294,6 +306,12 @@
                     Ce projet a pour but de travailler le référencement et l\'optimisation.
                     Dans le code original (disponible sur mon github) Bootsrap était intégré par défaut.
                     Dans cette version j\'ai entièrement supprimé le framework pour retirer tout le superflu.`
+            ,
+                img:
+                {
+                    src: '/images/ninacarducci/nina.png',
+                    alt: 'projet 3 Nina Carducci'
+                }
             ,
                 datas:
                 {

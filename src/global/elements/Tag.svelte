@@ -37,6 +37,14 @@ bind:this={tag}
     prop_FRAGS={{ children: TAG_FRAGS, value: prop_CONTENT }}
     prop_getStyle={prop_getFragmentsStyle}
     />
+
+    {#if prop_IMG}
+        <!-- svelte-ignore a11y-missing-attribute -->
+        <img
+        class:on={prop_IMG_ON}
+        {...prop_IMG}
+        >
+    {/if}
 </h3>
 
 
@@ -69,9 +77,11 @@ bind:this={tag}
 
     // --PROPS
     export let
-    prop_FOCUS = false
+    prop_FOCUS  = false,
+    prop_IMG_ON = false
     ,
     prop_CONTENT  = '',
+    prop_IMG      = void {},
     prop_DURATION = 0
     ,
     prop_getTagStyle       = () => '',
@@ -193,6 +203,7 @@ lang="scss"
     /* --APP */
 
     /* --DEPENDENCIES */
+    @use '../../assets/scss/styles/utils';
     @use '../../assets/scss/styles/font';
 
     /* --MEDIA */
@@ -201,6 +212,7 @@ lang="scss"
 /* #\-VARIABLES-\ */
 
     /* --* */
+    $duration: var(--frag-duration, .4s);
 
 
 /* #\-THIS-\ */
@@ -214,11 +226,43 @@ lang="scss"
     width:  fit-content;
     height: fit-content;
 
+    mix-blend-mode: screen;
+
     text-align: right;
 
-    transition: opacity var(--frag-duration, .4s);
+    transition: opacity $duration;
 
-    &.focus { opacity: 1; }
+    &.focus
+    {
+        opacity: 1;
+
+        img.on
+        {
+            opacity: 1;
+        
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+
+            transition: clip-path $duration;
+        }
+    }
+
+    img
+    {
+        $size: 26rem;
+    
+        @include utils.placement(absolute, $top: 50%, $left: 50%, $z: -1);
+
+        transform: translate(var(--tag-x, 0), calc(var(--tag-y, 0) - 50%));
+
+        opacity: 0;
+
+        width:  $size;
+        height: fit-content;
+
+        clip-path: polygon(0 50%, 0 50%, 0 50%, 0 50%);
+
+        transition: transform $duration, opacity 0s $duration, clip-path $duration;
+    }
 }
 
 

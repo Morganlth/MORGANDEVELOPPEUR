@@ -227,8 +227,6 @@ lang="scss"
 
     position: relative;
 
-    opacity: .9;
-
     width: 100%;
     height: 3.4rem;
     
@@ -249,8 +247,6 @@ lang="scss"
 
     &.selected
     {
-        opacity: 1;
-
         animation: a-selected .4s forwards;
 
         &::after

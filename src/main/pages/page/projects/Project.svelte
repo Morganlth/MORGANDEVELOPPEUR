@@ -43,7 +43,9 @@ bind:this={project}
 
         <Tag
         prop_FOCUS={prop_FOCUS && (tag_FOCUS || prop_TARGET)}
+        prop_IMG_ON={tag_IMG_ON}
         prop_CONTENT={prop_PROJECT.title}
+        prop_IMG={prop_PROJECT.img}
         prop_DURATION={TAG_DURATION}
         prop_getFragmentsStyle={fragments_getStyle}
         on:in={tag_eIn}
@@ -177,12 +179,15 @@ bind:this={project}
     let head
 
     let
-    tag_FOCUS = false
+    tag_FOCUS  = false,
+    tag_IMG_ON = false
     ,
     tag_TRANSLATE_X = 0,
     tag_TRANSLATE_Y = 0
     ,
     tag_DELAY
+    ,
+    tag_TIMEOUT
 
     let
     card_TRANSLATE_X = 0,
@@ -218,6 +223,13 @@ bind:this={project}
     {
         tag_TRANSLATE_X = card_TRANSLATE_X + card_HALF_WIDTH
         tag_TRANSLATE_Y = APP.app_HEIGHT * .5
+    }
+
+    function tag_setTimeout()
+    {
+        tag_IMG_ON = false
+
+        tag_TIMEOUT = setTimeout(() => tag_IMG_ON = true, TAG_DURATION * 2)
     }
 
     // --GET
@@ -268,7 +280,14 @@ bind:this={project}
     }
 
     // --DESTROY
-    function project_destroy() { particles_update(false) }
+    function project_destroy()
+    {
+        particles_update(false)
+
+        tag_destroyTimeout()
+    }
+
+    function tag_destroyTimeout() { clearTimeout(tag_TIMEOUT) }
 
 
 //=======@COMMANDS|
@@ -279,7 +298,12 @@ bind:this={project}
 //=======@EVENTS|
 
     // --*
-    async function card_eMouseAndTouchMove({ detail: {x, y} }) { tag_updateTranslate(x, y) }
+    async function card_eMouseAndTouchMove({ detail: {x, y} })
+    {
+        tag_destroyTimeout()
+        tag_setTimeout()
+        tag_updateTranslate(x, y)
+    }
 
     function card_eMouseEnter({detail})
     {
@@ -290,6 +314,8 @@ bind:this={project}
 
     function card_eMouseLeave()
     {
+        tag_destroyTimeout()
+    
         tag_FOCUS = false
 
         SVELTE_DISPATCH('mouseleave')

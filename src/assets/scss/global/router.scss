@@ -72,7 +72,14 @@
         {
             pointer-events: auto !important;
 
-            &:hover .route, .route:focus { clip-path: $route-default-clip !important; }
+            &:hover .route, .route:focus
+            {
+                opacity: 1 !important;
+        
+                clip-path: $route-default-clip !important;
+
+                transition: $route-default-transition !important;
+            }
         }
     }
 }
