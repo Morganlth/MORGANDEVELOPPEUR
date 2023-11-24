@@ -287,7 +287,6 @@ lang="scss"
 
 .pages
 {
-    display: none;
     @include utils.placement(absolute, 0, 0, 0, 0);
 
     @extend %any-size;

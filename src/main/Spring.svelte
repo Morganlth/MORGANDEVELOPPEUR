@@ -204,8 +204,6 @@ lang="scss"
 {
     @include utils.fixed($z: 3); /* > header */
 
-    isolation: isolate;
-
     pointer-events: none;
 
     mix-blend-mode: difference;
