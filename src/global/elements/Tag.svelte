@@ -248,15 +248,13 @@ lang="scss"
 
     img
     {
-        $size: 26rem;
-    
         @include utils.placement(absolute, $top: 50%, $left: 50%, $z: -1);
 
         transform: translate(var(--tag-x, 0), calc(var(--tag-y, 0) - 50%));
 
         opacity: 0;
 
-        width:  $size;
+        width:  min(28vw, 28vh);
         height: auto;
 
         clip-path: polygon(0 50%, 0 50%, 0 50%, 0 50%);
