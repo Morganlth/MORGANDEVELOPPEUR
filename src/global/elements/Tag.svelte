@@ -257,7 +257,7 @@ lang="scss"
         opacity: 0;
 
         width:  $size;
-        height: fit-content;
+        height: auto;
 
         clip-path: polygon(0 50%, 0 50%, 0 50%, 0 50%);
 
