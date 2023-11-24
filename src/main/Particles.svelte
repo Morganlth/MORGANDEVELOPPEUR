@@ -30,16 +30,12 @@ context="module"
 class="particles"
 bind:this={particles}
 >
-    <div>
-        <div>
-            <canvas
-            style:width="{canvas_WIDTH}px"
-            style:height="{canvas_HEIGHT}px"
-            bind:this={canvas}
-            >
-            </canvas>
-        </div>
-    </div>
+    <canvas
+    style:width="{canvas_WIDTH}px"
+    style:height="{canvas_HEIGHT}px"
+    bind:this={canvas}
+    >
+    </canvas>
 </div>
 
 
@@ -489,34 +485,13 @@ lang="scss"
 
 .particles
 {
-    &, &>div
-    {
-        @include utils.placement(absolute, 0, 0, 0, 0);
+    @extend %sticky;
 
-        @extend %any-size;
-    }
+    overflow: clip;
 
-    transform: scale(1);
+    pointer-events: none;
 
-    isolation: isolate;
-
-    &>div>div
-    {
-        @extend %sticky;
-
-        transform: scale(1);
-
-        overflow: clip;
-    }
-
-    canvas
-    {
-        border: solid $light 2px;
-
-        box-sizing: border-box;
-    }
-
-    /* &::after
+    &::after
     {
         @include utils.placement(absolute, 0, 0, 0, 0, $pe: true);
 
@@ -525,7 +500,7 @@ lang="scss"
         background:
         radial-gradient(circle at 20% -20%,  $dark    40%, transparent 110%),
         radial-gradient(circle at 10% -100%, $primary 0%,  transparent 88%);
-    } */
+    }
 }
 
 
