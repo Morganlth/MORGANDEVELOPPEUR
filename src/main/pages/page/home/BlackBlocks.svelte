@@ -193,9 +193,10 @@ bind:this={blackblocks}
     let
     blackblocks
     ,
-    blackblocks_CHARGED  = false,
-    blackblocks_OPTIMISE = false,
-    blackblocks_HIDE     = true
+    blackblocks_CHARGED   = false,
+    blackblocks_OPTIMISE  = false,
+    blackblocks_HIDE      = true,
+    blackblocks_ANIMATION = false
     ,
     blackblocks_SCENE,
     blackblocks_CAMERA,
@@ -555,10 +556,21 @@ bind:this={blackblocks}
         if (blackblocks && blackblocks_CHARGED)
         {
             const DURATION = blackblocks_updateBlocksPosition(focus)
-    
+
+            blackblocks_updateAnimation(DURATION)
             blackblocks_updateEvent(prop_ON, blackblocks_OPTIMISE, focus ? 0 : DURATION)
         }
     }
+
+    function blackblocks_updateAnimation(duration = 0)
+    {
+        blackblocks_destroyTimeout()
+    
+        blackblocks_ANIMATION = true
+
+        blackblocks_TIMEOUT = setTimeout(() => blackblocks_ANIMATION = false, duration)
+    }
+
 
     function blackblocks_updateEvent(on, optimise, delay = 0)
     {
@@ -596,7 +608,8 @@ bind:this={blackblocks}
         if (prop_FOCUS)
         {
             blackblocks_updateMouseLight()
-            blackblocks_updateBlocksLayout()
+            
+            if (!blackblocks_ANIMATION) blackblocks_updateBlocksLayout()
         }
     }
     function blackblocks_updateSceneVars(radius, intensity, angle, forcePosition, forceRotation)

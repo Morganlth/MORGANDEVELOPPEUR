@@ -140,8 +140,8 @@ style:transform="translateY({features_TRANSLATE_Y}%)"
     export let
     prop_FOCUS = false
     ,
-    prop_RATIO    = 0,
-    prop_FRACTION = 0
+    prop_RATIO           = 0,
+    prop_CONTENTS_LENGTH = 0
     ,
     prop_FEATURES
 
@@ -199,15 +199,25 @@ style:transform="translateY({features_TRANSLATE_Y}%)"
     // --UPDATES
     function features_update(ratio)
     {
-        let last_SHOW = false
-    
-        features_TRANSLATE_Y = -100 * ratio
+        features_updateTranslate(ratio)
+        features_updateTarget(ratio)
+    }
+
+    function features_updateTranslate(ratio) { features_TRANSLATE_Y = -100 * ratio }
+
+    function features_updateTarget(ratio)
+    {
+        let
+        last_SHOW = false,
+        position  = prop_CONTENTS_LENGTH
 
         for (let i = prop_FEATURES.length - 1; i >= 0; i--)
         {
-            const
-            FEATURE = prop_FEATURES[i],
-            SHOW    = last_SHOW ? last_SHOW : ratio >= FEATURE.id * prop_FRACTION
+            const FEATURE = prop_FEATURES[i]
+
+            position -= FEATURE.contents.length
+        
+            const SHOW = last_SHOW ? last_SHOW : ratio >= position / prop_CONTENTS_LENGTH
         
             prop_FEATURES[i] = { ...FEATURE, show: SHOW }
 

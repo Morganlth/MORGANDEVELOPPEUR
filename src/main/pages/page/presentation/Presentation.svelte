@@ -31,7 +31,7 @@ class="presentation"
 data-page-id={prop_ID}
 >
     <Features
-    prop_FRACTION={FEATURES_FRACTION}
+    prop_CONTENTS_LENGTH={FEATURES_CONTENTS_LENGTH}
     {prop_FOCUS}
     {prop_RATIO}
     {prop_FEATURES}
@@ -105,7 +105,7 @@ data-page-id={prop_ID}
     // --OUTSIDE
 
     // --THIS
-    const FEATURES_FRACTION = 1 / prop_FEATURES.length
+    const FEATURES_CONTENTS_LENGTH = prop_FEATURES.reduce((accumulator, current) => accumulator += current.contents.length, 0)
 
     // --INSIDE
 
@@ -226,7 +226,15 @@ data-page-id={prop_ID}
 
     function presentation_goTo(id = 0, instant, hide, callback)
     {
-        const TOP = prop_START + id * FEATURES_FRACTION * prop_DIF + prop_DIF * FEATURES_FRACTION / 2
+        let position = 0
+    
+        for (const DATA of prop_FEATURES)
+        {
+            if (DATA.id < id) position += DATA.contents.length
+            else break
+        }
+
+        const TOP = prop_START + prop_DIF * position / FEATURES_CONTENTS_LENGTH + APP.app_HEIGHT / 4 // 1/4 app_HEIGHT because Features top 50%
 
         EVENT.event_scrollTo(TOP, instant ?? ROUTER.router_getInstant(TOP), hide, callback)
     }
