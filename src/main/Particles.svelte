@@ -485,25 +485,13 @@ lang="scss"
 
 .particles
 {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    @extend %sticky;
 
     overflow: clip;
 
-    isolation: isolate;
-
-    width: 100%;
-    height: 100%;
-
-
-    /* overflow: clip; */
-
     pointer-events: none;
 
-    /* &::after
+    &::after
     {
         @include utils.placement(absolute, 0, 0, 0, 0, $pe: true);
 
@@ -512,20 +500,6 @@ lang="scss"
         background:
         radial-gradient(circle at 20% -20%,  $dark    40%, transparent 110%),
         radial-gradient(circle at 10% -100%, $primary 0%,  transparent 88%);
-    } */
-
-    canvas
-    {
-        /* @extend %sticky; */
-
-        position: sticky;
-        top: 0;
-
-        overflow: clip;
-
-        border: solid $primary 2px;
-
-        box-sizing: border-box;
     }
 
 
