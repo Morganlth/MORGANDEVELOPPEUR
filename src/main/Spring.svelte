@@ -27,18 +27,20 @@ context="module"
 <!-- #|-HTML-| -->
 
 {#if $spring_$ON}
-    <svg
+    <div
     class="spring"
     class:hide={spring_HIDE}
     class:true={$spring_$STATE === 1}
     class:false={$spring_$STATE === -1}
     >
-        <circle
-        cx={$spring_$COORDS.x}
-        cy={$spring_$COORDS.y}
-        r={Math.abs($spring_$SIZE)}
-        />
-    </svg>
+        <svg>
+            <circle
+            cx={$spring_$COORDS.x}
+            cy={$spring_$COORDS.y}
+            r={Math.abs($spring_$SIZE)}
+            />
+        </svg>
+    </div>
 {/if}
 
 
@@ -208,15 +210,20 @@ lang="scss"
 
     pointer-events: none;
 
-    mix-blend-mode: difference;
-
     &.hide { display: none !important; }
 
-    &.true, &.false { mix-blend-mode: screen !important; }
+    &.true, &.false svg { mix-blend-mode: screen !important; }
 
     &.true  circle { fill: $primary   !important; }
 
     &.false circle { fill: $indicator !important; }
+
+    svg
+    {
+        @extend %any-size;
+
+        mix-blend-mode: difference;
+    }
 
     circle
     {
