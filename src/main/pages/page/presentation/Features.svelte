@@ -299,7 +299,7 @@ lang="scss"
 
     @include utils.placement(absolute, $top: 50%, $right: 0, $left: 0);
 
-    transition: transform .7s ease-out;
+    transition: transform .1s ease-out;
 
     .container
     {
@@ -418,15 +418,20 @@ lang="scss"
 
             transform: translateY(-50%);
         }
+    }
 
-        @include media.min($ms4, $ms4)
+    @include media.min($ms4, $ms4)
+    {
+        transition-duration: .7s;
+
+        .container
         {
             section { padding-left: 6%; }
 
             .topic { line-height: 0; }
 
             .feature { padding-left: 34%; }
-
+    
             .contact-me { top: 50%; }
         }
     }
