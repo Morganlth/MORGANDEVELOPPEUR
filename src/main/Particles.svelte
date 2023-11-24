@@ -487,11 +487,11 @@ lang="scss"
 {
     @extend %sticky;
 
-    overflow: clip;
+    /* overflow: clip; */
 
     pointer-events: none;
 
-    &::after
+    /* &::after
     {
         @include utils.placement(absolute, 0, 0, 0, 0, $pe: true);
 
@@ -500,7 +500,9 @@ lang="scss"
         background:
         radial-gradient(circle at 20% -20%,  $dark    40%, transparent 110%),
         radial-gradient(circle at 10% -100%, $primary 0%,  transparent 88%);
-    }
+    } */
+
+    canvas { display: none !important; }
 
 
     border: solid $light 2px;
