@@ -485,13 +485,8 @@ lang="scss"
 
 .particles
 {
-    /* @extend %sticky; */
-    position: sticky;
-    top: 0;
-    left: 0;
-
     width: 100%;
-    height: 100svh;
+    height: 100%;
 
 
     /* overflow: clip; */
@@ -509,7 +504,14 @@ lang="scss"
         radial-gradient(circle at 10% -100%, $primary 0%,  transparent 88%);
     } */
 
-    canvas { display: none !important; }
+    canvas
+    {
+        @extend %sticky;
+
+        border: solid $primary 2px;
+
+        box-sizing: border-box;
+    }
 
 
     border: solid $light 2px;
