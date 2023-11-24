@@ -485,9 +485,14 @@ lang="scss"
 
 .particles
 {
-    @extend %sticky;
+    /* @extend %sticky; */
+    position: sticky;
+    top: 0;
+    left: 0;
 
-    touch-action: none;
+    width: 100%;
+    height: 100svh;
+
 
     /* overflow: clip; */
 
