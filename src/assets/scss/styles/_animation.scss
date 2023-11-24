@@ -12,7 +12,6 @@
 
     /* --DEPENDENCIES */
     @use './utils';
-    @use './display';
 
     /* --MEDIA */
 
@@ -52,9 +51,10 @@
         {
             @include utils.placement(absolute, 0, 0, 0, 0, $pe: attr(data-content));
 
-            @extend %f-center;
             @extend %any-size;
 
+            display: flex;
+    
             clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
 
             color: $primary;

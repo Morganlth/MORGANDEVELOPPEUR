@@ -393,7 +393,11 @@ lang="scss"
 
             transition: color .4s;
 
-            &:hover { color: $dark; }
+            &::after
+            {
+                justify-content: flex-end;
+                align-items:     center;
+            }
         }
 
         .contact-me

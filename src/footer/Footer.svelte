@@ -236,6 +236,12 @@ lang="scss"
             text-decoration: none;
 
             &:focus { color: $primary; }
+
+            &::after
+            {
+                justify-content: center;
+                align-items:     center;
+            }
         }
 
         @include media.min($ms4)
