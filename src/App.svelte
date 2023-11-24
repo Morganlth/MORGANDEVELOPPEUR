@@ -54,11 +54,11 @@ on:touchmove|passive={EVENT.event_touchMove.bind(EVENT)}
 on:touchstart|once={app_eTouchStart}
 >
     {#if app_FONTS_CHARGED}
-        <Header />
+        <!-- <Header /> -->
         <Main
         bind:main_CHARGED
         />
-        <Footer />
+        <!-- <Footer /> -->
     {/if}
 </div>
 
