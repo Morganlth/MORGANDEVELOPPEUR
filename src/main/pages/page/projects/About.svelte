@@ -27,8 +27,7 @@ context="module"
 <!-- #|-HTML-| -->
 
 <div
-class="about"
-style:--about-transition-duration="{about_TRANSITION_DURATION}ms"
+class="about {$APP_$USER_AGENT}"
 bind:this={about}
 transition:transition_fade={{ duration: 200 }}
 >
@@ -95,6 +94,7 @@ transition:transition_fade={{ duration: 200 }}
     import { transition_fade } from '$lib/transition'
 
     // --CONTEXTS
+    import { APP } from '../../../../App.svelte'
 
 //=======@COMPONENTS|
 
@@ -131,6 +131,7 @@ transition:transition_fade={{ duration: 200 }}
     const SVELTE_DISPATCH = createEventDispatcher()
 
     // --CONTEXTS
+    const APP_$USER_AGENT = APP.app_$USER_AGENT
 
     // --OUTSIDE
 
@@ -149,10 +150,7 @@ transition:transition_fade={{ duration: 200 }}
     // --OUTSIDE
 
     // --THIS
-    let
-    about
-    ,
-    about_TRANSITION_DURATION = 0
+    let about
 
     // --INSIDE
     let
@@ -191,15 +189,11 @@ transition:transition_fade={{ duration: 200 }}
     // --SET
     function about_set()
     {
-        about_setVars()
-    
         canvas_setVars()
         canvas_setMatrix()
         canvas_drawBackground()
         canvas_a()
     }
-
-    function about_setVars() { about_TRANSITION_DURATION = navigator.userAgent.match(/(Chrome|Safari|Edg)/i) ? 200 : 0 }
 
     function canvas_setVars()
     {
@@ -309,7 +303,8 @@ lang="scss"
 /* #\-VARIABLES-\ */
 
     /* --* */
-    $transition-duration: var(--about-transition-duration, 0ms);
+    $gap-border:         1rem;
+    $gap-center-element: 14%;
 
 
 /* #\-THIS-\ */
@@ -326,9 +321,6 @@ lang="scss"
 
     .content
     {
-        $gap-border:         1rem;
-        $gap-center-element: 14%;
-
         &, .global, .this { @extend %scroll-bar; }
  
         @include font.text($font-size: map.get(font.$font-sizes, s3), $line-height: 1.2);
@@ -370,11 +362,28 @@ lang="scss"
 
             color: $primary;
         }
+    }
 
-        @include media.min($ms4, $ms4)
+    .canvas
+    {
+        pointer-events: none;
+
+        transition: opacity .2s;
+    }
+
+    @include media.min($ms4, $ms4)
+    {
+        &.-webkit
+        {
+            .sup { transition: height .2s; }
+
+            .global, .this { transition: width .2s; }
+        }
+
+        .content
         {
             @include display.grid($width: (auto 1fr), $height: (auto 1fr auto));
-        
+    
             overflow-y: clip;
 
             .sup
@@ -382,8 +391,6 @@ lang="scss"
                 grid-column: 1 / 4; 
 
                 height: var(--y, $gap-center-element);
-
-                transition: height $transition-duration;
             }
 
             .global, .this
@@ -391,8 +398,6 @@ lang="scss"
                 grid-row: 2 / 3;
 
                 overflow: clip auto;
-
-                transition: width $transition-duration;
             }
 
             .global { width: var(--x, 50vw); }
@@ -404,13 +409,6 @@ lang="scss"
                 width: calc(100vw - var(--x, 50vw) - var(--w, 0));
             }
         }
-    }
-
-    .canvas
-    {
-        pointer-events: none;
-
-        transition: opacity .2s;
     }
 }
 

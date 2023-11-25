@@ -72,7 +72,7 @@
         {
             pointer-events: auto !important;
 
-            &:hover .route, .route:focus
+            &:hover .route, .route.selected:focus
             {
                 opacity: 1 !important;
         

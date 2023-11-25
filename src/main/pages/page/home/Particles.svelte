@@ -486,6 +486,8 @@ lang="scss"
 
 .particles
 {
+    @include utils.fixed;
+
     isolation: isolate;
 
     overflow: clip;
