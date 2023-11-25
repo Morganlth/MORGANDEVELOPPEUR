@@ -3,7 +3,7 @@
 
 <!-- #|-CONTEXT-| -->
 
-<!-- <script
+<script
 context="module"
 >
 
@@ -19,9 +19,10 @@ context="module"
 // #\-EXPORTS-\
 
     // --CONTEXTS
+    export const SNAKE = {}
 
 
-</script> -->
+</script>
 
 
 <!-- #|-HTML-| -->
@@ -137,12 +138,7 @@ on:fullscreenchange={snake_eFullscreenChange}
     export let prop_ON = true
 
     // --BINDING
-    export let
-    snake_GAME = false
-    ,
-    snake_BLOCKSIZE = 0
-
-    export let gameover_ON = false
+    export let snake_GAME = false
 
 
 // #\-CONSTANTES-\
@@ -207,6 +203,8 @@ on:fullscreenchange={snake_eFullscreenChange}
     snake_CHARGED    = false,
     snake_INVINCIBLE = true
     ,
+    snake_BLOCKSIZE = SNAKE_DEFAULT_BLOCKSIZE
+    ,
     snake_Z = 0
     ,
     snake_COLOR_BODY  = color_rgba(COLORS.primary, .6),
@@ -241,6 +239,8 @@ on:fullscreenchange={snake_eFullscreenChange}
     canvas_ROWS
     ,
     canvas_CLIENTRECT
+
+    let gameover_ON = false
 
 
 // #\-REATIVES-\
@@ -284,7 +284,7 @@ on:fullscreenchange={snake_eFullscreenChange}
 
         snake_PARENT ??= snake.parentElement
 
-        snake_BLOCKSIZE = SIZE
+        SNAKE.blocksize = (snake_BLOCKSIZE = SIZE)
     }
 
     function snake_setCommands() { COMMAND.command_setCommands(SNAKE_COMMANDS) }
@@ -423,7 +423,7 @@ on:fullscreenchange={snake_eFullscreenChange}
 
     function gameover_update(value)
     {
-        gameover_ON = value
+        SNAKE.gameover = (gameover_ON = value)
 
         if (value)
         {
@@ -565,7 +565,12 @@ on:fullscreenchange={snake_eFullscreenChange}
         snake_Z    = 0
     }
 
-    function snake_startAndStop(value) { if (snake_CHARGED) value ? snake_start() : snake_stop() }
+    function snake_startAndStop(value)
+    {
+        SNAKE.on = value
+
+        if (snake_CHARGED) value ? snake_start() : snake_stop()
+    }
 
     function snake_start()
     {

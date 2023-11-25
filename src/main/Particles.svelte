@@ -58,7 +58,9 @@ bind:this={particles}
     import { animation }          from '$lib/animation'
 
     // --CONTEXTS
-    import { APP, COMMAND, EVENT } from '../../../../App.svelte'
+    import { APP, COMMAND, EVENT } from '../App.svelte'
+
+    import { SNAKE } from './pages/page/home/Snake.svelte'
 
 //=======@COMPONENTS|
 
@@ -72,12 +74,6 @@ bind:this={particles}
 // #\-EXPORTS-\
 
     // --PROPS
-    export let
-    prop_SNAKE    = false,
-    prop_GAMEOVER = false
-    ,
-    prop_SNAKE_BLOCKSIZE = 0
-
 
     // --BINDING
 
@@ -298,9 +294,9 @@ bind:this={particles}
 
             if (particles_testOutside(x, y)) continue
         
-            if (prop_SNAKE && !prop_GAMEOVER && !PARTICLES[i + 7])
+            if (SNAKE.on && !SNAKE.gameover && !PARTICLES[i + 7])
             {
-                if (DISTANCE < prop_SNAKE_BLOCKSIZE) continue
+                if (DISTANCE < SNAKE.blocksize) continue
             }
             else if (DISTANCE < particles_MOUSE_RADIUS) [x, y] = particles_updateXY(DISTANCE_X, DISTANCE_Y)
 
@@ -472,7 +468,7 @@ lang="scss"
     /* --APP */
 
     /* --DEPENDENCIES */
-    @use '../../../../assets/scss/styles/utils';
+    @use '../assets/scss/styles/utils';
 
     /* --MEDIA */
 

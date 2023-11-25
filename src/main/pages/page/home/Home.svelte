@@ -30,17 +30,9 @@ context="module"
 class="home"
 data-page-id={prop_ID}
 >
-    <Particles
-    prop_SNAKE={snake_ON}
-    prop_GAMEOVER={gameover_ON}
-    prop_SNAKE_BLOCKSIZE={snake_BLOCKSIZE}
-    />
-
     <Snake
     prop_ON={snake_ON && prop_FOCUS && !$app_$MOBILE}
     bind:snake_GAME
-    bind:snake_BLOCKSIZE
-    bind:gameover_ON
     />
 
     <BlackBlocks
@@ -131,7 +123,6 @@ data-page-id={prop_ID}
     import Group       from '../../../../global/covers/Group.svelte'
     import Block       from '../../../../global/elements/Block.svelte'
 
-    import Particles   from './Particles.svelte'
     import Snake       from './Snake.svelte'
     import BlackBlocks from './BlackBlocks.svelte'
     import Mask        from './Mask.svelte'
@@ -203,10 +194,6 @@ data-page-id={prop_ID}
     let
     snake_ON   = true,
     snake_GAME = false
-    ,
-    snake_BLOCKSIZE = 0
-
-    let gameover_ON = false
 
     let
     group_start,
