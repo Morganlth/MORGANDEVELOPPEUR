@@ -19,7 +19,7 @@ context="module"
 // #\-EXPORTS-\
 
     // --CONTEXTS
-    export const SNAKE = {}
+    export const SNAKE = { on: false, blocksize: 0, gameover: false }
 
 
 </script>

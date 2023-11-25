@@ -27,7 +27,7 @@ context="module"
 <!-- #|-HTML-| -->
 
 <div
-class="features {$APP_$USER_AGENT}"
+class="features"
 class:focus={prop_FOCUS}
 style:transform="translateY({features_TRANSLATE_Y}%)"
 >
@@ -118,7 +118,6 @@ style:transform="translateY({features_TRANSLATE_Y}%)"
     import COLORS from '$lib/colors'
 
     // --CONTEXTS
-    import { APP } from '../../../../App.svelte'
 
 //=======@COMPONENTS|
 
@@ -155,7 +154,6 @@ style:transform="translateY({features_TRANSLATE_Y}%)"
     // --SVELTE
 
     // --CONTEXTS
-    const APP_$USER_AGENT = APP.app_$USER_AGENT
 
     // --OUTSIDE
 
@@ -302,15 +300,6 @@ lang="scss"
     @include utils.placement(absolute, $top: 50%, $right: 0, $left: 0);
 
     transition: transform .3s ease-out;
-
-    &.-webkit .topic
-    {
-        @include utils.placement(relative, $z: 1);
-
-        letter-spacing:      -1rem;
-        word-spacing:        1.8rem;
-        -webkit-text-stroke: $dark .2rem;
-    }
 
     .container
     {
