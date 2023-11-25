@@ -23,6 +23,7 @@ class App
     #app_$FREEZE       = { value: false, setter: function ({target}) { this.target = target }, optionalparameters: { target: null } }
     #app_$OPTIMISE     = { value: false }
     #app_$SMALL_SCREEN = { value: false }
+    #app_$USER_AGENT   = { value: '-?' }
 
     #app_OPTIMISE_CONFIG = {}
     #app_STORAGE         = {}
@@ -104,6 +105,8 @@ class App
 
     get app_$OPTIMISE()       { return this.#app_$OPTIMISE }
 
+    get app_$USER_AGENT()      { return this.#app_$USER_AGENT }
+
     get app_OPTIMISE_CONFIG() { return this.#app_OPTIMISE_CONFIG }
 
 
@@ -126,9 +129,15 @@ class App
         this.#app_$FREEZE       = store_custom(this.#app_$FREEZE)
         this.#app_$OPTIMISE     = store_custom(this.#app_$OPTIMISE)
         this.#app_$SMALL_SCREEN = store_custom(this.#app_$SMALL_SCREEN)
+        this.#app_$USER_AGENT   = store_custom(this.#app_$USER_AGENT)
     }
 
-    #app_setVars(app) { this.#app = app }
+    #app_setVars(app)
+    {
+        this.#app = app
+
+        this.#app_$USER_AGENT.set(navigator.userAgent.match(/(Chrome|Safari|Edg)/i) ? '-webkit' : '-?')
+    }
 
     #app_setCommands() { COMMAND.command_setCommands(this.#app_COMMANDS) }
 

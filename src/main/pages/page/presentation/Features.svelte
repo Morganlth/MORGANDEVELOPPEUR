@@ -27,7 +27,7 @@ context="module"
 <!-- #|-HTML-| -->
 
 <div
-class="features"
+class="features {$APP_$USER_AGENT}"
 class:focus={prop_FOCUS}
 style:transform="translateY({features_TRANSLATE_Y}%)"
 >
@@ -118,6 +118,7 @@ style:transform="translateY({features_TRANSLATE_Y}%)"
     import COLORS from '$lib/colors'
 
     // --CONTEXTS
+    import { APP } from '../../../../App.svelte'
 
 //=======@COMPONENTS|
 
@@ -154,6 +155,7 @@ style:transform="translateY({features_TRANSLATE_Y}%)"
     // --SVELTE
 
     // --CONTEXTS
+    const APP_$USER_AGENT = APP.app_$USER_AGENT
 
     // --OUTSIDE
 
@@ -301,6 +303,15 @@ lang="scss"
 
     transition: transform .3s ease-out;
 
+    &.-webkit .topic
+    {
+        @include utils.placement(relative, $z: 1);
+
+        letter-spacing:      -1rem;
+        word-spacing:        1.8rem;
+        -webkit-text-stroke: $dark .4rem;
+    }
+
     .container
     {
         $height: 32vh;
@@ -380,15 +391,7 @@ lang="scss"
 
         .text-background, .contact-me { white-space: nowrap; }
 
-        .topic
-        {
-            @include utils.placement(relative, $z: 1);
-            @include font.h-($n: 2, $color: $light, $line-height: 1);
-
-            letter-spacing:      -1rem;
-            word-spacing:        1.8rem;
-            -webkit-text-stroke: $dark .4rem;
-        }
+        .topic { @include font.h-($n: 2, $color: $light, $line-height: 1); }
 
         .feature
         {
