@@ -309,7 +309,7 @@ lang="scss"
 
         letter-spacing:      -1rem;
         word-spacing:        1.8rem;
-        -webkit-text-stroke: $dark .4rem;
+        -webkit-text-stroke: $dark .2rem;
     }
 
     .container
