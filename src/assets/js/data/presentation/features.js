@@ -32,7 +32,7 @@
                 contents:
                 [
                     {
-                        topic: 'NOM Prenom',
+                        topic: 'Nom Prenom',
                         html: 'strong',
                         props: {},
                         data: 'LE THUAUT Morgan'

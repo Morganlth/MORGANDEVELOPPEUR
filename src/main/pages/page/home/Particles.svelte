@@ -60,8 +60,6 @@ bind:this={particles}
     // --CONTEXTS
     import { APP, COMMAND, EVENT } from '../../../../App.svelte'
 
-    import { SNAKE_$ON, SNAKE_$BLOCKSIZE, GAMEOVER_$ON } from './Snake.svelte'
-
 //=======@COMPONENTS|
 
     // --*
@@ -74,6 +72,12 @@ bind:this={particles}
 // #\-EXPORTS-\
 
     // --PROPS
+    export let
+    prop_SNAKE    = false,
+    prop_GAMEOVER = false
+    ,
+    prop_SNAKE_BLOCKSIZE = 0
+
 
     // --BINDING
 
@@ -185,9 +189,6 @@ bind:this={particles}
 // #\-REATIVES-\
 
     // --CONTEXTS
-    $: snake$_ON        = $SNAKE_$ON
-    $: snake$_BLOCKSIZE = $SNAKE_$BLOCKSIZE
-    $: gameover$_ON     = $GAMEOVER_$ON
 
     // --OUTSIDE
 
@@ -297,9 +298,9 @@ bind:this={particles}
 
             if (particles_testOutside(x, y)) continue
         
-            if (snake$_ON && !gameover$_ON && !PARTICLES[i + 7])
+            if (prop_SNAKE && !prop_GAMEOVER && !PARTICLES[i + 7])
             {
-                if (DISTANCE < snake$_BLOCKSIZE) continue
+                if (DISTANCE < prop_SNAKE_BLOCKSIZE) continue
             }
             else if (DISTANCE < particles_MOUSE_RADIUS) [x, y] = particles_updateXY(DISTANCE_X, DISTANCE_Y)
 
@@ -485,7 +486,7 @@ lang="scss"
 
 .particles
 {
-    /* @extend %sticky; */
+    isolation: isolate;
 
     overflow: clip;
 
@@ -498,8 +499,8 @@ lang="scss"
         @extend %any-size;
 
         background:
-        radial-gradient(circle at 20% -20%,  $dark    40%, transparent 110%),
-        radial-gradient(circle at 10% -100%, $primary 0%,  transparent 88%);
+        radial-gradient(circle at 20% -20%,  rgba($dark, .94) 40%, transparent 110%),
+        radial-gradient(circle at 10% -100%, $primary         0%,  transparent 88%);
     }
 }
 

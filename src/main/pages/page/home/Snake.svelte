@@ -3,14 +3,13 @@
 
 <!-- #|-CONTEXT-| -->
 
-<script
+<!-- <script
 context="module"
 >
 
 // #\-IMPORTS-\
 
     // --SVELTE
-    import { writable } from 'svelte/store'
 
      // --LIB
 
@@ -20,14 +19,9 @@ context="module"
 // #\-EXPORTS-\
 
     // --CONTEXTS
-    export const
-    SNAKE_$ON        = writable(true),
-    SNAKE_$BLOCKSIZE = writable(40)
-    
-    export const GAMEOVER_$ON = writable(false)
 
 
-</script>
+</script> -->
 
 
 <!-- #|-HTML-| -->
@@ -56,7 +50,7 @@ on:fullscreenchange={snake_eFullscreenChange}
         >
         </div>
 
-        {#if gameover$_ON}
+        {#if gameover_ON}
             <button
             class="gameover"
             type="button"
@@ -143,7 +137,12 @@ on:fullscreenchange={snake_eFullscreenChange}
     export let prop_ON = true
 
     // --BINDING
-    export let snake_GAME = false
+    export let
+    snake_GAME = false
+    ,
+    snake_BLOCKSIZE = 0
+
+    export let gameover_ON = false
 
 
 // #\-CONSTANTES-\
@@ -210,8 +209,6 @@ on:fullscreenchange={snake_eFullscreenChange}
     ,
     snake_Z = 0
     ,
-    snake_BLOCKSIZE = SNAKE_DEFAULT_BLOCKSIZE
-    ,
     snake_COLOR_BODY  = color_rgba(COLORS.primary, .6),
     snake_COLOR_APPLE = color_rgba(COLORS.indicator, .8)
     ,
@@ -257,7 +254,6 @@ on:fullscreenchange={snake_eFullscreenChange}
     $: snake_startAndStopGame(snake_GAME)
 
     // --INSIDE
-    $: gameover$_ON = $GAMEOVER_$ON
 
 
 // #\-FUNCTIONS-\
@@ -285,8 +281,6 @@ on:fullscreenchange={snake_eFullscreenChange}
     function snake_setVars()
     {
         const SIZE = snake_CUSTOM_BLOCKSIZE ?? (APP.app_$SMALL_SCREEN.value ? SNAKE_DEFAULT_BLOCKSIZE - 10 : SNAKE_DEFAULT_BLOCKSIZE)
-
-        SNAKE_$BLOCKSIZE.set(SIZE)
 
         snake_PARENT ??= snake.parentElement
 
@@ -427,11 +421,11 @@ on:fullscreenchange={snake_eFullscreenChange}
         snake_setScore()
     }
 
-    function gameover_update(on)
+    function gameover_update(value)
     {
-        GAMEOVER_$ON.set(on)
+        gameover_ON = value
 
-        if (on)
+        if (value)
         {
             snake_INVINCIBLE = true
 
@@ -571,12 +565,7 @@ on:fullscreenchange={snake_eFullscreenChange}
         snake_Z    = 0
     }
 
-    function snake_startAndStop(value)
-    {
-        SNAKE_$ON.set(value)
-    
-        if (snake_CHARGED) value ? snake_start() : snake_stop()
-    }
+    function snake_startAndStop(value) { if (snake_CHARGED) value ? snake_start() : snake_stop() }
 
     function snake_start()
     {
@@ -631,7 +620,7 @@ on:fullscreenchange={snake_eFullscreenChange}
     {
         if (prop_ON)
         {
-            if (gameover$_ON) gameover_update(false)
+            if (gameover_ON) gameover_update(false)
         }
         else snake_stop()
         

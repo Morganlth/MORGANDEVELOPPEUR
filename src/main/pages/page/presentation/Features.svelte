@@ -380,7 +380,15 @@ lang="scss"
 
         .text-background, .contact-me { white-space: nowrap; }
 
-        .topic { @include font.h-($n: 2, $color: $light, $line-height: 1); }
+        .topic
+        {
+            @include utils.placement(relative, $z: 1);
+            @include font.h-($n: 2, $color: $light, $line-height: 1);
+
+            letter-spacing:      -1rem;
+            word-spacing:        1.8rem;
+            -webkit-text-stroke: $dark .4rem;
+        }
 
         .feature
         {
