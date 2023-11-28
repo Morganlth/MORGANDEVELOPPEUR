@@ -75,7 +75,7 @@ id="booki"
                 <ul
                 class="flex any-h"
                 >
-                    {#each prop_DATAS.nav ?? [] as a, i}
+                    {#each prop_DATA.nav ?? [] as a}
                         <li
                         class="any-h"
                         >
@@ -146,7 +146,7 @@ id="booki"
                         <h4>Filtres</h4>
                     </li>
 
-                    {#each prop_DATAS.filters ?? [] as filter}
+                    {#each prop_DATA.filters ?? [] as filter}
                         <li>
                             <button
                             class="flex pointer hover"
@@ -175,7 +175,7 @@ id="booki"
             </section>
 
             <section
-            id="booki-hosting"
+            id="booki-accommodation"
             class="flex"
             >
                 <div
@@ -187,7 +187,7 @@ id="booki"
                     id="booki-container-accommodation"
                     class="flex container"
                     >
-                        {#each prop_DATAS.accommodation ?? [] as accommodation}
+                        {#each prop_DATA.accommodation ?? [] as accommodation}
                             <article>
                                 <!-- svelte-ignore a11y-invalid-attribute -->
                                 <a
@@ -250,7 +250,7 @@ id="booki"
                     id="booki-container-popular"
                     class="flex container"
                     >
-                        {#each prop_DATAS.popular ?? [] as popular}
+                        {#each prop_DATA.popular ?? [] as popular}
                             <article
                             class="any-w"
                             >
@@ -301,7 +301,7 @@ id="booki"
                 id="booki-container-activities"
                 class="flex container"
                 >
-                    {#each prop_DATAS.activities ?? [] as activity}
+                    {#each prop_DATA.activities ?? [] as activity}
                         <!-- svelte-ignore a11y-invalid-attribute -->
                         <a
                         href="#"
@@ -331,7 +331,7 @@ id="booki"
         <footer
         class="flex bg"
         >
-            {#each prop_DATAS.footer ?? [] as nav}
+            {#each prop_DATA.footer ?? [] as nav}
                 <nav>
                     <h2>{nav.title}</h2>
 
@@ -381,7 +381,7 @@ id="booki"
 // #\-EXPORTS-\
 
     // --PROPS
-    export let prop_DATAS = {}
+    export let prop_DATA = {}
 
     // --BINDING
 
@@ -719,7 +719,7 @@ main
         box-shadow: 0 1rem 1rem rgba(0, 0, 0, 0.1);
     }
 
-    #booki-hosting
+    #booki-accommodation
     {
         gap: 4rem;
 
@@ -854,7 +854,7 @@ footer
 
 @media screen and (max-width: 991px)
 {
-    #booki-hosting { flex-wrap: wrap; }
+    #booki-accommodation { flex-wrap: wrap; }
 
     #booki-container-popular
     {
@@ -947,7 +947,7 @@ footer
 
         .container { flex-direction: column !important; }
 
-        #booki-hosting
+        #booki-accommodation
         {
             flex-direction: column-reverse;
             gap: 0;

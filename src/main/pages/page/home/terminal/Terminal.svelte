@@ -42,6 +42,7 @@ on:mouseleave={terminal_eMouseLeave}
     style:--container-duration="{CONTAINER_DURATION}ms"
     >
         <Face
+        prop_FACE={prop_TERMINAL.face}
         prop_FOCUS={terminal_ON}
         prop_updateProcessDatas={terminal_updateProcessDatas}
         prop_turn={terminal_updateTurn}
@@ -49,6 +50,7 @@ on:mouseleave={terminal_eMouseLeave}
         />
 
         <Back
+        prop_BACK={prop_TERMINAL.back}
         prop_FOCUS={terminal_ON && terminal_TURN}
         prop_turn={terminal_updateTurn}
         />
@@ -88,7 +90,10 @@ on:mouseleave={terminal_eMouseLeave}
 // #\-EXPORTS-\
 
     // --PROPS
-    export let prop_ID = void 0
+    export let
+    prop_TERMINAL = {}
+    ,
+    prop_ID = void 0
 
     // --BINDING
     export let terminal_ON = false

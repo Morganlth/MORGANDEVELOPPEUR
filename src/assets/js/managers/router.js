@@ -52,11 +52,13 @@ class Router
 //=======@GETTER|
 
     // --*
-    get router_$ID()     { return this.#router_$ID }
+    get router_$ID()      { return this.#router_$ID }
 
-    get router_$HIDE()   { return this.#router_$HIDE }
+    get router_$HIDE()    { return this.#router_$HIDE }
 
-    get router_SUBPATH() { return this.#router_SUBPATH }
+    get router_PAGES()    { return this.#router_PAGES }
+
+    get router_SUBPATH()  { return this.#router_SUBPATH }
 
     get router_RESPONSE() { return this.#router_RESPONSE }
 
@@ -117,7 +119,7 @@ class Router
 
         if (PAGE)
         {
-            PAGE.subPath = subPath ? '/' + subPath : void ''
+            PAGE.subPath = subPath ? '/' + subPath : subPath
 
             this.#router_SUBPATH = subPath
         }
@@ -153,7 +155,7 @@ class Router
 //=======@UTILS|
 
     // --*
-    router_add({ id, name, top }) { this.#router_PAGES[id] = { name, top } } // rendre router_PAGES reactif ?
+    router_add(id, name, label, top) { this.#router_PAGES[id] = { name, label, top } }
 
     router_remove(id) { this.#router_PAGES.splice(id, 1) }
 

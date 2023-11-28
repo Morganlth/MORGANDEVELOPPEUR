@@ -33,7 +33,7 @@ style:height="{MAIN_HEIGHT}%"
     <Particles />
 
     <Pages
-    prop_DATA={DATA}
+    prop_DATA={APP_DATA}
     bind:pages_e$Scroll
     />
 
@@ -53,7 +53,7 @@ style:height="{MAIN_HEIGHT}%"
 // #\-IMPORTS-\
 
     // --DATA
-    import DATA from '../assets/js/data/appData'
+    import app_getData from '../assets/js/data/appData'
 
     // --SVELTE
     import { onMount, onDestroy, tick } from 'svelte'
@@ -80,6 +80,7 @@ style:height="{MAIN_HEIGHT}%"
 // #\-EXPORTS-\
 
     // --PROPS
+    export let prop_LANG
 
     // --BINDING
     export let main_CHARGED = false
@@ -92,17 +93,18 @@ style:height="{MAIN_HEIGHT}%"
     // --CONTEXTS
 
     // --OUTSIDE
+    const APP_DATA = app_getData(prop_LANG)
 
     // --THIS
     const
     MAIN_DELAY = wait_getDelay(3)
     ,
-    MAIN_HEIGHT = DATA.reduce((accumulator, page) => accumulator + page.h, 0) * 100
+    MAIN_HEIGHT = main_getHeight()
     ,
     MAIN_EVENTS = { scroll: wait_throttle(main_e$Scroll, 1, 2) } // +- 20ms, +- 30ms
 
     // --INSIDE
-    const ROUTER_LINKS = DATA.map(page => router_getRoute(page))
+    const ROUTER_LINKS = router_getLinks()
 
 
 // #\-VARIABLES-\
@@ -166,7 +168,9 @@ style:height="{MAIN_HEIGHT}%"
     }
 
     // --GET
-    function router_getRoute(page) { return { id: page.id, ...page.route } }
+    function main_getHeight() { return APP_DATA.reduce((accumulator, page) => accumulator + page.height, 0) * 100 }
+
+    function router_getLinks() { return APP_DATA.map(page => { return { id: page.id, ...page.route } }) }
 
     // --UPDATES
     function main_update(scrollTop) // synchronise ROUTER and PAGES

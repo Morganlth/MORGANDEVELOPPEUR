@@ -32,9 +32,9 @@ data-page-id={prop_ID}
 >
     <System
     prop_START={prop_FOCUS && !prop_INTRO}
+    prop_SYSTEM={prop_CHILDREN.system}
     {prop_ID}
     {prop_FOCUS}
-    {prop_SYSTEM}
     {prop_RATIO}
     bind:system_TARGET
     />
@@ -86,13 +86,13 @@ data-page-id={prop_ID}
     prop_FOCUS = false,
     prop_INTRO = false
     ,
-    prop_SYSTEM = []
-    ,
     prop_TOP   = 0,
     prop_RATIO = 0
     ,
     prop_START = void 0,
     prop_DIF   = void 0
+    ,
+    prop_CHILDREN = {}
 
     // --BINDING
     export let
@@ -150,25 +150,17 @@ data-page-id={prop_ID}
     {
         system_setEvents()
 
-        APP.app_WAITING_LOADING.push(system_setVars)
+        APP.app_WAITING_LOADING = system_setVars
     
         page_CHARGED = true
     }
 
-    function system_setVars()
-    {
-        for (let i = 0; i < prop_SYSTEM.length; i++)
-        {
-            const ITEM = prop_SYSTEM[i]
-
-            ITEM.top = prop_START + prop_DIF * ITEM.props.prop_OFFSET
-        }
-    }
+    function system_setVars() { for (const ITEM of prop_CHILDREN.system) ITEM.top = prop_START + prop_DIF * ITEM.props.prop_OFFSET }
 
     function system_setEvents() { EVENT.event_add(SYSTEM_EVENTS) }
 
     // --GET
-    function system_getTarget(target) { return prop_SYSTEM.find(orbit => orbit.tags.includes(target)) }
+    function system_getTarget(target) { return prop_CHILDREN.system.find(item => item.tags.includes(target)) }
 
     // --UPDATES
 
@@ -229,7 +221,7 @@ data-page-id={prop_ID}
         system_TARGET = null
     }
 
-    function skills_goTo(id = 0) { EVENT.event_scrollTo(prop_SYSTEM[id].top) }
+    function skills_goTo(id = 0) { EVENT.event_scrollTo(prop_CHILDREN.system[id].top) }
 
 
 </script>

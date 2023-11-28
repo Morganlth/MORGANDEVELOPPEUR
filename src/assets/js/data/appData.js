@@ -11,11 +11,14 @@
     // --CONTEXTS
 
     // --JS
+    import HOME_SNAKE       from './home/snake'
     import HOME_BLACKBLOCKS from './home/blackblocks'
     import HOME_SLIDER      from './home/slider'
     import HOME_GAMES       from './home/games'
+    import HOME_TERMINAL    from './home/terminal'
 
     import PRESENTATION_FEATURES from './presentation/features'
+    import PRESENTATION_CONTACT  from './presentation/contact'
 
     import SKILLS_SYSTEM from './skills/system'
 
@@ -38,32 +41,44 @@
 // #\-EXPORTS-\
 
     // --THIS
-    export default
+    export default function app_getData(lang = 'fr')
+    {
+        const APP = []
+    
+        for (let i = 0; i < APP_DATA.length; i++) APP.push(page_get(lang, APP_DATA[i], i))
+
+        return APP
+    }
+
+
+// #\-CONSTANTES-\
+
+    // --THIS
+    const APP_DATA =
     [
-  /////////////////////////////////////////////HOME////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////HOME////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         {
-            name: 'home',
+            name     : 'home',
             component: Home,
-            tag: 'accueil',
-            overflow: false,
-            h: 0
+            tag      : { fr: 'accueil', en: 'home' },
+            overflow : false,
+            height   : 0,
+            label    : 'FR'
         ,
             route:
             {
-                value: 'ACCUEIL',
-                alt: 'Page accueil/home du site Morgan Développeur'
+                value: { fr: 'ACCUEIL', en: 'HOME' },
+                alt  : { fr: 'Page d\'accueil', en: 'Home page' }
             }
-        ,
-            label: 'FR'
         ,
             title:
             {   
                 fragments:
                 [
-                    { frags: 'DEVELOPPEUR' },
+                    { frags: { fr: 'DEVELOPPEUR', en: 'DEVELOPER' } },
                     {
-                        frags: 'WEB',
-                        tags: ['FRONT', 'BACK', '& DESIGNER']
+                        frags: { fr: 'WEB', en: 'WEB' },
+                        tags : { fr: ['FRONT', 'BACK', '& DESIGNER'], en: ['FRONT', 'BACK', '& DESIGNER'] }
                     }
                 ],
                 element:
@@ -79,7 +94,7 @@
                 }
             }
         ,
-            children: [HOME_BLACKBLOCKS, HOME_SLIDER, HOME_GAMES]
+            children: [HOME_SNAKE, HOME_BLACKBLOCKS, HOME_SLIDER, HOME_GAMES, HOME_TERMINAL]
         ,
             props:
             {
@@ -90,46 +105,45 @@
 /////////////////////////////////////////////PRESENTATION////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ,
         {
-            name: 'presentation',
+            name     : 'presentation',
             component: Presentation,
-            tag: 'presentation',
-            overflow: true,
-            h: 6,
-            gap: -1
+            tag      : { fr: 'presentation', en: 'presentation' },
+            overflow : true,
+            height   : 6,
+            gap      : -1,
+            label    : 'PRO'
         ,
             route:
             {
-                value: 'PRÉSENTATION',
-                alt: 'Page de ma présentation personnel'
+                value: { fr: 'PRÉSENTATION', en: 'PRESENTATION' },
+                alt  : { fr: 'Page de présentation', en: 'Presentation page' }
             }
-        ,
-            label: 'PRO'
         ,
             title:
             {
                 fragments:
                 [
-                    { frags: 'PRESENTATION' },
-                    { tags: ['IDENTITÉ', 'LOCALITÉ', 'ÉTUDES', 'PRO', 'CONTACT'] }
+                    { frags: { fr: 'PRESENTATION', en: 'PRESENTATION' } },
+                    { tags : { fr: ['IDENTITÉ', 'LOCALITÉ', 'ÉTUDES', 'PRO', 'CONTACT'], en: ['IDENTITY', 'LOCALITY', 'STUDIES', 'PRO', 'CONTACT'] } }
                 ]
             }
         ,
             nav:
             [
                 {
-                    id: 0,
-                    title: 'Page de contact',
-                    value: 'Contact'
+                    id   : 0,
+                    title: { fr: 'Page de contact', en: 'Contact page' },
+                    value: { fr: 'Contact', en: 'Contact' }
                 }
             ]
         ,
             quote:
             {
-                value: 'L\'informatique est un domaine qui valorise la créativité et l\'innovation.',
+                value : { fr: 'L\'informatique est un domaine qui valorise la créativité et l\'innovation.', en: 'IT is a field that values creativity and innovation.' },
                 author: 'Bill Gates'
             }
         ,
-            children: [PRESENTATION_FEATURES]
+            children: [PRESENTATION_FEATURES, PRESENTATION_CONTACT]
         ,
             props:
             {
@@ -143,54 +157,51 @@
 /////////////////////////////////////////////SKILLS////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ,
         {
-            name: 'skills',
+            name     : 'skills',
             component: Skills,
-            tag: 'competences',
-            overflow: true,
-            h: 6
+            tag      : { fr: 'competences', en: 'skills' },
+            overflow : true,
+            height   : 6,
+            label    : 'SYSTEM'
         ,
             route:
             {
-                value: 'COMPÉTENCES',
-                alt: 'Page de mes compétences de développeur web'
+                value: { fr: 'COMPÉTENCES', en: 'SKILLS' },
+                alt  : { fr: 'Page des compétences', en: 'Skills page' }
             }
-        ,
-            label: 'SYSTEM'
         ,
             title:
             {
                 fragments:
                 [
-                    { frags: 'COMPETENCES' },
-                    { tags: ['HTML', 'CSS', 'JS', 'NODE JS', 'GESTION', 'ADAPTABILITÉ'] }
+                    { frags: { fr: 'COMPETENCES', en: 'SKILLS' } },
+                    { tags : { fr: ['HTML', 'CSS', 'JS', 'NODE JS', 'GESTION', 'ADAPTABILITÉ'], en: ['HTML', 'CSS', 'JS', 'NODE JS', 'MANAGEMENT', 'ADAPTABILITY'] } }
                 ]
             }
         ,
             nav:
             [
                 {
-                    id: 0,
-                    title: 'HTML et CSS',
-                    value: 'Html & Css'
+                    id   : 0,
+                    title: { fr: 'HTML et CSS', en: 'HTML and CSS' },
+                    value: { fr: 'Html & Css', en: 'Html & Css' }
                 },
                 {
-                    id: 1,
-                    title: 'Javascript',
-                    value: 'Javascript'
+                    id   : 1,
+                    value: { fr: 'Javascript', en: 'Javascript' }
                 },
                 {
-                    id: 2,
-                    title: 'Node JS',
-                    value: 'Node JS'
+                    id   : 2,
+                    value: { fr: 'Node JS', en: 'Node JS' }
                 },
                 {
-                    id: 3,
-                    title: 'Gestion, Outils et Adaptabilité',
-                    value: 'Autres...'
+                    id   : 3,
+                    title: { fr: 'Gestion, Outils et Adaptabilité', en: 'Management, Tools and Adaptability' },
+                    value: { fr: 'Autres...', en: 'Others...' }
                 }
             ]
         ,
-            quote: { value: 'Le code est une forme d\'art qui permet de changer le monde.' }
+            quote: { value: { fr: 'Le code est une forme d\'art qui permet de changer le monde.', en: 'Code is an art form that can change the world.' } }
         ,
             children: [SKILLS_SYSTEM]
         ,
@@ -207,49 +218,45 @@
 /////////////////////////////////////////////PROJECTS////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ,
         {
-            name: 'projects',
+            name     : 'projects',
             component: Projects,
-            tag: 'projets',
-            overflow: false,
-            h: 3
+            tag      : { fr: 'projets', en: 'projects' },
+            overflow : false,
+            height   : 3,
+            label    : 'CARDS'
         ,
             route:
             {
-                value: 'PROJETS',
-                alt: 'Page de mes projets web'
+                value: { fr: 'PROJETS', en: 'PROJECTS' },
+                alt  : { fr: 'Page des projets', en: 'Project page' }
             }
-        ,
-            label: 'CARDS'
         ,
             title:
             {
                 fragments:
                 [
-                    { frags: 'PROJETS' },
-                    { tags: ['BOOKI', 'SOPHIE BLUEL', 'NINA CARDUCCI'] }
+                    { frags: { fr: 'PROJETS', en: 'PROJECTS' } },
+                    { tags : { fr: ['BOOKI', 'SOPHIE BLUEL', 'NINA CARDUCCI'], en: ['BOOKI', 'SOPHIE BLUEL', 'NINA CARDUCCI'] } }
                 ]
             }
         ,
             nav:
             [
                 {
-                    id: 0,
-                    title: 'Booki',
-                    value: 'Booki'
+                    id   : 0,
+                    value: { fr: 'Booki', en: 'Booki' }
                 },
                 {
-                    id: 1,
-                    title: 'Sophie Bluel',
-                    value: 'Sophie Bluel'
+                    id   : 1,
+                    value: { fr: 'Sophie Bluel', en: 'Sophie Bluel' }
                 },
                 {
-                    id: 2,
-                    title: 'Nina Carducci',
-                    value: 'Nina Carducci'
+                    id   : 2,
+                    value: { fr: 'Nina Carducci', en: 'Nina Carducci' }
                 }
             ]
         ,
-            quote: { value: 'Le code est un moyen de matérialiser nos idées créatives.' }
+            quote: { value: { fr: 'Le code est un moyen de matérialiser nos idées créatives.', en: 'Code is a way of turning our creative ideas into reality.' } }
         ,
             children: [PROJECTS_ABOUT, PROJECTS_PROJECTS]
         ,
@@ -261,27 +268,7 @@
                 prop_START: void 0
             }
         }
-    ].map((page, id) =>
-    {
-        page.id    = id
-        page.focus = (page.intro = false)
-        page.top   = (page.start = (page.end = (page.dif = 0)))
-
-        page.route = app_getRoute(page.name, page.route)
-        page.title = app_getTitle(id, page.title)
-
-        const [PROCESS, PROPS] = app_getChildrenData(page.children)
-
-        page.props   = Object.assign(page.props, PROPS)
-        page.process = Object.assign({ [page.tag]: 'top' }, PROCESS)
-
-        return page
-    })
-
-
-// #\-CONSTANTES-\
-
-    // --THIS
+    ]
 
 
 // #\-VARIABLES-\
@@ -294,56 +281,116 @@
     // --SET
 
     // --GET
-    function app_getRoute(href, {value, alt})
+    function page_get(lang, data, id)
     {
-        return (
+        const [CHILDREN, CHILDREN_PROCESS] = page_getChildrenData(lang, data.children)
+
+        data.tag = data.tag[lang]
+
+        const PAGE =
         {
-            on: false,
-            value,
-            attributes:
-            {
-                href: '#' + href,
-                alt,
-                'aria-label': `${value} ${value.split('').join(' ')}`
-            }
-        })
+            ...data
+            ,
+            id
+            ,
+            route: page_getRoute(lang, data.name, data.route),
+            title: page_getTitle(lang, id, data.title),
+            nav  : page_getNav(lang, data.nav),
+            quote: page_getQuote(lang, data.quote)
+            ,
+            children: CHILDREN
+            ,
+            process: Object.assign({ [data.tag]: 'top' }, CHILDREN_PROCESS)
+        }
+
+        return PAGE
     }
 
-    function app_getTitle(id, title)
-    {
-        return (
-        {
-            html: 'h' + (id ? 2 : 1),
-            ...title
-        })
-    }
-
-    function app_getChildrenData(children = [])
+    function page_getChildrenData(lang, children = [])
     {
         const
-        PROCESS = {},
-        PROPS   = {}
+        CHILDREN = {},
+        PROCESS  = {}
 
         for (const CHILD of children)
         {
-            const CHILD_NAME = CHILD.name
+            const
+            NAME = CHILD.name,
+            DATA = CHILD.getData(lang)
 
-            if (CHILD.tag) PROCESS[CHILD.tag] = 'start'
+            if (CHILD.tag) PROCESS[CHILD.tag[lang]] = 'start'
 
-            if (CHILD.datas instanceof Array)
+            if (DATA instanceof Array)
             {
-                for (const DATA of CHILD.datas)
+                for (let {tags} of DATA)
                 {
-                    const TAGS = DATA.tags ?? []
-
-                    for (const TAG of TAGS) if (TAG !== '') PROCESS[TAG] = CHILD_NAME
+                    if (tags instanceof Array) for (const TAG of tags) if (TAG !== '') PROCESS[TAG] = NAME
                 }
             }
 
-            PROPS['prop_' + CHILD_NAME.toUpperCase()] = CHILD.datas
+            CHILDREN[NAME] = DATA
         }
 
-        return [PROCESS, PROPS]
+        return [CHILDREN, PROCESS]
+    }
+
+    function page_getRoute(lang, name, {value, alt})
+    {
+        const
+        VALUE = value[lang],
+        ALT   = alt[lang]
+    
+        return {
+            on        : false,
+            value     : VALUE,
+            attributes:
+            {
+                href        : '/' + name,
+                alt         : ALT,
+                title       : ALT,
+                'aria-label': `${VALUE} ${VALUE.split('').join(' ')}`
+            }
+        }
+    }
+
+    function page_getTitle(lang, id, title)
+    {
+        for (const _ of title.fragments)
+        {
+            if (_.frags) _.frags = _.frags[lang]
+            if (_.tags)  _.tags  = _.tags [lang]
+        }
+    
+        return {
+            html: 'h' + (id ? 2 : 1),
+            ...title
+        }
+    }
+
+    function page_getNav(lang, nav)
+    {
+        return (
+        nav
+        ? nav.map(_ =>
+        {
+            const NAV = { id: _.id }
+        
+            if (_.title) NAV.title = _.title[lang]
+            if (_.value) NAV.value = _.value[lang]
+        
+            return NAV
+        })
+        : null)
+    }
+
+    function page_getQuote(lang, quote)
+    {
+        return quote
+        ?   {
+                value : quote.value[lang],
+                author: quote.author ?? null
+            }
+        :   null
     }
 
     // --UPDATES

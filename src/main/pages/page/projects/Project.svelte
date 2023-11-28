@@ -94,7 +94,7 @@ bind:this={project}
         >
             <svelte:component
             this={prop_PROJECT.component}
-            prop_DATAS={prop_PROJECT.datas}
+            prop_DATA={prop_PROJECT.data}
             />
         </div>
     {/if}
@@ -301,9 +301,12 @@ bind:this={project}
     // --*
     async function card_eMouseAndTouchMove({ detail: {x, y} })
     {
-        tag_destroyTimeout()
-        tag_setTimeout()
-        tag_updateTranslate(x, y)
+        if (tag_FOCUS)
+        {
+            tag_destroyTimeout()
+            tag_setTimeout()
+            tag_updateTranslate(x, y)
+        }
     }
 
     function card_eMouseEnter({detail})

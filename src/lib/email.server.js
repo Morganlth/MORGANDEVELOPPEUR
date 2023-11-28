@@ -53,8 +53,6 @@
             }
         })
 
-        TRANSPORTER.verify(err => console.log(err ? err : 'email setup is OK.'))
-
         return TRANSPORTER
     }
 

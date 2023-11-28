@@ -69,7 +69,7 @@ style:transform="translateY({features_TRANSLATE_Y}%)"
                             {...feature.props}
                             tabindex={feature.html === 'a' && prop_FOCUS ? 0 : -1}
                             >
-                                {feature.data}
+                                {feature.value}
                             </svelte:element>
                         </section>
                     </Line>
@@ -81,7 +81,7 @@ style:transform="translateY({features_TRANSLATE_Y}%)"
                             <Cell
                             prop_TEXT_WRAPPER={true}
                             prop_CENTER={true}
-                            prop_TITLE="Me contacter"
+                            prop_TITLE={feature.contact}
                             {prop_FOCUS}
                             on:click={cell_eClick}
                             >
@@ -93,7 +93,7 @@ style:transform="translateY({features_TRANSLATE_Y}%)"
                                     <Arrow />
                                 </Icon>
     
-                                Me contacter
+                                {feature.contact}
                             </Cell>
                         </div>
                     {/if}
@@ -389,7 +389,9 @@ lang="scss"
             background-color: $intermediate;
 
             padding-block: .2rem;
-            padding-left:  app.$gap-inline; 
+            padding-left:  app.$gap-inline;
+
+            line-height: 1.5;
         }
 
         a
@@ -430,7 +432,7 @@ lang="scss"
 
             .topic { line-height: 0; }
 
-            .feature { padding-left: 34%; }
+            .feature { padding-left: max(34%, 400px); }
     
             .contact-me { top: 50%; }
         }

@@ -34,16 +34,16 @@ style:z-index={prop_Z}
 >
     <Wrapper>
         <Label
-        prop_CONTENT={prop_LABEL}
+        {prop_LABEL}
         {prop_FOCUS}
         slot="label"
         />
 
         <Title
         prop_CHARGED={page_CHARGED}
+        {prop_TITLE}
         {prop_INTRO}
         {prop_TOP}
-        {prop_TITLE}
         bind:title_HEIGHT
         slot="title"
         />
@@ -54,7 +54,7 @@ style:z-index={prop_Z}
             {#if page_NAV}
                 <Nav
                 prop_TRANSLATE_Y={-title_HEIGHT + (page_NAV.offset ?? 0)}
-                prop_ITEMS={prop_NAV}
+                {prop_NAV}
                 {prop_FOCUS}
                 {prop_INTRO}
                 on:click={nav_eClick}
@@ -67,8 +67,8 @@ style:z-index={prop_Z}
         >
             {#if prop_QUOTE}
                 <Quote
-                {prop_INTRO}
                 {prop_QUOTE}
+                {prop_INTRO}
                 />
             {/if}
         </svelte:fragment>
@@ -77,6 +77,7 @@ style:z-index={prop_Z}
         this={prop_COMPONENT}
         {...prop_PROPS}
         {prop_ID}
+        {prop_CHILDREN}
         bind:page_CHARGED
         bind:PAGE_NAV={page_NAV}
         bind:page_process
@@ -135,7 +136,8 @@ style:z-index={prop_Z}
     prop_NAV       = {},
     prop_QUOTE     = {},
     prop_PROPS     = {},
-    prop_PROCESS   = {}
+    prop_PROCESS   = {},
+    prop_CHILDREN  = {}
 
     // --BINDING
 
@@ -162,8 +164,8 @@ style:z-index={prop_Z}
 
     // --THIS
     let
-    page_CHARGED    = false,
-    page_HIDE       = false
+    page_CHARGED = false,
+    page_HIDE    = false
     ,
     page_NAV
     ,
@@ -220,14 +222,7 @@ style:z-index={prop_Z}
 //=======@EVENTS|
 
     // --*
-    function nav_eClick({detail})
-    {
-        const ID = detail.id
-    
-        page_NAV.callback(detail)
-
-        prop_NAV[ID] = prop_NAV[ID]
-    }
+    function nav_eClick({detail}) { page_NAV.callback(detail) }
 
 
 //=======@TRANSITIONS|

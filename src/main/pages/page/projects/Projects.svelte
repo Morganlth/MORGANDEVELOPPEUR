@@ -33,7 +33,7 @@ data-page-id={prop_ID}
     <Group
     let:resize
     >
-        {#each prop_PROJECTS as project}
+        {#each prop_CHILDREN.projects as project}
             <Project
             prop__$RESIZE={resize}
             prop__TARGET={project__TARGET}
@@ -41,7 +41,7 @@ data-page-id={prop_ID}
             prop_FOCUS={project$_FOCUS}
             prop_TARGET={project__TARGET === project.id}
             prop_PROJECT={project}
-            prop_ABOUT_GLOBAL={prop_ABOUT_GLOBAL}
+            prop_ABOUT_GLOBAL={prop_CHILDREN.about_GLOBAL}
             on:mouseenter={card_eMouseEnter}
             on:mouseleave={card_eMouseLeave}
             on:click={project_eClick}
@@ -89,11 +89,10 @@ data-page-id={prop_ID}
     prop_FOCUS = false,
     prop_INTRO = false
     ,
-    prop_ABOUT_GLOBAL = [],
-    prop_PROJECTS     = []
-    ,
     prop_TOP   = 0,
     prop_START = 0
+    ,
+    prop_CHILDREN = {}
 
     // --BINDING
     export let page_CHARGED = false
@@ -152,7 +151,7 @@ data-page-id={prop_ID}
     // --SET
     function projects_set()
     {
-        APP.app_WAITING_LOADING.push(projects_update)
+        APP.app_WAITING_LOADING = projects_update
 
         page_CHARGED = true
     }
@@ -168,7 +167,7 @@ data-page-id={prop_ID}
     }
 
     // --GET
-    function projects_getProject(name) { return prop_PROJECTS.find(project => project.name === name) ?? null }
+    function projects_getProject(name) { return prop_CHILDREN.projects.find(project => project.name === name) ?? null }
 
     // --UPDATES
     function app_updateFreeze(value) { APP.app_$FREEZE = { value, target: prop_ID } }
@@ -177,7 +176,7 @@ data-page-id={prop_ID}
     {
         const VALUE = project__TARGET === id ? null : id
 
-        ROUTER.router_updateSubPath(prop_ID, VALUE == null ? null : prop_PROJECTS[id].name)
+        ROUTER.router_updateSubPath(prop_ID, VALUE == null ? null : prop_CHILDREN.projects[id].name)
         ROUTER.router_updatePath(prop_ID)
     }
 

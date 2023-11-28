@@ -23,7 +23,7 @@
 /* #\-VARIABLES-\ */
 
     /* --* */
-    $scroll-bar-width: 1rem;
+    $scrollbar-width: 1rem;
 
 
 /* #\-MIXIN-\ */
@@ -71,7 +71,7 @@
     {
         &::-webkit-scrollbar, &::-webkit-scrollbar-thumb { pointer-events: auto !important; }
     
-        &::-webkit-scrollbar { width: $scroll-bar-width; }
+        &::-webkit-scrollbar { width: $scrollbar-width; }
     
         &::-webkit-scrollbar-thumb { background-color: $light; }
     }

@@ -30,12 +30,12 @@ context="module"
 class="face"
 >
     <div
-    class="header"
+    class="head"
     >
         <Cell
         prop_ICON_WRAPPER={true}
         prop_CENTER={true}
-        prop_TITLE="Description du Terminal"
+        prop_TITLE={prop_FACE.head.cellTitle}
         {prop_FOCUS}
         on:click={prop_turn.bind(null, true)}
         >
@@ -46,17 +46,20 @@ class="face"
             </Icon>
         </Cell>
 
-        <p>
-            recherche:
-            [<span>text</span>]
-            commande:
-            [<span>app...</span>]
-        </p>
+        <span
+        class="info"
+        >
+            {#each prop_FACE.head.info as _}
+                {_.topic}:
+                [<span>{_.datatype}</span>]
+                &nbsp;
+            {/each}
+        </span>
     </div>
 
     <Line>
         <Cell
-        prop_TITLE="Terminal input"
+        prop_TITLE="terminal input"
         {prop_FOCUS}
         on:click={cell_eClick}
         slot="id"
@@ -193,6 +196,8 @@ class="face"
 
     // --PROPS
     export let
+    prop_FACE = {}
+    ,
     prop_FOCUS = false
     ,
     prop_updateProcessDatas = () => {},
@@ -606,14 +611,14 @@ lang="scss"
 
     transform: rotateY(0);
 
-    .header
+    .head
     {
         display:         flex;
         justify-content: space-between;
 
         margin-bottom: 2rem;
 
-        p
+        .info
         {
             @include font.text($color: $light, $font-size: map.get(font.$font-sizes, s1));
 
@@ -697,7 +702,7 @@ lang="scss"
     {
         --line-height: 5rem;
 
-        .header p { font-size: map.get(font.$font-sizes, s2); }
+        .head .info { font-size: map.get(font.$font-sizes, s2); }
     }
 }
 

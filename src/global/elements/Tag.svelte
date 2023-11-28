@@ -221,7 +221,7 @@ lang="scss"
 
 .tag
 {
-    @include font.h-(3, $light);
+    @include font.h-(3, $light, $line-height: .88);
 
     opacity: 0;
 

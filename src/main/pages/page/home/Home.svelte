@@ -31,14 +31,15 @@ class="home"
 data-page-id={prop_ID}
 >
     <Snake
+    prop_SNAKE={prop_CHILDREN.snake}
     prop_ON={snake_ON && prop_FOCUS && !$app_$MOBILE}
     bind:snake_GAME
     />
 
     <BlackBlocks
+    prop_BLACKBLOCKS={prop_CHILDREN.blackblocks}
     prop_ON={!snake_GAME}
     {prop_FOCUS}
-    {prop_BLACKBLOCKS}
     bind:page_CHARGED
     />
 
@@ -52,8 +53,8 @@ data-page-id={prop_ID}
 
     {#if !$app_$SMALL_SCREEN}
         <Slider
+        prop_SLIDER={prop_CHILDREN.slider}
         prop_FOCUS={prop_FOCUS && page_CHARGED}
-        {prop_SLIDER}
         />
     {/if}
 
@@ -68,7 +69,7 @@ data-page-id={prop_ID}
     bind:group_start
     bind:group_stop
     >
-        {#each prop_GAMES as item}
+        {#each prop_CHILDREN.games as item}
             <GravityArea
             let:hide
             let:grabbing
@@ -93,6 +94,7 @@ data-page-id={prop_ID}
     </Group>
 
     <Terminal
+    prop_TERMINAL={prop_CHILDREN.terminal}
     {prop_ID}
     bind:terminal_ON
     />
@@ -143,11 +145,9 @@ data-page-id={prop_ID}
     ,
     prop_FOCUS = false
     ,
-    prop_BLACKBLOCKS = new Float64Array([]),
-    prop_SLIDER      = [() => void ''],
-    prop_GAMES       = []
-    ,
     prop_TOP = 0
+    ,
+    prop_CHILDREN = {}
 
     // --BINDING
     export let page_CHARGED = false

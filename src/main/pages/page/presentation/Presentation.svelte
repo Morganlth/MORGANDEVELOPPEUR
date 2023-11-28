@@ -31,15 +31,16 @@ class="presentation"
 data-page-id={prop_ID}
 >
     <Features
+    prop_FEATURES={prop_CHILDREN.features}
     prop_CONTENTS_LENGTH={FEATURES_CONTENTS_LENGTH}
     {prop_FOCUS}
     {prop_RATIO}
-    {prop_FEATURES}
     bind:contact_ON
     />
 
     {#if contact_ON}
         <Contact
+        prop_CONTACT={prop_CHILDREN.contact}
         bind:contact_ON
         />
     {/if}
@@ -81,13 +82,13 @@ data-page-id={prop_ID}
     ,
     prop_FOCUS = false
     ,
-    prop_FEATURES = []
-    ,
     prop_TOP   = 0,
     prop_RATIO = 0
     ,
     prop_START = void 0,
     prop_DIF   = void 0
+    ,
+    prop_CHILDREN = {}
 
     // --BINDING
     export let page_CHARGED = false
@@ -105,9 +106,9 @@ data-page-id={prop_ID}
     // --OUTSIDE
 
     // --THIS
-    const FEATURES_CONTENTS_LENGTH = prop_FEATURES.reduce((accumulator, current) => accumulator += current.contents.length, 0)
 
     // --INSIDE
+    const FEATURES_CONTENTS_LENGTH = features_getContentsLength()
 
 
 // #\-VARIABLES-\
@@ -145,13 +146,17 @@ data-page-id={prop_ID}
     // --SET
     function presentation_set()
     {
-        APP.app_WAITING_LOADING.push(() => contact_ON = ROUTER.router_SUBPATH === 'contact')
+        APP.app_WAITING_LOADING = contact_setVars
 
         page_CHARGED = true
     }
 
+    function contact_setVars() { contact_ON = ROUTER.router_SUBPATH === 'contact' }
+ 
     // --GET
-    function features_getTarget(target) { return prop_FEATURES.find(feature => feature.tags.includes(target)) }
+    function features_getContentsLength() { return prop_CHILDREN.features.reduce((accumulator, current) => accumulator += current.contents.length, 0) }
+
+    function features_getTarget(target) { return prop_CHILDREN.features.find(feature => feature.tags.includes(target)) }
 
     // --UPDATES
     function app_updateFreeze(value) { APP.app_$FREEZE = { value, target: prop_ID } }
@@ -174,7 +179,7 @@ data-page-id={prop_ID}
     function presentation_updateScrollPosition()
     {
         contact_ON
-        ? presentation_goTo(features_getTarget('contact')?.id ?? prop_FEATURES.length - 1, true, false, app_updateFreeze.bind(null, true))
+        ? presentation_goTo(features_getTarget('contact')?.id ?? 0, true, false, app_updateFreeze.bind(null, true))
         : app_updateFreeze(false)
     }
 
@@ -195,7 +200,7 @@ data-page-id={prop_ID}
         {
             const CONTACT = features_getTarget('contact')
         
-            presentation_goTo(CONTACT ? CONTACT.id : prop_FEATURES.length - 1)
+            presentation_goTo(CONTACT ? CONTACT.id : 0)
         }
     }
 
@@ -228,7 +233,7 @@ data-page-id={prop_ID}
     {
         let position = 0
     
-        for (const DATA of prop_FEATURES)
+        for (const DATA of prop_CHILDREN.features)
         {
             if (DATA.id < id) position += DATA.contents.length
             else break

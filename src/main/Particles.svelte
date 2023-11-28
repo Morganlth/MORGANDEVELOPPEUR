@@ -27,7 +27,7 @@ context="module"
 <!-- #|-HTML-| -->
 
 <div
-class="particles"
+class="particles {$APP_$USER_AGENT}"
 bind:this={particles}
 >
     <canvas
@@ -83,6 +83,7 @@ bind:this={particles}
     // --SVELTE
 
     // --CONTEXTS
+    const APP_$USER_AGENT = APP.app_$USER_AGENT
 
     // --OUTSIDE
 
@@ -482,13 +483,15 @@ lang="scss"
 
 .particles
 {
-    @include utils.fixed;
+    @include utils.placement(fixed, $top: 0, $bottom: 0, $left: 0);
+
+    @extend %any-size;
 
     isolation: isolate;
 
     overflow: clip;
 
-    pointer-events: none;
+    &.-webkit { width: calc(100% - utils.$scrollbar-width) !important; }
 
     &::after
     {
@@ -497,8 +500,8 @@ lang="scss"
         @extend %any-size;
 
         background:
-        radial-gradient(circle at 20% -20%,  rgba($dark, .94) 40%, transparent 110%),
-        radial-gradient(circle at 10% -100%, $primary         0%,  transparent 88%);
+        radial-gradient(circle at 24% -20%,  rgba($dark, .94) 40%, transparent 120%),
+        radial-gradient(circle at 38% -100%, $primary         0%,  transparent 88%);
     }
 }
 

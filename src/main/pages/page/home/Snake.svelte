@@ -60,7 +60,7 @@ on:fullscreenchange={snake_eFullscreenChange}
                 <pre>     -GAME</pre>
                 <pre>OVER---   </pre>
 
-                <span>CLICK pour REJOUER</span>
+                <span>{prop_SNAKE.gameoverInfo}</span>
             </button>
         {/if}
 
@@ -135,7 +135,10 @@ on:fullscreenchange={snake_eFullscreenChange}
 // #\-EXPORTS-\
 
     // --PROPS
-    export let prop_ON = true
+    export let
+    prop_SNAKE = {}
+    ,
+    prop_ON = true
 
     // --BINDING
     export let snake_GAME = false
@@ -163,13 +166,13 @@ on:fullscreenchange={snake_eFullscreenChange}
     SNAKE_COMMANDS =
     [
         {
-            name: 'snake_size',
-            callback: snake_c$Size,
+            name           : 'snake_size',
+            callback       : snake_c$Size,
             getCurrentValue: () => snake_BLOCKSIZE,
-            params: { defaultValue: SNAKE_DEFAULT_BLOCKSIZE, min: 20, max: 70 },
-            tests: { testNumber: true },
-            desc: 'Modifier la taille du serpent (p: [20; 70])',
-            storage: true
+            params         : { defaultValue: SNAKE_DEFAULT_BLOCKSIZE, min: 20, max: 70 },
+            tests          : { testNumber: true },
+            desc           : 'Modifier la taille du serpent (p: [20; 70])',
+            storage        : true
         }
     ]
     ,

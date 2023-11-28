@@ -31,12 +31,17 @@ class="slider"
 class:focus={prop_FOCUS}
 >
     <div
-    style:transform="translateY({slider_TRANSLATE_Y}%)"
+    class="banner"
+    style:transform="translateY({banner_TRANSLATE_Y}%)"
     >
-        {slider_CONTENT}
+        {banner_CONTENT}
     </div>
 
-    <div>ACCUEIL PRÉSENTATION COMPÉTENCES PROJETS</div>
+    <div
+    class="subbanner"
+    >
+        {subbanner_CONTENT}
+    </div>
 </div>
 
 
@@ -49,13 +54,14 @@ class:focus={prop_FOCUS}
     // --DATA
 
     // --SVELTE
-    import { onDestroy } from 'svelte'
+    import { onMount, onDestroy } from 'svelte'
 
     // --LIB
     import { wait_getDelay } from '$lib/wait'
     import { animation }     from '$lib/animation'
 
     // --CONTEXTS
+    import { APP, ROUTER } from '../../../../App.svelte'
 
 //=======@COMPONENTS|
 
@@ -104,15 +110,17 @@ class:focus={prop_FOCUS}
     slider_I = 0,
     slider_T = 1
     ,
-    slider_CONTENT = prop_SLIDER[slider_I]()
-    ,
-    slider_TRANSLATE_Y = 100
-    ,
     slider_TIMEOUT
     ,
     slider_cancel = () => {}
 
     // --INSIDE
+    let
+    banner_CONTENT = prop_SLIDER[slider_I]()
+    ,
+    banner_TRANSLATE_Y = 100
+
+    let subbanner_CONTENT = ''
 
 
 // #\-REATIVES-\
@@ -132,9 +140,12 @@ class:focus={prop_FOCUS}
 //=======@LIFE|
 
     // --SVELTE
-    onDestroy(slider_destroy)
+    onMount(slider_set), onDestroy(slider_destroy)
 
     // --SET
+    function slider_set() { APP.app_WAITING_LOADING = subbanner_setVars }
+
+    function subbanner_setVars() { subbanner_CONTENT = ROUTER.router_PAGES.map(route => route.label).join(' ') }
 
     // --GET
 
@@ -184,7 +195,7 @@ class:focus={prop_FOCUS}
 
             slider_T = t
     
-            slider_TRANSLATE_Y = 100 * T
+            banner_TRANSLATE_Y = 100 * T
         }, SLIDER_DURATION, slider_T, invert)
 
         slider_cancel = cancel
@@ -204,12 +215,11 @@ class:focus={prop_FOCUS}
     
             try
             {
-                await slider_a()
+          await slider_a()
         
-                slider_CONTENT = prop_SLIDER[slider_I]()
+                banner_CONTENT = prop_SLIDER[slider_I]()
 
-                await slider_a(true) 
-
+          await slider_a(true) 
                 slider_loop()
             }
             catch { return }
@@ -274,7 +284,7 @@ lang="scss"
 
     &.focus div:nth-child(2) { transform: translateY(0); }
 
-    &>*
+    .banner, .subbanner
     {
         height: 100%;
 
@@ -283,7 +293,7 @@ lang="scss"
         box-sizing: border-box;
     }
 
-    div:nth-child(1)
+    .banner
     {
         #{--title-size}: calc(map.get(font.$font-sizes, s8) * 2);
 
@@ -292,7 +302,7 @@ lang="scss"
         letter-spacing: -.4rem;
     }
 
-    div:nth-child(2)
+    .subbanner
     {
         @include font.text($regular: false, $font-size: map.get(font.$font-sizes, s3));
 

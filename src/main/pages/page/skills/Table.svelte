@@ -70,11 +70,11 @@ on:outrostart={table_eOut}
             <div
             class="line"
             >
-                <svelte:element
-                this={line.topic ? 'h4' : 'p'}
-                >
-                    {line.text}
-                </svelte:element>
+                {#if line instanceof Object}
+                    <p>{line.skill}</p>
+                {:else}
+                    <h4>{line}</h4>
+                {/if}
             </div>
         {/each}
     </div>
@@ -93,7 +93,7 @@ on:outrostart={table_eOut}
     import { onMount, onDestroy, createEventDispatcher } from 'svelte'
 
     // --LIB
-    import COLORS from '$lib/colors'
+    import COLORS              from '$lib/colors'
     import { transition_fade } from '$lib/transition'
 
     // --CONTEXTS
@@ -344,7 +344,7 @@ lang="scss"
 
         pointer-events: auto;
 
-        padding-inline: app.$gap-inline calc(app.$gap-inline - utils.$scroll-bar-width);
+        padding-inline: app.$gap-inline calc(app.$gap-inline - utils.$scrollbar-width);
 
         .line
         {

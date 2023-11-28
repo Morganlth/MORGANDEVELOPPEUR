@@ -34,17 +34,18 @@ class:hide={$app_$HIDE}
         <Page
         prop_ID={page.id}
         prop_NAME={page.name}
-        prop_FOCUS={page.focus}
-        prop_INTRO={page.intro}
-        prop_TOP={page.top}
-        prop_Z={page.focus ? PAGE_Z : PAGE_Z - page.id - 1}
+        prop_FOCUS={PAGES_REACTIVES[page.id].focus}
+        prop_INTRO={PAGES_REACTIVES[page.id].intro}
+        prop_TOP={PAGES_REACTIVES[page.id].top}
+        prop_Z={PAGES_REACTIVES[page.id].z}
+        prop_PROPS={PAGES_REACTIVES[page.id].props}
         prop_COMPONENT={page.component}
         prop_LABEL={page.label}
         prop_TITLE={page.title}
         prop_NAV={page.nav}
         prop_QUOTE={page.quote}
-        prop_PROPS={page.props}
         prop_PROCESS={page.process}
+        prop_CHILDREN={page.children}
         />
     {/each}
 </div>
@@ -96,6 +97,8 @@ class:hide={$app_$HIDE}
     const
     PAGES_NAME = 'pages'
     ,
+    PAGES_REACTIVES = pages_getReactives()
+    ,
     PAGES_EVENTS = { resize: pages_e$Resize }
 
     // --INSIDE
@@ -146,36 +149,67 @@ class:hide={$app_$HIDE}
     {
         let top = 0
 
-        for (let i = 0; i < prop_DATA.length; i++)
+        for (const PAGE of prop_DATA)
         {
-            const PAGE = prop_DATA[i]
+            const ID = PAGE.id
+        
+            page_setVars(PAGE, top)
     
-            page_setVars(PAGE, i, top)
-    
-            ROUTER.router_add(PAGE)
+            ROUTER.router_add(ID, PAGE.name, PAGE.route.value, top)
 
-            top = PAGE.end
+            top = PAGES_REACTIVES[ID].end
         }
-
-        pages_update(APP.app_SCROLLTOP ?? 0)
     }
 
     function pages_setEvents() { EVENT.event_add(PAGES_EVENTS) }
 
-    function page_setVars(page, i, top)
+    function page_setVars(page, top)
     {
-        [page.end, page.start] = page.h ? [page.h * APP.app_HEIGHT + top, top + APP.app_PAGE_INTRO_HEIGHT] : [1, 1]
+        const
+        SCROLLTOP = APP.app_SCROLLTOP ?? 0,
+        REACTIVE  = PAGES_REACTIVES[page.id],
+        HEIGHT    = page.height,
+        START     = HEIGHT ? top + APP.app_PAGE_INTRO_HEIGHT : 1,
+        END       = HEIGHT ? HEIGHT * APP.app_HEIGHT + top   : 1,
+        INTRO     = page_getIntro(top, START, SCROLLTOP),
+        DIF       = END - START + (page.gap ?? 0) * APP.app_HEIGHT,
+        RATIO     = page_getRatio(START, DIF, page.overflow, SCROLLTOP)
 
-        page_updateProps(page, i,
-        {
-            prop_TOP:   (page.top = top),
-            prop_INTRO: (page.intro = page_getIntro(page.top, page.start, APP.app_SCROLLTOP ?? 0)),
-            prop_START: page.start,
-            prop_DIF:   (page.dif = page.end - page.start + (page.gap ?? 0) * APP.app_HEIGHT)
-        })
+        REACTIVE.intro = INTRO
+        REACTIVE.top   = top
+        REACTIVE.start = START
+        REACTIVE.end   = END
+        REACTIVE.dif   = DIF
+
+        pages_updateReactivesProps(page.id, { prop_INTRO: INTRO, prop_TOP: top, prop_START: START, prop_END: END, prop_DIF: DIF, prop_RATIO: RATIO })
     }
 
     // --GET
+    function pages_getReactives()
+    {
+        const REACTIVES = []
+
+        for (const PAGE of prop_DATA)
+        {
+            REACTIVES[PAGE.id] =
+            {
+                focus: false,
+                intro: false
+                ,
+                top  : 0,
+                start: 0,
+                end  : 0,
+                dif  : 0
+                ,
+                props: PAGE.props
+            }
+
+            delete PAGE.props
+        }
+    
+        return REACTIVES
+    }
+
     function page_getIntro(top, start, scrollTop) { return scrollTop >= top && scrollTop < start }
     
     function page_getRatio(start, dif, overflow, scrollTop)
@@ -190,37 +224,44 @@ class:hide={$app_$HIDE}
 
     function pages_update(scrollTop)
     {
-        for (let i = 0; i < prop_DATA.length; i++)
+        for (const PAGE of prop_DATA)
         {
-            const PAGE = prop_DATA[i]
+            const
+            REACTIVE = PAGES_REACTIVES[PAGE.id],
+            INTRO    = page_getIntro(REACTIVE.top, REACTIVE.start, scrollTop),
+            RATIO    = page_getRatio(REACTIVE.start, REACTIVE.dif, PAGE.overflow, scrollTop)
 
-            page_updateProps(PAGE, i,
-            {
-                prop_INTRO: (PAGE.intro = page_getIntro(PAGE.top, PAGE.start, scrollTop)),
-                prop_RATIO: page_getRatio(PAGE.start, PAGE.dif, PAGE.overflow, scrollTop)
-            })
+            REACTIVE.intro = INTRO
 
-            if (PAGE.focus) router_updateHide(!PAGE.intro)
+            pages_updateReactivesProps(PAGE.id, { prop_INTRO: INTRO, prop_RATIO: RATIO })
+
+            if (REACTIVE.focus) router_updateHide(!INTRO)
         }
     }
 
     function pages_updateFocus(id)
     {
-        for (let i = 0; i < prop_DATA.length; i++)
+        for (const PAGE of prop_DATA)
         {
-            const PAGE = prop_DATA[i]
+            const
+            ID       = PAGE.id,
+            REACTIVE = PAGES_REACTIVES[ID],
+            FOCUS    = id === ID
     
-            PAGE.focus = PAGE.id === id
+            REACTIVE.focus = FOCUS
+            REACTIVE.z     = FOCUS ? PAGE_Z : PAGE_Z - ID - 1
 
-            page_updateProps(PAGE, i, { prop_FOCUS: PAGE.focus })
+            pages_updateReactivesProps(ID, { prop_FOCUS: FOCUS })
         }
     }
 
-    function page_updateProps(page, i, props = {})
+    function pages_updateReactivesProps(id = 0, props = {})
     {
-        for (const KEY in props) if (KEY in page.props) page.props[KEY] = props[KEY]
+        const REACTIVE = PAGES_REACTIVES[id]
+    
+        for (const PROP in props) if (PROP in REACTIVE.props) REACTIVE.props[PROP] = props[PROP]
 
-        prop_DATA[i] = page
+        PAGES_REACTIVES[id] = REACTIVE
     }
 
     // --DESTROY

@@ -161,13 +161,13 @@ style:--system-r-y={system_ROTATE_Y}
     SYSTEM_COMMANDS =
     [
         {
-            name: 'system_optimise',
-            callback: system_c$Optimise,
+            name           : 'system_optimise',
+            callback       : system_c$Optimise,
             getCurrentValue: () => system_OPTIMISE,
-            params: { defaultValue: false, optimise: { value: true } },
-            tests: { testBoolean: true },
-            desc: 'Optimiser le système dans la section compétence (p: \'t\' ou \'f\')',
-            storage: true
+            params         : { defaultValue: false, optimise: { value: true } },
+            tests          : { testBoolean: true },
+            desc           : 'Optimiser le système dans la section compétence (p: \'t\' ou \'f\')',
+            storage        : true
         }
     ]
     ,
@@ -369,7 +369,7 @@ style:--system-r-y={system_ROTATE_Y}
 
     function tag_eIn({detail: { tag, frags }})
     {
-        const Y = MATH.headsOrTails() * 4 + '%'
+        const Y = MATH.headsOrTails() * 2 + '%'
     
         tag_update(tag, frags, Y, 1)
     }

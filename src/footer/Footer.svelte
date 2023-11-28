@@ -45,11 +45,32 @@ class="footer"
         </ul>
     </nav>
 
-    <p>
-        lang:
+    <div
+    class="lang"
+    >
+        <span>lang:</span>
 
-        <strong>fr</strong>
-    </p>
+        <form
+        method="post"
+        action="/"
+        bind:this={form}
+        >
+            <select
+            name="lang"
+            aria-label="choix de la langue"
+            on:input={select_eInput}
+            >
+                {#each LANGS as LANG}
+                    <option
+                    value={LANG}
+                    selected={LANG === prop_LANG}
+                    >
+                        {LANG.toUpperCase()}
+                    </option>
+                {/each}
+            </select>
+        </form>
+    </div>
 </footer>
 
 
@@ -64,6 +85,7 @@ class="footer"
     // --SVELTE
 
     // --LIB
+    import { LANGS } from '$lib/lang'
 
     // --CONTEXTS
 
@@ -79,6 +101,7 @@ class="footer"
 // #\-EXPORTS-\
 
     // --PROPS
+    export let prop_LANG
 
     // --BINDING
 
@@ -105,6 +128,7 @@ class="footer"
     // --THIS
 
     // --INSIDE
+    let form
 
 
 // #\-REATIVES-\
@@ -127,6 +151,14 @@ class="footer"
     // --SET
 
     // --GET
+    function select_getCookieExpiration()
+    {
+        const DATE = new Date()
+
+        DATE.setFullYear(DATE.getFullYear() + 1)
+
+        return DATE.toUTCString()
+    }
 
     // --UPDATES
 
@@ -141,6 +173,16 @@ class="footer"
 //=======@EVENTS|
 
     // --*
+    function select_eInput({ target: {value} })
+    {
+        const VALUE = encodeURIComponent(value)
+    
+        if (!LANGS.includes(VALUE)) return
+        
+        document.cookie = `lang=${VALUE}; expires=${select_getCookieExpiration()}; samesite=lax`
+
+        form.submit()
+    }
 
 
 //=======@TRANSITIONS|
@@ -196,6 +238,7 @@ lang="scss"
     &, ul { display: flex; }
 
     @include utils.placement(fixed, $right: 0, $bottom: 0, $z: 2);
+    @include font.text($color: $light, $regular: false);
 
     @extend %no-drag;
     @extend %a-scaled;
@@ -211,6 +254,14 @@ lang="scss"
 
     box-sizing: border-box;
 
+    a, select
+    {
+        pointer-events: auto;
+
+        color: inherit;
+        font:  inherit;
+    }
+
     nav { width: 50%; }
 
     ul
@@ -223,15 +274,11 @@ lang="scss"
 
         a
         {
-            @include font.text($color: $light, $regular: false);
-
             @extend %a-text;
 
             position: relative;
 
             padding: $padding-block 1rem;
-
-            pointer-events: auto;
 
             text-decoration: none;
 
@@ -252,11 +299,24 @@ lang="scss"
         }
     }
 
-    &>p
+    .lang
     {
-        @include font.text($color: $light);
+        display: flex;
 
         padding-bottom: $padding-block;
+
+        span
+        {
+            font-family: font.$family-text;
+            font-weight: lighter;
+        }
+    
+        select
+        {
+            background-color: $dark;
+        
+            border: none;
+        }
     }
 }
 

@@ -40,14 +40,14 @@ style:--pe-color={nav_PE_COLOR}
     style:transform="translateX({items_TRANSLATE_X}%)"
     style:opacity={items_OPACITY}
     >
-        {#each prop_ITEMS as item}
+        {#each prop_NAV as item}
             <li
             class="item"
             style:--item-color={item.color ?? COLORS.light}
             >
                 <Cell
                 prop_TEXT_WRAPPER={true}
-                prop_TITLE={item.title ?? (item.value ?? 'compétence')}
+                prop_TITLE={item.title ?? (item.value ?? '')}
                 {prop_FOCUS}
                 on:click={cell_eClick.bind(null, item.id)}
                 >
@@ -92,12 +92,12 @@ style:--pe-color={nav_PE_COLOR}
 
     // --PROPS
     export let
+    prop_NAV = []
+    ,
     prop_FOCUS = false,
     prop_INTRO = false
     ,
     prop_TRANSLATE_Y = 0
-    ,
-    prop_ITEMS = []
 
     // --BINDING
 
@@ -183,7 +183,7 @@ style:--pe-color={nav_PE_COLOR}
 //=======@EVENTS|
 
     // --*
-    function cell_eClick(id) { SVELTE_DISPATCH('click', { id: id, item: prop_ITEMS[id] }) }
+    function cell_eClick(id) { SVELTE_DISPATCH('click', { id: id, item: prop_NAV[id] }) }
 
 
 //=======@TRANSITIONS|

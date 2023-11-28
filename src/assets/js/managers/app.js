@@ -28,6 +28,7 @@ class App
     #app_OPTIMISE_CONFIG = {}
     #app_STORAGE         = {}
     #app_COMMANDS        = []
+    #app_WAITING_LOADING = []
 
     #app_TIMEOUT
 
@@ -39,8 +40,6 @@ class App
     app_HEIGHT            = 0
     app_PAGE_INTRO_HEIGHT = 0
     app_SCROLLTOP         = 0
-
-    app_WAITING_LOADING = []
 
 
 // #\-CONSTRUCTOR-\
@@ -89,6 +88,8 @@ class App
 
     set app_OPTIMISE_CONFIG({name, value}) { this.#app_OPTIMISE_CONFIG[name] = value ?? false }
 
+    set app_WAITING_LOADING(func) { if (func instanceof Function) this.#app_WAITING_LOADING ? this.#app_WAITING_LOADING.push(func) : func() }
+
 
 //=======@GETTER|
 
@@ -105,18 +106,21 @@ class App
 
     get app_$OPTIMISE()       { return this.#app_$OPTIMISE }
 
-    get app_$USER_AGENT()      { return this.#app_$USER_AGENT }
+    get app_$USER_AGENT()     { return this.#app_$USER_AGENT }
 
     get app_OPTIMISE_CONFIG() { return this.#app_OPTIMISE_CONFIG }
+
+    get app_WAITING_LOADING() { return this.#app_WAITING_LOADING }
 
 
 //=======@LIFE|
 
     // --SET
-    app_set(app)
+    app_set(app, lang)
     {
         this.app_hide()
 
+        this.#app_setLang(lang)
         this.#app_setVars(app)
         this.#app_setCommands()
 
@@ -131,6 +135,8 @@ class App
         this.#app_$SMALL_SCREEN = store_custom(this.#app_$SMALL_SCREEN)
         this.#app_$USER_AGENT   = store_custom(this.#app_$USER_AGENT)
     }
+
+    #app_setLang(lang) { document.documentElement.lang = lang }
 
     #app_setVars(app)
     {
@@ -232,9 +238,9 @@ class App
 
     #app_loaded()
     {
-        for (const CALLBACK of this.app_WAITING_LOADING) CALLBACK()
+        for (const CALLBACK of this.#app_WAITING_LOADING) CALLBACK()
 
-        delete this.app_WAITING_LOADING
+        this.#app_WAITING_LOADING = null
     }
 
     app_hide()

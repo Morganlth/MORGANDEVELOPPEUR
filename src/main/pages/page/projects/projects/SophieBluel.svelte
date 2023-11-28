@@ -63,7 +63,7 @@ id="sophiebluel"
         
             <nav>
                 <ul>
-                    {#each prop_DATAS.nav ?? [] as a}
+                    {#each prop_DATA.nav ?? [] as a}
                         <li>
                             <!-- svelte-ignore a11y-invalid-attribute -->
                             <a
@@ -257,7 +257,7 @@ id="sophiebluel"
 // #\-EXPORTS-\
 
     // --PROPS
-    export let prop_DATAS = {}
+    export let prop_DATA = {}
 
     // --BINDING
 
@@ -283,7 +283,7 @@ id="sophiebluel"
     // --OUTSIDE
 
     // --THIS
-    let sophiebluel_GALLERY = prop_DATAS.gallery ?? []
+    let sophiebluel_GALLERY = prop_DATA.gallery ?? []
 
     // --INSIDE
 
@@ -312,7 +312,7 @@ id="sophiebluel"
     {
         const DEFAULT_FILTER = 'Tous'
     
-        return prop_DATAS.gallery?.reduce((array, figure) =>
+        return prop_DATA.gallery?.reduce((array, figure) =>
         {
             const
             FILTER = figure.filter ?? DEFAULT_FILTER,
@@ -348,8 +348,8 @@ id="sophiebluel"
     {
         sophiebluel_GALLERY =
         !id
-        ? prop_DATAS.gallery ?? []
-        : prop_DATAS.gallery?.filter(figure => figure.filter_ID === id)
+        ? prop_DATA.gallery ?? []
+        : prop_DATA.gallery?.filter(figure => figure.filter_ID === id)
     }
 
     // --DESTROY

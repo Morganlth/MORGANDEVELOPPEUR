@@ -38,7 +38,7 @@ bind:this={contact}
             prop_FOCUS={true}
             prop_ICON_WRAPPER={true}
             prop_CENTER={true}
-            prop_TITLE="fermer"
+            prop_TITLE={prop_CONTACT.headCellTitle}
             on:click={cell_eClick}
             >
                 <Icon
@@ -68,7 +68,7 @@ bind:this={contact}
             class:valid={input_VALID}
             type="email"
             name="email"
-            aria-label="contact email"
+            aria-label="email"
             placeholder="Email"
             required
             bind:this={input}
@@ -81,7 +81,7 @@ bind:this={contact}
             prop_ICON_WRAPPER={true}
             prop_CENTER={true}
             prop_SUBMIT={cell_SUBMIT}
-            prop_TITLE="Me contacter"
+            prop_TITLE={prop_CONTACT.formCellTitle}
             >
                 <Icon
                 prop_COLOR={COLORS.light}
@@ -93,8 +93,8 @@ bind:this={contact}
             <textarea
             class:valid={textarea_VALID}
             name="message"
-            aria-label="contact message"
-            placeholder="Message (min {FORM_MSG_MIN} - max {FORM_MSG_MAX} caractères)"
+            aria-label="message"
+            placeholder="Message (min {FORM_MSG_MIN} - max {FORM_MSG_MAX} {prop_CONTACT.formTextareaPlaceholder})"
             minlength={FORM_MSG_MIN}
             maxlength={FORM_MSG_MAX}
             required
@@ -118,7 +118,7 @@ bind:this={contact}
     import { onMount, onDestroy } from 'svelte'
 
     // --LIB
-    import COLORS                                                                   from '$lib/colors'
+    import COLORS                                                       from '$lib/colors'
     import { FORM_MSG_MIN, FORM_MSG_MAX, form_testEmail, form_testMsg } from '$lib/form'
 
     // --CONTEXTS
@@ -141,6 +141,7 @@ bind:this={contact}
 // #\-EXPORTS-\
 
     // --PROPS
+    export let prop_CONTACT = {}
 
     // --BINDING
     export let contact_ON = true
@@ -354,14 +355,14 @@ lang="scss"
         min-height: 52vh;
         max-height: 88vh;
 
-        &>div
+        .head
         {
             #{--cell-size}: 2.4rem;
 
             display:     flex;
             align-items: flex-end;
             flex-wrap:   wrap;
-            gap:         4rem;
+            gap:         2rem;
         }
 
         h3

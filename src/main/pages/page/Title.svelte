@@ -99,12 +99,12 @@ bind:this={title}
 
     // --PROPS
     export let
+    prop_TITLE = {}
+    ,
     prop_CHARGED = false,
     prop_INTRO   = false
     ,
     prop_TOP = 0
-    ,
-    prop_TITLE = {}
 
     // --BINDING
     export let title_HEIGHT = 0

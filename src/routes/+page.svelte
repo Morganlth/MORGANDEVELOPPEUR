@@ -26,7 +26,10 @@ context="module"
 
 <!-- #|-HTML-| -->
 
-<App />
+<App
+prop_LANG={data.lang ?? LANGS[0]}
+prop_RESPONSE={form}
+/>
 
 
 <!-- #|-SCRIPT-| -->
@@ -40,6 +43,7 @@ context="module"
     // --SVELTE
 
     // --LIB
+    import { LANGS } from '$lib/lang'
 
     // --CONTEXTS
 
@@ -56,6 +60,9 @@ context="module"
 // #\-EXPORTS-\
 
     // --PROPS
+    export let
+    data = {},
+    form
 
     // --BINDING
 

@@ -42,6 +42,7 @@ context="module"
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
 id="app"
+class="lang-{prop_LANG}"
 class:freeze={$app_$FREEZE}
 style:visibility={app_FONTS_CHARGED ? 'visible' : 'hidden'}
 bind:this={app}
@@ -55,10 +56,15 @@ on:touchstart|once={app_eTouchStart}
 >
     {#if app_FONTS_CHARGED}
         <Header />
+
         <Main
+        {prop_LANG}
         bind:main_CHARGED
         />
-        <Footer />
+    
+        <Footer
+        {prop_LANG}
+        />
     {/if}
 </div>
 
@@ -69,10 +75,13 @@ on:touchstart|once={app_eTouchStart}
 
 // #\-IMPORTS-\
 
+    // --DATA
+
     // --SVELTE
     import { onMount, onDestroy } from 'svelte'
 
     // --LIB
+    import { LANGS } from '$lib/lang'
 
     // --CONTEXTS
 
@@ -93,6 +102,7 @@ on:touchstart|once={app_eTouchStart}
 
     // --PROPS
     export let
+    prop_LANG    = LANGS[0],
     prop_PAGE_ID = 0
     ,
     prop_SUBPATH  = void '',
@@ -183,7 +193,7 @@ on:touchstart|once={app_eTouchStart}
             PROCESS.process_set()
             SPRING.spring_set()
 
-            APP.app_set(app)
+            APP.app_set(app, prop_LANG)
 
             app_setContexts = () => {}
         }

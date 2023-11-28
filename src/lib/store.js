@@ -3,8 +3,8 @@
     // --STORE
     export default function store_custom({ value, setter, optionalparameters })
     {
-        value ??= null
-        setter ??= () => {}
+        value              ??= null
+        setter             ??= () => {}
         optionalparameters ??= {}
 
         let { set, subscribe } = writable(value)

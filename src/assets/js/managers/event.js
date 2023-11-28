@@ -18,10 +18,10 @@ class Event
     {
         value: 0
     ,
-        setter: function ({value})
+        setter: function (args)
         {
             this.count = 0
-            this.samples[this.i] = value // fps
+            this.samples[this.i] = args[0] // fps
             
             if (++this.i >= this.samples.length) this.i = 0
 

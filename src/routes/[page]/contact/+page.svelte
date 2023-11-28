@@ -27,6 +27,7 @@ context="module"
 <!-- #|-HTML-| -->
 
 <App
+prop_LANG={data.lang ?? LANGS[0]}
 prop_PAGE_ID={data.page_ID ?? 1}
 prop_SUBPATH={data.subpath}
 prop_RESPONSE={form}
@@ -44,6 +45,7 @@ prop_RESPONSE={form}
     // --SVELTE
 
     // --LIB
+    import { LANGS } from '$lib/lang'
 
     // --CONTEXTS
 
@@ -60,8 +62,10 @@ prop_RESPONSE={form}
 // #\-EXPORTS-\
 
     // --PROPS
-    export let data = {}
-    export let form
+    export let
+    data = {}
+    ,
+    form
 
     // --BINDING
 

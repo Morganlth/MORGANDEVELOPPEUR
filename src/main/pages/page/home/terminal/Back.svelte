@@ -32,7 +32,7 @@ class="back"
     <Cell
     prop_ICON_WRAPPER={true}
     prop_CENTER={true}
-    prop_TITLE="fermer"
+    prop_TITLE={prop_BACK.cellTitle}
     {prop_FOCUS}
     on:click={prop_turn.bind(null, false)}
     >
@@ -46,123 +46,65 @@ class="back"
     <article
     class="desc"
     >
-        <h2>FONCTIONS DU TERMINAL</h2>
+        <h2>{prop_BACK.desc.title}</h2>
 
-        <section>
-            <h3>- Taper une commande pour obtenir, modifier, ou optimiser</h3>
+        {#each prop_BACK.desc.sections as section}
+            <section>
+                <h3>- {section.title}</h3>
 
-            <p>
-                Le terminal vous offre la possibilité de personnaliser le site web LE THUAUT Morgan.
-                Vous pouvez par exemple changer des paramètres pour optimiser la page ou réduire/augmenter des effets visuels.
-                Les commandes se traduisent par le mot-clé
-
-                <span
-                class="command-app"
-                >
-                    {TERMINAL_WORD_REFERENCE}
-                </span>
-
-                suivi du nom d'une commande, par exemple:
-
-                <span
-                class="command-name"
-                >
-                    {DESC_EXEMPLE.command}
-                </span>
-        
-                ; puis éventuellement d'un ou plusieurs paramètres séparés par des virgules:
-
-                <span>"{DESC_EXEMPLE.params}"</span>
-        
-                (premier paramètre "p1", second paramètre "p2", ...).
-            <br>
-                Cela nous donne la commande suivante:
-
-                <Cell
-                prop_TEXT_WRAPPER={true}
-                prop_TITLE={CELL_COMMAND_TITLE}
-                {prop_FOCUS}
-                on:click={cell_eClick.bind(null, `${TERMINAL_WORD_REFERENCE} ${DESC_EXEMPLE.command} ${DESC_EXEMPLE.params}`)}
-                >
-                    <span
-                    class="command-app"
-                    >
-                        {TERMINAL_WORD_REFERENCE}
-                    </span>
-
-                    <span
-                    class="command-name"
-                    >
-                        {DESC_EXEMPLE.command}
-                    </span>
-
-                    <span>{DESC_EXEMPLE.params}</span>
-                </Cell>
-            <br>
-            <br>
-                Vous pouvez retrouver la liste des commandes avec la commande
-
-                <Cell
-                prop_TEXT_WRAPPER={true}
-                prop_TITLE={CELL_COMMAND_TITLE}
-                {prop_FOCUS}
-                on:click={cell_eClick.bind(null, TERMINAL_WORD_REFERENCE + ' commands')}
-                >
-                    <span
-                    class="command-app"
-                    >
-                        {TERMINAL_WORD_REFERENCE}
-                    </span>
-
-                    <span
-                    class="command-name"
-                    >
-                        commands
-                    </span>
-                </Cell>
-            </p>
-        </section>
-
-        <section>
-            <h3>- Rechercher une section ou une information</h3>
-
-            <p>
-                Le terminal agit comme une barre de recherche.
-                Tapez un mot-clé pour trouver une section correspondante, par exemple:
+                <p>
+                    {#each section.contents as content}
+                        {#if content instanceof Object}
+                            {#if content.br}
+                                <br>
+                            {:else if content.cell}
+                                <Cell
+                                prop_TEXT_WRAPPER={true}
+                                prop_TITLE={content.cellTitle}
+                                {prop_FOCUS}
+                                on:click={cell_eClick.bind(null, content.value)}
+                                >
+                                    "{content.value}"
+                                </Cell>
+                            {:else if content.command}
+                                <Cell
+                                prop_TEXT_WRAPPER={true}
+                                prop_TITLE={prop_BACK.cellCommandTitle}
+                                {prop_FOCUS}
+                                on:click={cell_eClick.bind(null, `${TERMINAL_WORD_REFERENCE} ${content.name} ${content.params ?? ''}`)}
+                                >
+                                    <span
+                                    class="command-app"
+                                    >
+                                        {TERMINAL_WORD_REFERENCE}
+                                    </span>
                 
-                <Cell
-                prop_TEXT_WRAPPER={true}
-                prop_TITLE="Clicker pour rejoindre la page de contact"
-                {prop_FOCUS}
-                on:click={cell_eClick.bind(null, 'contact')}
-                >
-                    "contact"
-                </Cell>
-                .
-            <br>
-            <br>
-                Vous pouvez retrouver la liste des mots-clés avec la commande
-
-                <Cell
-                prop_TEXT_WRAPPER={true}
-                prop_TITLE={CELL_COMMAND_TITLE}
-                {prop_FOCUS}
-                on:click={cell_eClick.bind(null, TERMINAL_WORD_REFERENCE + ' keywords')}
-                >
-                    <span
-                    class="command-app"
-                    >
-                        {TERMINAL_WORD_REFERENCE}
-                    </span>
-
-                    <span
-                    class="command-name"
-                    >
-                        keywords
-                    </span>
-                </Cell>
-            </p>
-        </section>
+                                    <span
+                                    class="command-name"
+                                    >
+                                        {content.name}
+                                    </span>
+                
+                                    <span
+                                    class="command-params"
+                                    >
+                                        {content.params ?? ''}
+                                    </span>
+                                </Cell>
+                            {:else if content.commandFraction}
+                                <span
+                                class="command-{content.commandType}"
+                                >
+                                    {content.commandType === 'app' ? TERMINAL_WORD_REFERENCE : content.value}
+                                </span>
+                            {/if}
+                        {:else}
+                            {content}&nbsp;
+                        {/if}
+                    {/each}
+                </p>
+            </section>
+        {/each}
     </article>
 </div>
 
@@ -202,6 +144,8 @@ class="back"
 
     // --PROPS
     export let
+    prop_BACK = {}
+    ,
     prop_FOCUS = false
     ,
     prop_turn = () => {}
@@ -220,14 +164,6 @@ class="back"
     // --THIS
 
     // --INSIDE
-    const DESC_EXEMPLE =
-    {
-        ref: TERMINAL_WORD_REFERENCE,
-        command: 'success',
-        params: 'Le terminal, Mon Succès'
-    }
-
-    const CELL_COMMAND_TITLE = 'Clicker pour éxécuter la commande'
 
 
 // #\-VARIABLES-\

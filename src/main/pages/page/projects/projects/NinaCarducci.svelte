@@ -27,7 +27,7 @@ context="module"
 <!-- #|-HTML-| -->
 
 <svelte:head>
-    {#each prop_DATAS.meta ?? {} as meta}
+    {#each prop_DATA.meta ?? {} as meta}
         <meta
         property="og:{meta.property}"
         content={meta.content}
@@ -114,7 +114,7 @@ id="ninacarducci"
         
             <nav>
                 <ul>
-                    {#each prop_DATAS.nav ?? [] as a}
+                    {#each prop_DATA.nav ?? [] as a}
                         <li>
                             <a
                             href="#ninacarducci-{a.href}"
@@ -152,7 +152,7 @@ id="ninacarducci"
                 itemtype="https://schema.org/ImageGallery"
                 itemprop="subjectOf"
                 >
-                    {#each prop_DATAS.slider ?? [] as item}
+                    {#each prop_DATA.slider ?? [] as item}
                         <div
                         class="slider-item"
                         style:transition-duration="{item.duration}ms"
@@ -216,7 +216,7 @@ id="ninacarducci"
                 {/each}
 
                 <nav>
-                    {#each Array(prop_DATAS.slider?.length ?? 0) as _, id}
+                    {#each Array(prop_DATA.slider?.length ?? 0) as _, id}
                         <button
                         type="button"
                         class:active={slider_TARGET === id}
@@ -374,8 +374,8 @@ id="ninacarducci"
                     >
                         <div>
                             <img
-                            src="/images/ninacarducci/gallery/{(prop_DATAS.gallery ?? [])[gallery_TARGET]?.src}.jpg"
-                            alt={(prop_DATAS.gallery ?? [])[gallery_TARGET]?.alt}
+                            src="/images/ninacarducci/gallery/{(prop_DATA.gallery ?? [])[gallery_TARGET]?.src}.jpg"
+                            alt={(prop_DATA.gallery ?? [])[gallery_TARGET]?.alt}
                             width="498"
                             />
 
@@ -426,7 +426,7 @@ id="ninacarducci"
                 <h2>Mes services</h2>
 
                 <div>
-                    {#each prop_DATAS.service ?? [] as service}
+                    {#each prop_DATA.service ?? [] as service}
                         <article
                         itemscope
                         itemtype="https://schema.org/Offer"
@@ -679,7 +679,7 @@ id="ninacarducci"
 // #\-EXPORTS-\
 
     // --PROPS
-    export let prop_DATAS = {}
+    export let prop_DATA = {}
 
     // --BINDING
 
@@ -719,7 +719,7 @@ id="ninacarducci"
     let
     gallery_TARGET = null
     ,
-    gallery_GALLERY = prop_DATAS.gallery ?? []
+    gallery_GALLERY = prop_DATA.gallery ?? []
 
 
 // #\-REATIVES-\
@@ -754,7 +754,7 @@ id="ninacarducci"
     {
         const DEFAULT_FILTER = 'Tous'
     
-        return prop_DATAS.gallery?.reduce((array, img) =>
+        return prop_DATA.gallery?.reduce((array, img) =>
         {
             const
             FILTER = img.filter ?? DEFAULT_FILTER,
@@ -778,12 +778,12 @@ id="ninacarducci"
     // --UPDATES
     function slider_update(n /* -1: prev | 1: next */)
     {
-        const LENGTH = prop_DATAS.slider?.length ?? 0
+        const LENGTH = prop_DATA.slider?.length ?? 0
 
         for (let i = 0; i < LENGTH; i++)
         {
             const
-            SLIDE = prop_DATAS.slider[i],
+            SLIDE = prop_DATA.slider[i],
             MAX   = LENGTH - 1
             
             let
@@ -800,7 +800,7 @@ id="ninacarducci"
 
             if (position === 0) slider_TARGET = i
 
-            prop_DATAS.slider[i] = { ...SLIDE, translateX: i * -100 + position * 100, position, duration }
+            prop_DATA.slider[i] = { ...SLIDE, translateX: i * -100 + position * 100, position, duration }
         }
     }
 
@@ -821,8 +821,8 @@ id="ninacarducci"
     {
         gallery_GALLERY =
         !id
-        ? prop_DATAS.gallery ?? []
-        : prop_DATAS.gallery?.filter(img => img.filter_ID === id)
+        ? prop_DATA.gallery ?? []
+        : prop_DATA.gallery?.filter(img => img.filter_ID === id)
     }
 
     function gallery_updateFilter(id)
@@ -868,7 +868,7 @@ id="ninacarducci"
     // --*
     function slider_eClick(d) { slider_updateTo(d) }
 
-    function slider_eClick2(id = 0) { slider_updateTo((prop_DATAS.slider ?? [])[id].position ?? 0 * -1) }
+    function slider_eClick2(id = 0) { slider_updateTo((prop_DATA.slider ?? [])[id].position ?? 0 * -1) }
 
     function gallery_eClick(id)
     {
