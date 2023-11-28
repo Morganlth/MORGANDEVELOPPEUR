@@ -311,17 +311,19 @@ lang="scss"
             font-family: font.$family-text;
             font-weight: lighter;
         }
+
+        select, option
+        {
+            margin:  0;
+            padding: 0;
+        }
     
         select
         {
             background-color: $dark;
-
-            margin: 0;
         
             border: none;
         }
-
-        option { padding: 0; }
     }
 }
 
