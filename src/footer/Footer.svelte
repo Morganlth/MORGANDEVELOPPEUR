@@ -218,6 +218,7 @@ lang="scss"
 
     /* --DEPENDENCIES */
     @use '../assets/scss/styles/utils';
+    @use '../assets/scss/styles/display';
     @use '../assets/scss/styles/font';
     @use '../assets/scss/styles/animation';
 
@@ -301,7 +302,7 @@ lang="scss"
 
     .lang
     {
-        display: flex;
+        @extend %f-a-center;
 
         padding-bottom: $padding-block;
 
