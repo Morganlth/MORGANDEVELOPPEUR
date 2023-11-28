@@ -314,9 +314,13 @@ lang="scss"
         select
         {
             background-color: $dark;
+
+            margin: 0;
         
             border: none;
         }
+
+        option { padding: 0; }
     }
 }
 
