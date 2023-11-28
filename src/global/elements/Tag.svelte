@@ -256,9 +256,9 @@ lang="scss"
 
         opacity: 0;
 
-        width:      min(36vw, 36vh);
+        width:      min(40vw, 40vh);
         height:     auto;
-        max-height: min(24vw, 24vh);
+        max-height: min(30vw, 30vh);
 
         clip-path: polygon(0 50%, 0 50%, 0 50%, 0 50%);
 

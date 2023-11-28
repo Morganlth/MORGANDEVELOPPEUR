@@ -230,7 +230,7 @@ bind:this={project}
     {
         tag_IMG_ON = false
 
-        tag_TIMEOUT = setTimeout(() => tag_IMG_ON = true, TAG_DURATION * 2)
+        tag_TIMEOUT = setTimeout(() => tag_IMG_ON = true, TAG_DURATION)
     }
 
     // --GET
