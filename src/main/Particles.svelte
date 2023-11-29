@@ -112,22 +112,22 @@ bind:this={particles}
     PARTICLES_COMMANDS =
     [
         {
-            name: 'particles',
-            callback: particles_c$,
+            name           : 'particles',
+            callback       : particles_c$,
             getCurrentValue: () => particles_ON,
-            params: { defaultValue: true, optimise: { value: false } },
-            tests: { testBoolean: true },
-            desc: 'Activer/Désactiver les particules (p: \'t\' ou \'f\')',
-            storage: true
+            params         : { defaultValue: true, optimize: { value: false } },
+            tests          : { testBoolean: true },
+            desc           : { fr: 'Activer/Désactiver les particules (p: \'t\' ou \'f\')', en: 'Enable/Disable particles (p: \'t\' or \'f\')' },
+            storage        : true
         },
         {
-            name: 'particles_delay',
-            callback: particles_c$Delay,
+            name           : 'particles_delay',
+            callback       : particles_c$Delay,
             getCurrentValue: () => particles_DELAY,
-            params: { defaultValue: PARTICLES_DEFAULT_DELAY, min: 10, max: 1000 },
-            tests: { testNumber: true },
-            desc: 'Augmenter/Diminuer le nombre de particules (p: [10; 1000])',
-            storage: true
+            params         : { defaultValue: PARTICLES_DEFAULT_DELAY, min: 10, max: 1000 },
+            tests          : { testNumber: true },
+            desc           : { fr: 'Augmenter/Diminuer le nombre de particules (p: [10; 1000])', en: 'Increase/Decrease the number of particles (p: [10; 1000])' },
+            storage        : true
         }
     ]
     ,
@@ -135,7 +135,7 @@ bind:this={particles}
     PARTICLES_EVENTS_2  =
     {
         mouseDown: particles_e$MouseDown,
-        mouseUp:   particles_e$MouseUp,
+        mouseUp  : particles_e$MouseUp,
         animation: particles_e$Animation
     }
 

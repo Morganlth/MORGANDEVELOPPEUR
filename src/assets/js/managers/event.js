@@ -272,7 +272,7 @@ class Event
 
             if (callback) this.#event_scrollToCallback(top, callback)
 
-            APP.app?.scrollTo({ top: top, behavior: instant ? 'instant' : 'smooth' })
+            ;(APP.app ?? document.getElementById('app'))?.scrollTo({ top: top, behavior: instant ? 'instant' : 'smooth' })
         }
         else if (callback) callback()
     }

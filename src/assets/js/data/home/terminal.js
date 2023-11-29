@@ -66,7 +66,7 @@
                 sections:
                 [
                     {
-                        title: { fr: 'Taper une commande pour obtenir, modifier, ou optimiser', en: 'Type a command to obtain, modify or optimise' }
+                        title: { fr: 'Taper une commande pour obtenir, modifier, ou optimiser', en: 'Type a command to obtain, modify or optimize' }
                         ,
                         contents:
                         [
@@ -76,7 +76,7 @@
                                 Les commandes se traduisent par le mot-clé:`
                                 ,
                                 en: `The terminal allows you to personalise the LE THUAUT Morgan website.
-                                For example, you can change parameters to optimise the page or reduce/increase visual effects.
+                                For example, you can change parameters to optimize the page or reduce/increase visual effects.
                                 Commands are expressed by the keyword:`
                             }
                             ,

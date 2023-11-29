@@ -161,11 +161,7 @@ on:touchstart|once={app_eTouchStart}
     onMount(app_set), onDestroy(app_destroy)
 
     // --SET
-    function app_set()
-    {
-        app_setVars()
-        app_setCommands()
-    }
+    function app_set() { app_setVars() }
 
     function app_setVars()
     {
@@ -176,25 +172,16 @@ on:touchstart|once={app_eTouchStart}
         document.fonts.ready.then(() => app_FONTS_CHARGED = true)
     }
 
-    function app_setCommands()
-    {
-        // COMMAND.command_add('app',     app_c$App)
-        // COMMAND.command_add('router',  app_c$Router)
-        // COMMAND.command_add('command', app_c$Command)
-        // COMMAND.command_add('event',   app_c$Event)
-    }
-
     function app_setContexts(charged)
     {
         if (charged)
         {
-            APP    .app_set(app, prop_LANG)
             ROUTER .router_set(prop_PAGE_ID, prop_SUBPATH, prop_RESPONSE)
             COMMAND.command_set()
             EVENT  .event_set()
             PROCESS.process_set()
             SPRING .spring_set()
-            APP    .app_set2()
+            APP    .app_set(app, prop_LANG)
 
             app_setContexts = () => {}
         }
@@ -215,13 +202,6 @@ on:touchstart|once={app_eTouchStart}
 //=======@COMMANDS|
 
     // --*
-    function app_c$App()     { console.log(APP) }
-
-    function app_c$Router()  { console.log(ROUTER) }
-
-    function app_c$Command() { console.log(COMMAND) }
-
-    function app_c$Event()   { console.log(EVENT) }
 
 
 //=======@EVENTS|
@@ -243,6 +223,7 @@ on:touchstart|once={app_eTouchStart}
 //=======@UTILS|
 
     // --*
+    ;(function app_setLang() { APP.app_setLang(prop_LANG) })()
 
 
 </script>

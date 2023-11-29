@@ -40,9 +40,9 @@ class Process
     {
         this.#process_COMMANDS.push(
         {
-            name: 'keywords',
+            name    : 'keywords',
             callback: this.#process_c$Keywords.bind(this),
-            desc: 'Afficher les mots clés'
+            desc    : { fr: 'Afficher les mots clés', en: 'Display keywords' }
         })
     }
 

@@ -43,7 +43,7 @@ class Command
         }
     ]
 
-    static __command_PARAMS = { defaultValue: true, min: null, max: null, optimise: false }
+    static __command_PARAMS = { defaultValue: true, min: null, max: null, optimize: false }
     static __command_TESTS  = { testBoolean: false, testNumber: false }
 
 
@@ -103,7 +103,7 @@ class Command
     {
         for (let { name, callback, getCurrentValue, params = Command.__command_PARAMS, tests = Command.__command_TESTS, desc, storage } of commands)
         {
-            if (params.optimise) APP.app_OPTIMISE_CONFIG = { name, value: params.optimise.value }
+            if (params.optimize) APP.app_OPTIMIZE_CONFIG = { name, value: params.optimize.value }
 
             this.command_add(name, (value) =>
             {
@@ -199,7 +199,7 @@ class Command
     {
         if (storage && !this.command_KEYSTORAGE.includes(name)) this.command_KEYSTORAGE.push(name)
 
-        command.desc = desc
+        command.desc = desc instanceof Object ? desc[APP.app_LANG] : desc
         command.args = args
 
         this.command_COMMANDS[name] = command
@@ -241,7 +241,7 @@ class Command
     #command_execute(name, value, current_VALUE, callback = () => {}, params = {}, storage = false)
     {
         if (value !== current_VALUE) callback(value)
-        if (params.optimise && value !== params.optimise.value) APP.app_$OPTIMISE = false
+        if (params.optimize && value !== params.optimize.value) APP.app_$OPTIMIZE = false
         if (storage) localStorage[value === params.defaultValue ? 'removeItem' : 'setItem'](name, value)
 
         this.command_c$Success(name + ' ' + value)

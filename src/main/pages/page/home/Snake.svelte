@@ -171,7 +171,7 @@ on:fullscreenchange={snake_eFullscreenChange}
             getCurrentValue: () => snake_BLOCKSIZE,
             params         : { defaultValue: SNAKE_DEFAULT_BLOCKSIZE, min: 20, max: 70 },
             tests          : { testNumber: true },
-            desc           : 'Modifier la taille du serpent (p: [20; 70])',
+            desc           : { fr: 'Modifier la taille du serpent (p: [20; 70])', en: 'Adjust the size of the snake (p: [20; 70])' },
             storage        : true
         }
     ]

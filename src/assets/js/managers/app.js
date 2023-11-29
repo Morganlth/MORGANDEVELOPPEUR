@@ -10,7 +10,7 @@ class App
 
     // --*
     static __app_SAVE_NAME     = 'save'
-    static __app_OPTIMISE_NAME = 'optimise'
+    static __app_OPTIMIZE_NAME = 'optimize'
 
 
 // #\-PRIVATES-\
@@ -23,11 +23,11 @@ class App
     #app_$HIDE         = writable(true)
     #app_$MOBILE       = writable(false)
     #app_$FREEZE       = { value: false, setter: function ({target}) { this.target = target }, optionalparameters: { target: null } }
-    #app_$OPTIMISE     = { value: false }
+    #app_$OPTIMIZE     = { value: false }
     #app_$SMALL_SCREEN = { value: false }
     #app_$USER_AGENT   = { value: '-?' }
 
-    #app_OPTIMISE_CONFIG = {}
+    #app_OPTIMIZE_CONFIG = {}
     #app_STORAGE         = {}
     #app_COMMANDS        = []
     #app_WAITING_LOADING = []
@@ -53,13 +53,13 @@ class App
 
         this.#app_COMMANDS.push(
         {
-            name: App.__app_OPTIMISE_NAME,
-            callback: this.#app_c$Optimise.bind(this),
-            getCurrentValue: () => this.#app_$OPTIMISE.value,
-            params: { defaultValue: this.#app_$OPTIMISE.value },
-            tests: { testBoolean: true },
-            desc: 'Optimiser l\'application (p: \'t\' ou \'f\')',
-            storage: true
+            name           : App.__app_OPTIMIZE_NAME,
+            callback       : this.#app_c$Optimize.bind(this),
+            getCurrentValue: () => this.#app_$OPTIMIZE.value,
+            params         : { defaultValue: this.#app_$OPTIMIZE.value },
+            tests          : { testBoolean: true },
+            desc           : { fr: 'Optimiser l\'application (p: \'t\' ou \'f\')', en: 'Optimize the application (p: \'t\' or \'f\')' },
+            storage        : true
         })
     }
 
@@ -78,17 +78,17 @@ class App
         if (!CURRENT_TARGET || CURRENT_TARGET === target) this.#app_$FREEZE.set(value, { target: value ? target : null })
     }
 
-    set app_$OPTIMISE(value)
+    set app_$OPTIMIZE(value)
     {
-        if (this.#app_$OPTIMISE.value !== value)
+        if (this.#app_$OPTIMIZE.value !== value)
         {
-            this.#app_$OPTIMISE.set(value)
+            this.#app_$OPTIMIZE.set(value)
 
-            localStorage.setItem(App.__app_OPTIMISE_NAME, value) 
+            localStorage.setItem(App.__app_OPTIMIZE_NAME, value) 
         }
     }
 
-    set app_OPTIMISE_CONFIG({name, value}) { this.#app_OPTIMISE_CONFIG[name] = value ?? false }
+    set app_OPTIMIZE_CONFIG({name, value}) { this.#app_OPTIMIZE_CONFIG[name] = value ?? false }
 
     set app_WAITING_LOADING(func) { if (func instanceof Function) this.#app_WAITING_LOADING ? this.#app_WAITING_LOADING.push(func) : func() }
 
@@ -108,11 +108,11 @@ class App
 
     get app_$SMALL_SCREEN()   { return this.#app_$SMALL_SCREEN }
 
-    get app_$OPTIMISE()       { return this.#app_$OPTIMISE }
+    get app_$OPTIMIZE()       { return this.#app_$OPTIMIZE }
 
     get app_$USER_AGENT()     { return this.#app_$USER_AGENT }
 
-    get app_OPTIMISE_CONFIG() { return this.#app_OPTIMISE_CONFIG }
+    get app_OPTIMIZE_CONFIG() { return this.#app_OPTIMIZE_CONFIG }
 
     get app_WAITING_LOADING() { return this.#app_WAITING_LOADING }
 
@@ -124,11 +124,7 @@ class App
     {
         this.app_hide()
         this.#app_setLang(lang)
-        this.#app_setVars(app, lang)
-    }
-
-    app_set2()
-    {
+        this.#app_setVars(app)
         this.#app_setCommands()
         this.#app_restore()
         this.#app_loaded()
@@ -137,17 +133,18 @@ class App
     #app_setStores()
     {
         this.#app_$FREEZE       = store_custom(this.#app_$FREEZE)
-        this.#app_$OPTIMISE     = store_custom(this.#app_$OPTIMISE)
+        this.#app_$OPTIMIZE     = store_custom(this.#app_$OPTIMIZE)
         this.#app_$SMALL_SCREEN = store_custom(this.#app_$SMALL_SCREEN)
         this.#app_$USER_AGENT   = store_custom(this.#app_$USER_AGENT)
     }
 
+    app_setLang(lang)  { this.#app_LANG = lang ?? LANGS[0] }
+
     #app_setLang(lang) { document.documentElement.lang = lang }
 
-    #app_setVars(app, lang)
+    #app_setVars(app)
     {
-        this.#app      = app
-        this.#app_LANG = lang ?? LANGS[0]
+        this.#app = app ?? document.getElementById('app')
 
         this.#app_$USER_AGENT.set(navigator.userAgent.match(/(Chrome|Safari|Edg)/i) ? '-webkit' : '-?')
     }
@@ -160,13 +157,13 @@ class App
         SAVE   = localStorage.getItem(App.__app_SAVE_NAME),
         CONFIG = JSON.parse(SAVE ?? '{}')
     
-        for (const NAME in this.#app_OPTIMISE_CONFIG) this.#app_STORAGE[NAME] = CONFIG[NAME] ?? (localStorage.getItem(NAME) ?? 'd')
+        for (const NAME in this.#app_OPTIMIZE_CONFIG) this.#app_STORAGE[NAME] = CONFIG[NAME] ?? (localStorage.getItem(NAME) ?? 'd')
 
         if (!SAVE) localStorage.setItem(App.__app_SAVE_NAME, JSON.stringify(this.#app_STORAGE))
     }
 
     // --GET
-    app_getOptimiseState() { return localStorage.getItem(App.__app_OPTIMISE_NAME) === 'true' }
+    app_getOptimizeState() { return localStorage.getItem(App.__app_OPTIMIZE_NAME) === 'true' }
 
     // --UPDATES
     app_updateSize()
@@ -197,17 +194,17 @@ class App
 //=======@COMMANDS|
 
     // --*
-    #app_c$Optimise(value)
+    #app_c$Optimize(value)
     {
         const COMMANDS = value
-        ? this.#app_OPTIMISE_CONFIG
+        ? this.#app_OPTIMIZE_CONFIG
         : (this.#app_STORAGE ?? (JSON.parse(localStorage.getItem(App.__app_SAVE_NAME) ?? {})))
 
         value ? this.#app_setSaveStorage() : this.app_destroySaveStorage()
 
         COMMAND.command_executes(COMMANDS)
 
-        this.#app_$OPTIMISE.set(value)
+        this.#app_$OPTIMIZE.set(value)
     }
 
 
@@ -224,8 +221,8 @@ class App
     #app_restore()
     {
         const
-        OPTIMISE        = this.#app_$OPTIMISE.value,
-        OPTIMISE_CONFIG = this.#app_OPTIMISE_CONFIG,
+        OPTIMIZE        = this.#app_$OPTIMIZE.value,
+        OPTIMIZE_CONFIG = this.#app_OPTIMIZE_CONFIG,
         COMMANDS        = COMMAND.command_COMMANDS
 
         for (const NAME of COMMAND.command_KEYSTORAGE)
@@ -234,7 +231,7 @@ class App
             {
                 const [COMMAND, STORAGE] = [COMMANDS[NAME], localStorage.getItem(NAME)]
 
-                if (OPTIMISE && NAME in OPTIMISE_CONFIG) COMMAND(OPTIMISE_CONFIG[NAME])
+                if (OPTIMIZE && NAME in OPTIMIZE_CONFIG) COMMAND(OPTIMIZE_CONFIG[NAME])
                 if (STORAGE != null) COMMAND(STORAGE)
             }
             catch { localStorage.removeItem(NAME) }

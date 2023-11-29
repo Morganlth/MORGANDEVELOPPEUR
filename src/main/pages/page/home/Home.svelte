@@ -170,9 +170,9 @@ data-page-id={prop_ID}
             name           : 'snake',
             callback       : snake_c$,
             getCurrentValue: () => snake_ON,
-            params         : { defaultValue: true, optimise: { value: false } },
+            params         : { defaultValue: true, optimize: { value: false } },
             tests          : { testBoolean: true },
-            desc           : 'Activer/Désactiver le serpent (p: \'t\' ou \'f\')',
+            desc           : { fr: 'Activer/Désactiver le serpent (p: \'t\' ou \'f\')', en: 'Enable/Disable the snake (p: \'t\' or \'f\')' },
             storage        : true
         }
     ]
@@ -182,7 +182,7 @@ data-page-id={prop_ID}
 
     // --CONTEXTS
     let
-    app_$OPTIMISE     = APP.app_$OPTIMISE,
+    app_$OPTIMIZE     = APP.app_$OPTIMIZE,
     app_$SMALL_SCREEN = APP.app_$SMALL_SCREEN,
     app_$MOBILE       = APP.app_$MOBILE
 
@@ -213,7 +213,7 @@ data-page-id={prop_ID}
     // --THIS
 
     // --INSIDE
-    $: group_update(prop_FOCUS && !snake_GAME && !$app_$OPTIMISE)
+    $: group_update(prop_FOCUS && !snake_GAME && !$app_$OPTIMIZE)
 
     $: gravityarea$_FOCUS = prop_FOCUS && page_CHARGED
 

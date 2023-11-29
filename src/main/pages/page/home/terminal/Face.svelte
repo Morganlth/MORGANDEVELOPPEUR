@@ -221,21 +221,21 @@ class="face"
         {
             name    : 'write',
             callback: input_c$Write,
-            desc    : 'Écrire une commande (p: commande)',
+            desc    : { fr: 'Écrire une commande (p: commande)', en: 'Write a command (p: command)' },
             args    : true
         }
     ,
         {
             name    : 'log',
             callback: output_c$Log,
-            desc    : 'Afficher un message (p: message)',
+            desc    : { fr: 'Afficher un message (p: message)', en: 'Display a message (p: message)' },
             args    : true
         }
     ,
         {
             name    : 'clear',
             callback: output_c$Clear,
-            desc    : 'Nettoyer le Terminal',
+            desc    : { fr: 'Nettoyer le Terminal', en: 'Clean the Terminal' },
             args    : false
         }
     ]

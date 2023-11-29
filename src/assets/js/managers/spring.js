@@ -49,13 +49,13 @@ class Spring
 
         this.#spring_COMMANDS.push(
         {
-            name: 'spring',
-            callback: this.spring_c$.bind(this),
+            name           : 'spring',
+            callback       : this.spring_c$.bind(this),
             getCurrentValue: () => this.#spring_$ON.value,
-            params: { defaultValue: this.#spring_$ON.value, optimise: { value: false } },
-            tests: { testBoolean: true },
-            desc: 'Activer/Désactiver le curseur personnalisé (p: \'t\' ou \'f\')',
-            storage: true
+            params         : { defaultValue: this.#spring_$ON.value, optimize: { value: false } },
+            tests          : { testBoolean: true },
+            desc           : { fr: 'Activer/Désactiver le curseur personnalisé (p: \'t\' ou \'f\')', en: 'Enable/Disable custom cursor (p: \'t\' or \'f\')' },
+            storage        : true
         })
 
         this.#spring_EVENTS =
@@ -147,9 +147,9 @@ class Spring
 
     spring_updateCoords(x, y) { if (!this.#spring_HOVER) this.spring_$COORDS = { x: x, y: y } }
 
-    #spring_updateMouseDelay(optimise)
+    #spring_updateMouseDelay(optimize)
     {
-        this.spring_updateCoords = optimise
+        this.spring_updateCoords = optimize
         ? wait_throttle.call(this, this.spring_updateCoords, Spring.__spring_DEFAULT_DELAY, Spring.__spring_DEFAULT_DELAY + 1)
         : this.spring_updateCoords.bind(this)
     }

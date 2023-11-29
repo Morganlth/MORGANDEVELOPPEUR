@@ -107,7 +107,7 @@
                 {
                     fr: 'Optimiser les performances en favorisant les propriétés de transformation.'
                     ,
-                    en: 'Optimise performance by promoting transformation properties.'
+                    en: 'Optimize performance by promoting transformation properties.'
                 },
                 {
                     fr: 'Manipuler la perspective et la 3d CSS.'
@@ -481,12 +481,12 @@
                 {
                     fr: 'Optimiser le référencement naturel en utilisant les balises conformément à leur sémantique.'
                     ,
-                    en: 'Optimise natural referencing by using tags in accordance with their semantics.'
+                    en: 'Optimize natural referencing by using tags in accordance with their semantics.'
                 },
                 {
                     fr: 'Améliorer les performances et optimiser une page web.'
                     ,
-                    en: 'Improve performance and optimise a web page.'
+                    en: 'Improve performance and optimize a web page.'
                 },
                 {
                     fr: 'Appliquer les Schema.org.'

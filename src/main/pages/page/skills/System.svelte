@@ -42,7 +42,7 @@ style:--system-r-y={system_ROTATE_Y}
         {prop_FOCUS}
         />
 
-        {#if !system_OPTIMISE}
+        {#if !system_OPTIMIZE}
             {#each prop_SYSTEM as item}
                 <GravityArea
                 let:hide
@@ -161,12 +161,12 @@ style:--system-r-y={system_ROTATE_Y}
     SYSTEM_COMMANDS =
     [
         {
-            name           : 'system_optimise',
-            callback       : system_c$Optimise,
-            getCurrentValue: () => system_OPTIMISE,
-            params         : { defaultValue: false, optimise: { value: true } },
+            name           : 'system_optimize',
+            callback       : system_c$Optimize,
+            getCurrentValue: () => system_OPTIMIZE,
+            params         : { defaultValue: false, optimize: { value: true } },
             tests          : { testBoolean: true },
-            desc           : 'Optimiser le système dans la section compétence (p: \'t\' ou \'f\')',
+            desc           : { fr: 'Optimiser le système dans la section compétence (p: \'t\' ou \'f\')', en: 'Optimize the system in the skills section (p: \'t\' or \'f\')' },
             storage        : true
         }
     ]
@@ -194,7 +194,7 @@ style:--system-r-y={system_ROTATE_Y}
 
     // --THIS
     let
-    system_OPTIMISE = false
+    system_OPTIMIZE = false
     ,
     system_ROTATE_X = 0,
     system_ROTATE_Y = 0
@@ -253,7 +253,7 @@ style:--system-r-y={system_ROTATE_Y}
     // --GET
     function group_getIndexFocus()
     {
-        const INDEX = system_OPTIMISE
+        const INDEX = system_OPTIMIZE
         ? Math.floor(prop_SYSTEM.length * prop_RATIO)
         : GROUP_Z_POSITIONS.indexOf(Math.max(...GROUP_Z_POSITIONS))
 
@@ -339,7 +339,7 @@ style:--system-r-y={system_ROTATE_Y}
 //=======@COMMANDS|
 
     // --*
-    function system_c$Optimise(value) { system_OPTIMISE = value }
+    function system_c$Optimize(value) { system_OPTIMIZE = value }
 
 
 //=======@EVENTS|
@@ -396,7 +396,7 @@ style:--system-r-y={system_ROTATE_Y}
 
     function system_start()
     {
-        if (!system_OPTIMISE)
+        if (!system_OPTIMIZE)
         {
             system_setEvents()
 

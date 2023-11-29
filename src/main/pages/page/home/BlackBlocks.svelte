@@ -156,12 +156,12 @@ bind:this={blackblocks}
     BLACKBLOCKS_COMMANDS =
     [
         {
-            name           : 'blackblocks_optimise',
-            callback       : blackblocks_c$Optimise,
-            getCurrentValue: () => blackblocks_OPTIMISE,
-            params         : { defaultValue: false, optimise: { value: true } },
+            name           : 'blackblocks_optimize',
+            callback       : blackblocks_c$Optimize,
+            getCurrentValue: () => blackblocks_OPTIMIZE,
+            params         : { defaultValue: false, optimize: { value: true } },
             tests          : { testBoolean: true },
-            desc           : 'Optimiser les blocks noirs (p: \'t\' ou \'f\')',
+            desc           : { fr: 'Optimiser les blocks noirs (p: \'t\' ou \'f\')', en: 'Optimize the black blocks (p: \'t\' or \'f\')' },
             storage        : true
         }
     ]
@@ -194,7 +194,7 @@ bind:this={blackblocks}
     blackblocks
     ,
     blackblocks_CHARGED   = false,
-    blackblocks_OPTIMISE  = false,
+    blackblocks_OPTIMIZE  = false,
     blackblocks_HIDE      = true,
     blackblocks_ANIMATION = false
     ,
@@ -237,7 +237,7 @@ bind:this={blackblocks}
 
     // --THIS
     $: blackblocks_update(prop_FOCUS)
-    $: blackblocks_updateEvent(prop_ON, blackblocks_OPTIMISE)
+    $: blackblocks_updateEvent(prop_ON, blackblocks_OPTIMIZE)
 
     // --INSIDE
 
@@ -558,7 +558,7 @@ bind:this={blackblocks}
             const DURATION = blackblocks_updateBlocksPosition(focus)
 
             blackblocks_updateAnimation(DURATION)
-            blackblocks_updateEvent(prop_ON, blackblocks_OPTIMISE, focus ? 0 : DURATION)
+            blackblocks_updateEvent(prop_ON, blackblocks_OPTIMIZE, focus ? 0 : DURATION)
         }
     }
 
@@ -572,7 +572,7 @@ bind:this={blackblocks}
     }
 
 
-    function blackblocks_updateEvent(on, optimise, delay = 0)
+    function blackblocks_updateEvent(on, optimize, delay = 0)
     {
         blackblocks_destroyTimeout2()
 
@@ -580,7 +580,7 @@ bind:this={blackblocks}
         {
             const FOCUS = on && prop_FOCUS
 
-            if (!optimise && FOCUS)
+            if (!optimize && FOCUS)
             {
                 blackblocks_setEvents2()
                 blackblocks_destroyEvents3()
@@ -589,7 +589,7 @@ bind:this={blackblocks}
             {
                 blackblocks_destroyEvents2()
 
-                !optimise || FOCUS ? blackblocks_setEvents3() : blackblocks_destroyEvents3()
+                !optimize || FOCUS ? blackblocks_setEvents3() : blackblocks_destroyEvents3()
             }
         },
         delay) 
@@ -748,7 +748,7 @@ bind:this={blackblocks}
 //=======@COMMANDS|
 
     // --*
-    function blackblocks_c$Optimise(value) { blackblocks_OPTIMISE = value }
+    function blackblocks_c$Optimize(value) { blackblocks_OPTIMIZE = value }
 
 
 //=======@EVENTS|
