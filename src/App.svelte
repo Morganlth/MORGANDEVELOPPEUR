@@ -178,22 +178,23 @@ on:touchstart|once={app_eTouchStart}
 
     function app_setCommands()
     {
-        COMMAND.command_add('app',     app_c$App)
-        COMMAND.command_add('router',  app_c$Router)
-        COMMAND.command_add('command', app_c$Command)
-        COMMAND.command_add('event',   app_c$Event)
+        // COMMAND.command_add('app',     app_c$App)
+        // COMMAND.command_add('router',  app_c$Router)
+        // COMMAND.command_add('command', app_c$Command)
+        // COMMAND.command_add('event',   app_c$Event)
     }
 
     function app_setContexts(charged)
     {
         if (charged)
         {
-            ROUTER.router_set(prop_PAGE_ID, prop_SUBPATH, prop_RESPONSE)
-            EVENT.event_set()
+            APP    .app_set(app, prop_LANG)
+            ROUTER .router_set(prop_PAGE_ID, prop_SUBPATH, prop_RESPONSE)
+            COMMAND.command_set()
+            EVENT  .event_set()
             PROCESS.process_set()
-            SPRING.spring_set()
-
-            APP.app_set(app, prop_LANG)
+            SPRING .spring_set()
+            APP    .app_set2()
 
             app_setContexts = () => {}
         }

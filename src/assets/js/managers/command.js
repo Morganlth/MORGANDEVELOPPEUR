@@ -13,32 +13,32 @@ class Command
     [
         {
             name: 'reset',
-            desc: 'Réinitialiser les paramètres',
+            desc: { fr: 'Réinitialiser les paramètres', en: 'Reset settings' },
             args: false
         },
         {
             name: 'success',
-            desc: 'Afficher un Succès (p1: message, p2: nom du succès)',
+            desc: { fr: 'Afficher un Succès (p1: message, p2: nom du succès)', en: 'Display a Success (p1: message, p2: name of success)' },
             args: true
         },
         {
             name: 'error',
-            desc: 'Afficher une Erreur (p1: message, p2: nom de l\'erreur)',
+            desc: { fr: 'Afficher une Erreur (p1: message, p2: nom de l\'erreur)', en: 'Display an Error (p1: message, p2: error name)' },
             args: true
         },
         {
             name: 'config',
-            desc: 'Afficher la configuration actuelle',
+            desc: { fr: 'Afficher la configuration actuelle', en: 'Display current configuration' },
             args: false
         },
         {
             name: 'commands',
-            desc: 'Afficher l\'ensemble des commandes',
+            desc: { fr: 'Afficher l\'ensemble des commandes', en: 'Display all orders' },
             args: false
         },
         {
             name: 'fps',
-            desc: 'Obtenir les fps et fps moyen',
+            desc: { fr: 'Obtenir les fps et fps moyen', en: 'Get fps and average fps' },
             args: false
         }
     ]
@@ -62,7 +62,6 @@ class Command
 // #\-CONSTRUCTOR-\
 
     // --THIS
-    constructor () { this.#command_setDefaultsCommands() }
 
 
 // #\-FUNCTIONS-\
@@ -80,17 +79,24 @@ class Command
 //=======@LIFE|
 
     // --SET
+    command_set() { this.#command_setDefaultsCommands() }
+
     #command_setDefaultsCommands()
     {
+        const LANG = APP.app_LANG
+    
         for (const COMMAND of Command.__command_DEFAULTS_COMMANDS)
+        {
             try
             {
                 const
                 NAME     = COMMAND.name,
                 CALLBACK = this['command_c$' + NAME.charAt(0).toUpperCase() + NAME.slice(1).toLowerCase()].bind(this)
             
-                this.command_add(NAME, CALLBACK, COMMAND.desc, COMMAND.args)
-            } catch { continue }
+                this.command_add(NAME, CALLBACK, COMMAND.desc[LANG], COMMAND.args)
+            }
+            catch { continue }
+        }
     }
 
     command_setCommands(commands)

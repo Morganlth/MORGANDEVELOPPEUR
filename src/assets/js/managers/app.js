@@ -17,6 +17,8 @@ class App
 
     // --THIS
     #app
+    
+    #app_LANG = ''
 
     #app_$HIDE         = writable(true)
     #app_$MOBILE       = writable(false)
@@ -96,6 +98,8 @@ class App
     // --*
     get app()                 { return this.#app }
 
+    get app_LANG()            { return this.#app_LANG }
+
     get app_$HIDE()           { return this.#app_$HIDE }
 
     get app_$MOBILE()         { return this.#app_$MOBILE }
@@ -119,11 +123,13 @@ class App
     app_set(app, lang)
     {
         this.app_hide()
-
         this.#app_setLang(lang)
-        this.#app_setVars(app)
-        this.#app_setCommands()
+        this.#app_setVars(app, lang)
+    }
 
+    app_set2()
+    {
+        this.#app_setCommands()
         this.#app_restore()
         this.#app_loaded()
     }
@@ -138,9 +144,10 @@ class App
 
     #app_setLang(lang) { document.documentElement.lang = lang }
 
-    #app_setVars(app)
+    #app_setVars(app, lang)
     {
-        this.#app = app
+        this.#app      = app
+        this.#app_LANG = lang ?? LANGS[0]
 
         this.#app_$USER_AGENT.set(navigator.userAgent.match(/(Chrome|Safari|Edg)/i) ? '-webkit' : '-?')
     }
@@ -264,6 +271,7 @@ class App
     // --LIB
     import store_custom from '$lib/store'
     import BREAKPOINTS  from '$lib/breakpoints'
+    import { LANGS }    from '$lib/lang'
 
     // --CONTEXTS
     import COMMAND from './command'
