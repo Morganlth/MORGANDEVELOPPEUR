@@ -150,7 +150,7 @@ bind:this={blackblocks}
         projectedTexture      : { value: '' },
         widthScaled           : { value: 0 },
         heightScaled          : { value: 0 },
-        textureOffset         : { value: new Vector2(-.19, -.02) }
+        textureOffset         : { value: new Vector2(-.21, -.02) }
     }
     ,
     BLACKBLOCKS_COMMANDS =
@@ -459,7 +459,7 @@ bind:this={blackblocks}
     function blackblocks_getBlock(size, x, y)
     {
         const
-        MATERIAL = new MeshStandardMaterial({ color: COLORS.dark }),
+        MATERIAL = new MeshStandardMaterial({ color: COLORS.dark, wireframe: false }),
         GEOMETRY = blackblocks_getBlockGeometry(size),
         BLOCK    = new Mesh(GEOMETRY, MATERIAL)
 
