@@ -6,6 +6,7 @@
     // --SVELTE
 
     // --LIB
+    import { lang_processing } from '$lib/lang'
 
     // --CONTEXTS
 
@@ -23,14 +24,7 @@
     {
         name: 'contact'
     ,
-        getData: lang =>
-        {
-            CONTACT_DATA.headCellTitle           = CONTACT_DATA.headCellTitle[lang]
-            CONTACT_DATA.formCellTitle           = CONTACT_DATA.formCellTitle[lang]
-            CONTACT_DATA.formTextareaPlaceholder = CONTACT_DATA.formTextareaPlaceholder[lang]
-
-            return CONTACT_DATA
-        }
+        getData: lang => lang_processing(lang, CONTACT_DATA)
     }
 
 

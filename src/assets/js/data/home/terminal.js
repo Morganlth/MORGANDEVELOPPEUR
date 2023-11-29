@@ -6,6 +6,7 @@
     // --SVELTE
 
     // --LIB
+    import { lang_processing } from '$lib/lang'
 
     // --CONTEXTS
 
@@ -23,40 +24,20 @@
     {
         name: 'terminal'
     ,
-        getData: lang =>
-        {
-            TERMINAL_DATA.face.head.cellTitle = TERMINAL_DATA.face.head.cellTitle[lang]
-            TERMINAL_DATA.face.head.info      = TERMINAL_DATA.face.head.info[lang]
-
-            TERMINAL_DATA.back.cellTitle        = TERMINAL_DATA.back.cellTitle[lang]
-            TERMINAL_DATA.back.cellCommandTitle = TERMINAL_DATA.back.cellCommandTitle[lang]
-            TERMINAL_DATA.back.desc.title       = TERMINAL_DATA.back.desc.title[lang]
-
-            for (const SECTION of TERMINAL_DATA.back.desc.sections)
-            {
-                SECTION.title = SECTION.title[lang]
-        
-                for (let i = 0; i < SECTION.contents.length; i++)
-                {
-                    const C = SECTION.contents[i]
-            
-                         if (C.br)                              continue
-                    else if (C.cell)                            C.cellTitle         = C.cellTitle[lang]
-                    else if (C.command)         { if (C.params) C.params            = C.params[lang]     }
-                    else if (C.commandFraction) { if (C.value)  C.value             = C.value[lang]      }
-                    else                                        SECTION.contents[i] = C[lang]
-                }
-            }
-
-            return TERMINAL_DATA
-        }
+        getData: lang => lang_processing(lang, TERMINAL_DATA)
     }
 
 
 // #\-CONSTANTES-\
 
     // --THIS
-    const TERMINAL_DATA =
+    const
+    TERMINAL_COMMAND_EXAMPLE =
+    {
+        name  : 'success',
+        params: { fr: 'Le terminal, mon Succès', en: 'The terminal, my Success' }
+    },
+    TERMINAL_DATA =
     {
         face:
         {
@@ -109,7 +90,7 @@
                             {
                                 commandFraction: true,
                                 commandType    : 'name',
-                                value          : { fr: 'success', en: 'success' }
+                                value          : TERMINAL_COMMAND_EXAMPLE.name
                             }
                             ,
                             { fr: '; puis éventuellement d\'un ou plusieurs paramètres séparés par des virgules:', en: '; then optionally one or more parameters separated by commas:' }
@@ -117,7 +98,7 @@
                             {
                                 commandFraction: true,
                                 commandType    : 'params',
-                                value          : { fr: '"Le terminal, mon Succès"', en: '"The terminal, my Success"' }
+                                value          : TERMINAL_COMMAND_EXAMPLE.params
                             }
                             ,
                             { fr: '(premier paramètre "p1", second paramètre "p2", ...).', en: '(first parameter "p1", second parameter "p2", etc.).'}
@@ -128,8 +109,8 @@
                             ,
                             {
                                 command: true,
-                                name   : 'success',
-                                params : { fr: 'Le terminal, mon Succès', en: 'The terminal, my Success' }
+                                name   : TERMINAL_COMMAND_EXAMPLE.name,
+                                params : TERMINAL_COMMAND_EXAMPLE.params
                             }
                             ,
                             { br: true }

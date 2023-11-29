@@ -6,6 +6,7 @@
     // --SVELTE
 
     // --LIB
+    import { lang_processing } from '$lib/lang'
 
     // --CONTEXTS
 
@@ -23,12 +24,7 @@
     {
         name: 'snake'
     ,
-        getData: lang =>
-        {
-            SNAKE_DATA.gameoverInfo = SNAKE_DATA.gameoverInfo[lang]
-        
-            return SNAKE_DATA
-        }
+        getData: lang => lang_processing(lang, SNAKE_DATA)
     }
 
 

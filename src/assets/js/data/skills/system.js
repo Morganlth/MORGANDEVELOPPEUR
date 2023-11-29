@@ -6,7 +6,8 @@
     // --SVELTE
 
     // --LIB
-    import MATH from '$lib/math'
+    import MATH                from '$lib/math'
+    import { lang_processing } from '$lib/lang'
 
     // --CONTEXTS
 
@@ -24,22 +25,28 @@
     {
         name: 'system'
     ,
-        getData: lang => SYSTEM_DATA.map(item =>
+        getData: lang =>
         {
-            item.name              = item.name[lang]
-            item.tags              = item.tags[lang]
-            item.props.prop_TITLE  = item.name
-            item.props.prop_OFFSET = 1 / (SYSTEM_DATA.length + 1) * (item.id + 1)
-
-            for (let i = 0; i < item.skills.length; i++)
+            const SYSTEM = lang_processing(lang, SYSTEM_DATA.map(_ =>
             {
-                const SKILL = item.skills[i]
+                for (let i = 0; i < _.skills.length; i++)
+                {
+                    const SKILL = _.skills[i]
+    
+                    if (SKILL instanceof Object) _.skills[i] = { skill: SKILL }
+                }
 
-                if (SKILL instanceof Object) item.skills[i] = { skill: SKILL[lang] }
+                return _
+            }))
+
+            for (const _ of SYSTEM)
+            {
+                _.props.prop_TITLE  = _.name
+                _.props.prop_OFFSET = 1 / (SYSTEM_DATA.length + 1) * (_.id + 1)
             }
 
-            return item
-        })
+            return SYSTEM
+        }
     }
 
 
@@ -51,7 +58,7 @@
         {
             id   : 0,
             name : { fr: 'Html et Css', en: 'Html and Css' },
-            tags : { fr: ['html', 'css'], en: ['html', 'css'] },
+            tags : ['html', 'css'],
             props:
             {
                 prop_ROTATE: MATH.toRad(150),
@@ -152,8 +159,8 @@
         },
         {
             id   : 1,
-            name : { fr: 'Javascript', en: 'Javascript' },
-            tags : { fr: ['javascript'], en: ['javascript'] },
+            name : 'Javascript',
+            tags : ['javascript'],
             props:
             {
                 prop_ROTATE: MATH.toRad(30),
@@ -326,8 +333,8 @@
         },
         {
             id   : 2,
-            name : { fr: 'Node JS', en: 'Node JS' },
-            tags : { fr: ['nodejs'], en: ['nodejs'] },
+            name : 'Node JS',
+            tags : ['nodejs'],
             props:
             {
                 prop_ROTATE: MATH.toRad(60),

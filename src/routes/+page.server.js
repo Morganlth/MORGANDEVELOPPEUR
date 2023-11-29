@@ -4,7 +4,7 @@
 // #\-IMPORTS-\
 
     // --SVELTE
-    import { fail } from '@sveltejs/kit'
+    import { fail, redirect } from '@sveltejs/kit'
 
     // --LIB
     import { LANGS } from '$lib/lang'
@@ -25,13 +25,17 @@
     {
         default: async ({ request }) =>
         {
-            try
-            {
-                const LANG = (await request.formData()).get(LANG_NAME)
+            const
+            DATA = await request.formData(),
+            LANG = DATA.get(LANG_NAME),
+            URL  = DATA.get('url')
 
-                return LANGS.includes(LANG) ? { lang: LANG } : fail(403, { author: LANG_NAME, error: 'invalid parameter.' })
+            if (LANGS.includes(LANG))
+            {
+                if (URL != null) throw  redirect(302, URL)
+                else             return { lang: LANG }
             }
-            catch { return fail(500, { error: 'server failed.' }) }
+            else return fail(403, { author: LANG_NAME, error: 'invalid parameter.' })
         }
     }
 

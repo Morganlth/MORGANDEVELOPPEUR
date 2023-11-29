@@ -60,12 +60,12 @@ id="booki"
             <a
             id="booki-logo"
             href="/projects/booki"
-            alt="projet Booki par LE THUAUT Morgan"
+            alt={prop_DATA.desc}
             data-sveltekit-reload
             >
                 <img
                 src="/images/booki/logo/booki.png"
-                alt="Logo Booki site de réservation et de vente d'hébergements et d'activités pour les vacances"
+                alt="Logo Booki"
                 >
             </a>
 
@@ -95,10 +95,11 @@ id="booki"
         class="flex"
         >
             <section
-            id="booki-nav"
+            id="booki-head"
             >
-                <h1>Trouvez votre hébergement pour des vacances de rêve</h1>
-                <p>En plein centre-ville ou en pleine nature</p>
+                <h1>{prop_DATA.head.title}</h1>
+    
+                <p>{prop_DATA.head.subtitle}</p>
 
                 <form
                 class="flex"
@@ -120,13 +121,14 @@ id="booki"
                     <input
                     class="any-w"
                     type="search"
+                    name="search"
                     value="Marseille, France"
                     >
             
                     <input
                     class="pointer"
                     type="submit"
-                    value="Rechercher"
+                    value={prop_DATA.head.formInputValue}
                     >
                 
                     <button
@@ -143,10 +145,10 @@ id="booki"
                 class="flex"
                 >
                     <li>
-                        <h4>Filtres</h4>
+                        <h4>{prop_DATA.head.filtersTitle}</h4>
                     </li>
 
-                    {#each prop_DATA.filters ?? [] as filter}
+                    {#each prop_DATA.head.filters ?? [] as filter}
                         <li>
                             <button
                             class="flex pointer hover"
@@ -170,7 +172,7 @@ id="booki"
                     >
                     </i>
 
-                    <p>Plus de 500 logements sont disponibles dans cette ville</p>
+                    <p>{prop_DATA.head.info}</p>
                 </aside>
             </section>
 
@@ -181,13 +183,13 @@ id="booki"
                 <div
                 class="any-w bg"
                 >
-                    <h2>Hébergements à Marseille</h2>
+                    <h2>{prop_DATA.accommodation.title}</h2>
 
                     <div
                     id="booki-container-accommodation"
                     class="flex container"
                     >
-                        {#each prop_DATA.accommodation ?? [] as accommodation}
+                        {#each prop_DATA.accommodation.contents ?? [] as accommodation}
                             <article>
                                 <!-- svelte-ignore a11y-invalid-attribute -->
                                 <a
@@ -228,7 +230,7 @@ id="booki"
                     href="#"
                     rel="nofollow"
                     >
-                        Afficher plus
+                        {prop_DATA.accommodation.more}
                     </a>
                 </div>
 
@@ -238,7 +240,7 @@ id="booki"
                     <div
                     class="flex"
                     >
-                        <h2>Les plus populaires</h2>
+                        <h2>{prop_DATA.popular.title}</h2>
 
                         <i
                         class="main-color fa-solid fa-chart-line"
@@ -250,7 +252,7 @@ id="booki"
                     id="booki-container-popular"
                     class="flex container"
                     >
-                        {#each prop_DATA.popular ?? [] as popular}
+                        {#each prop_DATA.popular.contents ?? [] as popular}
                             <article
                             class="any-w"
                             >
@@ -295,13 +297,13 @@ id="booki"
             <section
             id="booki-activity"
             >
-                <h2>Activités à Marseille</h2>
+                <h2>{prop_DATA.activities.title}</h2>
 
                 <div
                 id="booki-container-activities"
                 class="flex container"
                 >
-                    {#each prop_DATA.activities ?? [] as activity}
+                    {#each prop_DATA.activities.contents ?? [] as activity}
                         <!-- svelte-ignore a11y-invalid-attribute -->
                         <a
                         href="#"
@@ -597,7 +599,7 @@ main
 
     h2 { margin-bottom: 2.5rem; }
 
-    #booki-nav
+    #booki-head
     {
         &>p { margin-top: .8rem; }
 
@@ -879,7 +881,7 @@ footer
 {
     .body { padding: 0; }
     
-    article, #booki-container-activities>a, #booki-nav>ul>li:nth-child(1), #booki-nav>ul button { width: 100% !important; }
+    article, #booki-container-activities>a, #booki-head>ul>li:nth-child(1), #booki-head>ul button { width: 100% !important; }
 
     header
     {
@@ -907,7 +909,7 @@ footer
     {
         padding: 3rem 0 8rem;
 
-        #booki-nav
+        #booki-head
         {
             padding: 0 2rem;
 

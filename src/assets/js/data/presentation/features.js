@@ -6,6 +6,7 @@
     // --SVELTE
 
     // --LIB
+    import { lang_processing } from '$lib/lang'
 
     // --CONTEXTS
 
@@ -25,29 +26,21 @@
     ,
         tag: { fr: 'caracteristique', en: 'features' }
     ,
-        getData: lang => FEATURES_DATA.map(_ =>
+        getData: lang =>
         {
-            _.tags = _.tags[lang]
+            const FEATURES = lang_processing(lang, FEATURES_DATA)
 
-            for (const CONTENT of _.contents)
-            {
-                CONTENT.topic = CONTENT.topic[lang]
-                CONTENT.value = CONTENT.value[lang]
-        
-                const TOPIC = CONTENT.topic.replaceAll(/\s/g, '-')
-                
-                if (TOPIC.length > 2) _.tags.push(TOPIC.toLowerCase())
-
-                if (CONTENT.html === 'a')
+            for (const FEATURE of FEATURES)
+                for (const CONTENT of FEATURE.contents)
                 {
-                    CONTENT.props.alt             = CONTENT.props.alt[lang]
-                    CONTENT.props['data-content'] = CONTENT.value
-                }
-                if (CONTENT.contact) CONTENT.contact = CONTENT.contact[lang]
-            }
+                    const TOPIC = CONTENT.topic.replaceAll(/\s/g, '-')
 
-            return _
-        })
+                    if (TOPIC.length > 2)     FEATURE.tags.push(TOPIC.toLowerCase())
+                    if (CONTENT.html === 'a') CONTENT.props['data-content'] = CONTENT.value
+                }
+
+            return FEATURES
+        }
     }
 
 
@@ -63,11 +56,11 @@
             [
                 {
                     topic: { fr: 'Nom Prenom', en: 'Full Name' },
-                    value: { fr: 'LE THUAUT Morgan', en: 'LE THUAUT Morgan' },
+                    value: 'LE THUAUT Morgan',
                     html : 'strong'
                 },
                 {
-                    topic: { fr: 'Age', en: 'Age' },
+                    topic: 'Age',
                     value: { fr: '21 ans', en: '21 years old' },
                     html : 'p'
                 }
@@ -79,13 +72,13 @@
             contents:
             [
                 {
-                    topic: { fr: 'Region', en: 'Region' },
-                    value: { fr: 'Bretagne', en: 'Bretagne' },
+                    topic: 'Region',
+                    value: 'Bretagne',
                     html : 'p'
                 },
                 {
                     topic: { fr: 'Pays', en: 'Country' },
-                    value: { fr: 'FRANCE', en: 'FRANCE' },
+                    value: 'FRANCE',
                     html : 'strong'
                 }
             ]
@@ -120,25 +113,25 @@
                 },
                 {
                     topic: { fr: 'Objectifs', en: 'Objectives' },
-                    value: { fr: 'Fullstack, Mobile & Designer', en: 'Fullstack, Mobile & Designer' },
+                    value: 'Fullstack, Mobile & Designer',
                     html : 'p'
                 }
             ]
         },
         {
             id      : 4,
-            tags    : { fr: ['contact'], en: ['contact'] },
+            tags    : ['contact'],
             contents:
             [
                 {
-                    topic  : { fr: 'Email', en: 'Email' },
-                    value  : { fr: 'morganlethuaut@gmail.com', en: 'morganlethuaut@gmail.com' },
+                    topic  : 'Email',
+                    value  : 'morganlethuaut@gmail.com',
                     html   : 'p',
                     contact: { fr: 'Me contacter', en: 'Contact me' }
                 },
                 {
-                    topic: { fr: 'LinkedIn', en: 'LinkedIn' },
-                    value: { fr: 'LinkedIn', en: 'LinkedIn' },
+                    topic: 'LinkedIn',
+                    value: 'LinkedIn',
                     html : 'a',
                     props:
                     {
@@ -148,8 +141,8 @@
                     }
                 },
                 {
-                    topic: { fr: 'Github', en: 'Github' },
-                    value: { fr: 'Github', en: 'Github' },
+                    topic: 'Github',
+                    value: 'Github',
                     html : 'a',
                     props:
                     {

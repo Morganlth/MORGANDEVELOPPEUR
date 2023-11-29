@@ -19,6 +19,8 @@ class Router
 
     #router_PAGES = []
 
+    #router_ROUTE = '/'
+
     #router_SUBPATH
     #router_RESPONSE
 
@@ -57,6 +59,8 @@ class Router
     get router_$HIDE()    { return this.#router_$HIDE }
 
     get router_PAGES()    { return this.#router_PAGES }
+
+    get router_ROUTE()    { return this.#router_ROUTE }
 
     get router_SUBPATH()  { return this.#router_SUBPATH }
 
@@ -105,11 +109,14 @@ class Router
 
         if (page)
         {
-            const SUBPATH = (page.subPath ? page.subPath : '')
+            const
+            SUBPATH = (page.subPath ? page.subPath : ''),
+            ROUTE   = '/' + page.name + SUBPATH
     
-            history.pushState({}, '', location.origin + '/' + page.name + SUBPATH)
+            history.pushState({}, '', location.origin + ROUTE)
     
             this.#router_$ID.set(id)
+            this.#router_ROUTE = ROUTE
         }
     }
 

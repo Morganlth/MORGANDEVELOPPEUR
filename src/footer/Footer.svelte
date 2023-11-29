@@ -55,6 +55,12 @@ class="footer"
         action="/"
         bind:this={form}
         >
+            <input
+            type="hidden"
+            name="url"
+            value={router_ROUTE}
+            >
+    
             <select
             name="lang"
             aria-label="choix de la langue"
@@ -83,11 +89,13 @@ class="footer"
     // --DATA
 
     // --SVELTE
+    import { tick } from 'svelte'
 
     // --LIB
     import { LANGS } from '$lib/lang'
 
     // --CONTEXTS
+    import { ROUTER } from '../App.svelte'
 
 //=======@COMPONENTS|
 
@@ -124,6 +132,7 @@ class="footer"
     // --CONTEXTS
 
     // --OUTSIDE
+    let router_ROUTE = '/'
 
     // --THIS
 
@@ -149,6 +158,7 @@ class="footer"
     // --SVELTE
 
     // --SET
+    function select_setCookie(value) { document.cookie = `lang=${value}; expires=${select_getCookieExpiration()}; samesite=lax` }
 
     // --GET
     function select_getCookieExpiration()
@@ -173,15 +183,20 @@ class="footer"
 //=======@EVENTS|
 
     // --*
-    function select_eInput({ target: {value} })
+    async function select_eInput({ target: {value} })
     {
         const VALUE = encodeURIComponent(value)
     
-        if (!LANGS.includes(VALUE)) return
-        
-        document.cookie = `lang=${VALUE}; expires=${select_getCookieExpiration()}; samesite=lax`
+        if (LANGS.includes(VALUE))
+        {
+            select_setCookie(VALUE)
 
-        form.submit()
+            router_ROUTE = ROUTER.router_ROUTE
+
+      await tick() 
+
+            form.submit()
+        }
     }
 
 
@@ -311,6 +326,8 @@ lang="scss"
             font-family: font.$family-text;
             font-weight: lighter;
         }
+
+        input { display: none; }
 
         select, option
         {

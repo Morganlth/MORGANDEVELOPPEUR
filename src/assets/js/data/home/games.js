@@ -6,6 +6,7 @@
     // --SVELTE
 
     // --LIB
+    import { lang_processing } from '$lib/lang'
 
     // --CONTEXTS
 
@@ -28,12 +29,11 @@
     ,
         getData: lang => GAMES_DATA.map(game =>
         {
-            const TITLE = game.props.prop_TITLE[lang]
+            const GAME = lang_processing(lang, game)
     
-            game.props.prop_TITLE = TITLE
-            game.tags             = [TITLE.toLowerCase()]
+            GAME.tags = [GAME.props.prop_TITLE.toLowerCase()]
 
-            return game
+            return GAME
         })
     }
 
@@ -72,7 +72,7 @@
             component: CommandLine,
             props    :
             {
-                prop_TITLE : { fr: 'Terminal', en: 'Terminal' },
+                prop_TITLE : 'Terminal',
                 prop_Z     : 1,
                 prop_X     : .89,
                 prop_Y     : .58,

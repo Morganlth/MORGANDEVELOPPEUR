@@ -51,13 +51,13 @@ id="sophiebluel"
         <header>
             <a
             href="/projects/sophiebluel"
-            alt="projet Sophie Bluel par LE THUAUT Morgan"
+            alt={prop_DATA.desc}
             data-sveltekit-reload
             >
                 <h1>
                     Sophie Bluel
     
-                    <span>Architecte d'inteérieur</span>
+                    <span>{prop_DATA.job}</span>
                 </h1>
             </a>
         
@@ -112,18 +112,18 @@ id="sophiebluel"
                     >
                     </div>
         
-                    <h2>Designer d'espace</h2>
-            
-                    <p>Je raconte votre histoire, je valorise vos idées. Je vous accompagne de la conception à la livraison finale du chantier.</p>
-                    <p>Chaque projet sera étudié en commun, de façon à mettre en valeur les volumes, les matières et les couleurs dans le respect de l’esprit des lieux et le choix adapté des matériaux. Le suivi du chantier sera assuré dans le souci du détail, le respect du planning et du budget.</p>
-                    <p>En cas de besoin, une équipe pluridisciplinaire peut-être constituée : architecte DPLG, décorateur(trice)</p>
+                    <h2>{prop_DATA.introduction.title}</h2>
+
+                    {#each prop_DATA.introduction.contents as content}
+                        <p>{content}</p>
+                    {/each}
                 </article>
             </section>
         
             <section
             id="sophiebluel-projects"
             >
-                <h2>Mes Projets</h2>
+                <h2>{prop_DATA.projects.title}</h2>
 
                 <!--* Ajout d'une ancre pour les éléments d'édition + div -->
         
@@ -174,9 +174,9 @@ id="sophiebluel"
             <section
             id="sophiebluel-contact"
             >
-                <h2>Contact</h2>
+                <h2>{prop_DATA.contact.title}</h2>
 
-                <p>Vous avez un projet ? Discutons-en !</p>
+                <p>{prop_DATA.contact.desc}</p>
     
                 <form
                 action="#"
@@ -184,37 +184,26 @@ id="sophiebluel"
                 rel="nofollow"
                 onsubmit="return false"
                 >
-                    <label>
-                        Nom
+                    {#each prop_DATA.contact.form ?? [] as input}
+                        {@const {value, textarea, ...rest} = input}
+                        <label>
+                            {value}
 
-                        <input
-                        type="text"
-                        name="name"
-                        >
-                    </label>
-            
-                    <label>
-                        Email
-
-                        <input
-                        type="email"
-                        name="email"
-                        >
-                    </label>
-                
-                    <label>
-                        Message
-
-                        <textarea
-                        name="message"
-                        cols="30"
-                        rows="10"
-                        ></textarea>
-                    </label>
+                            {#if textarea}
+                                <textarea
+                                {...rest}
+                                ></textarea>
+                            {:else}
+                                <input
+                                {...rest}
+                                >
+                            {/if}
+                        </label>
+                    {/each}
 
                     <input
                     type="submit"
-                    value="Envoyer"
+                    value={prop_DATA.contact.formSubmit}
                     >
                 </form>
             </section>
@@ -223,7 +212,7 @@ id="sophiebluel"
         <footer>
             <nav>
                 <ul>
-                    <li>Mentions Légales</li>
+                    <li>{prop_DATA.footer}</li>
                 </ul>
             </nav>
         </footer>
@@ -283,7 +272,7 @@ id="sophiebluel"
     // --OUTSIDE
 
     // --THIS
-    let sophiebluel_GALLERY = prop_DATA.gallery ?? []
+    let sophiebluel_GALLERY = prop_DATA.projects.gallery ?? []
 
     // --INSIDE
 
@@ -310,9 +299,9 @@ id="sophiebluel"
     // --GET
     function sophiebluel_getFilters()
     {
-        const DEFAULT_FILTER = 'Tous'
+        const DEFAULT_FILTER = prop_DATA.defaultFilter
     
-        return prop_DATA.gallery?.reduce((array, figure) =>
+        return prop_DATA.projects.gallery?.reduce((array, figure) =>
         {
             const
             FILTER = figure.filter ?? DEFAULT_FILTER,
@@ -348,8 +337,8 @@ id="sophiebluel"
     {
         sophiebluel_GALLERY =
         !id
-        ? prop_DATA.gallery ?? []
-        : prop_DATA.gallery?.filter(figure => figure.filter_ID === id)
+        ? prop_DATA.projects.gallery ?? []
+        : prop_DATA.projects.gallery?.filter(figure => figure.filter_ID === id)
     }
 
     // --DESTROY

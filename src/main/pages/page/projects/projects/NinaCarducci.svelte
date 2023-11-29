@@ -102,7 +102,7 @@ id="ninacarducci"
         <header>
             <a
             href="/projects/ninacarducci"
-            alt="projet Nina Carducci par LE THUAUT Morgan"
+            alt={prop_DATA.desc}
             data-sveltekit-reload
             >
                 <h1
@@ -208,7 +208,7 @@ id="ninacarducci"
                     >
                         <img
                         src="/images/ninacarducci/icons/carousel-control-{btn}-icon.svg"
-                        alt="{btn} button pour le slider"
+                        alt="{btn} button slider"
                         width="16"
                         height="27"
                         >
@@ -252,7 +252,7 @@ id="ninacarducci"
                     /images/ninacarducci/nina-224.png 224w"
                     sizes="(min-width: {BREAKPOINTS.ms5}px) 560px, (min-width: {BREAKPOINTS.ms4}px) 420px, 224px"
                     src="/images/ninacarducci/nina-224.png"
-                    alt="moi - Nina Carducci"
+                    alt="Nina Carducci"
                     decoding="async"
                     itemprop="image"
                     >
@@ -261,19 +261,11 @@ id="ninacarducci"
                 <article
                 itemprop="description"
                 >
-                    <h2>À propos de moi</h2>
+                    <h2>{prop_DATA.description.title}</h2>
             
-                    <em>
-                        Devenir photographe était pour moi une évidence. Comme si j’y étais prédestiné. Saisir un moment, une émotion, une situation, un endroit, une lumière et les rendre immortels,
-                        voilà ce qui me fait vibrer.
-                    </em>
+                    <em>{prop_DATA.description.intro}</em>
 
-                    <p>
-                        Nous passons notre vie à chercher le bonheur, et lorsque nous y touchons, nous n’avons qu’une envie : le figer au travers de photographies pour le savourer avec les personnes
-                        qui sont importantes à nos yeux, ou le partager au plus grand nombre.
-                        C’est ce que je vous propose : saisir ces merveilleux moments au travers de mon regard, mon approche, ma technique. Rendre ces moments immortels, afin que vous puissiez y 
-                        puiser de l’amour, du bonheur, de la tendresse et de lumière à chaque fois que vous poserez les yeux sur vos photos.
-                    </p>
+                    <p>{prop_DATA.description.text}</p>
                 </article>
             </div>
 
@@ -407,15 +399,14 @@ id="ninacarducci"
                         <h2
                         itemprop="citation"
                         >
-                            Un portrait n’est pas une ressemblance. Dès lors qu’une émotion ou qu’un fait est traduit en photo, il cesse d’être un fait pour devenir une opinion.
-                            L’inexactitude n’existe pas en photographie. Toutes les photos sont exactes. Aucune d’elles n’est la vérité.
+                            {prop_DATA.quote1.value}
                         </h2>
                     </blockquote>
         
                     <figcaption
                     itemprop="author"
                     >
-                        - Richard Avedon
+                        - {prop_DATA.quote1.author}
                     </figcaption>
                 </figure>
             </article>
@@ -423,10 +414,10 @@ id="ninacarducci"
             <section
             id="ninacarducci-service"
             >
-                <h2>Mes services</h2>
+                <h2>{prop_DATA.services.title}</h2>
 
                 <div>
-                    {#each prop_DATA.service ?? [] as service}
+                    {#each prop_DATA.services.contents ?? [] as service}
                         <article
                         itemscope
                         itemtype="https://schema.org/Offer"
@@ -480,14 +471,14 @@ id="ninacarducci"
                         <h2
                         itemprop="citation"
                         >
-                            De manière inconsciente, je crois, je guette un regard, une expression, des traits ou une nostalgie capable de résumer ou plus exactement de révéler une vie
+                            {prop_DATA.quote2.value}
                         </h2>
                     </blockquote>
         
                     <figcaption 
                     itemprop="author"
                     >
-                        - Richard Avedon
+                        - {prop_DATA.quote2.author}
                     </figcaption>
                 </figure>
             </article>
@@ -498,46 +489,35 @@ id="ninacarducci"
         >
             <div>
                 <section>
-                    <h2>Une question ? Une demande de devis ?</h2>
+                    <h2>{prop_DATA.contact.title}</h2>
         
-                    <p> N’hésitez pas à m’écrire ! Je vous répondrais en moins de 24 heures</p>
+                    <p>{prop_DATA.contact.text}</p>
                     
                     <form
                     action="#"
                     method="post"
                     onsubmit="return false"
                     >
-                        <label>
-                            Nom
-        
-                            <input
-                            type="text"
-                            name="nom"
-                            >
-                        </label>
+                        {#each prop_DATA.contact.form ?? [] as input}
+                            {@const {value, textarea, ...rest} = input}
+                            <label>
+                                {value}
 
-                        <label>
-                            Email
-                        
-                            <input
-                            type="email"
-                            name="email"
-                            >
-                        </label>
-
-                        <label>
-                            Message
-                        
-                            <textarea
-                            name="message"
-                            cols="30"
-                            rows="10"
-                            ></textarea>
-                        </label>
+                                {#if textarea}
+                                    <textarea
+                                    {...rest}
+                                    ></textarea>
+                                {:else}
+                                    <input
+                                    {...rest}
+                                    >
+                                {/if}
+                            </label>
+                        {/each}
 
                         <input
                         type="submit"
-                        value="Envoyer"
+                        value={prop_DATA.contact.formSubmit}
                         >
                     </form>
                 </section>
@@ -564,7 +544,7 @@ id="ninacarducci"
                     /images/ninacarducci/camera-159.png 159w"
                     sizes="(min-width: {BREAKPOINTS.ms5}px) 418px, (min-width: {BREAKPOINTS.ms4}px) 279px, 158px"
                     src="/images/ninacarducci/camera.png"
-                    alt="Caméra vidéo"
+                    alt="Camera video"
                     width="419"
                     height="418"
                     decoding="async"
@@ -573,76 +553,34 @@ id="ninacarducci"
             </div>
 
             <div>
-                <section>
-                    <h2>Adresse</h2>
+                {#each prop_DATA.infos as info}
+                    {@const {title, textAttributes, contents} = info}
+                    <section>
+                        <h2>{title}</h2>
 
-                    <p
-                    itemprop="address"
-                    itemscope itemtype="https://schema.org/PostalAddress"
-                    >
-                        <span
-                        itemprop="streetAddress"
+                        <p
+                        {...(textAttributes ?? {})}
                         >
-                            68 avenue Alsace-Lorraine
-                        </span>
-                    <br>
-                        <span
-                        itemprop="postalCode"
-                        >
-                            33200
-                        </span>
-                        <span
-                        itemprop="addressLocality"
-                        >
-                            Bordeaux
-                        </span>
-                    </p>
-                </section>
+                            {#each contents as content, i}
+                                {@const {link, value, attributes} = content}
+                                {#if attributes instanceof Object}
+                                    <svelte:element
+                                    this={link ? 'a' : 'span'}
+                                    {...attributes}
+                                    >
+                                        {value}
+                                    </svelte:element>
+                                {:else}
+                                    {value}
+                                {/if}
 
-                <section>
-                    <h2>Contact</h2>
-
-                    <p>
-                        téléphone
-                    <br>
-                        <span
-                        itemprop="telephone"
-                        >
-                            05 56 67 78 89
-                        </span>
-                    </p>
-                </section>
-
-                <section>
-                    <h2>Horaires</h2>
-
-                    <p
-                    itemprop="openingHours"
-                    content="Mo, Tu, We, Th, Fr 10:00-19:00"
-                    >
-                        Du lundi au vendredi
-                    <br>
-                        de 10h à 19h.
-                    </p>
-                </section>
-
-                <section>
-                    <h2>Tarifs</h2>
-
-                    <p>
-                        <span
-                        itemprop="priceRange"
-                        >
-                            50€ à 400€
-                        </span>
-                    <br>
-                        <a
-                        href="#ninacarducci-service"
-                        >
-                            voir mes services
-                        </a>
-                    </p>
-                </section>
+                                {#if !i}
+                                    <br>
+                                {/if}
+                            {/each}
+                        </p>
+                    </section>
+                {/each}
             </div>
         </footer>
 	</div>
@@ -752,7 +690,7 @@ id="ninacarducci"
     // --GET
     function gallery_getFilters()
     {
-        const DEFAULT_FILTER = 'Tous'
+        const DEFAULT_FILTER = prop_DATA.defaultFilter
     
         return prop_DATA.gallery?.reduce((array, img) =>
         {
@@ -998,13 +936,13 @@ lang="scss"
     
                 padding: 1.6rem 1rem;
 
-                text-align: center;
+                text-align : center;
                 white-space: nowrap;
             }
 
             img
             {
-                width:  2rem;
+                width : 2rem;
                 height: 2rem;
             }
         }
@@ -1014,7 +952,7 @@ lang="scss"
     {
         &, &>div, .slider-item
         {
-            width:  100%;
+            width : 100%;
             height: fit-content;
         }
 
@@ -1043,7 +981,7 @@ lang="scss"
             {
                 display: block;
 
-                width:  auto;
+                width : auto;
                 height: auto;
             }
         }
@@ -1056,7 +994,7 @@ lang="scss"
 
             opacity: .5;
 
-            width:  15%;
+            width : 15%;
             height: 100%;
 
             background-color: transparent;
@@ -1071,7 +1009,7 @@ lang="scss"
             {
                 vertical-align: middle;
 
-                width:  1.6rem;
+                width : 1.6rem;
                 height: 2.7rem;
             }
         }
@@ -1088,15 +1026,15 @@ lang="scss"
             
                 opacity: .5;
     
-                width:  3rem;
+                width : 3rem;
                 height: 3px;
 
                 margin-inline: 3px;
 
                 background-color: $light-color;
-                background-clip: padding-box;
+                background-clip : padding-box;
 
-                border-top:    $border;
+                border-top   : $border;
                 border-bottom: $border;
 
                 box-sizing: content-box;
@@ -1147,7 +1085,7 @@ lang="scss"
 
             z-index: 0;
         
-            width:  224px;
+            width : 224px;
             height: 223px;
         }
 
@@ -1172,11 +1110,11 @@ lang="scss"
         
                 font-family: Spectral, sans-serif;
                 font-weight: 800;
-                font-style: italic;
+                font-style : italic;
                 line-height: 1.2;
             }
 
-            p { width: 80%;}
+            p { width: 80%; }
         }
     }
 
@@ -1207,8 +1145,8 @@ lang="scss"
             {
                 padding: .8rem 1.6rem;
 
-                color: #000;
-                font-size: 1.6rem;
+                color      : #000;
+                font-size  : 1.6rem;
                 line-height: 1.5;
 
                 transition: color .15s ease-in-out, background-color .15s ease-in-out;
@@ -1219,17 +1157,17 @@ lang="scss"
 
         .container>div
         {
-            display: grid;
+            display              : grid;
             grid-template-columns: 1fr;
 
             gap: 1.6rem;
 
-            width: fit-content;
+            width    : fit-content;
             max-width: 100%;
 
             button
             {
-                width:  254px;
+                width : 254px;
                 height: 254px;
             }
 
@@ -1237,7 +1175,7 @@ lang="scss"
             {
                 aspect-ratio: 1 /  1;
 
-                width:  auto;
+                width : auto;
                 height: auto;
             }
         }
@@ -1263,13 +1201,13 @@ lang="scss"
                 {
                     order: 2;
     
-                    width: auto;
-                    max-width: min(90vw, 498px);
+                    width     : auto;
+                    max-width : min(90vw, 498px);
                     max-height: 90vh;
 
                     object-fit: contain;
             
-                    border: solid $light-color $border-size;
+                    border       : solid $light-color $border-size;
                     border-radius: .5rem;
 
                     box-sizing: border-box;
@@ -1292,7 +1230,7 @@ lang="scss"
                         transform: translateX(-$border-size);
                     }
 
-                    width:  3rem;
+                    width : 3rem;
                     height: 3rem;
 
                     background-color: $light-color;
@@ -1307,7 +1245,7 @@ lang="scss"
     {
         width: 70%;
 
-        margin: auto;
+        margin       : auto;
         padding-block: 4.8rem;
 
         font-family: Spectral;
@@ -1318,14 +1256,14 @@ lang="scss"
 
         h2
         {
-            font-size: 4rem !important;
-            font-style: italic;
+            font-size  : 4rem !important;
+            font-style : italic;
             font-weight: 300;
         }
 
         figcaption
         {
-            font-size: 2.2rem;
+            font-size  : 2.2rem;
             font-weight: 800;
         }
     }
@@ -1360,13 +1298,13 @@ lang="scss"
     
                 background-color: $service-s-color;
 
-                width:  30%;
+                width : 30%;
                 height: 100%;
             }
 
             width: 94%;
 
-            margin: auto;
+            margin       : auto;
             padding-block: 3.2rem;
         }
 
@@ -1377,10 +1315,10 @@ lang="scss"
             z-index: 1;
 
             max-width: 100%;
-            height: auto;
+            height   : auto;
     
             margin-block: 3.2rem;
-            padding: 1.6rem;
+            padding     : 1.6rem;
 
             background-color: $light-color;
 
@@ -1408,7 +1346,7 @@ lang="scss"
         {
             margin: auto;
 
-            font-size: 1.6rem;
+            font-size  : 1.6rem;
             line-height: 1.5;
 
             &>* { z-index: 1; }
@@ -1430,14 +1368,14 @@ lang="scss"
 
                 label, input
                 {
-                    font-size:   inherit;
+                    font-size  :   inherit;
                     line-height: inherit;
                 }
 
                 input, textarea
                 {
                     margin-bottom: 2rem;
-                    padding: .8rem 1.6rem;
+                    padding      : .8rem 1.6rem;
     
                     background-color: transparent;
     
@@ -1458,9 +1396,9 @@ lang="scss"
                 textarea 
                 {
                     max-width: 100%;
-                    height: 9.6rem;
+                    height   : 9.6rem;
     
-                    font-size:   1.2em;
+                    font-size  :   1.2em;
                     line-height: 2.5em;
                 }
             }
@@ -1471,18 +1409,18 @@ lang="scss"
                 {
                     @include utils.placement(absolute, $bottom: 0, $right: 0, $z: -1, $pe: true);
 
-                    width:  100%;
+                    width : 100%;
                     height: 150px;
                 
                     background-color: $contact-s-color;
                 }
 
-                margin-top: 1.6rem;
+                margin-top   : 1.6rem;
                 margin-inline: 2rem;
 
                 img
                 {
-                    width: auto;
+                    width : auto;
                     height: auto;
                 }
             }
@@ -1505,7 +1443,7 @@ lang="scss"
 
             p
             {
-                font-size:   inherit;
+                font-size  : inherit;
                 line-height: inherit;
             }
         }
@@ -1519,7 +1457,7 @@ lang="scss"
 
             button
             {
-                width:  194px;
+                width : 194px;
                 height: 194px;
             }
         }
@@ -1544,7 +1482,7 @@ lang="scss"
 
         #ninacarducci-about picture
         {
-            width:  420px;
+            width : 420px;
             height: 419px;
         }
 
@@ -1554,7 +1492,7 @@ lang="scss"
 
             button
             {
-                width:  224px;
+                width : 224px;
                 height: 224px;
             }
         }
@@ -1572,7 +1510,7 @@ lang="scss"
         #ninacarducci-about, #ninacarducci-service>div, #ninacarducci-contact>div
         {
             flex-direction: row;
-            align-items: start;
+            align-items   : start;
         }
     
         #ninacarducci-about
@@ -1581,13 +1519,13 @@ lang="scss"
             {
                 &::before
                 {
-                    top: auto;
+                    top   : auto;
                     bottom: 0;
     
                     width: 374px;
                 }
 
-                width:  560px;
+                width : 560px;
                 height: 558px;
 
                 margin: 0 2rem;
@@ -1603,7 +1541,7 @@ lang="scss"
 
         #ninacarducci-gallery .container>div button
         {
-            width:  304px;
+            width : 304px;
             height: 304px;
         }
 
@@ -1613,15 +1551,15 @@ lang="scss"
             {
                 left: 0;
 
-                width:  100%;
+                width : 100%;
                 height: 30%;
             }
 
             article
             {
-                width: 30%;
+                width    : 30%;
                 max-width: 390px;
-                height: 337px;
+                height   : 337px;
             }
         }
 
@@ -1629,7 +1567,7 @@ lang="scss"
         {
             &::before
             {
-                width:  374px;
+                width : 374px;
                 height: 329px;
             }
     
@@ -1643,7 +1581,7 @@ lang="scss"
     {
         #ninacarducci-gallery .container>div button
         {
-            width:  424px;
+            width : 424px;
             height: 424px;
         }
 

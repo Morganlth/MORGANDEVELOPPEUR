@@ -6,7 +6,8 @@
     // --SVELTE
 
     // --LIB
-    import COLORS from '$lib/colors'
+    import COLORS              from '$lib/colors'
+    import { lang_processing } from '$lib/lang'
 
     // --CONTEXTS
 
@@ -78,7 +79,7 @@
                     { frags: { fr: 'DEVELOPPEUR', en: 'DEVELOPER' } },
                     {
                         frags: { fr: 'WEB', en: 'WEB' },
-                        tags : { fr: ['FRONT', 'BACK', '& DESIGNER'], en: ['FRONT', 'BACK', '& DESIGNER'] }
+                        tags : ['FRONT', 'BACK', '& DESIGNER']
                     }
                 ],
                 element:
@@ -107,7 +108,7 @@
         {
             name     : 'presentation',
             component: Presentation,
-            tag      : { fr: 'presentation', en: 'presentation' },
+            tag      : 'presentation',
             overflow : true,
             height   : 6,
             gap      : -1,
@@ -123,7 +124,7 @@
             {
                 fragments:
                 [
-                    { frags: { fr: 'PRESENTATION', en: 'PRESENTATION' } },
+                    { frags: 'PRESENTATION' },
                     { tags : { fr: ['IDENTITÉ', 'LOCALITÉ', 'ÉTUDES', 'PRO', 'CONTACT'], en: ['IDENTITY', 'LOCALITY', 'STUDIES', 'PRO', 'CONTACT'] } }
                 ]
             }
@@ -133,7 +134,7 @@
                 {
                     id   : 0,
                     title: { fr: 'Page de contact', en: 'Contact page' },
-                    value: { fr: 'Contact', en: 'Contact' }
+                    value: 'Contact'
                 }
             ]
         ,
@@ -184,15 +185,15 @@
                 {
                     id   : 0,
                     title: { fr: 'HTML et CSS', en: 'HTML and CSS' },
-                    value: { fr: 'Html & Css', en: 'Html & Css' }
+                    value: 'Html & Css'
                 },
                 {
                     id   : 1,
-                    value: { fr: 'Javascript', en: 'Javascript' }
+                    value: 'Javascript'
                 },
                 {
                     id   : 2,
-                    value: { fr: 'Node JS', en: 'Node JS' }
+                    value: 'Node JS'
                 },
                 {
                     id   : 3,
@@ -236,7 +237,7 @@
                 fragments:
                 [
                     { frags: { fr: 'PROJETS', en: 'PROJECTS' } },
-                    { tags : { fr: ['BOOKI', 'SOPHIE BLUEL', 'NINA CARDUCCI'], en: ['BOOKI', 'SOPHIE BLUEL', 'NINA CARDUCCI'] } }
+                    { tags : ['BOOKI', 'SOPHIE BLUEL', 'NINA CARDUCCI'] }
                 ]
             }
         ,
@@ -244,15 +245,15 @@
             [
                 {
                     id   : 0,
-                    value: { fr: 'Booki', en: 'Booki' }
+                    value: 'Booki'
                 },
                 {
                     id   : 1,
-                    value: { fr: 'Sophie Bluel', en: 'Sophie Bluel' }
+                    value: 'Sophie Bluel'
                 },
                 {
                     id   : 2,
-                    value: { fr: 'Nina Carducci', en: 'Nina Carducci' }
+                    value: 'Nina Carducci'
                 }
             ]
         ,
@@ -283,24 +284,22 @@
     // --GET
     function page_get(lang, data, id)
     {
-        const [CHILDREN, CHILDREN_PROCESS] = page_getChildrenData(lang, data.children)
-
-        data.tag = data.tag[lang]
+        const
+        DATA                         = lang_processing(lang, data),
+        [CHILDREN, CHILDREN_PROCESS] = page_getChildrenData(lang, data.children)
 
         const PAGE =
         {
-            ...data
+            ...DATA
             ,
             id
             ,
-            route: page_getRoute(lang, data.name, data.route),
-            title: page_getTitle(lang, id, data.title),
-            nav  : page_getNav(lang, data.nav),
-            quote: page_getQuote(lang, data.quote)
+            route: page_getRoute(DATA.name, DATA.route),
+            title: page_getTitle(id, DATA.title)
             ,
             children: CHILDREN
             ,
-            process: Object.assign({ [data.tag]: 'top' }, CHILDREN_PROCESS)
+            process: Object.assign({ [DATA.tag]: 'top' }, CHILDREN_PROCESS)
         }
 
         return PAGE
@@ -334,63 +333,27 @@
         return [CHILDREN, PROCESS]
     }
 
-    function page_getRoute(lang, name, {value, alt})
+    function page_getRoute(name, {value, alt})
     {
-        const
-        VALUE = value[lang],
-        ALT   = alt[lang]
-    
         return {
             on        : false,
-            value     : VALUE,
+            value,
             attributes:
             {
                 href        : '/' + name,
-                alt         : ALT,
-                title       : ALT,
-                'aria-label': `${VALUE} ${VALUE.split('').join(' ')}`
+                alt         : alt,
+                title       : alt,
+                'aria-label': `${value} ${value.split('').join(' ')}`
             }
         }
     }
 
-    function page_getTitle(lang, id, title)
+    function page_getTitle(id, title)
     {
-        for (const _ of title.fragments)
-        {
-            if (_.frags) _.frags = _.frags[lang]
-            if (_.tags)  _.tags  = _.tags [lang]
-        }
-    
         return {
             html: 'h' + (id ? 2 : 1),
             ...title
         }
-    }
-
-    function page_getNav(lang, nav)
-    {
-        return (
-        nav
-        ? nav.map(_ =>
-        {
-            const NAV = { id: _.id }
-        
-            if (_.title) NAV.title = _.title[lang]
-            if (_.value) NAV.value = _.value[lang]
-        
-            return NAV
-        })
-        : null)
-    }
-
-    function page_getQuote(lang, quote)
-    {
-        return quote
-        ?   {
-                value : quote.value[lang],
-                author: quote.author ?? null
-            }
-        :   null
     }
 
     // --UPDATES
