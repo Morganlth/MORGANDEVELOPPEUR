@@ -286,7 +286,7 @@ lang="scss"
             pointer-events: none;
         }
 
-        top:  56%;
+        top:  58%;
         left: app.$gap-inline;
 
         ul
