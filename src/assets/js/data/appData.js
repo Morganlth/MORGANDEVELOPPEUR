@@ -84,13 +84,15 @@
                 ],
                 element:
                 {
-                    component: Icon,
+                    component: Icon
+                    ,
                     props:
                     {
-                        prop_SIZE: 'calc(var(--title-size) * .71)',
-                        prop_COLOR: COLORS.light,
+                        prop_SIZE  : 'calc(var(--title-size) * .7)',
+                        prop_COLOR : COLORS.light,
                         prop_SPRING: false
-                    },
+                    }
+                    ,
                     children: [{ component: Logo }]
                 }
             }

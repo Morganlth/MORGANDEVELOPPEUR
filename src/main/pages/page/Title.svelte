@@ -365,7 +365,7 @@ lang="scss"
 
     perspective: 1000px;
 
-    width:  fit-content;
+    width : fit-content;
     height: fit-content;
 
     padding-bottom: 2rem;
@@ -384,10 +384,10 @@ lang="scss"
         
             clip-path: polygon(100% 0, 100% 0, 100% 100%, 100% 100%);
 
-            color: $intermediate;
+            color      : $intermediate;
             font-family: inherit;
-            font-size: 212%;
-            font-style: italic;
+            font-size  : 212%;
+            font-style : italic;
 
             transition: clip-path $pe-duration ease-in-out;
         }
