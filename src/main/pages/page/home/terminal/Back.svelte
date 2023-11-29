@@ -295,7 +295,7 @@ lang="scss"
 
         margin-top:     $margin-top;
         padding-bottom: 1rem;
-        padding-right:  app.$gap-inline;
+        padding-right:  2rem;
 
         background-color: $dark;
 
@@ -312,7 +312,12 @@ lang="scss"
             margin-block: 2.4rem 1.2rem;
         }
 
-        p { @include font.text($color: $light, $font-size: map.get(font.$font-sizes, s2), $line-height: 1.2); }
+        p
+        {
+            @include font.text($color: $light, $font-size: map.get(font.$font-sizes, s2), $line-height: 1.2);
+
+            text-align: justify;
+        }
 
         .command-app { color: $primary; }
 

@@ -29,7 +29,6 @@ context="module"
 <h3
 class="tag"
 class:focus={tag_FOCUS}
-class:target={prop_TARGET}
 style={prop_getTagStyle()}
 bind:this={tag}
 >
@@ -245,8 +244,6 @@ lang="scss"
             transition: clip-path $duration;
         }
     }
-
-    &.target { mix-blend-mode: screen; }
 
     img
     {
