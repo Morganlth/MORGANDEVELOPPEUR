@@ -54,20 +54,22 @@ bind:this={card}
         class:hide={decor_HIDE}
         style:transform="rotateY({decor_ROTATE_Y}deg) translateZ({decor_TRANSLATE_Z}px)"
         >
-            <svg
-            class="background"
-            viewBox="0 0 234 333"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            >
-                <path
-                d="M8.91919 3.5H224.325C227.308 3.5 229.744 5.92832 229.744 8.94574V323.298C229.744 326.316 227.308 328.744 224.325 328.744H8.91919C5.93608 328.744 3.5 326.316 3.5
-                323.298V8.94574C3.5 5.92832 5.93605 3.5 8.91919 3.5Z"
-                fill={COLORS.dark}
-                stroke={COLORS.light}
-                stroke-width="1"
-                />
-            </svg>
+            {#each ['back', 'face'] as position}
+                <svg
+                class="background {position}"
+                viewBox="0 0 234 333"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                >
+                    <path
+                    d="M8.91919 3.5H224.325C227.308 3.5 229.744 5.92832 229.744 8.94574V323.298C229.744 326.316 227.308 328.744 224.325 328.744H8.91919C5.93608 328.744 3.5 326.316 3.5
+                    323.298V8.94574C3.5 5.92832 5.93605 3.5 8.91919 3.5Z"
+                    fill={COLORS.dark}
+                    stroke={position === 'back' ? COLORS.light : prop_COLOR}
+                    stroke-width="4"
+                    />
+                </svg>
+            {/each}
 
             <svg
             class="texture"

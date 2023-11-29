@@ -41,12 +41,9 @@
 {
     @include utils.placement(absolute, $top: 0, $left: 0);
 
-    .texture, .icon
-    {
-        position: absolute;
+    .background, .texture, .icon { backface-visibility: hidden; }
 
-        backface-visibility: hidden;
-    }
+    .background.back, .texture, .icon { position: absolute; }
 
-    .icon { transform: rotateY(180deg); }
+    .background.back, .icon { transform: rotateY(180deg); }
 }
