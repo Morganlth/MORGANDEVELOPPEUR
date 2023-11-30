@@ -306,9 +306,9 @@ class="contact"
         form.submit()
     }
 
-    function email_eInput() { email_VALID = form_testEmail(email_VALUE.trim()) }
+    function email_eInput()   { email_VALID = form_testEmail(email_VALUE.trim()) }
 
-    function cell_eClick() { contact_ON = false }
+    function cell_eClick()    { contact_ON = false }
 
     function message_eInput() { message_VALID = form_testMsg(message_VALUE.trim()) }
 
@@ -352,7 +352,6 @@ lang="scss"
     @use '../../../../assets/scss/styles/animation';
 
     /* --MEDIA */
-    @use '../../../../assets/scss/styles/media';
 
 
 /* #\-VARIABLES-\ */
