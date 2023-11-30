@@ -34,14 +34,6 @@ class="contact"
     bind:this={background}
     >
         <!-- particles -->
-
-        <div
-        class="glow-lines"
-        >
-            {#each [] as _}
-                <span></span>
-            {/each}
-        </div>
     </div>
 
     <div
@@ -375,7 +367,7 @@ lang="scss"
 
     background-color: $dark;
 
-    .background, .glow-lines
+    .background
     {
         @include utils.placement(absolute, 0, 0, 0, 0, $z: -1);
     

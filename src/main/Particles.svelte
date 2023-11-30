@@ -491,6 +491,8 @@ lang="scss"
 
     overflow: clip;
 
+    pointer-events: none;
+
     &.-webkit { width: calc(100% - utils.$scrollbar-width) !important; }
 
     &::after
