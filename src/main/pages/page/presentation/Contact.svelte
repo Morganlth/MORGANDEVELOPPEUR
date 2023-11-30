@@ -436,7 +436,7 @@ lang="scss"
 
             box-sizing: border-box;
 
-            &::placeholder { color: $intermediate; }
+            &::placeholder { color: $primary; }
         }
 
         label, button
