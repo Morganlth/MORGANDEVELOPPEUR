@@ -336,6 +336,7 @@ lang="scss"
     /* --DEPENDENCIES */
     @use '../../../../assets/scss/styles/utils';
     @use '../../../../assets/scss/styles/display';
+    @use '../../../../assets/scss/styles/animation';
 
     /* --MEDIA */
 
@@ -356,60 +357,22 @@ lang="scss"
 
     &::before, &::after
     {
-        opacity: 0;
-
         border-color: var(--pe-border-color, rgba($light, .4)) !important;
     
         transition: border-color .4s;
-
-        animation: a-pe-intro .4s ease-out forwards;
     }
 
-    &::before
-    {
-        --pe-translate: translate(-50%, -100%);
-    
-        @include utils.placement(absolute, $top: 100%, $left: 50%, $pe: true);
-
-        transform: translateX(-50%);
-
-        width: $cell-size;
-        height: 100%;
-
-        border-left:  solid 1px;
-        border-right: solid 1px;
-    }
+    &::before { width: $cell-size; }
 
     @include utils.placement(absolute, $top: 46%, $left: 46%);
     @include display.grid($cell-size, $cell-size, 3, 3);
 
+    @extend %a-grid;
+
     width:  $size;
     height: $size;
 
-    &::after
-    {
-        --pe-translate: translate(-100%, -50%);
-
-        @include utils.placement(absolute, $top: 50%, $left: 100%, $pe: true);
-
-        transform: translateY(-50%);
-
-        width: 100%;
-        height: $cell-size;
-
-        border-top:    solid 1px;
-        border-bottom: solid 1px;
-    }
-
-    @keyframes a-pe-intro
-    {
-        to
-        {
-            transform: var(--pe-translate);
-
-            opacity: 1;
-        }
-    }
+    &::after { height: $cell-size; }
 }
 
 

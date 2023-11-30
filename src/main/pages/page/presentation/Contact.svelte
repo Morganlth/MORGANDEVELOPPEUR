@@ -69,11 +69,12 @@ class="contact"
     <form
     method="post"
     action="/presentation/contact"
-    on:submit={form_eSubmit}
+    bind:this={form}
+    on:submit|preventDefault={form_eSubmit}
     >
         <label
         for="contact-email"
-        class:valid={input_VALID}
+        class:valid={email_VALID}
         >
             Email
         </label>
@@ -83,7 +84,7 @@ class="contact"
         type="email"
         name="email"
         aria-label="email"
-        placeholder="..."
+        placeholder="...@"
         required
         bind:this={input}
         bind:value={input_VALUE}
@@ -92,7 +93,7 @@ class="contact"
 
         <label
         for="contact-message"
-        class:valid={textarea_VALID}
+        class:valid={message_VALID}
         >
             Message
         </label>
@@ -101,7 +102,7 @@ class="contact"
         id="contact-message"
         name="message"
         aria-label="message"
-        placeholder="(min {FORM_MSG_MIN} - max {FORM_MSG_MAX} {prop_CONTACT.formTextareaPlaceholder})"
+        placeholder={prop_CONTACT.messagePlaceholder}
         minlength={FORM_MSG_MIN}
         maxlength={FORM_MSG_MAX}
         required
@@ -111,8 +112,9 @@ class="contact"
 
         <button
         type="submit"
+        title={prop_CONTACT.formCellTitle}
         >
-            Envoyer
+            {prop_CONTACT.formCellTitle}
 
             <Icon
             prop_COLOR={COLORS.light}
@@ -197,16 +199,19 @@ class="contact"
     response_VALUE = ''
 
     let
+    form
+    ,
+    form_SUBMIT = false
+
+    let
     input
     ,
-    input_VALID = false
+    email_VALID = false
     ,
     input_VALUE = ''
 
-    let cell_SUBMIT = true
-
     let
-    textarea_VALID = false
+    message_VALID = false
     ,
     textarea_VALUE = ''
 
@@ -248,24 +253,24 @@ class="contact"
         if (RESPONSE?.author === 'contact')
         {
             if (RESPONSE.success) response_setSuccess()
-            else                  response_setError(RESPONSE.error ?? 'Une erreur est survenue, tentez de recharger la page.')
+            else                  response_setError(RESPONSE.error ?? prop_CONTACT.formError)
         }
     }
 
-    function response_setSuccess()
+    function response_setSuccess(success)
     {
         response_SUCCESS = true
-        response_VALUE   = 'Message envoyé.'
+        response_VALUE   = success ?? prop_CONTACT.formSuccess
     }
 
     function response_setError(error)
     {
         response_ERROR = true
 
-             if (error.server) response_VALUE = error.server
-        else if (error.email)  response_VALUE = error.email
-        else if (error.msg)    response_VALUE = error.msg
-        else                   response_VALUE = 'une erreur est survenue.'
+             if (error.server)  response_VALUE = error.server
+        else if (error.email)   response_VALUE = prop_CONTACT.emailError
+        else if (error.message) response_VALUE = prop_CONTACT.messageError
+        else                    response_VALUE = prop_CONTACT.formError
     }
 
     // --GET
@@ -289,13 +294,24 @@ class="contact"
 //=======@EVENTS|
 
     // --* 
-    function form_eSubmit() { cell_SUBMIT = false }
+    function form_eSubmit()
+    {
+        if (form_SUBMIT)    return
+        if (!email_VALID)   return response_setError({ email  : prop_CONTACT.emailError })
+        if (!message_VALID) return response_setError({ message: prop_CONTACT.messageError })
 
-    function input_eInput() { input_VALID = form_testEmail(input_VALUE.trim()) }
+        response_setSuccess(prop_CONTACT.formWait)
+    
+        form_SUBMIT = true
+
+        form.submit()
+    }
+
+    function input_eInput() { email_VALID = form_testEmail(input_VALUE.trim()) }
 
     function cell_eClick() { contact_ON = false }
 
-    function textarea_eInput() { textarea_VALID = form_testMsg(textarea_VALUE.trim()) }
+    function textarea_eInput() { message_VALID = form_testMsg(textarea_VALUE.trim()) }
 
 
 //=======@TRANSITIONS|
@@ -409,21 +425,12 @@ lang="scss"
 
         &::before, &::after { pointer-events: none; }
 
-        &::before
-        {
-            @include utils.placement(absolute, $top: 0, $bottom: 0, $left: 50%, $pe: true);
-
-            transform: translateX(-50%);
-
-            width : $message-width;
-            height: 100vh;
-            height: 100svh;
-
-            border-inline: $border;
-        }
+        &::before { width : $message-width; }
 
         @include display.grid($width: ($label-width $message-width $label-width), $height: ($label-height $message-height $label-height));
         @include font.text($color: $light, $font-size: $font-size);
+
+        @extend %a-grid;
 
         width : calc($label-width  * 2 + $message-width);
         height: calc($label-height * 2 + $message-height);
@@ -518,16 +525,9 @@ lang="scss"
 
         &::after
         {
-            @include utils.placement(absolute, $top: 50%, $right: 0, $left: 0, $pe: true);
-
-            transform: translateY(-50%);
-
-            width : 100vw;
             height: $message-height;
 
             margin-top: $head-top * .5;
-
-            border-block: $border;
         }
     }
 }

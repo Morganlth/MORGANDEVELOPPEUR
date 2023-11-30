@@ -64,5 +64,51 @@
         }
     }
 
+    %a-grid
+    {
+        &::before, &::after
+        {
+            opacity: 0;
+
+            animation: a-pe .6s ease-out forwards;
+        }
+
+        &::before
+        {
+            --pe-translate: translate(-50%, -100%);
+        
+            @include utils.placement(absolute, $top: 100%, $left: 50%, $pe: true);
+
+            transform: translateX(-50%);
+
+            height: 100%;
+
+            border-inline: solid $intermediate 1px;
+        }
+
+        &::after
+        {
+            --pe-translate: translate(-100%, -50%);
+
+            @include utils.placement(absolute, $top: 50%, $left: 100%, $pe: true);
+
+            transform: translateY(-50%);
+
+            width: 100%;
+
+            border-block: solid $intermediate 1px;
+        }
+
+        @keyframes a-pe
+        {
+            to
+            {
+                transform: var(--pe-translate);
+
+                opacity: 1;
+            }
+        }
+    }
+
 
 /* #\-THIS-\ */

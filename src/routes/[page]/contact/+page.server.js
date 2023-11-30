@@ -6,11 +6,12 @@
     // --SVELTE
     import { redirect, fail } from '@sveltejs/kit'
 
-    // --LIB
-    import { EMAIL }   from '$env/static/private'
-    import transporter from '$lib/email.server'
+    // --ENV
+    import { EMAIL } from '$env/static/private'
 
-    import { FORM_MSG_MIN, FORM_MSG_MAX, form_testEmail, form_testMsg } from '$lib/form'
+    // --LIB
+    import transporter                      from '$lib/email.server'
+    import { form_testEmail, form_testMsg } from '$lib/form'
 
     // --CONTEXTS
 
@@ -42,9 +43,8 @@
                 EMAIL = contact_getEncode(DATA.get('email')),
                 MSG   = contact_getEncode(DATA.get('message'))
 
-                if (!form_testEmail(EMAIL)) return fail(400, contact_getResponse({ email: 'L\'email est invalide.' }))
-
-                if (!form_testMsg(MSG))     return fail(400, contact_getResponse({ msg: `Le message doit contenir entre ${FORM_MSG_MIN} et ${FORM_MSG_MAX} caractères` }))
+                if (!form_testEmail(EMAIL)) return fail(400, contact_getResponse({ email : true }))
+                if (!form_testMsg(MSG))     return fail(400, contact_getResponse({ message: true }))
 
                 const
                 HTML    = contact_getHtml(EMAIL, MSG),
