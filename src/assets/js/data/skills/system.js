@@ -57,7 +57,7 @@
     [
         {
             id   : 0,
-            name : { fr: 'Html et Css', en: 'Html and Css' },
+            name : 'Html Css',
             tags : ['html', 'css'],
             props:
             {
