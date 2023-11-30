@@ -293,7 +293,7 @@ lang="scss"
 {
     &, .container
     {
-        width:  100%;
+        width : 100%;
         height: fit-content;
     }
 
@@ -323,7 +323,7 @@ lang="scss"
 
                 opacity: .3;
         
-                background:     url('/images/feature_bg.jpg') center / cover no-repeat;
+                background    : url('/images/feature_bg.jpg') center / cover no-repeat;
                 mix-blend-mode: darken;
             }
         
@@ -385,11 +385,13 @@ lang="scss"
         .feature
         {
             display: inline;
-    
-            background-color: $intermediate;
+
+            pointer-events: auto;
 
             padding-block: .2rem;
-            padding-left:  app.$gap-inline;
+            padding-left :  app.$gap-inline;
+
+            background-color: $intermediate;
 
             line-height: 1.5;
         }
@@ -398,9 +400,7 @@ lang="scss"
         {
             @extend %a-text;
 
-            pointer-events: auto;
-
-            color:           inherit;
+            color          : inherit;
             text-decoration: underline;
 
             transition: color .4s;
@@ -408,7 +408,7 @@ lang="scss"
             &::after
             {
                 justify-content: flex-end;
-                align-items:     center;
+                align-items    : center;
             }
         }
 
