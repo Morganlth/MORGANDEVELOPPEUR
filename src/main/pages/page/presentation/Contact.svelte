@@ -35,9 +35,13 @@ class="contact"
     >
         <!-- particles -->
 
-        {#each [] as _}
-            <span></span>
-        {/each}
+        <div
+        class="glow-lines"
+        >
+            {#each [] as _}
+                <span></span>
+            {/each}
+        </div>
     </div>
 
     <div
@@ -86,9 +90,8 @@ class="contact"
         aria-label="email"
         placeholder="...@"
         required
-        bind:this={input}
-        bind:value={input_VALUE}
-        on:input={input_eInput}
+        bind:value={email_VALUE}
+        on:input={email_eInput}
         />
 
         <label
@@ -106,8 +109,8 @@ class="contact"
         minlength={FORM_MSG_MIN}
         maxlength={FORM_MSG_MAX}
         required
-        bind:value={textarea_VALUE}
-        on:input={textarea_eInput}
+        bind:value={message_VALUE}
+        on:input={message_eInput}
         ></textarea>
 
         <button
@@ -204,16 +207,14 @@ class="contact"
     form_SUBMIT = false
 
     let
-    input
-    ,
     email_VALID = false
     ,
-    input_VALUE = ''
+    email_VALUE = ''
 
     let
     message_VALID = false
     ,
-    textarea_VALUE = ''
+    message_VALUE = ''
 
 
 // #\-REATIVES-\
@@ -240,8 +241,6 @@ class="contact"
         particles_set()
 
         response_setVars()
-    
-        input?.focus()
     }
 
     function particles_set() { (particles ??= document.querySelector('.particles'))?.moveTo(background) }
@@ -307,11 +306,11 @@ class="contact"
         form.submit()
     }
 
-    function input_eInput() { email_VALID = form_testEmail(input_VALUE.trim()) }
+    function email_eInput() { email_VALID = form_testEmail(email_VALUE.trim()) }
 
     function cell_eClick() { contact_ON = false }
 
-    function textarea_eInput() { message_VALID = form_testMsg(textarea_VALUE.trim()) }
+    function message_eInput() { message_VALID = form_testMsg(message_VALUE.trim()) }
 
 
 //=======@TRANSITIONS|
@@ -377,7 +376,7 @@ lang="scss"
 
     background-color: $dark;
 
-    .background
+    .background, .glow-lines
     {
         @include utils.placement(absolute, 0, 0, 0, 0, $z: -1);
     
