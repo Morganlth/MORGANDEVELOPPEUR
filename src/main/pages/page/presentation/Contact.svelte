@@ -357,6 +357,7 @@ lang="scss"
     @extend %f-center;
 
     pointer-events: auto;
+    touch-action  : auto;
 
     background-color: $dark;
 
