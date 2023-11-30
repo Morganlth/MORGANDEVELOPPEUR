@@ -401,7 +401,7 @@ lang="scss"
 
         $font-size: map.get(font.$font-sizes, s2);
     
-        $label-width : max(7vw, 70px);
+        $label-width : max(7vw, 74px);
         $label-height: 4.4rem;
     
         $message-width : min(calc(100vw - $label-width * 2), 880px);
@@ -508,7 +508,7 @@ lang="scss"
             grid-column: 3 / 4;
             grid-row   : 3 / 4;
 
-            gap: 1rem;
+            gap: .6rem;
 
             border-right : $border;
             border-bottom: $border;
