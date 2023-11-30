@@ -491,7 +491,7 @@ lang="scss"
 
             overscroll-behavior: none;
 
-            backdrop-filter: blur(8px);
+            backdrop-filter: blur(8px) hue-rotate(30deg);
 
             resize: none;
         }
