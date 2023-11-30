@@ -28,81 +28,99 @@ context="module"
 
 <div
 class="contact"
-bind:this={contact}
 >
-    <section>
+    <div
+    class="background"
+    bind:this={background}
+    >
+        <!-- particles -->
+
+        {#each [] as _}
+            <span></span>
+        {/each}
+    </div>
+
+    <div
+    class="head"
+    >
+        <Cell
+        prop_FOCUS={true}
+        prop_ICON_WRAPPER={true}
+        prop_CENTER={true}
+        prop_TITLE={prop_CONTACT.headCellTitle}
+        on:click={cell_eClick}
+        >
+            <Icon
+            prop_COLOR={COLORS.light}
+            >
+                <Cross />
+            </Icon>
+        </Cell>
+
         <div
-        class="head"
+        class="response"
+        class:success={response_SUCCESS}
+        class:error={response_ERROR}
         >
-            <Cell
-            prop_FOCUS={true}
-            prop_ICON_WRAPPER={true}
-            prop_CENTER={true}
-            prop_TITLE={prop_CONTACT.headCellTitle}
-            on:click={cell_eClick}
-            >
-                <Icon
-                prop_COLOR={COLORS.light}
-                >
-                    <Cross />
-                </Icon>
-            </Cell>
-
-            <h3>Message</h3>
-
-            <div
-            class="response"
-            class:success={response_SUCCESS}
-            class:error={response_ERROR}
-            >
-                {response_VALUE}
-            </div>
+            {response_VALUE}
         </div>
+    </div>
 
-        <form
-        method="post"
-        action="/presentation/contact"
-        on:submit={form_eSubmit}
+    <form
+    method="post"
+    action="/presentation/contact"
+    on:submit={form_eSubmit}
+    >
+        <label
+        for="contact-email"
+        class:valid={input_VALID}
         >
-            <input
-            class:valid={input_VALID}
-            type="email"
-            name="email"
-            aria-label="email"
-            placeholder="Email"
-            required
-            bind:this={input}
-            bind:value={input_VALUE}
-            on:input={input_eInput}
-            />
+            Email
+        </label>
 
-            <Cell
-            prop_FOCUS={true}
-            prop_ICON_WRAPPER={true}
-            prop_CENTER={true}
-            prop_SUBMIT={cell_SUBMIT}
-            prop_TITLE={prop_CONTACT.formCellTitle}
+        <input
+        id="contact-email"
+        type="email"
+        name="email"
+        aria-label="email"
+        placeholder="..."
+        required
+        bind:this={input}
+        bind:value={input_VALUE}
+        on:input={input_eInput}
+        />
+
+        <label
+        for="contact-message"
+        class:valid={textarea_VALID}
+        >
+            Message
+        </label>
+
+        <textarea
+        id="contact-message"
+        name="message"
+        aria-label="message"
+        placeholder="(min {FORM_MSG_MIN} - max {FORM_MSG_MAX} {prop_CONTACT.formTextareaPlaceholder})"
+        minlength={FORM_MSG_MIN}
+        maxlength={FORM_MSG_MAX}
+        required
+        bind:value={textarea_VALUE}
+        on:input={textarea_eInput}
+        ></textarea>
+
+        <button
+        type="submit"
+        >
+            Envoyer
+
+            <Icon
+            prop_COLOR={COLORS.light}
             >
-                <Icon
-                prop_COLOR={COLORS.light}
-                >
-                    <Send />
-                </Icon>
-            </Cell>
-
-            <textarea
-            class:valid={textarea_VALID}
-            name="message"
-            aria-label="message"
-            placeholder="Message (min {FORM_MSG_MIN} - max {FORM_MSG_MAX} {prop_CONTACT.formTextareaPlaceholder})"
-            minlength={FORM_MSG_MIN}
-            maxlength={FORM_MSG_MAX}
-            required
-            bind:value={textarea_VALUE}
-            on:input={textarea_eInput}
-            ></textarea>
-        </form>
-    </section>
+                <Send />
+            </Icon>
+        </button>
+    </form>
 </div>
 
 
@@ -168,9 +186,10 @@ bind:this={contact}
     let particles
 
     // --THIS
-    let contact
 
     // --INSIDE
+    let background
+
     let
     response_SUCCESS = false,
     response_ERROR   = false
@@ -220,7 +239,7 @@ bind:this={contact}
         input?.focus()
     }
 
-    function particles_set() { (particles ??= document.querySelector('.particles'))?.moveTo(contact) }
+    function particles_set() { (particles ??= document.querySelector('.particles'))?.moveTo(background) }
 
     function response_setVars()
     {
@@ -324,55 +343,40 @@ lang="scss"
 /* #\-VARIABLES-\ */
 
     /* --* */
+    $head-top: 8rem;
+
+    $cell-size: map.get(font.$font-sizes, s4);
 
 
 /* #\-THIS-\ */
 
 .contact
 {
-    #{--cell-border-color}: $primary;
-
     @include utils.fixed($z: 2); /* label & title */
 
+    @extend %f-center;
+
     pointer-events: auto;
-    touch-action:   auto;
 
     background-color: $dark;
 
-    section h3, form input, form textarea { animation: a-intro .4s forwards; }
-
-    section
+    .background
     {
-        @include utils.absolute-center;
+        @include utils.placement(absolute, 0, 0, 0, 0, $z: -1);
     
-        @extend %f-column;
+        @extend %any-size;
+    }
 
-        gap: 2.4rem;
+    .head
+    {
+        #{--cell-size}: $cell-size;
 
-        min-width:  46vw;
-        width:      100%;
-        max-width:  calc(100vw - app.$gap-inline * 2);
-        min-height: 52vh;
-        max-height: 88vh;
+        @include utils.placement(absolute, $top: $head-top, $left: app.$gap-inline);
 
-        .head
-        {
-            #{--cell-size}: 2.4rem;
-
-            display:     flex;
-            align-items: flex-end;
-            flex-wrap:   wrap;
-            gap:         2rem;
-        }
-
-        h3
-        {
-            @include font.h-($n: 3, $color: $light, $line-height: 1);
-
-            clip-path: polygon(0 0, 0 0, 0 100%, 0 100%);
-
-            text-decoration: underline;
-        }
+        display    : flex;
+        align-items: flex-end;
+        flex-wrap  : wrap;
+        gap        : 2rem;
 
         .response
         {
@@ -392,52 +396,139 @@ lang="scss"
 
     form
     {
-        $height: 4.8rem;
+        $border: solid $intermediate 1px;
 
-        #{--cell-size}: $height;
+        $font-size: map.get(font.$font-sizes, s2);
     
-        @include display.grid($width: (1fr $height), $height: ($height 1fr));
-        @include font.text($color: $light);
+        $label-width : max(7vw, 70px);
+        $label-height: 4.4rem;
+    
+        $message-width : min(calc(100vw - $label-width * 2), 880px);
+        $message-height: 38vh;
 
-        flex: 1;
-        gap:  1.2rem;
+        &::before, &::after { pointer-events: none; }
 
-        input, textarea
+        &::before
+        {
+            @include utils.placement(absolute, $top: 0, $bottom: 0, $left: 50%, $pe: true);
+
+            transform: translateX(-50%);
+
+            width : $message-width;
+            height: 100vh;
+            height: 100svh;
+
+            border-inline: $border;
+        }
+
+        @include display.grid($width: ($label-width $message-width $label-width), $height: ($label-height $message-height $label-height));
+        @include font.text($color: $light, $font-size: $font-size);
+
+        width : calc($label-width  * 2 + $message-width);
+        height: calc($label-height * 2 + $message-height);
+
+        margin-top: $head-top;
+
+        #contact-email, #contact-message, button
         {
             padding: 1.4rem 1.8rem;
 
-            clip-path: polygon(100% 0, 100% 0, 100% 0, 100% 0);
-    
-            border: solid $intermediate 2px;
-
             color: inherit;
-            font:  inherit;
+            font : inherit;
 
             box-sizing: border-box;
-
-            &.valid { border-color: $primary; }
 
             &::placeholder { color: $intermediate; }
         }
 
-        textarea
+        label, button
+        {
+            width : 100%;
+            height: $label-height;
+
+            background-color: $dark;
+        }
+
+        label
+        {
+            @extend %f-a-center;
+
+            padding-left: 1.8rem;
+
+            border-left: $border;
+
+            box-sizing: border-box;
+
+            &.valid { color: $primary; }
+        }
+
+        label[for="contact-email"]
+        {
+            grid-column: 1 / 2;
+            grid-row   : 1 / 2;
+
+            border-top : $border;
+        }
+
+        #contact-email
+        {
+            grid-column: 2 / 3;
+            grid-row   : 1 / 2;
+        }
+
+        label[for="contact-message"]
+        {
+            grid-column: 1 / 2;
+            grid-row   : 2 / 3;
+
+            border-bottom: $border;
+        }
+
+        #contact-message
         {
             @extend %scroll-bar;
     
-            grid-column: 1 / 3;
+            grid-column: 2 / 3;
+            grid-row   : 2 / 3;
 
             overscroll-behavior: none;
+
+            backdrop-filter: blur(8px);
+
+            resize: none;
+        }
+
+        button
+        {
+            #{--icon-size}: $font-size;
+
+            @extend %f-center;
+        
+            grid-column: 3 / 4;
+            grid-row   : 3 / 4;
+
+            gap: 1rem;
+
+            border-right : $border;
+            border-bottom: $border;
+
+            :global .icon { flex-shrink: 0; }
+        }
+
+        &::after
+        {
+            @include utils.placement(absolute, $top: 50%, $right: 0, $left: 0, $pe: true);
+
+            transform: translateY(-50%);
+
+            width : 100vw;
+            height: $message-height;
+
+            margin-top: $head-top * .5;
+
+            border-block: $border;
         }
     }
-
-    @include media.min($ms4, $ms4)
-    {
-        section { width: auto; }
-
-        form { font-size: map.get(font.$font-sizes, s3); }
-    }
-
-    @keyframes a-intro { to { clip-path: polygon(-1% -1%, 101% -1%, 101% 101%, -1% 101%); } }
 }
 
 

@@ -225,7 +225,7 @@ lang="scss"
     pointer-events: none;
 
     color: inherit;
-    font:  inherit;
+    font : inherit;
 
     &.focus { pointer-events: auto; }
 
@@ -237,7 +237,7 @@ lang="scss"
     
         #{--icon-size}: calc($size * .4);
 
-        width:  $size;
+        width : $size;
         height: $size;
 
         border: solid var(--cell-border-color, $light) .2rem;
