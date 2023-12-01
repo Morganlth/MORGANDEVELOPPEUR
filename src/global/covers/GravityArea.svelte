@@ -31,15 +31,18 @@ context="module"
 class="gravityarea"
 class:focus={prop_FOCUS}
 class:grabbing={slot_GRABBING}
-style:--gravityarea-t-x="{gravityarea_TRANSLATE_X}px"
-style:--gravityarea-t-y="{gravityarea_TRANSLATE_Y + gravityarea_FLOATING_Y}px"
-style:--gravityarea-t-z="{gravityarea_TRANSLATE_Z}px"
 style:--slot-default-size="{prop_RADIUS}px"
 style:--slot-f-x="{slot_FORCE_X}px"
 style:--slot-f-y="{slot_FORCE_Y}px"
 style:--slot-r-y="{slot_ROTATE_Y}rad"
 style:--slot-r-z="{slot_ROTATE_Z}rad"
 style:z-index={prop_Z}
+style:transform="
+perspective({prop_3D ? prop_ORBIT_RADIUS * 2 + 'px' : 'none'})
+translate3d(
+{gravityarea_TRANSLATE_X}px,
+{gravityarea_TRANSLATE_Y + gravityarea_FLOATING_Y}px,
+{gravityarea_TRANSLATE_Z}px)"
 style:cursor={prop_GRABBING ? 'grab' : 'pointer'}
 style:transition="transform {gravityarea_TRANSITION_DELAY}ms ease-out"
 type="button"
@@ -525,7 +528,7 @@ lang="scss"
 .gravityarea
 {
     --slot-ratio: .4;
-    --slot-size : calc(var(--slot-default-size, '100px') * var(--slot-ratio, 1));
+    --slot-size:  calc(var(--slot-default-size, '100px') * var(--slot-ratio, 1));
 
     &::before
     {
@@ -538,18 +541,18 @@ lang="scss"
 
     @extend %f-center;
 
-    contain: layout size;
+    contain:   layout size;
+    isolation: isolate;
 
     position: absolute;
 
     transform-style: preserve-3d;
-    transform      : perspective(var(--gravityarea-perspective, none)) translate3d(var(--gravityarea-t-x, 0), var(--gravityarea-t-y, 0), var(--gravityarea-t-z, 0));
 
-    width : $size;
+    width:  $size;
     height: $size;
 
     pointer-events: auto;
-    touch-action  : none;
+    touch-action:   none;
 
     border-radius: 50%;
 

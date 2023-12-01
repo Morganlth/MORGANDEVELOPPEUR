@@ -54,9 +54,9 @@
 
     overflow: clip; // important
 
-    &.-webkit .group { perspective: $perspective; } // iphone bug
+    // &.-webkit .group { perspective: $perspective; } // iphone bug
 
-    &:not(.-webkit) { #{--gravityarea-perspective}: $perspective; } // firefox bug
+    // &:not(.-webkit) { #{--gravityarea-perspective}: $perspective; } // firefox bug
 
     .group, .cell { transition: transform .4s; }
 
