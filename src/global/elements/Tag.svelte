@@ -29,6 +29,7 @@ context="module"
 <h3
 class="tag"
 class:focus={tag_FOCUS}
+class:target={prop_TARGET}
 style={prop_getTagStyle()}
 bind:this={tag}
 >
@@ -224,7 +225,7 @@ lang="scss"
 
     opacity: 0;
 
-    width:  fit-content;
+    width : fit-content;
     height: fit-content;
 
     text-align: right;
@@ -235,7 +236,7 @@ lang="scss"
     {
         opacity: 1;
 
-        img.on
+        &:not(.target) img.on
         {
             opacity: 1;
         
@@ -253,13 +254,12 @@ lang="scss"
 
         opacity: 0;
 
-        width:      min(40vw, 40vh);
-        height:     auto;
-        max-height: min(30vw, 30vh);
+        width : min(35.9rem, 40vw, 40vh);
+        height: auto;
 
         clip-path: polygon(0 50%, 0 50%, 0 50%, 0 50%);
 
-        object-fit:      cover;
+        object-fit     : cover;
         object-position: top;
 
         transition: transform $duration, opacity 0s $duration, clip-path $duration;

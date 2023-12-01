@@ -71,7 +71,7 @@
         ,
             img:
             {
-                src: '/images/booki/logo/booki3x.png',
+                src: '/images/booki/logo/booki_tag.png',
                 alt: 'Booki'
             }
         ,
@@ -260,7 +260,7 @@
         ,
             img:
             {
-                src: '/images/sophiebluel/sophie-bluel.png',
+                src: '/images/sophiebluel/sophie-bluel_tag.png',
                 alt: 'Sophie Bluel'
             }
         ,
@@ -445,7 +445,7 @@
         ,
             img:
             {
-                src: '/images/ninacarducci/nina.png',
+                src: '/images/ninacarducci/nina_tag.png',
                 alt: 'Nina Carducci'
             }
         ,
