@@ -542,7 +542,7 @@ lang="scss"
     @extend %f-center;
 
     contain:   layout size;
-    isolation: isolate;
+    /* isolation: isolate; */
 
     position: absolute;
 
