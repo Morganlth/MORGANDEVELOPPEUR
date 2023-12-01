@@ -26,7 +26,7 @@
 /* #\-VARIABLES-\ */
 
     /* --* */
-    $s: .3rem;
+    $s: .2rem;
 
 
 /* #\-MIXIN-\ */
@@ -43,20 +43,20 @@
 
 .title
 {
-    &::before, .fragments>pre
-    {
-        text-shadow:
-        $s    $s    $dark,
-        $s*-1 $s    $dark,
-        $s*-1 $s*-1 $dark,
-        $s    $s*-1 $dark;
-    }
-
     .fragments
     {
         transform: translateX(calc(var(--fragments-t-x, 0) * var(--fragments-direction, 0)));
 
         transition: transform .4s ease-out;
+
+        &>pre
+        {
+            text-shadow:
+            $s    $s    $dark,
+            $s*-1 $s    $dark,
+            $s*-1 $s*-1 $dark,
+            $s    $s*-1 $dark;
+        }
 
         @include media.min($ms3, $ms3)
         {
