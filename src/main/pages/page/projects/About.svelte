@@ -28,45 +28,41 @@ context="module"
 
 <div
 class="about {$APP_$USER_AGENT}"
+style:--x="{prop_X}px"
+style:--y="{prop_Y}px"
+style:--w="{prop_W}px"
 bind:this={about}
 transition:transition_fade={{ duration: 200 }}
 >
     <div
-    class="content"
-    style:--x="{prop_X}px"
-    style:--y="{prop_Y}px"
-    style:--w="{prop_W}px"
+    class="sup"
     >
-        <div
-        class="sup"
+        <Cell
+        prop_FOCUS={true}
+        prop_ICON_WRAPPER={true}
+        prop_CENTER={true}
+        prop_TITLE="fermer"
+        on:click={cell_eClick}
         >
-            <Cell
-            prop_FOCUS={true}
-            prop_ICON_WRAPPER={true}
-            prop_CENTER={true}
-            prop_TITLE="fermer"
-            on:click={cell_eClick}
+            <Icon
+            prop_COLOR={COLORS.light}
             >
-                <Icon
-                prop_COLOR={COLORS.light}
-                >
-                    <Cross />
-                </Icon>
-            </Cell>
-        </div>
-
-        <p
-        class="global"
-        >
-            {prop_GLOBAL}
-        </p>
-
-        <p
-        class="this"
-        >
-            {prop_THIS}
-        </p>
+                <Cross />
+            </Icon>
+        </Cell>
     </div>
+
+    <p
+    class="global"
+    >
+        {prop_GLOBAL}
+    </p>
+
+    <p
+    class="this"
+    >
+        {prop_THIS}
+    </p>
 
     <canvas
     class="canvas"
@@ -311,57 +307,57 @@ lang="scss"
 
 .about
 {
-    &, .content, .canvas { @extend %any-size; }
+    &, .global, .this
+    {
+        @extend %scroll-bar;
 
-    &, .canvas { @include utils.placement(absolute, 0, 0, 0, 0); }
+        box-sizing: border-box;
+    }
+
+    &, .canvas
+    {
+        @include utils.placement(absolute, 0, 0, 0, 0);
+
+        @extend %any-size;
+    }
+
+    @include font.text($font-size: map.get(font.$font-sizes, s3), $line-height: 1.2);
+
+    @extend %f-column;
+
+    gap: 2rem;
+
+    overflow: clip auto;
 
     padding: 8rem app.$gap-inline;
 
-    box-sizing: border-box;
+    text-align: justify;
 
-    .content
+    .sup, .global, .this { isolation: isolate; }
+
+    .global, .this { min-width: max(10vw, 10vh); }
+    
+    .sup
     {
-        &, .global, .this { @extend %scroll-bar; }
- 
-        @include font.text($font-size: map.get(font.$font-sizes, s3), $line-height: 1.2);
+        #{--cell-size}: map.get(font.$font-sizes, s4);
 
-        @extend %f-column;
-
-        gap: 2rem;
-
-        overflow: clip auto;
-
-        text-align: justify;
-
-        .sup, .global, .this { isolation: isolate; }
-
-        .sup
-        {
-            #{--cell-size}: map.get(font.$font-sizes, s4);
-        
-            min-height: var(--cell-size, fit-content);
-        }
-
-        .global, .this
-        {
-            min-width: max(10vw, 10vh);
+        @include utils.placement(relative, $z: 1);
     
-            box-sizing: border-box;
-        }
+        min-height: var(--cell-size, fit-content);
+    }
 
-        .global
-        {
-            padding-inline: $gap-border $gap-center-element;
+    .global
+    {
+        padding-inline: $gap-border $gap-center-element;
 
-            color: $light;
-        }
-    
-        .this
-        {
-            padding-inline: $gap-center-element $gap-border;
+        color: $light;
+    }
 
-            color: $primary;
-        }
+    .this
+    {
+        padding-inline: $gap-center-element $gap-border;
+
+        color: $primary;
     }
 
     .canvas
@@ -373,6 +369,10 @@ lang="scss"
 
     @include media.min($ms4, $ms4)
     {
+        @include display.grid($width: (auto 1fr), $height: (auto 1fr auto));
+
+        overflow-y: clip;
+    
         &.-webkit
         {
             .sup { transition: height .2s; }
@@ -380,34 +380,27 @@ lang="scss"
             .global, .this { transition: width .2s; }
         }
 
-        .content
+        .sup
         {
-            @include display.grid($width: (auto 1fr), $height: (auto 1fr auto));
-    
-            overflow-y: clip;
+            grid-column: 1 / 4; 
 
-            .sup
-            {
-                grid-column: 1 / 4; 
+            height: var(--y, $gap-center-element);
+        }
 
-                height: var(--y, $gap-center-element);
-            }
+        .global, .this
+        {
+            grid-row: 2 / 3;
 
-            .global, .this
-            {
-                grid-row: 2 / 3;
+            overflow: clip auto;
+        }
 
-                overflow: clip auto;
-            }
+        .global { width: var(--x, 50vw); }
 
-            .global { width: var(--x, 50vw); }
+        .this
+        {
+            grid-column: 3 / 4;
 
-            .this
-            {
-                grid-column: 3 / 4;
-
-                width: calc(100vw - var(--x, 50vw) - var(--w, 0));
-            }
+            width: calc(100vw - var(--x, 50vw) - var(--w, 0));
         }
     }
 }
