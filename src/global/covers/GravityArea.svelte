@@ -31,17 +31,15 @@ context="module"
 class="gravityarea"
 class:focus={prop_FOCUS}
 class:grabbing={slot_GRABBING}
+style:--gravityarea-t-x="{gravityarea_TRANSLATE_X}px"
+style:--gravityarea-t-y="{gravityarea_TRANSLATE_Y + gravityarea_FLOATING_Y}px"
+style:--gravityarea-t-z="{gravityarea_TRANSLATE_Z}px"
 style:--slot-default-size="{prop_RADIUS}px"
 style:--slot-f-x="{slot_FORCE_X}px"
 style:--slot-f-y="{slot_FORCE_Y}px"
 style:--slot-r-y="{slot_ROTATE_Y}rad"
 style:--slot-r-z="{slot_ROTATE_Z}rad"
 style:z-index={prop_Z}
-style:transform="
-translate3d(
-{gravityarea_TRANSLATE_X}px,
-{gravityarea_TRANSLATE_Y + gravityarea_FLOATING_Y}px,
-{gravityarea_TRANSLATE_Z}px)"
 style:cursor={prop_GRABBING ? 'grab' : 'pointer'}
 style:transition="transform {gravityarea_TRANSITION_DELAY}ms ease-out"
 type="button"
@@ -132,12 +130,13 @@ on:touchend={gravityarea_eTouchEnd}
 
     // --THIS
     const
-    GRAVITYAREA_PERSPECTIVE = 1200,
-    GRAVITYAREA_DELAY       = wait_getDelay(3),  // +- 50ms
-    GRAVITYAREA_DELAY_2     = wait_getDelay(18), // +- 300ms
-    GRAVITYAREA_DELAY_3     = wait_getDelay(24)  // +- 400ms
+    GRAVITYAREA_PERSPECTIVE = 1200
     ,
-    GRAVITYAREA_EVENTS   = { mouseUp:   gravityarea_e$MouseUp },
+    GRAVITYAREA_DELAY   = wait_getDelay(3),  // +- 50ms
+    GRAVITYAREA_DELAY_2 = wait_getDelay(18), // +- 300ms
+    GRAVITYAREA_DELAY_3 = wait_getDelay(24)  // +- 400ms
+    ,
+    GRAVITYAREA_EVENTS   = { mouseUp  : gravityarea_e$MouseUp },
     GRAVITYAREA_EVENTS_2 = { mouseMove: wait_throttle(gravityarea_e$MouseMove, 3, 4) }, // +- 50ms, 70ms
     GRAVITYAREA_EVENTS_3 = { touchMove: wait_throttle(gravityarea_e$TouchMove, 3, 4) }  // +- 50ms, 70ms
 
@@ -526,7 +525,7 @@ lang="scss"
 .gravityarea
 {
     --slot-ratio: .4;
-    --slot-size:  calc(var(--slot-default-size, '100px') * var(--slot-ratio, 1));
+    --slot-size : calc(var(--slot-default-size, '100px') * var(--slot-ratio, 1));
 
     &::before
     {
@@ -545,12 +544,13 @@ lang="scss"
     position: absolute;
 
     transform-style: preserve-3d;
+    transform      : translate3d(var(--gravityarea-t-x, 0), var(--gravityarea-t-y, 0), var(--gravityarea-t-z, 0));
 
-    width:  $size;
+    width : $size;
     height: $size;
 
     pointer-events: auto;
-    touch-action:   none;
+    touch-action  : none;
 
     border-radius: 50%;
 
