@@ -334,7 +334,7 @@ lang="scss"
 
     transform: scale(1); /* fixed and page z-index */
 
-    overflow: hidden;
+    overflow: clip;
 
     transition: filter .6s;
 
