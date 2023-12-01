@@ -50,15 +50,15 @@
         @extend %any-size;
     }
 
-    isolation: isolate;
+    &.-webkit .group { perspective: var(--system-perspective, 1000px); }         // iphone bug
+
+    &:not(.-webkit) { --gravityarea-perspective: var(--system-perspective, 0); } // firefox bug
 
     .group, .cell { transition: transform .4s; }
 
     .group
     {
         @extend %f-center;
-
-        // perspective: var(--system-perspective, 1000px);
 
         transform-style: preserve-3d;
         transform      : rotate3d($r-x, $r-y, 0, .016rad);
