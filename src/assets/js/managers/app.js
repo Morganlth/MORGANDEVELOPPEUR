@@ -147,8 +147,6 @@ class App
         this.#app = app ?? document.getElementById('app')
 
         this.#app_$USER_AGENT.set(navigator.userAgent.match(/(Chrome|Safari|Edg)/i) ? '-webkit' : '-?')
-
-        setTimeout(() => COMMAND.command_COMMANDS.log(this.#app_$USER_AGENT.value + ' ' + navigator.userAgent), 1000)
     }
 
     #app_setCommands() { COMMAND.command_setCommands(this.#app_COMMANDS) }
