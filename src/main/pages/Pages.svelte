@@ -334,8 +334,6 @@ lang="scss"
 
     transform: scale(1); /* fixed and page z-index */
 
-    overflow: clip;
-
     transition: filter .6s;
 
     &.hide { filter: blur(100px) hue-rotate(30deg); }
