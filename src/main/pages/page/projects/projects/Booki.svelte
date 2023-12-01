@@ -111,6 +111,7 @@ id="booki"
                     <button
                     class="bg pointer"
                     type="button"
+                    aria-label="location"
                     >
                         <i
                         class="fa-solid fa-location-dot"
@@ -122,6 +123,7 @@ id="booki"
                     class="any-w"
                     type="search"
                     name="search"
+                    aria-label="search"
                     value="Marseille, France"
                     >
             
@@ -133,7 +135,8 @@ id="booki"
                 
                     <button
                     class="pointer"
-                    type="submit">
+                    type="submit"
+                    >
                         <i
                         class="fa-solid fa-magnifying-glass"
                         >
@@ -145,13 +148,15 @@ id="booki"
                 class="flex"
                 >
                     <li>
-                        <h4>{prop_DATA.head.filtersTitle}</h4>
+                        <h3>{prop_DATA.head.filtersTitle}</h3>
                     </li>
 
                     {#each prop_DATA.head.filters ?? [] as filter}
                         <li>
                             <button
                             class="flex pointer hover"
+                            type="button"
+                            aria-label="filtre {filter.value}"
                             >
                                 <i
                                 class="main-color fa-solid {filter.icon}"
@@ -315,7 +320,7 @@ id="booki"
                                 <img
                                 class="any-w"
                                 src="/images/booki/activites/{activity.src}"
-                                alt={activity.title}
+                                alt="{prop_DATA.activities.alt} {activity.title}"
                                 >
 
                                 <figcaption
@@ -660,7 +665,7 @@ main
 
             margin-top: 3rem;
 
-            h4 { font-size: 1.8rem; }
+            h3 { font-size: 1.8rem; }
 
             button
             {

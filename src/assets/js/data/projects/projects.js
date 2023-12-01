@@ -196,7 +196,8 @@
             ,
                 activities:
                 {
-                    title: { fr: 'Activités à Marseille', en: 'Activities in Marseille' }
+                    title: { fr: 'Activités à Marseille', en: 'Activities in Marseille' },
+                    alt  : { fr: 'Activités au', en: 'Activities at' }
                     ,
                     contents:
                     [
