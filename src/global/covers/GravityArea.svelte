@@ -528,7 +528,7 @@ lang="scss"
 .gravityarea
 {
     --slot-ratio: .4;
-    --slot-size:  calc(var(--slot-default-size, '100px') * var(--slot-ratio, 1));
+    --slot-size : calc(var(--slot-default-size, '100px') * var(--slot-ratio, 1));
 
     &::before
     {
@@ -541,18 +541,17 @@ lang="scss"
 
     @extend %f-center;
 
-    contain:   layout size;
-    /* isolation: isolate; */
+    contain: layout size;
 
     position: absolute;
 
     transform-style: preserve-3d;
 
-    width:  $size;
+    width : $size;
     height: $size;
 
     pointer-events: auto;
-    touch-action:   none;
+    touch-action  : none;
 
     border-radius: 50%;
 
