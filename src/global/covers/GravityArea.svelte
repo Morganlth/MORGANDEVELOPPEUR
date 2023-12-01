@@ -538,7 +538,8 @@ lang="scss"
 
     @extend %f-center;
 
-    contain: layout size;
+    contain  : layout size;
+    isolation: isolate;
 
     position: absolute;
 
