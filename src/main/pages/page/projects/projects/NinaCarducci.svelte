@@ -509,6 +509,7 @@ id="ninacarducci"
                                     ></textarea>
                                 {:else}
                                     <input
+                                    autocomplete="on"
                                     {...rest}
                                     >
                                 {/if}
