@@ -270,7 +270,7 @@ lang="scss"
     @include utils.placement(absolute, $bottom: 0, $left: 62%);
 
     transform-origin: bottom right;
-    transform       : perspective(860px) rotateX(-.6rad) scale(.5);
+    transform:        perspective(860px) rotateX(-.6rad) scale(.5);
 
     width : fit-content;
     height: 200vh;

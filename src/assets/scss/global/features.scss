@@ -47,6 +47,8 @@
         &, .content { box-sizing: border-box; }
 
         padding-left: 2rem;
+
+        .content { overflow: hidden; }
     }
 
     .contact-me .cell { gap: 1.2rem; }

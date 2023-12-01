@@ -33,6 +33,7 @@ data-page-id={prop_ID}
     <Snake
     prop_SNAKE={prop_CHILDREN.snake}
     prop_ON={snake_ON && prop_FOCUS && !$app_$MOBILE}
+    {prop_ID}
     bind:snake_GAME
     />
 

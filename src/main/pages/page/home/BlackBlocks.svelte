@@ -959,6 +959,8 @@ lang="scss"
 
     @extend %any-size;
 
+    overflow: hidden;
+
     &.hide { visibility: hidden; }
 }
 

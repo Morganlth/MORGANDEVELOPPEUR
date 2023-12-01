@@ -38,6 +38,7 @@ style:--slot-r-y="{slot_ROTATE_Y}rad"
 style:--slot-r-z="{slot_ROTATE_Z}rad"
 style:z-index={prop_Z}
 style:transform="
+perspective({prop_3D ? prop_ORBIT_RADIUS * 2 + 'px' : 'none'})
 translate3d(
 {gravityarea_TRANSLATE_X}px,
 {gravityarea_TRANSLATE_Y + gravityarea_FLOATING_Y}px,

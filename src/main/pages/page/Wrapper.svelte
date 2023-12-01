@@ -194,8 +194,6 @@ lang="scss"
 
     transform: scale(1); /* fixed */
 
-    overflow: hidden;
-
     padding: 8rem app.$gap-inline;
 
     box-sizing: border-box;

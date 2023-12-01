@@ -139,6 +139,8 @@ on:fullscreenchange={snake_eFullscreenChange}
     prop_SNAKE = {}
     ,
     prop_ON = true
+    ,
+    prop_ID = void 0
 
     // --BINDING
     export let snake_GAME = false
@@ -154,8 +156,6 @@ on:fullscreenchange={snake_eFullscreenChange}
 
     // --THIS
     const
-    SNAKE_NAME = 'snake'
-    ,
     SNAKE_DEFAULT_SIZE      = 10,
     SNAKE_DEFAULT_BLOCKSIZE = 40,
     SNAKE_DURATION          = wait_getDelay(24), // +- 400ms
@@ -562,7 +562,7 @@ on:fullscreenchange={snake_eFullscreenChange}
     {
         if (snake_Z && snake_PARENT instanceof HTMLElement) snake_PARENT.insertBefore(snake, snake_PARENT.firstElementChild ?? snake_PARENT.children[0])
 
-        APP.app_$FREEZE = { value: false, target: SNAKE_NAME } 
+        APP.app_$FREEZE = { value: false, target: prop_ID } 
     
         snake_GAME = false
         snake_Z    = 0
@@ -615,7 +615,7 @@ on:fullscreenchange={snake_eFullscreenChange}
             snake_e$Resize()
         }
 
-        APP.app_$FREEZE = { value: true, target: SNAKE_NAME } 
+        APP.app_$FREEZE = { value: true, target: prop_ID } 
 
         if (!prop_ON) snake_start()
 
@@ -800,7 +800,7 @@ lang="scss"
     {
         background-color: $dark;
 
-        .canvas, .gameover { pointer-events: auto; }
+        pointer-events: auto;
     }
 
     .canvas, .grid { position: absolute; }
