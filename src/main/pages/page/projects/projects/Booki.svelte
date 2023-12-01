@@ -148,7 +148,7 @@ id="booki"
                 class="flex"
                 >
                     <li>
-                        <h3>{prop_DATA.head.filtersTitle}</h3>
+                        <span>{prop_DATA.head.filtersTitle}</span>
                     </li>
 
                     {#each prop_DATA.head.filters ?? [] as filter}
@@ -491,10 +491,10 @@ lang="scss"
 /* #\-VARIABLES-\ */
 
     /* --* */
-    $primary-color: #0065FC;
+    $primary-color      : #0065FC;
     $primary-light-color: #DEEBFF;
-    $light-color: #F2F2F2;
-    $border-color: #D9D9D9;
+    $light-color        : #F2F2F2;
+    $border-color       : #D9D9D9;
 
 
 /* #\-THIS-\ */
@@ -521,7 +521,7 @@ lang="scss"
 
     .flex { display: flex; }
 
-    .any-w { width:  100%; }
+    .any-w { width : 100%; }
     .any-h { height: 100%; }
 
     .bg { background-color: $light-color; }
@@ -665,7 +665,11 @@ main
 
             margin-top: 3rem;
 
-            h3 { font-size: 1.8rem; }
+            span
+            {
+                font-size  : 1.8rem;
+                font-weight: bold;
+            }
 
             button
             {
