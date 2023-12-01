@@ -25,6 +25,8 @@
 /* #\-VARIABLES-\ */
 
     /* --* */
+    $perspective: var(--system-perspective, 1000px);
+
     $r-x: var(--system-r-x, 0);
     $r-y: var(--system-r-y, 0);
 
@@ -50,17 +52,17 @@
         @extend %any-size;
     }
 
-    // isolation: isolate;
-
     overflow: clip; // important
+
+    &.-webkit .group { perspective: $perspective; } // iphone bug
+
+    &:not(.-webkit) { --gravityarea-perspective: $perspective; } // firefox bug
 
     .group, .cell { transition: transform .4s; }
 
     .group
     {
         @extend %f-center;
-
-        perspective: var(--system-perspective, 1000px);
 
         transform-style: preserve-3d;
         transform      : rotate3d($r-x, $r-y, 0, .016rad);

@@ -544,7 +544,7 @@ lang="scss"
     position: absolute;
 
     transform-style: preserve-3d;
-    transform      : perspective(none) translate3d(var(--gravityarea-t-x, 0), var(--gravityarea-t-y, 0), var(--gravityarea-t-z, 0));
+    transform      : perspective(var(--gravityarea-perspective, none)) translate3d(var(--gravityarea-t-x, 0), var(--gravityarea-t-y, 0), var(--gravityarea-t-z, 0));
 
     width : $size;
     height: $size;
