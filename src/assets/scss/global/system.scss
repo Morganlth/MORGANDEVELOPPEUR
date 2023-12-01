@@ -50,9 +50,9 @@
         @extend %any-size;
     }
 
-    isolation: isolate;
+    // isolation: isolate;
 
-    // overflow: clip;
+    overflow: clip;
 
     .group, .cell { transition: transform .4s; }
 
