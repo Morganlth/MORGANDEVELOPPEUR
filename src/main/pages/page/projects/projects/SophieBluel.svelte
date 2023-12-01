@@ -399,7 +399,7 @@ lang="scss"
 /* #\-VARIABLES-\ */
 
     /* --* */
-    $primary-color:   #B1663C;
+    $primary-color  : #AB633A;
     $secondary-color: #1D6154;
 
 
@@ -415,19 +415,19 @@ lang="scss"
 
     .body
     {
-        width:     auto;
+        width    : auto;
         max-width: 1140px;
 
-        margin:         auto;
+        margin        : auto;
         padding-inline: 2rem;
 
         font-family: 'Work Sans';
-        font-size:   1.4rem;
+        font-size  : 1.4rem;
     }
 
     header
     {
-        display:         flex;
+        display        : flex;
         justify-content: space-between;
 
         margin-bottom: 5rem;
@@ -436,15 +436,15 @@ lang="scss"
         {
             @extend %f-column;
 
-            color:       $primary-color;
+            color      : $primary-color;
             font-family: 'Syne';
-            font-size:   2.2rem;
+            font-size  : 2.2rem;
             font-weight: 800;
 
             &>span
             {
-                font-family:    'Work Sans';
-                font-size:      1rem;
+                font-family   : 'Work Sans';
+                font-size     : 1rem;
                 letter-spacing: .1rem;
             }
         }
@@ -471,7 +471,7 @@ lang="scss"
         @extend %f-column;
 
         align-items: center;
-        gap:         3rem;
+        gap        : 3rem;
     
         article, figure { flex: 1; }
         
@@ -504,13 +504,13 @@ lang="scss"
             @extend %f-j-center;
 
             flex-wrap: wrap;
-            gap:       1rem;
+            gap      : 1rem;
 
             margin: 5rem 0;
     
             button
             {
-                font-size:   1.6rem;
+                font-size  : 1.6rem;
                 font-weight: 700;
 
                 &.active
@@ -524,9 +524,9 @@ lang="scss"
 
         .gallery
         {
-            display:               grid;
+            display              : grid;
             grid-template-columns: 1fr;
-            gap:                   2rem;
+            gap                  : 2rem;
 
             &, img { width: 100%; }
         }
@@ -556,7 +556,7 @@ lang="scss"
         input:not([type="submit"]), textarea
         {
             margin-top: 1rem;
-            padding:    1rem;
+            padding   : 1rem;
 
             box-sizing: border-box;
         }
@@ -587,10 +587,10 @@ lang="scss"
 
             border-radius: 6rem;
 
-            color:     #fff;
+            color      : #fff;
             font-family: 'Syne';
             font-weight: 700;
-            text-align:  center;
+            text-align : center;
 
             cursor: pointer;
         }
@@ -600,10 +600,10 @@ lang="scss"
 
     h2
     {
-        color:       $secondary-color;
+        color      : $secondary-color;
         font-family: 'Syne';
-        font-weight:  700;
-        font-size:    3rem;
+        font-weight: 700;
+        font-size  : 3rem;
     }
 
     button
@@ -612,7 +612,7 @@ lang="scss"
 
         background-color: transparent;
 
-        border:        solid $secondary-color 1px;
+        border       : solid $secondary-color 1px;
         border-radius: 6rem;
 
         color: $secondary-color;
@@ -624,7 +624,7 @@ lang="scss"
 
     footer nav ul
     {
-        display:         flex;
+        display        : flex;
         justify-content: flex-end;
 
         margin-top: 2rem;
@@ -635,7 +635,7 @@ lang="scss"
         #sophiebluel-introduction
         {
             flex-direction: row;
-            gap:            0;
+            gap           : 0;
         }
 
         #sophiebluel-projects .gallery { grid-template-columns: 1fr 1fr 1fr; }

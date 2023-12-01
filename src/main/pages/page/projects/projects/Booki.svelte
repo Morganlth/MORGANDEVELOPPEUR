@@ -539,7 +539,7 @@ lang="scss"
 
     .star-list i
     {
-        color: $light-color;
+        color    : $light-color;
         font-size: 1.2rem;
     }
 
@@ -547,7 +547,7 @@ lang="scss"
     {
         max-width: 1400px;
 
-        margin: 0 auto;
+        margin : 0 auto;
         padding: 0 5rem;
 
         font-family: 'Raleway', sans-serif;
@@ -566,12 +566,12 @@ header
 
     #booki-logo
     {
-        width:  61px;
+        width : 61px;
         height: 19px;
 
         img
         {
-            width:  inherit;
+            width : inherit;
             height: inherit;
         }
     }
@@ -598,7 +598,7 @@ header
 main
 {
     flex-direction: column;
-    gap: 5rem 0;
+    gap           : 5rem 0;
 
     padding: 5rem 0;
 
@@ -618,7 +618,7 @@ main
 
                 border: none;
 
-                font-size: 1.8rem;
+                font-size  : 1.8rem;
                 font-weight: 700;
             }
 
@@ -661,15 +661,13 @@ main
         &>ul
         {
             flex-wrap: wrap;
-            gap: 1rem 2rem;
+            gap      : 1rem 2rem;
 
             margin-top: 3rem;
 
-            span
-            {
-                font-size  : 1.8rem;
-                font-weight: bold;
-            }
+            span, button { font-weight: 700; }
+
+            span { font-size: 1.8rem; }
 
             button
             {
@@ -679,11 +677,10 @@ main
 
                 background-color: transparent;
 
-                border: solid $border-color .2rem;
+                border       : solid $border-color .2rem;
                 border-radius: 3rem;
                 
                 font-size: 1.7rem;
-                font-weight: 700;
             }
 
             i
@@ -700,16 +697,16 @@ main
 
             &>i
             {
-                display: flex !important;
+                display        : flex !important;
                 justify-content: center;
-                align-items: center;
+                align-items    : center;
 
                 min-width: 24px;
-                height: 2.4rem;
+                height   : 2.4rem;
 
                 margin-right: 1rem;
 
-                border: solid $border-color 1px;
+                border       : solid $border-color 1px;
                 border-radius: 50%;
 
                 font-size: 1.2rem;
@@ -767,7 +764,7 @@ main
 
             margin-top: 4rem;
 
-            font-size: 1.8rem;
+            font-size  : 1.8rem;
             font-weight: 700;
         }
 
@@ -802,7 +799,7 @@ main
                     width: 63%;
 
                     margin-left: 37%;
-                    padding: 1.5rem 2rem;
+                    padding    : 1.5rem 2rem;
 
                     box-sizing: border-box;
                 }
@@ -810,7 +807,7 @@ main
                 .star-list
                 {
                     position: absolute;
-                    bottom: 1rem;
+                    bottom  : 1rem;
                 }
             }
         }
@@ -824,7 +821,7 @@ main
         {
             display: block;
 
-            width: 25%;
+            width : 25%;
             height: 444px;
         }
     
@@ -835,7 +832,7 @@ main
             align-items: center;
 
             position: relative;
-            bottom: .4rem;
+            bottom  : .4rem;
 
             height: 13%;
 
@@ -895,7 +892,7 @@ footer
     header
     {
         flex-direction: column;
-        align-items: center;
+        align-items   : center;
 
         height: 130px;
 
@@ -909,7 +906,7 @@ footer
         {
             padding-bottom: 2.3rem;
 
-            border-top:    none;
+            border-top   : none;
             border-bottom: solid $light-color .3rem;
         }
     }
@@ -938,7 +935,7 @@ footer
             &>ul
             {
                 justify-content: center;
-                gap: 3.5%;
+                gap            : 3.5%;
 
                 &>li
                 {
@@ -961,7 +958,7 @@ footer
         #booki-accommodation
         {
             flex-direction: column-reverse;
-            gap: 0;
+            gap           : 0;
 
             &>div, &>aside
             {
@@ -998,7 +995,7 @@ footer
     footer
     {
         flex-direction: column;
-        gap: 4rem;
+        gap           : 4rem;
 
         padding: 5rem 3rem;
 
