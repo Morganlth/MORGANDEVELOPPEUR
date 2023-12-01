@@ -27,7 +27,7 @@ context="module"
 <!-- #|-HTML-| -->
 
 <div
-class="system"
+class="system {$APP_$USER_AGENT}"
 style:--system-perspective="{gravityarea_ORBIT_RADIUS * 2}px"
 style:--system-r-x={system_ROTATE_X}
 style:--system-r-y={system_ROTATE_Y}
@@ -153,6 +153,7 @@ style:--system-r-y={system_ROTATE_Y}
     // --SVELTE
 
     // --CONTEXTS
+    const APP_$USER_AGENT = APP.app_$USER_AGENT
 
     // --OUTSIDE
 
