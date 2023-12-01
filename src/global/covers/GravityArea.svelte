@@ -31,9 +31,9 @@ context="module"
 class="gravityarea"
 class:focus={prop_FOCUS}
 class:grabbing={slot_GRABBING}
-style:--gravityarea-tx="{gravityarea_TRANSLATE_X}px"
-style:--gravityarea-ty="{gravityarea_TRANSLATE_Y + gravityarea_FLOATING_Y}px"
-style:--gravityarea-tz="{gravityarea_TRANSLATE_Z}px"
+style:--gravityarea-t-x="{gravityarea_TRANSLATE_X}px"
+style:--gravityarea-t-y="{gravityarea_TRANSLATE_Y + gravityarea_FLOATING_Y}px"
+style:--gravityarea-t-z="{gravityarea_TRANSLATE_Z}px"
 style:--slot-default-size="{prop_RADIUS}px"
 style:--slot-f-x="{slot_FORCE_X}px"
 style:--slot-f-y="{slot_FORCE_Y}px"
@@ -544,7 +544,7 @@ lang="scss"
     position: absolute;
 
     transform-style: preserve-3d;
-    transform      : perspective(var(--gravityarea-perspective, none)) translate3d(var(--gravityarea-tx, 0), var(--gravityarea-ty, 0), var(--gravityarea-tz, 0));
+    transform      : perspective(var(--gravityarea-perspective, none)) translate3d(var(--gravityarea-t-x, 0), var(--gravityarea-t-y, 0), var(--gravityarea-t-z, 0));
 
     width : $size;
     height: $size;
