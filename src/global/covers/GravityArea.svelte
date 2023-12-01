@@ -546,11 +546,11 @@ lang="scss"
     transform-style: preserve-3d;
     transform      : perspective(var(--gravityarea-perspective, none)) translate3d(var(--gravityarea-tx, 0), var(--gravityarea-ty, 0), var(--gravityarea-tz, 0));
 
-    width:  $size;
+    width : $size;
     height: $size;
 
     pointer-events: auto;
-    touch-action:   none;
+    touch-action  : none;
 
     border-radius: 50%;
 
