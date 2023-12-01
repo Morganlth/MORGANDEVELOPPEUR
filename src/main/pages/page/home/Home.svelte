@@ -64,7 +64,7 @@ data-page-id={prop_ID}
     />
 
     <Group
-    prop_STYLE="position:absolute;top:0;left:0;width:0;height:0;"
+    prop_STYLE="position:absolute;top:0;left:0;width:0;height:0;isolation:isolate;"
     let:resize
     let:animation
     bind:group_start
