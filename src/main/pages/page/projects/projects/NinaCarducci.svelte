@@ -204,6 +204,7 @@ id="ninacarducci"
                     <button
                     class={btn}
                     type="button"
+                    aria-label="{btn} button slider"
                     on:click={slider_eClick.bind(null, btn === 'prev' ? -1 : 1)}
                     >
                         <img
@@ -218,8 +219,9 @@ id="ninacarducci"
                 <nav>
                     {#each Array(prop_DATA.slider?.length ?? 0) as _, id}
                         <button
-                        type="button"
                         class:active={slider_TARGET === id}
+                        type="button"
+                        aria-label="nav button slider {id}"
                         on:click={slider_eClick2.bind(null, id)}
                         >
                         </button>
@@ -288,6 +290,7 @@ id="ninacarducci"
                                 <button
                                 class:active={filter.on}
                                 type="button"
+                                aria-label="filter {filter.value}"
                                 on:click={gallery_eClick.bind(null, filter.id)}
                                 >
                                     {filter.value}
@@ -304,6 +307,7 @@ id="ninacarducci"
                         {#each gallery_GALLERY as img (img.id)}
                             <button
                             type="button"
+                            aria-label="gallery image"
                             on:click={gallery_eClick2.bind(null, img.id)}
                             >
                                 <picture>
@@ -376,6 +380,7 @@ id="ninacarducci"
                                     <button
                                     class={btn}
                                     type="button"
+                                    aria-label="{btn} button modal"
                                     on:click|stopPropagation={modal_eClick2.bind(null, btn === 'prev' ? -1 : 1)}
                                     >
                                         {btn === 'prev' ? '<' : '>'}
