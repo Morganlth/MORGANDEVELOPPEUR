@@ -260,7 +260,7 @@ lang="scss"
 
     @extend %scroll-bar;
 
-    overflow:            clip scroll;
+    overflow           : hidden scroll;
     overscroll-behavior: none;
 
     background-color: $dark;
