@@ -195,6 +195,7 @@ id="sophiebluel"
                                 ></textarea>
                             {:else}
                                 <input
+                                autocomplete="on"
                                 {...rest}
                                 >
                             {/if}
