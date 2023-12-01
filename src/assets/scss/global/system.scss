@@ -52,7 +52,7 @@
         @extend %any-size;
     }
 
-    // overflow: clip;
+    overflow: clip; // important
 
     .group, .cell { transition: transform .4s; }
 
