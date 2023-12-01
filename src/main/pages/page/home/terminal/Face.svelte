@@ -78,6 +78,7 @@ class="face"
         >
             <input
             type="text"
+            name="command-line"
             inputmode="text"
             maxlength={input_MAX_LENGTH}
             aria-label="command line"
