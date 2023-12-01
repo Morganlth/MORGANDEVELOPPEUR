@@ -174,7 +174,7 @@ class="face"
     import { animation } from '$lib/animation'
 
     // --CONTEXTS
-    import { COMMAND, EVENT, PROCESS } from '../../../../../App.svelte'
+    import { APP, COMMAND, EVENT, PROCESS } from '../../../../../App.svelte'
 
     import { TERMINAL_WORD_REFERENCE } from './Terminal.svelte'
 
@@ -290,6 +290,9 @@ class="face"
     // --CONTEXTS
 
     // --OUTSIDE
+    let APP_$FREEZE = APP.app_$FREEZE
+    $: test($APP_$FREEZE)
+    function test(freeze) { output_c$Log(freeze + ' ' + APP_$FREEZE.target) }
 
     // --THIS
 
@@ -354,7 +357,7 @@ class="face"
     {
         input_I += up ? -1 : 1
     
-        if (input_I < 0) input_I = 0
+             if (input_I < 0) input_I = 0
         else if (input_I >= INPUT_HISTORY.length) input_I = INPUT_HISTORY.length - 1
     }
 
@@ -446,8 +449,8 @@ class="face"
 
     async function input_eKeyup({key})
     {
-        if      (key === 'Enter') mirror_APP_AVAILABLE ? input_execute() : input_analyseKeyword()
-        else if (key === 'ArrowUp') input_restore(true)
+             if (key === 'Enter')     mirror_APP_AVAILABLE ? input_execute() : input_analyseKeyword()
+        else if (key === 'ArrowUp')   input_restore(true)
         else if (key === 'ArrowDown') input_restore(false)
     }
 

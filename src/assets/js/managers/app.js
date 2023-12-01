@@ -22,7 +22,7 @@ class App
 
     #app_$HIDE         = writable(true)
     #app_$MOBILE       = writable(false)
-    #app_$FREEZE       = { value: false, setter: function ({target}) { this.target = target }, optionalparameters: { target: null } }
+    #app_$FREEZE       = { value: false, setter: function (args) { this.target = args[1] }, optionalparameters: { target: null } }
     #app_$OPTIMIZE     = { value: false }
     #app_$SMALL_SCREEN = { value: false }
     #app_$USER_AGENT   = { value: '-?' }
@@ -75,7 +75,7 @@ class App
     {
         const CURRENT_TARGET = this.#app_$FREEZE.target
     
-        if (!CURRENT_TARGET || CURRENT_TARGET === target) this.#app_$FREEZE.set(value, { target: value ? target : null })
+        if (!CURRENT_TARGET || CURRENT_TARGET === target) this.#app_$FREEZE.set(value, value ? target : null)
     }
 
     set app_$OPTIMIZE(value)
