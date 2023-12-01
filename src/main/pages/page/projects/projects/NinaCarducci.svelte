@@ -979,7 +979,7 @@ lang="scss"
 
             flex-shrink: 0;
         
-            overflow: clip;
+            overflow: hidden;
 
             transition: transform ease-in-out;
 

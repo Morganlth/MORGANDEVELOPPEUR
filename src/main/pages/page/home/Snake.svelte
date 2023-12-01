@@ -791,7 +791,7 @@ lang="scss"
 
     @extend %f-center;
 
-    overflow: clip;
+    overflow           : hidden;
     overscroll-behavior: none;
 
     max-height: 100svh;

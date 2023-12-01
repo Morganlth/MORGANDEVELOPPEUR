@@ -270,16 +270,14 @@ lang="scss"
     @include utils.placement(absolute, $bottom: 0, $left: 62%);
 
     transform-origin: bottom right;
-    transform:        perspective(860px) rotateX(-.6rad) scale(.5);
+    transform       : perspective(860px) rotateX(-.6rad) scale(.5);
 
-    overflow: clip;
-
-    width:  fit-content;
+    width : fit-content;
     height: 200vh;
     height: 200svh;
 
-    color:        $intermediate;
-    text-align:   right;
+    color       : $intermediate;
+    text-align  : right;
     writing-mode: vertical-rl;
 
     &.focus div:nth-child(2) { transform: translateY(0); }

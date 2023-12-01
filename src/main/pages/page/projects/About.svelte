@@ -327,7 +327,7 @@ lang="scss"
 
     gap: 2rem;
 
-    overflow: clip auto;
+    overflow: hidden auto;
 
     padding: 8rem app.$gap-inline;
 
@@ -371,7 +371,7 @@ lang="scss"
     {
         @include display.grid($width: (auto 1fr), $height: (auto 1fr auto));
 
-        overflow-y: clip;
+        overflow-y: hidden;
     
         &.-webkit
         {
@@ -391,7 +391,7 @@ lang="scss"
         {
             grid-row: 2 / 3;
 
-            overflow: clip auto;
+            overflow: hidden auto;
         }
 
         .global { width: var(--x, 50vw); }

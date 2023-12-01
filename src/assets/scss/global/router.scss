@@ -24,8 +24,8 @@
 /* #\-VARIABLES-\ */
 
     /* --* */
-    $route-default-clip:       polygon(-10% -10%, 110% -10%, 110% 110%, -10% 110%);
-    $route-duration:           .4s;
+    $route-default-clip      : polygon(-10% -10%, 110% -10%, 110% 110%, -10% 110%);
+    $route-duration          : .4s;
     $route-default-transition: clip-path $route-duration var(--route-t-delay, 0s) ease-out;
 
 

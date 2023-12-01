@@ -260,7 +260,7 @@ lang="scss"
 {
     position: relative;
 
-    overflow: clip;
+    overflow: hidden;
     
     width:      100vw;
     min-height: 100vh;

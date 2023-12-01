@@ -194,7 +194,7 @@ lang="scss"
 
     transform: scale(1); /* fixed */
 
-    overflow: clip;
+    overflow: hidden;
 
     padding: 8rem app.$gap-inline;
 

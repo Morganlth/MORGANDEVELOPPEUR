@@ -489,7 +489,7 @@ lang="scss"
 
     isolation: isolate;
 
-    overflow: clip;
+    overflow: hidden;
 
     pointer-events: none;
 

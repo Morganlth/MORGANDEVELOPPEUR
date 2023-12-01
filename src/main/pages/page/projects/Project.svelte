@@ -390,7 +390,7 @@ lang="scss"
 
     @extend %any-size;
 
-    overflow:            clip;
+    overflow           : hidden;
     overscroll-behavior: none;
 
     &.scroller
@@ -412,7 +412,7 @@ lang="scss"
     {
         @include utils.placement(relative, $z: 1);
 
-        width:  100%;
+        width : 100%;
         height: fit-content;
     }
 }
