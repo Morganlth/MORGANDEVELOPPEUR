@@ -81,6 +81,7 @@ class="contact"
         name="email"
         aria-label="email"
         placeholder="...@"
+        autocomplete="on"
         required
         bind:value={email_VALUE}
         on:input={email_eInput}
