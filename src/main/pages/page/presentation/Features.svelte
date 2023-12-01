@@ -419,6 +419,8 @@ lang="scss"
             @include utils.placement(absolute, $top: 18%, $right: app.$gap-inline);
 
             transform: translateY(-50%);
+
+            @include media.min($ms5, $ms4) { top: 50%; }
         }
     }
 
@@ -433,8 +435,6 @@ lang="scss"
             .topic { line-height: 0; }
 
             .feature { padding-left: max(34%, 400px); }
-    
-            .contact-me { top: 50%; }
         }
     }
 }
