@@ -58,6 +58,8 @@
     {
         @extend %f-center;
 
+        // perspective: var(--system-perspective, 1000px);
+
         transform-style: preserve-3d;
         transform      : rotate3d($r-x, $r-y, 0, .016rad);
     }

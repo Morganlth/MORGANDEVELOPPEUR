@@ -28,51 +28,56 @@ context="module"
 
 <div
 class="system"
+style:--system-perspective="{gravityarea_ORBIT_RADIUS * 2}px"
 style:--system-r-x={system_ROTATE_X}
 style:--system-r-y={system_ROTATE_Y}
 >
-    <Group
-    let:resize
-    let:animation
-    bind:group_start
-    bind:group_stop
+    <div
+    style="isolation: isolate;"
     >
-        <Moon
-        {prop_FOCUS}
-        />
+        <Group
+        let:resize
+        let:animation
+        bind:group_start
+        bind:group_stop
+        >
+            <Moon
+            {prop_FOCUS}
+            />
 
-        {#if !system_OPTIMIZE}
-            {#each prop_SYSTEM as item}
-                <GravityArea
-                let:hide
-                let:grabbing
-                prop_$RESIZE={resize}
-                prop_$ANIMATION={animation}
-                prop_FOCUSABLE={(item.focus ?? false) && !system_TARGET}
-                prop_3D={true}
-                prop_RATIO={gravityarea_RATIO}
-                prop_GRABBING={false}
-                prop_TITLE={item.props.prop_TITLE}
-                prop_ORBIT_RADIUS={gravityarea_ORBIT_RADIUS}
-                prop_ROTATE_Z={item.props.prop_ROTATE}
-                prop_OFFSET={item.props.prop_OFFSET}
-                prop_FORCE={.16}
-                {prop_FOCUS}
-                bind:gravityarea_TRANSLATE_Z={GROUP_Z_POSITIONS[item.id]}
-                on:click={gravityarea_eClick.bind(item)}
-                >
-                    <Block
-                    prop_HIDE={hide}
-                    prop_GRABBING={grabbing}
-                    prop_FOCUS={item.focus ?? false}
-                    prop_SRC={item.props.prop_SRC}
-                    prop_ALT={item.props.prop_ALT}
-                    prop_COLOR={item.props.prop_COLOR}
-                    />
-                </GravityArea>
-            {/each}
-        {/if}
-    </Group>
+            {#if !system_OPTIMIZE}
+                {#each prop_SYSTEM as item}
+                    <GravityArea
+                    let:hide
+                    let:grabbing
+                    prop_$RESIZE={resize}
+                    prop_$ANIMATION={animation}
+                    prop_FOCUSABLE={(item.focus ?? false) && !system_TARGET}
+                    prop_3D={true}
+                    prop_RATIO={gravityarea_RATIO}
+                    prop_GRABBING={false}
+                    prop_TITLE={item.props.prop_TITLE}
+                    prop_ORBIT_RADIUS={gravityarea_ORBIT_RADIUS}
+                    prop_ROTATE_Z={item.props.prop_ROTATE}
+                    prop_OFFSET={item.props.prop_OFFSET}
+                    prop_FORCE={.16}
+                    {prop_FOCUS}
+                    bind:gravityarea_TRANSLATE_Z={GROUP_Z_POSITIONS[item.id]}
+                    on:click={gravityarea_eClick.bind(item)}
+                    >
+                        <Block
+                        prop_HIDE={hide}
+                        prop_GRABBING={grabbing}
+                        prop_FOCUS={item.focus ?? false}
+                        prop_SRC={item.props.prop_SRC}
+                        prop_ALT={item.props.prop_ALT}
+                        prop_COLOR={item.props.prop_COLOR}
+                        />
+                    </GravityArea>
+                {/each}
+            {/if}
+        </Group>
+    </div>
 
     {#each prop_SYSTEM as item}
         <Cell
