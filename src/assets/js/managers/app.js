@@ -148,7 +148,7 @@ class App
 
         this.#app_$USER_AGENT.set(navigator.userAgent.match(/(Chrome|Safari|Edg)/i) ? '-webkit' : '-?')
 
-        COMMAND.command_COMMANDS.log(this.#app_$USER_AGENT)
+        setTimeout(() => COMMAND.command_COMMANDS.log(this.#app_$USER_AGENT.value), 1000)
     }
 
     #app_setCommands() { COMMAND.command_setCommands(this.#app_COMMANDS) }
