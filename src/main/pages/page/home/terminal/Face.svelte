@@ -174,7 +174,7 @@ class="face"
     import { animation } from '$lib/animation'
 
     // --CONTEXTS
-    import { APP, COMMAND, EVENT, PROCESS } from '../../../../../App.svelte'
+    import { COMMAND, EVENT, PROCESS } from '../../../../../App.svelte'
 
     import { TERMINAL_WORD_REFERENCE } from './Terminal.svelte'
 
@@ -290,9 +290,6 @@ class="face"
     // --CONTEXTS
 
     // --OUTSIDE
-    let APP_$FREEZE = APP.app_$FREEZE
-    $: test($APP_$FREEZE)
-    function test(freeze) { output_c$Log(freeze + ' ' + APP_$FREEZE.target) }
 
     // --THIS
 
