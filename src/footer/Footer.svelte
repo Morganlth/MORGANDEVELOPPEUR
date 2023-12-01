@@ -244,14 +244,13 @@ lang="scss"
 /* #\-VARIABLES-\ */
 
     /* --* */
-    $padding-block: .4rem;
 
 
 /* #\-THIS-\ */
 
 .footer
 {
-    &, ul { display: flex; }
+    &, .lang { @extend %f-a-center; }
 
     @include utils.placement(fixed, $right: 0, $bottom: 0, $z: 2);
     @include font.text($color: $light, $regular: false);
@@ -260,7 +259,6 @@ lang="scss"
     @extend %a-scaled;
 
     justify-content: space-between;
-    align-items: flex-end;
 
     width: 100%;
 
@@ -275,13 +273,14 @@ lang="scss"
         pointer-events: auto;
 
         color: inherit;
-        font:  inherit;
+        font : inherit;
     }
 
     nav { width: 50%; }
 
     ul
     {
+        display        : flex;
         justify-content: flex-start;
 
         gap: app.$gap-block;
@@ -294,7 +293,7 @@ lang="scss"
 
             position: relative;
 
-            padding: $padding-block 1rem;
+            padding: .4rem 1rem;
 
             text-decoration: none;
 
@@ -303,7 +302,7 @@ lang="scss"
             &::after
             {
                 justify-content: center;
-                align-items:     center;
+                align-items    : center;
             }
         }
 
@@ -317,10 +316,6 @@ lang="scss"
 
     .lang
     {
-        @extend %f-a-center;
-
-        padding-bottom: $padding-block;
-
         span
         {
             font-family: font.$family-text;
@@ -329,18 +324,18 @@ lang="scss"
 
         input { display: none; }
 
-        select, option
-        {
-            margin:  0;
-            padding: 0;
-        }
+        select, option { margin : 0; }
     
         select
         {
+            padding: 0 .2rem;
+
             background-color: $dark;
         
             border: none;
         }
+
+        option { padding: 0; }
     }
 }
 
