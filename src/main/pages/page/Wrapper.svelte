@@ -26,15 +26,15 @@ context="module"
 
 <!-- #|-HTML-| -->
 
-<div
+<section
 class="wrapper"
 >
     <slot
     name="label"
     />
 
-    <section
-    class="header"
+    <div
+    class="head"
     >
         <slot
         name="title"
@@ -47,10 +47,10 @@ class="wrapper"
         <slot
         name="quote"
         />
-    </section>
+    </div>
 
     <slot />
-</div>
+</section>
 
 
 <!-- #|-SCRIPT-| -->
@@ -200,7 +200,7 @@ lang="scss"
 
     box-sizing: border-box;
 
-    .header
+    .head
     {
         @include utils.placement(absolute, $z: 1);
 
