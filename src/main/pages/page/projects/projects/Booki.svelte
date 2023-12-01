@@ -198,7 +198,7 @@ id="booki"
                                 >
                                     <img
                                     class="any-w"
-                                    src="/images/booki/hebergements/4_small/{accommodation.src}"
+                                    src="/images/booki/hebergements/{accommodation.src}"
                                     alt={accommodation.title}
                                     >
                                 
@@ -263,7 +263,7 @@ id="booki"
                                 >
                                     <img
                                     class="any-h"
-                                    src="/images/booki/hebergements/4_small/{popular.src}"
+                                    src="/images/booki/hebergements/{popular.src}"
                                     alt={popular.title}
                                     >
                                 
@@ -314,7 +314,7 @@ id="booki"
                             >
                                 <img
                                 class="any-w"
-                                src="/images/booki/activites/3_medium/{activity.src}"
+                                src="/images/booki/activites/{activity.src}"
                                 alt={activity.title}
                                 >
 

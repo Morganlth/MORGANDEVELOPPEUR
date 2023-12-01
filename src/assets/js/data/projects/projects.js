@@ -130,38 +130,38 @@
                         {
                             title: 'Auberge La Canebière',
                             desc : { fr: 'Nuit à partir de 25€', en: 'Night from 25€' },
-                            src  : 'marcus-loke-WQJvWU_HZFo-unsplash.jpg',
+                            src  : 'marcus-loke.jpg',
                             stars: [1, 1, 1, 1, 0]
                         },
                         {
                             title: 'Hôtel du port',
                             desc : { fr: 'Nuit à partir de 52€', en: 'Night from 52€' },
-                            src  : 'fred-kleber-gTbaxaVLvsg-unsplash.jpg',
+                            src  : 'fred-kleber.jpg',
                             stars: [1, 1, 1, 0, 0]
                         }
                         ,
                         {
                             title: 'Hôtel Les mouettes',
                             desc : { fr: 'Nuit à partir de 76€', en: 'Night from 76€' },
-                            src  : 'reisetopia-B8WIgxA_PFU-unsplash.jpg',
+                            src  : 'reisetopia.jpg',
                             stars: [1, 1, 1, 1, 0]
                         },
                         {
                             title: 'Hôtel de la mer',
                             desc: { fr: 'Nuit à partir de 46€', en: 'Night from 46€' },
-                            src: 'annie-spratt-Eg1qcIitAuA-unsplash.jpg',
+                            src: 'annie-spratt.jpg',
                             stars: [1, 1, 1, 1, 1]
                         },
                         {
                             title: 'Auberge Le Panier',
                             desc : { fr: 'Nuit à partir de 23€', en: 'Night from 23€' },
-                            src  : 'nicate-lee-kT-ZyaiwBe0-unsplash.jpg',
+                            src  : 'nicate-lee.jpg',
                             stars: [1, 1, 1, 0, 0]
                         },
                         {
                             title: 'Hôtel Chez Amina',
                             desc : { fr: 'Nuit à partir de 96€', en: 'Night from 96€' },
-                            src  : 'febrian-zakaria-M6S1WvfW68A-unsplash.jpg',
+                            src  : 'febrian-zakaria.jpg',
                             stars: [1, 1, 1, 1, 0]
                         }
                     ]
@@ -176,19 +176,19 @@
                         {
                             title: 'Hôtel Le soleil du matin',
                             desc : { fr: 'Nuit à partir de 128€', en: 'Night from 128€' },
-                            src  : 'emile-guillemot-Bj_rcSC5XfE-unsplash.jpg',
+                            src  : 'emile-guillemot.jpg',
                             stars: [1, 1, 1, 1, 1]
                         },
                         {
                             title: 'Chambres d\'hôtes Au cœur de l\'eau',
                             desc : { fr: 'Nuit à partir de 71€', en: 'Night from 71€' },
-                            src  : 'aw-creative-VGs8z60yT2c-unsplash.jpg',
+                            src  : 'aw-creative.jpg',
                             stars: [1, 1, 1, 1, 1]
                         },
                         {
                             title: 'Hôtel Bleu et Blanc',
                             desc : { fr: 'Nuit à partir de 68€', en: 'Night from 68€' },
-                            src  : 'febrian-zakaria-sjvU0THccQA-unsplash.jpg',
+                            src  : 'febrian-zakaria2.jpg',
                             stars: [1, 1, 1, 1, 0]
                         }
                     ]
@@ -202,19 +202,19 @@
                     [
                         {
                             title: 'Vieux-Port',
-                            src  : 'reno-laithienne-QUgJhdY5Fyk-unsplash.jpg'
+                            src  : 'reno-laithienne.jpg'
                         },
                         {
                             title: 'Fort de Pomègues',
-                            src  : 'paul-hermann-QFTrLdQIRhI-unsplash.jpg'
+                            src  : 'paul-hermann.jpg'
                         },
                         {
                             title: 'Parc national des Calanques',
-                            src  : 'kilyan-sockalingum-NR8-cBCN3aI-unsplash.jpg'
+                            src  : 'kilyan-sockalingum.jpg'
                         },
                         {
                             title: 'Notre-Dame-de-la-Garde',
-                            src  : 'florian-wehde-xW9e8gdotxI-unsplash.jpg'
+                            src  : 'florian-wehde.jpg'
                         }
                     ]
                 }
@@ -321,67 +321,67 @@
                             id    : 0,
                             title : 'Abajour Tahina',
                             filter: { fr: 'Objets', en: 'Objects' },
-                            src   : 'abajour-tahina1651286843956.png'
+                            src   : 'abajour-tahina.png'
                         },
                         {
                             id    : 1,
                             title : 'Appartement Paris V',
                             filter: { fr: 'Appartements', en: 'Flats' },
-                            src   : 'appartement-paris-v1651287270508.png'
+                            src   : 'appartement-paris-v.png'
                         },
                         {
                             id    : 2,
                             title : 'Restaurant Sushisen - Londres',
                             filter: { fr: 'Hôtels & restaurants', en: 'Hotels & restaurants' },
-                            src   : 'restaurant-sushisen-londres1651287319271.png'
+                            src   : 'restaurant-sushisen-londres.png'
                         },
                         {
                             id    : 3,
                             title : 'Villa “La Balisiere” - Port Louis',
                             filter: { fr: 'Appartements', en: 'Flats' },
-                            src   : 'la-balisiere1651287350102.png'
+                            src   : 'la-balisiere.png'
                         },
                         {
                             id: 4,
                             title: 'Structures Thermopolis',
                             filter: { fr: 'Objets', en: 'Objects' },
-                            src: 'structures-thermopolis1651287380258.png'
+                            src: 'structures-thermopolis.png'
                         },
                         {
                             id    : 5,
                             title : 'Appartement Paris X',
                             filter: { fr: 'Appartements', en: 'Flats' },
-                            src   : 'appartement-paris-x1651287435459.png'
+                            src   : 'appartement-paris-x.png'
                         },
                         {
                             id: 6,
                             title: 'Pavillon “Le coteau” - Cassis',
                             filter: { fr: 'Appartements', en: 'Flats' },
-                            src: 'le-coteau-cassis1651287469876.png'
+                            src: 'le-coteau-cassis.png'
                         },
                         {
                             id     : 7,
                             title : 'Villa Ferneze - Isola d’Elba',
                             filter: { fr: 'Appartements', en: 'Flats' },
-                            src   : 'villa-ferneze1651287511604.png'
+                            src   : 'villa-ferneze.png'
                         },
                         {
                             id    : 8,
                             title : 'Appartement Paris XVIII',
                             filter: { fr: 'Appartements', en: 'Flats' },
-                            src   : 'appartement-paris-xviii1651287541053.png'
+                            src   : 'appartement-paris-xviii.png'
                         },
                         {
                             id    : 9,
                             title : 'Bar “Lullaby” - Paris',
                             filter: { fr: 'Hôtels & restaurants', en: 'Hotels & restaurants' },
-                            src   : 'bar-lullaby-paris1651287567130.png'
+                            src   : 'bar-lullaby-paris.png'
                         },
                         {
                             id    : 10,
                             title : 'Hotel First Arte - New Delhi',
                             filter: { fr: 'Hôtels & restaurants', en: 'Hotels & restaurants' },
-                            src   : 'hotel-first-arte-new-delhi1651287605585.png'
+                            src   : 'hotel-first-arte-new-delhi.png'
                         },
                     ]
                 }
@@ -500,17 +500,17 @@
                 slider:
                 [
                     {
-                        src       : 'ryoji-iwata-wUZjnOv7t0g-unsplash',
+                        src       : 'ryoji-iwata',
                         alt       : 'Ryoji Iwata',
                         translateX: 100
                     },
                     {
-                        src       : 'nicholas-green-nPz8akkUmDI-unsplash',
+                        src       : 'nicholas-green',
                         alt       : 'Nicholas Green',
                         translateX: 200
                     },
                     {
-                        src       : 'edward-cisneros-3_h6-1NPDGw-unsplash',
+                        src       : 'edward-cisneros',
                         alt       : 'Edward Cisneros',
                         translateX: 0
                     }
@@ -547,55 +547,55 @@
                     {
                         id    : 0,
                         filter: 'Concert',
-                        src   : 'concerts/aaron-paul-wnX-fXzB6Cw-unsplash',
+                        src   : 'concerts/aaron-paul',
                         alt   : 'Aaron Paul'
                     },
                     {
                         id    : 1,
                         filter: { fr: 'Entreprises', en: 'Companies' },
-                        src   : 'entreprise/ali-morshedlou-WMD64tMfc4k-unsplash',
+                        src   : 'entreprise/ali-morshedlou',
                         alt   : 'Ali Morshedlou'
                     },
                     {
                         id    : 2,
                         filter:  { fr: 'Entreprises', en: 'Companies' },
-                        src   : 'entreprise/jason-goodman-tHO1_OuKbg0-unsplash',
+                        src   : 'entreprise/jason-goodman',
                         alt   : 'Jason Goodman'
                     },
                     {
                         id    : 3,
                         filter: { fr: 'Mariages', en: 'Weddings' },
-                        src   : 'mariage/hannah-busing-RvF2R_qMpRk-unsplash',
+                        src   : 'mariage/hannah-busing',
                         alt   : 'Hannah Busing'
                     },
                     {
                         id    : 4,
                         filter: 'Portrait',
-                        src   : 'portraits/ade-tunji-rVkhWWZFAtQ-unsplash',
+                        src   : 'portraits/ade-tunji',
                         alt   : 'Ade Tunji'
                     },
                     {
                         id    : 5,
                         filter: { fr: 'Mariages', en: 'Weddings' },
-                        src   : 'mariage/jakob-owens-SiniLJkXhMc-unsplash',
+                        src   : 'mariage/jakob-owens',
                         alt   : 'Jakob Owens'
                     },
                     {
                         id    : 6,
                         filter: 'Portrait',
-                        src   : 'portraits/nino-van-prattenburg--443cl1uR_8-unsplash',
+                        src   : 'portraits/nino-van-prattenburg',
                         alt   : 'Non Van Prattenburg'
                     },
                     {
                         id    : 7,
                         filter: 'Concert',
-                        src   : 'concerts/austin-neill-hgO1wFPXl3I-unsplash',
+                        src   : 'concerts/austin-neill',
                         alt   : 'Austin Neill'
                     },
                     {
                         id    : 8,
                         filter:  { fr: 'Entreprises', en: 'Companies' },
-                        src   : 'entreprise/mateus-campos-felipe-Fsgzm8N0hIY-unsplash',
+                        src   : 'entreprise/mateus-campos-felipe',
                         alt   : 'Mateus Campos Felipe'
                     }
                 ]
