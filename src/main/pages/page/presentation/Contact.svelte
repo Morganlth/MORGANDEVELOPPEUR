@@ -62,63 +62,69 @@ class="contact"
         </div>
     </div>
 
-    <form
-    method="post"
-    action="/presentation/contact"
-    bind:this={form}
-    on:submit|preventDefault={form_eSubmit}
+    <div
+    class="content"
     >
-        <label
-        for="contact-email"
-        class:valid={email_VALID}
-        >
-            Email
-        </label>
-
-        <input
-        id="contact-email"
-        type="email"
-        name="email"
-        aria-label="email"
-        placeholder="...@"
-        autocomplete="on"
-        required
-        bind:value={email_VALUE}
-        on:input={email_eInput}
-        />
-
-        <label
-        for="contact-message"
-        class:valid={message_VALID}
-        >
-            Message
-        </label>
-
-        <textarea
-        id="contact-message"
-        name="message"
-        aria-label="message"
-        placeholder={prop_CONTACT.messagePlaceholder}
-        minlength={FORM_MSG_MIN}
-        maxlength={FORM_MSG_MAX}
-        required
-        bind:value={message_VALUE}
-        on:input={message_eInput}
-        ></textarea>
-
-        <button
-        type="submit"
-        title={prop_CONTACT.formCellTitle}
-        >
-            {prop_CONTACT.formCellTitle}
-
-            <Icon
-            prop_COLOR={COLORS.light}
+        <div>
+            <form
+            method="post"
+            action="/presentation/contact"
+            bind:this={form}
+            on:submit|preventDefault={form_eSubmit}
             >
-                <Send />
-            </Icon>
-        </button>
-    </form>
+                <label
+                for="contact-email"
+                class:valid={email_VALID}
+                >
+                    Email
+                </label>
+
+                <input
+                id="contact-email"
+                type="email"
+                name="email"
+                aria-label="email"
+                placeholder="...@"
+                autocomplete="on"
+                required
+                bind:value={email_VALUE}
+                on:input={email_eInput}
+                />
+
+                <label
+                for="contact-message"
+                class:valid={message_VALID}
+                >
+                    Message
+                </label>
+
+                <textarea
+                id="contact-message"
+                name="message"
+                aria-label="message"
+                placeholder={prop_CONTACT.messagePlaceholder}
+                minlength={FORM_MSG_MIN}
+                maxlength={FORM_MSG_MAX}
+                required
+                bind:value={message_VALUE}
+                on:input={message_eInput}
+                ></textarea>
+
+                <button
+                type="submit"
+                title={prop_CONTACT.formCellTitle}
+                >
+                    {prop_CONTACT.formCellTitle}
+
+                    <Icon
+                    prop_COLOR={COLORS.light}
+                    >
+                        <Send />
+                    </Icon>
+                </button>
+            </form>
+        </div>
+    </div>
 </div>
 
 
@@ -361,25 +367,22 @@ lang="scss"
 {
     @include utils.fixed($z: 2); /* label & title */
 
-    @extend %f-center;
-
     pointer-events: auto;
     touch-action  : auto;
 
     background-color: $dark;
 
-    .background
-    {
-        @include utils.placement(absolute, 0, 0, 0, 0, $z: -1);
-    
-        @extend %any-size;
-    }
+    .background, .content, .content>div { @extend %any-size; }
+
+    .background, .content { @include utils.placement(absolute, 0, 0, 0, 0); }
+
+    .background { z-index: -1; }
 
     .head
     {
         #{--cell-size}: $cell-size;
 
-        @include utils.placement(absolute, $top: $head-top, $left: app.$gap-inline);
+        @include utils.placement(absolute, $top: $head-top, $left: app.$gap-inline, $z: 1);
 
         display    : flex;
         align-items: flex-end;
@@ -402,6 +405,26 @@ lang="scss"
         }
     }
 
+    .content
+    {
+        @extend %scroll-bar;
+    
+        overflow: hidden auto;
+
+        &>div
+        {
+            @extend %f-center;
+
+            position: relative;
+
+            min-height: $ms3;
+
+            padding-block: $head-top * 2;
+
+            box-sizing: border-box;
+        }
+    }
+
     form
     {
         $border: solid $intermediate 1px;
@@ -412,7 +435,7 @@ lang="scss"
         $label-height: 4rem;
     
         $message-width : min(calc(100vw - $label-width * 2), 880px);
-        $message-height: 38vh;
+        $message-height: max(38vh, calc($ms3 - $label-height * 2 - $head-top * 4));
 
         &::before, &::after { pointer-events: none; }
 
@@ -425,8 +448,6 @@ lang="scss"
 
         width : calc($label-width  * 2 + $message-width);
         height: calc($label-height * 2 + $message-height);
-
-        margin-top: $head-top;
 
         #contact-email, #contact-message, button
         {
@@ -514,12 +535,7 @@ lang="scss"
             :global .icon { flex-shrink: 0; }
         }
 
-        &::after
-        {
-            height: $message-height;
-
-            margin-top: $head-top * .5;
-        }
+        &::after { height: $message-height; }
     }
 }
 
