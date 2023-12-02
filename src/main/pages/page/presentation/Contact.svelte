@@ -431,7 +431,7 @@ lang="scss"
 
         $font-size: map.get(font.$font-sizes, s2);
     
-        $label-width : max(7vw, 74px);
+        $label-width : max(7vw, 78px);
         $label-height: 4rem;
     
         $message-width : min(calc(100vw - $label-width * 2), 880px);
