@@ -29,15 +29,29 @@ context="module"
 <div
 class="quote"
 class:focus={prop_INTRO}
+itemscope
+itemtype="https://schema.org/Quotation"
 >
     {#if prop_QUOTE.author}
         <figure>
-            <blockquote>{prop_QUOTE.value}</blockquote>
+            <blockquote
+            itemprop="text"
+            >
+                {prop_QUOTE.value}
+            </blockquote>
 
-            <figcaption>{prop_QUOTE.author}</figcaption>
+            <figcaption
+            itemprop="author"
+            >
+                {prop_QUOTE.author}
+            </figcaption>
         </figure>
     {:else}
-        <q>{prop_QUOTE.value}</q>
+        <q
+        itemprop="citation"
+        >
+            {prop_QUOTE.value}
+        </q>
     {/if}
 </div>
 

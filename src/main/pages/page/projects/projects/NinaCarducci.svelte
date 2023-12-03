@@ -402,7 +402,7 @@ id="ninacarducci"
                 >
                     <blockquote>
                         <h2
-                        itemprop="citation"
+                        itemprop="text"
                         >
                             {prop_DATA.quote1.value}
                         </h2>
@@ -474,7 +474,7 @@ id="ninacarducci"
                 >
                     <blockquote>
                         <h2
-                        itemprop="citation"
+                        itemprop="text"
                         >
                             {prop_DATA.quote2.value}
                         </h2>

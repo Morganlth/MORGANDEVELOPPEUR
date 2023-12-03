@@ -29,6 +29,8 @@ context="module"
 <nav
 class="router"
 class:hide={prop_HIDE}
+itemscope
+itemtype="https://schema.org/SiteNavigationElement"
 on:mouseleave={router_eMouseLeave}
 >
     <ul>
@@ -36,6 +38,7 @@ on:mouseleave={router_eMouseLeave}
             {#if route.actif}
                 <li
                 style:--route-t-delay="{i * 100}ms"
+                itemprop="name"
                 >
                     <span
                     class="indicator"
