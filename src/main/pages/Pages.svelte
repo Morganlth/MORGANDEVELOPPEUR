@@ -29,8 +29,6 @@ context="module"
 <div
 class="pages"
 class:hide={$app_$HIDE}
-itemscope
-itemtype="https://schema.org/Person"
 >
     {#each prop_DATA as page (page.id)}
         <Page
