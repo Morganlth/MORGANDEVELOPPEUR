@@ -131,7 +131,7 @@ style:z-index={prop_Z}
     prop_Z   = 0
     ,
     prop_COMPONENT = {},
-    prop_LABEL     = '',
+    prop_LABEL     = {},
     prop_TITLE     = {},
     prop_NAV       = {},
     prop_QUOTE     = void {},

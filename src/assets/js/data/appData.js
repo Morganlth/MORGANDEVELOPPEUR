@@ -64,7 +64,11 @@
             tag      : { fr: 'accueil', en: 'home' },
             overflow : false,
             height   : 0,
-            label    : 'FR'
+            label    :
+            {
+                value     : 'FR',
+                attributes: { itemprop: 'nationality' }
+            }
         ,
             route:
             {
@@ -73,7 +77,9 @@
             }
         ,
             title:
-            {   
+            {
+                attributes: { itemprop: 'jobTitle' }
+                ,
                 fragments:
                 [
                     { frags: { fr: 'DEVELOPPEUR', en: 'DEVELOPER' } },
@@ -81,7 +87,8 @@
                         frags: { fr: 'WEB', en: 'WEB' },
                         tags : ['FRONT', 'BACK', '& DESIGNER']
                     }
-                ],
+                ]
+                ,
                 element:
                 {
                     component: Icon
@@ -114,7 +121,7 @@
             overflow : true,
             height   : 6,
             gap      : -1,
-            label    : 'PRO'
+            label    : { value: 'PRO' }
         ,
             route:
             {
@@ -165,7 +172,7 @@
             tag      : { fr: 'competences', en: 'skills' },
             overflow : true,
             height   : 6,
-            label    : 'SYSTEM'
+            label    : { value: 'SYSTEM' }
         ,
             route:
             {
@@ -226,7 +233,7 @@
             tag      : { fr: 'projets', en: 'projects' },
             overflow : false,
             height   : 3,
-            label    : 'CARDS'
+            label    : { value: 'CARDS' }
         ,
             route:
             {

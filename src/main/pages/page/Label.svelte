@@ -39,8 +39,9 @@ style:opacity={label_OPACITY}
     <p
     class="content"
     style:clip-path="polygon(0 0, {content_CLIP}% 0, {content_CLIP}% 100%, 0% 100%)"
+    {...(prop_LABEL.attributes)}
     >
-        {prop_LABEL}
+        {prop_LABEL.value}
     </p>
 
     <span
@@ -82,7 +83,7 @@ style:opacity={label_OPACITY}
 
     // --PROPS
     export let
-    prop_LABEL = ''
+    prop_LABEL = {}
     ,
     prop_FOCUS = false
 

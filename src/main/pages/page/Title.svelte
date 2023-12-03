@@ -31,6 +31,7 @@ this={prop_TITLE.html}
 class="title"
 class:focus={prop_CHARGED && prop_INTRO}
 data-pe-content={prop_TITLE.fragments[0]?.frags?.substring(0, 1)}
+{...(prop_TITLE.attributes ?? {})}
 style:--fragments-t-x="{fragments_TRANSLATE_X}px"
 bind:this={title}
 >
