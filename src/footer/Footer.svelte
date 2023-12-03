@@ -36,7 +36,9 @@ class="footer"
                     <a
                     href="./"
                     alt="LE THUAUT Morgan - {a}"
+                    aria-label={a}
                     data-content={a}
+                    itemprop="sameAs"
                     >
                         {a}
                     </a>

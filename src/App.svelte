@@ -45,6 +45,8 @@ id="app"
 class="lang-{prop_LANG}"
 class:freeze={$app_$FREEZE}
 style:visibility={app_FONTS_CHARGED ? 'visible' : 'hidden'}
+itemscope
+itemtype="https://schema.org/Person"
 bind:this={app}
 on:scroll={EVENT.event_scroll.bind(EVENT)}
 on:mousemove={EVENT.event_mouseMove.bind(EVENT)}
