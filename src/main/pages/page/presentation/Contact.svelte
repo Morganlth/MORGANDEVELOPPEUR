@@ -28,6 +28,8 @@ context="module"
 
 <div
 class="contact"
+transition:transition_fade={{ duration: 200 }}
+on:introend={contact_eIntro}
 >
     <div
     class="background"
@@ -67,6 +69,7 @@ class="contact"
     >
         <div>
             <form
+            style:--pe-border-color={form_PE_BORDER_COLOR}
             method="post"
             action="/presentation/contact"
             bind:this={form}
@@ -142,6 +145,7 @@ class="contact"
     // --LIB
     import COLORS                                                       from '$lib/colors'
     import { FORM_MSG_MIN, FORM_MSG_MAX, form_testEmail, form_testMsg } from '$lib/form'
+    import { transition_fade }                                          from '$lib/transition'
 
     // --CONTEXTS
     import { ROUTER } from '../../../../App.svelte'
@@ -204,6 +208,8 @@ class="contact"
     form
     ,
     form_SUBMIT = false
+    ,
+    form_PE_BORDER_COLOR = COLORS.light
 
     let
     email_VALID = false
@@ -291,7 +297,9 @@ class="contact"
 
 //=======@EVENTS|
 
-    // --* 
+    // --*
+    function contact_eIntro() { form_PE_BORDER_COLOR = COLORS.intermediate }
+
     function form_eSubmit()
     {
         if (form_SUBMIT)    return
@@ -417,6 +425,8 @@ lang="scss"
 
             position: relative;
 
+            overflow: hidden;
+
             min-height: $ms3;
 
             padding-block: $head-top * 2;
@@ -428,8 +438,6 @@ lang="scss"
     form
     {
         $border: solid $intermediate 1px;
-
-        $font-size: map.get(font.$font-sizes, s2);
     
         $label-width : max(7vw, 80px);
         $label-height: 4rem;
@@ -442,7 +450,7 @@ lang="scss"
         &::before { width : $message-width; }
 
         @include display.grid($width: ($label-width $message-width $label-width), $height: ($label-height $message-height $label-height));
-        @include font.text($color: $light, $font-size: $font-size);
+        @include font.text($color: $light, $font-size: map.get(font.$font-sizes, s2));
 
         @extend %a-grid;
 
@@ -520,7 +528,7 @@ lang="scss"
 
         button
         {
-            #{--icon-size}: $font-size;
+            #{--icon-size}: 1.4rem;
 
             @extend %f-center;
         

@@ -68,39 +68,45 @@
     {
         &::before, &::after
         {
-            opacity: 0;
-
+            border-color: var(--pe-border-color, $intermediate) !important;
+    
+            transition: border-color .4s;
+    
             animation: a-pe .6s ease-out forwards;
         }
 
         &::before
         {
-            --pe-translate: translate(-50%, -100%);
+            --pe-i-translate: translateX(-50%);
+            --pe-translate  : translate(-50%, -100%);
         
             @include utils.placement(absolute, $top: 100%, $left: 50%, $pe: true);
 
-            transform: translateX(-50%);
-
             height: 100%;
 
-            border-inline: solid $intermediate 1px;
+            border-inline: solid 1px;
         }
 
         &::after
         {
-            --pe-translate: translate(-100%, -50%);
+            --pe-i-translate: translateY(-50%);
+            --pe-translate  : translate(-100%, -50%);
 
             @include utils.placement(absolute, $top: 50%, $left: 100%, $pe: true);
 
-            transform: translateY(-50%);
-
             width: 100%;
 
-            border-block: solid $intermediate 1px;
+            border-block: solid 1px;
         }
 
         @keyframes a-pe
         {
+            from
+            {
+                transform: var(--pe-i-translate);
+
+                opacity: 0;
+            }
             to
             {
                 transform: var(--pe-translate);

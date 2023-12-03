@@ -31,6 +31,7 @@ context="module"
     <div
     class="tictactoe"
     style:--pe-border-color={tictactoe_BORDER_COLOR}
+    out:transition_fade={{ duration: 200 }}
     on:mouseenter={SPRING.spring_e$Hide.bind(SPRING)}
     on:mouseleave={SPRING.spring_e$Show.bind(SPRING)}
     >
@@ -69,6 +70,7 @@ context="module"
 
     // --LIB
     import COLORS, { color_rgba } from '$lib/colors'
+    import { transition_fade }    from '$lib/transition'
 
     // --CONTEXTS
     import { SPRING } from '../../../../App.svelte'
@@ -235,7 +237,7 @@ context="module"
         {
             icon_OPACITY = 0
 
-            setTimeout(tictactoe_resetGame, 300)
+            setTimeout(tictactoe_resetGame, 200)
         }, 200)
     }
 
@@ -355,13 +357,6 @@ lang="scss"
 {
     --icon-size: 50%;
 
-    &::before, &::after
-    {
-        border-color: var(--pe-border-color, rgba($light, .4)) !important;
-    
-        transition: border-color .4s;
-    }
-
     &::before { width: $cell-size; }
 
     @include utils.placement(absolute, $top: 46%, $left: 46%);
@@ -369,7 +364,7 @@ lang="scss"
 
     @extend %a-grid;
 
-    width:  $size;
+    width : $size;
     height: $size;
 
     &::after { height: $cell-size; }
