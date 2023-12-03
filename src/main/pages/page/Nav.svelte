@@ -34,6 +34,8 @@ style:--nav-t-x="{nav_TRANSLATE_X}%"
 style:--nav-t-y="{prop_TRANSLATE_Y}px"
 style:--nav-rotate="{nav_ROTATE}deg"
 style:--pe-color={nav_PE_COLOR}
+itemscope
+itemtype="https://schema.org/SiteNavigationElement"
 >
     <ul
     class="items"
@@ -44,6 +46,7 @@ style:--pe-color={nav_PE_COLOR}
             <li
             class="item"
             style:--item-color={item.color ?? COLORS.light}
+            itemprop="name"
             >
                 <Cell
                 prop_TEXT_WRAPPER={true}

@@ -36,7 +36,7 @@
                     const TOPIC = CONTENT.topic.replaceAll(/\s/g, '-')
 
                     if (TOPIC.length > 2)     FEATURE.tags.push(TOPIC.toLowerCase())
-                    if (CONTENT.html === 'a') CONTENT.props['data-content'] = CONTENT.value
+                    if (CONTENT.html === 'a') CONTENT.attributes['data-content'] = CONTENT.value
                 }
 
             return FEATURES
@@ -50,66 +50,139 @@
     const FEATURES_DATA =
     [
         {
-            id      : 0,
-            tags    : { fr: ['identite'], en: ['identity'] },
+            id  : 0,
+            tags: { fr: ['identite'], en: ['identity'] }
+            ,
             contents:
             [
                 {
-                    topic: { fr: 'Nom Prenom', en: 'Full Name' },
-                    value: 'LE THUAUT Morgan',
-                    html : 'strong'
+                    topic     : { fr: 'Nom Prenom', en: 'Full Name' },
+                    value     : 'LE THUAUT Morgan',
+                    html      : 'strong',
+                    attributes: { itemprop: 'name' }
                 },
                 {
-                    topic: 'Age',
-                    value: { fr: '21 ans', en: '21 years old' },
-                    html : 'p'
+                    topic     : 'Age',
+                    value     : { fr: '21 ans . 2002-01-29', en: '21 years old . 2002-01-29' },
+                    html      : 'p',
+                    attributes: { itemprop: 'birthDate' }
                 }
             ]
         },
         {
-            id      : 1,
-            tags    : { fr: ['localite'], en: ['locality'] },
+            id  : 1,
+            tags: { fr: ['localite'], en: ['locality'] }
+            ,
+            attributes:
+            {
+                itemprop : 'address',
+                itemscope: '',
+                itemtype : 'https://schema.org/PostalAddress'
+            }
+            ,
             contents:
             [
                 {
-                    topic: 'Region',
-                    value: 'Bretagne',
-                    html : 'p'
+                    topic     : 'Region',
+                    value     : 'Bretagne',
+                    html      : 'p',
+                    attributes: { itemprop: 'addressRegion' }
                 },
                 {
-                    topic: { fr: 'Pays', en: 'Country' },
-                    value: 'FRANCE',
-                    html : 'strong'
+                    topic     : { fr: 'Pays', en: 'Country' },
+                    value     : 'FRANCE',
+                    html      : 'strong',
+                    attributes: { itemprop: 'addressCountry' }
                 }
             ]
         },
         {
-            id      : 2,
-            tags    : { fr: ['formations'], en: ['studies'] },
+            id  : 2,
+            tags: { fr: ['formations'], en: ['studies'] }
+            ,
             contents:
             [
                 {
-                    topic: { fr: 'Lycee', en: 'High School' },
-                    value: { fr: 'Bac S SVT spécialité MATHS, lycée Jeanne d\'Arc Pontivy', en: 'Bac S SVT MATHS speciality, high school Jeanne d\'Arc Pontivy' },
+                    topic: { fr: 'Lycee', en: 'High School' }
+                    ,
+                    value:
+                    [
+                        {
+                            value:
+                            {
+                                value     : { fr: 'Bac S SVT spécialité MATHS', en: 'Bac S SVT MATHS speciality' },
+                                attributes: { itemprop: 'name' }
+                            }
+                            ,
+                            attributes:
+                            {
+                                itemprop : 'educationalCredentialAwarded',
+                                itemscope: '',
+                                itemtype : 'https://schema.org/EducationalOccupationalCredential'
+                            }
+                        },
+                        {
+                            value     : { fr: 'lycée Jeanne d\'Arc Pontivy', en: 'high school Jeanne d\'Arc Pontivy' },
+                            attributes: { itemprop: 'name' }
+                        }
+                    ]
+                    ,
                     html : 'p'
+                    ,
+                    attributes:
+                    {
+                        itemprop : 'alumniOf',
+                        itemscope: '',
+                        itemtype : 'https://schema.org/HighSchool'
+                    }
                 },
                 {
-                    topic: { fr: 'Ecole Sup.', en: 'higher Educ.' },
-                    value: { fr: 'Développeur Web, OpenClassrooms', en: 'Web Developer, OpenClassrooms' },
+                    topic: { fr: 'Ecole Sup.', en: 'higher Educ.' }
+                    ,
+                    value:
+                    [
+                        {
+                            value:
+                            {
+                                value     : { fr: 'Développeur Web', en: 'Web Developer' },
+                                attributes: { itemprop: 'name' }
+                            }
+                            ,
+                            attributes:
+                            {
+                                itemprop : 'educationalCredentialAwarded',
+                                itemscope: '',
+                                itemtype : 'https://schema.org/EducationalOccupationalCredential'
+                            }
+                        },
+                        {
+                            value     : 'OpenClassrooms',
+                            attributes: { itemprop: 'name' }
+                        }
+                    ]
+                    ,
                     html : 'p'
+                    ,
+                    attributes:
+                    {
+                        itemprop : 'alumniOf',
+                        itemscope: '',
+                        itemtype : 'https://schema.org/CollegeOrUniversity'
+                    }
                 }
             ]
         },
         {
-            id      : 3,
-            tags    : { fr: [], en: [] },
+            id  : 3,
+            tags: { fr: [], en: [] }
+            ,
             contents:
             [
                 {
-                    topic: { fr: 'Profesion', en: 'Job' },
-                    value: { fr: 'Développeur Web', en: 'Web Developer' },
-                    html : 'strong',
-                    props: {}
+                    topic     : { fr: 'Profesion', en: 'Job' },
+                    value     : { fr: 'Développeur Web', en: 'Web Developer' },
+                    html      : 'strong',
+                    attributes: { itemprop: 'jobTitle' }
                 },
                 {
                     topic: { fr: 'Objectifs', en: 'Objectives' },
@@ -119,36 +192,50 @@
             ]
         },
         {
-            id      : 4,
-            tags    : ['contact'],
+            id  : 4,
+            tags: ['contact']
+            ,
             contents:
             [
                 {
-                    topic  : 'Email',
-                    value  : 'morganlethuaut@gmail.com',
-                    html   : 'p',
+                    topic: 'Email',
+                    value: 'morganlethuaut@gmail.com',
+                    html : 'a'
+                    ,
+                    attributes:
+                    {
+                        href        : 'mailto:morganlethuaut@gmail.com',
+                        alt         : { fr: 'adresse email de LE THUAUT Morgan', en: 'LE THUAUT Morgan\'s email address' },
+                        'aria-label': 'email',
+                        itemprop    : 'email'
+                    }
+                    ,
                     contact: { fr: 'Me contacter', en: 'Contact me' }
                 },
                 {
                     topic: 'LinkedIn',
                     value: 'LinkedIn',
-                    html : 'a',
-                    props:
+                    html : 'a'
+                    ,
+                    attributes:
                     {
-                        href  : 'https://www.linkedin.com/in/le-thuaut-morgan',
-                        alt   : { fr: 'Profil LinkedIn de LE THUAUT Morgan', en: 'LE THUAUT Morgan\'s LinkedIn profile' },
-                        target: '_blank',
+                        href    : 'https://www.linkedin.com/in/le-thuaut-morgan',
+                        alt     : { fr: 'Profil LinkedIn de LE THUAUT Morgan', en: 'LE THUAUT Morgan\'s LinkedIn profile' },
+                        target  : '_blank',
+                        itemprop: 'sameAs'
                     }
                 },
                 {
                     topic: 'Github',
                     value: 'Github',
-                    html : 'a',
-                    props:
+                    html : 'a'
+                    ,
+                    attributes:
                     {
-                        href  : 'https://github.com/Morganlth',
-                        alt   : { fr: 'Profil Github de LE THUAUT Morgan', en: 'LE THUAUT Morgan\'s Github profile' },
-                        target: '_blank',
+                        href    : 'https://github.com/Morganlth',
+                        alt     : { fr: 'Profil Github de LE THUAUT Morgan', en: 'LE THUAUT Morgan\'s Github profile' },
+                        target  : '_blank',
+                        itemprop: 'sameAs'
                     }
                 }
             ]

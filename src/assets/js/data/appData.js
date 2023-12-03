@@ -158,10 +158,10 @@
             props:
             {
                 prop_FOCUS: false,
-                prop_TOP: 0,
+                prop_TOP  : 0,
                 prop_RATIO: 0,
                 prop_START: void 0,
-                prop_DIF: void 0
+                prop_DIF  : void 0
             }
         }
 /////////////////////////////////////////////SKILLS////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -219,10 +219,10 @@
             {
                 prop_FOCUS: false,
                 prop_INTRO: false,
-                prop_TOP: 0,
+                prop_TOP  : 0,
                 prop_RATIO: 0,
                 prop_START: void 0,
-                prop_DIF: void 0
+                prop_DIF  : void 0
             }
         }
 /////////////////////////////////////////////PROJECTS////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -274,7 +274,7 @@
             {
                 prop_FOCUS: false,
                 prop_INTRO: false,
-                prop_TOP: 0,
+                prop_TOP  : 0,
                 prop_START: void 0
             }
         }

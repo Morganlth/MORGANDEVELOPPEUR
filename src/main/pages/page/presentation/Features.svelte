@@ -32,11 +32,14 @@ class:focus={prop_FOCUS}
 style:transform="translateY({features_TRANSLATE_Y}%)"
 >
     {#each prop_FEATURES as group}
+    {@const {show, attributes, contents} = group}
         <div
         class="container"
-        class:show={group.show}
+        class:show
+        {...(attributes ?? {})}
         >
-            {#each group.contents as feature, j}
+            {#each contents as feature, j}
+            {@const {topic, value, html, attributes, contact} = feature}
                 <div
                 style:--feature-direction={j % 2 ? -1 : 1}
                 style:--feature-delay="{.2 * j}s"
@@ -54,34 +57,54 @@ style:transform="translateY({features_TRANSLATE_Y}%)"
                             <div
                             class="text-background"
                             >
-                                {feature.topic.toUpperCase()}
+                                {topic.toUpperCase()}
                             </div>
                     
                             <h3
                             class="topic"
                             >
-                                {feature.topic}
+                                {topic}
                             </h3>
 
                             <svelte:element
-                            this={feature.html ?? 'p'}
+                            this={html ?? 'p'}
                             class="feature"
-                            {...feature.props}
-                            tabindex={feature.html === 'a' && prop_FOCUS ? 0 : -1}
+                            tabindex={html === 'a' && prop_FOCUS ? 0 : -1}
+                            {...(attributes ?? {})}
                             >
-                                {feature.value}
+                                {#if value instanceof Array}
+                                    {#each value as v}
+                                    {@const {value, attributes} = v}
+                                        <span
+                                        {...(attributes ?? {})}
+                                        >
+                                            {#if value instanceof Object}
+                                            {@const {value, attributes} = value}
+                                                <span
+                                                {...(attributes ?? {})}
+                                                >
+                                                    {value}
+                                                </span>
+                                            {:else}
+                                                {value}
+                                            {/if}
+                                        </span>
+                                    {/each}
+                                {:else}
+                                    {value}
+                                {/if}
                             </svelte:element>
                         </section>
                     </Line>
 
-                    {#if feature.contact}
+                    {#if contact}
                         <div
                         class="contact-me"
                         >
                             <Cell
                             prop_TEXT_WRAPPER={true}
                             prop_CENTER={true}
-                            prop_TITLE={feature.contact}
+                            prop_TITLE={contact}
                             {prop_FOCUS}
                             on:click={cell_eClick}
                             >
@@ -93,7 +116,7 @@ style:transform="translateY({features_TRANSLATE_Y}%)"
                                     <Arrow />
                                 </Icon>
     
-                                {feature.contact}
+                                {contact}
                             </Cell>
                         </div>
                     {/if}
