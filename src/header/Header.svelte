@@ -46,11 +46,7 @@ class="header"
             
         <span>DEV.</span>
 
-        <p
-        itemprop="name"
-        >
-            LE THUAUT MORGAN
-        </p>
+        <p>LE THUAUT MORGAN</p>
     </strong>
 
     <span>
