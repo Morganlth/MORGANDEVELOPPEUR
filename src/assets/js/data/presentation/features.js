@@ -116,7 +116,7 @@
                             ,
                             attributes:
                             {
-                                itemprop : 'educationalCredentialAwarded',
+                                itemprop : 'hasCredential',
                                 itemscope: '',
                                 itemtype : 'https://schema.org/EducationalOccupationalCredential'
                             }
@@ -150,7 +150,7 @@
                             ,
                             attributes:
                             {
-                                itemprop : 'educationalCredentialAwarded',
+                                itemprop : 'hasCredential',
                                 itemscope: '',
                                 itemtype : 'https://schema.org/EducationalOccupationalCredential'
                             }
