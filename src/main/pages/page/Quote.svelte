@@ -48,7 +48,7 @@ itemtype="https://schema.org/Quotation"
         </figure>
     {:else}
         <q
-        itemprop="citation"
+        itemprop="text"
         >
             {prop_QUOTE.value}
         </q>
