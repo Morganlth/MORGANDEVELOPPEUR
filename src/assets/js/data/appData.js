@@ -78,7 +78,7 @@
         ,
             title:
             {
-                attributes: { itemprop: 'jobTitle' }
+                attributes: { itemprop: 'description' }
                 ,
                 fragments:
                 [
