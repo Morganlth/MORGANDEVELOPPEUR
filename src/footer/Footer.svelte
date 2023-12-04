@@ -159,7 +159,7 @@ class="footer"
     // --SVELTE
 
     // --SET
-    function select_setCookie(value) { document.cookie = `lang=${value}; expires=${select_getCookieExpiration()}; samesite=strict` }
+    function select_setCookie(value) { document.cookie = `lang=${value}; path=/; expires=${select_getCookieExpiration()}; samesite=strict;` }
 
     // --GET
     function select_getCookieExpiration()
