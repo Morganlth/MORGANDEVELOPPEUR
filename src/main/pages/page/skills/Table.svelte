@@ -353,12 +353,7 @@ lang="scss"
 
         padding-bottom: 2rem;
 
-        h3
-        {
-            text-decoration: underline;
-    
-            animation: .8s ease-out forwards;
-        }
+        h3 { animation: .8s ease-out forwards; }
     }
 
     .contents
