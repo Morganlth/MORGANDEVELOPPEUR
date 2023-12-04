@@ -59,7 +59,7 @@
             skills:
             [
                 {
-                    title: 'HTML5 & CSS3'
+                    title: 'HTML5 - CSS3'
                     ,
                     lines:
                     [
@@ -173,7 +173,7 @@
             skills:
             [
                 {
-                    title: 'ES5 & ES6'
+                    title: 'ES5 - ES6'
                     ,
                     lines:
                     [
@@ -277,7 +277,7 @@
                     ]
                 },
                 {
-                    title: 'REACT & REACT ROUTER'
+                    title: 'REACT - REACT ROUTER'
                     ,
                     lines:
                     [
@@ -460,7 +460,7 @@
             skills:
             [
                 {
-                    title: 'GESTION & OUTILS'
+                    title: 'GESTION - OUTILS'
                     ,
                     lines:
                     [
