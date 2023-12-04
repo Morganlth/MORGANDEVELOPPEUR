@@ -70,7 +70,7 @@ class="header"
     import COLORS from '$lib/colors'
 
     // --CONTEXTS
-    import { EVENT } from '../App.svelte'
+    import { APP, EVENT } from '../App.svelte'
 
 //=======@COMPONENTS|
 
@@ -100,7 +100,7 @@ class="header"
     // --THIS
 
     // --INSIDE
-    const LINK_LABEL = 'Page d\'accueil du site LE THUAUT Morgan Développeur Web'
+    const LINK_LABEL = { fr: 'Page d\'accueil du site LE THUAUT Morgan Développeur Web', en: 'Home page LE THUAUT Morgan Web Developer' }[APP.app_LANG]
 
 
 // #\-VARIABLES-\
