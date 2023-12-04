@@ -63,21 +63,29 @@ on:outrostart={table_eOut}
         <h3>{prop_TITLE}</h3>
     </div>
 
-    <div
+    <ul
     class="lines"
     >
         {#each prop_LINES as line}
-            <div
+            <li
             class="line"
             >
                 {#if line instanceof Object}
-                    <p>{line.skill}</p>
+                    <p
+                    itemprop="knows"
+                    >
+                        {line.skill}
+                    </p>
                 {:else}
-                    <h4>{line}</h4>
+                    <h4
+                    itemprop="knowsAbout"
+                    >
+                        {line}
+                    </h4>
                 {/if}
-            </div>
+            </li>
         {/each}
-    </div>
+    </ul>
 </section>
 
 
