@@ -239,7 +239,7 @@ class Event
 
         function event_scrollToCallback(scrollTop)
         {
-                 if (+new Date() > START + 800) this.event_remove(EVENT)
+                 if (+new Date() > START + 1200) this.event_remove(EVENT)
             else if (scrollTop === top)
             {
                 this.event_remove(EVENT)
