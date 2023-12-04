@@ -311,6 +311,10 @@ lang="scss"
             &::before { animation-name: a-0 !important; }
 
             &>* { animation-name: a-1 !important; }
+
+            filter: blur(100px);
+
+            transition: filter .8s;
         }
     }
 
@@ -346,7 +350,7 @@ lang="scss"
         {
             text-decoration: underline;
     
-            animation: .6s ease-out forwards;
+            animation: .8s ease-out forwards;
         }
     }
 
@@ -372,7 +376,7 @@ lang="scss"
 
         .line
         {
-            &::before, &>* { animation: .6s ease-out forwards; }
+            &::before, &>* { animation: .8s ease-out forwards; }
 
             &::before
             {
