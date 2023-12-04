@@ -30,7 +30,8 @@ context="module"
 class="table"
 class:build={table_CHARGED}
 class:destroy={table_DESTROY}
-transition:transition_fade={{ duration: 600 }}
+transition:transition_fade={{ duration: 800 }}
+on:introstart={table_eIn}
 on:outrostart={table_eOut}
 >
     <div
@@ -93,30 +94,6 @@ on:outrostart={table_eOut}
             </section>
         {/each}
     </div>
-
-    <!-- <ul
-    class="lines"
-    >
-        {#each prop_LINES as line}
-            <li
-            class="line"
-            >
-                {#if line instanceof Object}
-                    <p
-                    itemprop="knows"
-                    >
-                        {line.skill}
-                    </p>
-                {:else}
-                    <h4
-                    itemprop="knowsAbout"
-                    >
-                        {line}
-                    </h4>
-                {/if}
-            </li>
-        {/each}
-    </ul> -->
 </section>
 
 
@@ -232,6 +209,8 @@ on:outrostart={table_eOut}
     {
         table_destroyTimeout()
 
+        head_HEIGHT = 0
+
         particles?.moveTo()
     }
 
@@ -246,6 +225,8 @@ on:outrostart={table_eOut}
 //=======@EVENTS|
 
     // --*
+    function table_eIn()  { table_DESTROY = false }
+
     function table_eOut() { table_DESTROY = true }
 
     function cell_eClick() { SVELTE_DISPATCH('click') }
@@ -419,7 +400,7 @@ lang="scss"
 
             justify-content: flex-end;
 
-            min-height: max(8vw, 8vh, 140px);
+            min-height: max(12vw, 12vh, 140px);
 
             padding-inline: app.$gap-inline;
 

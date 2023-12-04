@@ -259,13 +259,13 @@ class Event
 
         if (top !== APP.app_SCROLLTOP)
         {
-            await tick() // app freeze overflow clip + set app manager
+      await tick() // app freeze overflow clip + set app manager
     
             if (APP_$FREEZE.value)
             {
                 APP.app_$FREEZE = { value: false, target: APP_$FREEZE.target }
 
-                await tick() // app freeze overflow clip
+          await tick() // app freeze overflow clip
             }
 
             if (instant && hide) APP.app_hide()

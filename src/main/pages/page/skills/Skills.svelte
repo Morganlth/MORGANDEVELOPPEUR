@@ -31,18 +31,19 @@ class="skills"
 data-page-id={prop_ID}
 >
     <System
-    prop_START={prop_FOCUS && !prop_INTRO}
     prop_SYSTEM={prop_CHILDREN.system}
-    {prop_ID}
+    prop_START={prop_FOCUS && !prop_INTRO}
+    prop_TARGET={skills_TARGET}
+    prop_updateTarget={skills_updateTarget}
     {prop_FOCUS}
     {prop_RATIO}
-    bind:system_TARGET
     />
 
-    {#if system_TARGET}
+    {#if skills_TARGET}
+    {@const {name, skills} = skills_TARGET}
         <Table
-        prop_TITLE={system_TARGET.name}
-        prop_LINES={system_TARGET.skills}
+        prop_TITLE={name}
+        prop_LINES={skills}
         bind:head_HEIGHT={PAGE_NAV.offset}
         on:click={table_eClick}
         />
@@ -64,7 +65,7 @@ data-page-id={prop_ID}
     // --LIB
 
     // --CONTEXTS
-    import { APP, EVENT } from '../../../../App.svelte'
+    import { APP, ROUTER, EVENT } from '../../../../App.svelte'
 
 //=======@COMPONENTS|
 
@@ -106,6 +107,7 @@ data-page-id={prop_ID}
     // --SVELTE
 
     // --CONTEXTS
+    const APP_$FREEZE  = APP.app_$FREEZE
 
     // --OUTSIDE
 
@@ -118,14 +120,13 @@ data-page-id={prop_ID}
 // #\-VARIABLES-\
 
     // --CONTEXTS
-    let app_$FREEZE  = APP.app_$FREEZE
 
     // --OUTSIDE
 
     // --THIS
+    let skills_TARGET = null
 
     // --INSIDE
-    let system_TARGET = null
 
 
 // #\-REATIVES-\
@@ -135,7 +136,7 @@ data-page-id={prop_ID}
     // --OUTSIDE
 
     // --THIS
-    $: !$app_$FREEZE ? skills_reset() : void 0
+    $: !$APP_$FREEZE ? skills_reset() : void 0
 
 
 // #\-FUNCTIONS-\
@@ -150,7 +151,14 @@ data-page-id={prop_ID}
     {
         system_setEvents()
 
-        APP.app_WAITING_LOADING = system_setVars
+        APP.app_WAITING_LOADING = () =>
+        {
+            system_setVars()
+        
+            const TARGET = prop_CHILDREN.system.find(item => item.path === ROUTER.router_SUBPATH)
+
+            if (TARGET) skills_updateTarget(TARGET, true)
+        }
     
         page_CHARGED = true
     }
@@ -163,6 +171,24 @@ data-page-id={prop_ID}
     function system_getTarget(target) { return prop_CHILDREN.system.find(item => item.tags.includes(target)) }
 
     // --UPDATES
+    function app_updateFreeze(value) { APP.app_$FREEZE = { value, target: prop_ID } }
+
+    function router_updatePaths(subpath)
+    {
+        ROUTER.router_updateSubPath(prop_ID, subpath)
+        ROUTER.router_updatePath(prop_ID)
+    }
+
+    function skills_updateTarget(target, instant = false)
+    {
+        skills_goTo(target, instant, () =>
+        {
+            skills_TARGET = target
+    
+            app_updateFreeze(true)
+            router_updatePaths(target?.path)
+        })
+    }
 
     // --DESTROY
     function skills_destroy() { system_destroyEvents() }
@@ -178,16 +204,21 @@ data-page-id={prop_ID}
 //=======@EVENTS|
 
     // --*
-    export function nav_e$Click({id}) { skills_goTo(id) }
+    export function nav_e$Click({id})
+    {
+        const TARGET = prop_CHILDREN.system[id]
+
+        skills_TARGET ? skills_updateTarget(TARGET) : skills_goTo(TARGET)
+    }
 
     async function system_e$Resize()
     {
-        await tick() // wait prop_START and prop_DIF
+  await tick() // wait prop_START and prop_DIF
     
         system_setVars()
     }
 
-    function table_eClick() { APP.app_$FREEZE = { value: false, target: prop_ID } } // call skills_reset with reactive app_$FREEZE
+    function table_eClick() { app_updateFreeze(false) } // call skills_reset with reactive app_$FREEZE
 
 
 //=======@TRANSITIONS|
@@ -209,19 +240,19 @@ data-page-id={prop_ID}
         {
             case 'top'   : EVENT.event_scrollTo(prop_TOP, true)   ;break
             case 'start' : EVENT.event_scrollTo(prop_START, true) ;break
-            case 'system': skills_goTo(system_getTarget(str)?.id) ;break
+            case 'system': skills_goTo(system_getTarget(str))     ;break
             default      :                                        ;break
         }
     }
 
     function skills_reset()
     {
-        PAGE_NAV.offset = 0
+        if (skills_TARGET) router_updatePaths(null)
     
-        system_TARGET = null
+        skills_TARGET = null
     }
 
-    function skills_goTo(id = 0) { EVENT.event_scrollTo(prop_CHILDREN.system[id].top) }
+    function skills_goTo(target, instant = false, callback) { EVENT.event_scrollTo(target?.top ?? prop_START, instant, true, callback) }
 
 
 </script>

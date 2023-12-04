@@ -43,31 +43,33 @@ style:--system-r-y={system_ROTATE_Y}
 
         {#if !system_OPTIMIZE}
             {#each prop_SYSTEM as item}
+            {@const {focus, id, props: {prop_TITLE, prop_ROTATE, prop_OFFSET}} = item}
                 <GravityArea
                 let:hide
                 let:grabbing
                 prop_$RESIZE={resize}
                 prop_$ANIMATION={animation}
-                prop_FOCUSABLE={(item.focus ?? false) && !system_TARGET}
+                prop_FOCUSABLE={(focus ?? false) && !prop_TARGET}
                 prop_3D={true}
                 prop_RATIO={gravityarea_RATIO}
                 prop_GRABBING={false}
-                prop_TITLE={item.props.prop_TITLE}
+                prop_TITLE={prop_TITLE}
                 prop_ORBIT_RADIUS={gravityarea_ORBIT_RADIUS}
-                prop_ROTATE_Z={item.props.prop_ROTATE}
-                prop_OFFSET={item.props.prop_OFFSET}
+                prop_ROTATE_Z={prop_ROTATE}
+                prop_OFFSET={prop_OFFSET}
                 prop_FORCE={.16}
                 {prop_FOCUS}
-                bind:gravityarea_TRANSLATE_Z={GROUP_Z_POSITIONS[item.id]}
+                bind:gravityarea_TRANSLATE_Z={GROUP_Z_POSITIONS[id]}
                 on:click={gravityarea_eClick.bind(item)}
                 >
+                {@const {props: {prop_SRC, prop_ALT, prop_COLOR}} = item}
                     <Block
                     prop_HIDE={hide}
                     prop_GRABBING={grabbing}
-                    prop_FOCUS={item.focus ?? false}
-                    prop_SRC={item.props.prop_SRC}
-                    prop_ALT={item.props.prop_ALT}
-                    prop_COLOR={item.props.prop_COLOR}
+                    prop_FOCUS={focus ?? false}
+                    prop_SRC={prop_SRC}
+                    prop_ALT={prop_ALT}
+                    prop_COLOR={prop_COLOR}
                     />
                 </GravityArea>
             {/each}
@@ -75,14 +77,15 @@ style:--system-r-y={system_ROTATE_Y}
     </Group>
 
     {#each prop_SYSTEM as item}
+    {@const {focus, name} = item}
         <Cell
-        prop_FOCUS={(item.focus ?? false) && !system_TARGET}
-        prop_TITLE={item.name}
+        prop_FOCUS={(focus ?? false) && !prop_TARGET}
+        prop_TITLE={name}
         on:click={tag_eClick.bind(item)}
         >
             <Tag
-            prop_FOCUS={item.focus ?? false}
-            prop_CONTENT={item.name}
+            prop_FOCUS={focus ?? false}
+            prop_CONTENT={name}
             prop_DURATION={TAG_DURATION}
             prop_getTagStyle={tag_getStyle}
             prop_getFragmentsStyle={fragments_getStyle}
@@ -134,17 +137,18 @@ style:--system-r-y={system_ROTATE_Y}
 
     // --PROPS
     export let
-    prop_ID = void 0
+    prop_SYSTEM = []
     ,
     prop_FOCUS = false,
     prop_START = false
     ,
-    prop_SYSTEM = []
+    prop_RATIO  = 0
     ,
-    prop_RATIO = 0
+    prop_TARGET = null
+    ,
+    prop_updateTarget = () => {}
 
     // --BINDING
-    export let system_TARGET = null
 
 
 // #\-CONSTANTES-\
@@ -280,13 +284,6 @@ style:--system-r-y={system_ROTATE_Y}
     }
 
     // --UPDATES
-    function system_updateTarget(target)
-    {
-        system_TARGET = target
-
-        APP.app_$FREEZE = { value: true, target: prop_ID }
-    }
-
     function group_updateFocus()
     {
         const INDEX = prop_START ? group_getIndexFocus() : void 0
@@ -364,7 +361,7 @@ style:--system-r-y={system_ROTATE_Y}
 
     async function gravityarea_e$Resize() { gravityarea_setVars() }
 
-    function gravityarea_eClick() { if (this.focus) system_updateTarget(this) }
+    function gravityarea_eClick() { if (this.focus) prop_updateTarget(this) }
 
     function tag_eIn({detail: { tag, frags }})
     {
@@ -375,7 +372,7 @@ style:--system-r-y={system_ROTATE_Y}
 
     function tag_eOut({detail: { tag, frags }}) { tag_update(tag, frags, tag_getY(), 0) }
 
-    function tag_eClick() { system_updateTarget(this) }
+    function tag_eClick() { prop_updateTarget(this) }
 
 
 //=======@TRANSITIONS|

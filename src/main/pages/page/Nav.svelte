@@ -286,7 +286,7 @@ lang="scss"
 
     position: relative;
 
-    transition: transform .4s .2s ease-out;
+    transition: transform .4s ease-out;
 
     &.focus
     {
@@ -307,8 +307,8 @@ lang="scss"
         @extend %f-a-center;
 
         justify-content: flex-start;
-        flex-wrap: wrap;
-        gap: .8rem;
+        flex-wrap      : wrap;
+        gap            : .8rem;
     }
 }
 

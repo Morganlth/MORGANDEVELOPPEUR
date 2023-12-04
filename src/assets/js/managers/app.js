@@ -240,8 +240,10 @@ class App
         try { if (COMMAND.command_test('clear')) COMMANDS.clear() } catch {}
     }
 
-    #app_loaded()
+    async #app_loaded()
     {
+  await tick() // router => event_scrollTo => tick
+
         for (const CALLBACK of this.#app_WAITING_LOADING) CALLBACK()
 
         this.#app_WAITING_LOADING = null
@@ -263,6 +265,7 @@ class App
 // #\-IMPORTS-\
 
     // --SVELTE
+    import { tick }     from 'svelte'
     import { writable } from 'svelte/store'
 
     // --LIB
