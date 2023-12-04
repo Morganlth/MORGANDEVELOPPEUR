@@ -308,8 +308,6 @@ lang="scss"
 
     gap: 1rem;
 
-    background-color: $dark;
-
     &.build
     {
         .head { opacity: 1; }
@@ -345,6 +343,8 @@ lang="scss"
     
         @extend %any-size;
     }
+
+    .background { background-color: $dark; }
 
     .head, .contents section, .contents ul, .contents .line { width: 100%; }
 
