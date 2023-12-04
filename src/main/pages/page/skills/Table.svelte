@@ -69,7 +69,10 @@ on:outrostart={table_eOut}
     >
         {#each prop_LINES as content}
         {@const {title, lines} = content}
-            <section>
+            <section
+            itemscope
+            itemtype="https://schema.org/Thing"
+            >
                 <h4
                 class="line"
                 itemprop="knowsAbout"
