@@ -266,6 +266,7 @@ lang="scss"
     @use '../../../../assets/scss/styles/font';
 
     /* --MEDIA */
+    @use '../../../../assets/scss/styles/media';
 
 
 /* #\-VARIABLES-\ */
@@ -308,15 +309,18 @@ lang="scss"
 
         .contents
         {
-            filter: blur(100px);
-
-            transition: filter 1s;
-    
             .line
             {
                 &::before { animation-name: a-0 !important; }
 
                 &>* { animation-name: a-1 !important; }
+            }
+
+            @include media.min($ms4, $ms4)
+            {
+                filter: blur(100px);
+
+                transition: filter 1s;
             }
         }
     }
