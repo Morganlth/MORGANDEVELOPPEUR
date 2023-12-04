@@ -35,8 +35,9 @@
                 {
                     const TOPIC = CONTENT.topic.replaceAll(/\s/g, '-')
 
-                    if (TOPIC.length > 2)     FEATURE.tags.push(TOPIC.toLowerCase())
-                    if (CONTENT.html === 'a') CONTENT.attributes['data-content'] = CONTENT.value
+                    if (TOPIC.length > 2)                   FEATURE.tags.push(TOPIC.toLowerCase())
+                    if (CONTENT.setter instanceof Function) CONTENT.setter()
+                    if (CONTENT.html === 'a')               CONTENT.attributes['data-content'] = CONTENT.value
                 }
 
             return FEATURES
@@ -62,10 +63,35 @@
                     attributes: { itemprop: 'name' }
                 },
                 {
-                    topic     : 'Age',
-                    value     : { fr: '21 ans . 2002-01-29', en: '21 years old . 2002-01-29' },
-                    html      : 'p',
-                    attributes: { itemprop: 'birthDate' }
+                    topic: 'Age'
+                    ,
+                    value:
+                    [
+                        { value: { fr: 'ans', en: 'years old' } }
+                        ,
+                        {
+                            value     : '2002-01-29',
+                            attributes: { itemprop: 'birthDate' }
+                        }
+                    ]
+                    ,
+                    html      : 'p'
+                    ,
+                    setter: function ()
+                    {
+                        const
+                        VALUE    = this.value[0].value,
+                        BIRTHDAY = new Date(this.value[1].value),
+                        TODAY    = new Date(),
+                        BIRTHDAY_YEAR  = BIRTHDAY.getFullYear(),
+                        BIRTHDAY_MONTH = BIRTHDAY.getMonth(),
+                        TODAY_YEAR     = TODAY.getFullYear(),
+                        TODAY_MONTH    = TODAY.getMonth(),    
+                        AGE            = TODAY_YEAR - BIRTHDAY_YEAR
+                                         -(TODAY_MONTH > BIRTHDAY_MONTH || (TODAY_MONTH === BIRTHDAY_MONTH && TODAY.getDate() >= BIRTHDAY.getDate()) ? 0 : 1)
+            
+                        this.value[0].value = `${AGE} ${VALUE} -`
+                    }
                 }
             ]
         },

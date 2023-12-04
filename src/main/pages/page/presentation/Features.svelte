@@ -73,8 +73,8 @@ style:transform="translateY({features_TRANSLATE_Y}%)"
                             {...(attributes ?? {})}
                             >
                                 {#if value instanceof Array}
-                                    {#each value as v}
-                                    {@const {value, attributes} = v}
+                                    {#each value as _}
+                                    {@const {value, attributes} = _}
                                         <span
                                         {...(attributes ?? {})}
                                         >
