@@ -214,7 +214,7 @@ data-page-id={prop_ID}
 //=======@EVENTS|
 
     // --*
-    function project_eClick({detail: {id}})      { projects_setProject(id) }
+    function project_eClick({detail: {id}})   { projects_setProject(id) }
 
     function card_eMouseEnter({detail: {id}}) { card_updateCardHover(id) }
 
