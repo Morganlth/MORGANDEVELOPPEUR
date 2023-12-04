@@ -70,6 +70,7 @@ on:outrostart={table_eOut}
         {#each prop_LINES as content}
         {@const {title, lines} = content}
             <section
+            itemprop="knows"
             itemscope
             itemtype="https://schema.org/Thing"
             >
@@ -84,7 +85,7 @@ on:outrostart={table_eOut}
                     {#each lines as line}
                         <li
                         class="line"
-                        itemprop="knows"
+                        itemprop="name"
                         >
                             <p>{line}</p>
                         </li>
