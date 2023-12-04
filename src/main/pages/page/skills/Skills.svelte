@@ -33,7 +33,7 @@ data-page-id={prop_ID}
     <System
     prop_SYSTEM={prop_CHILDREN.system}
     prop_START={prop_FOCUS && !prop_INTRO}
-    prop_TARGET={skills_TARGET}
+    prop_HIDE={skills_TARGET || skills_SET_TARGET}
     prop_updateTarget={skills_updateTarget}
     {prop_FOCUS}
     {prop_RATIO}
@@ -124,7 +124,10 @@ data-page-id={prop_ID}
     // --OUTSIDE
 
     // --THIS
-    let skills_TARGET = null
+    let
+    skills_SET_TARGET = false
+    ,
+    skills_TARGET = null
 
     // --INSIDE
 
@@ -181,9 +184,12 @@ data-page-id={prop_ID}
 
     function skills_updateTarget(target, instant = false)
     {
+        skills_SET_TARGET = true
+    
         skills_goTo(target, instant, () =>
         {
-            skills_TARGET = target
+            skills_SET_TARGET = false
+            skills_TARGET     = target
     
             app_updateFreeze(true)
             router_updatePaths(target?.path)

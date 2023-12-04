@@ -69,7 +69,7 @@ style:transform="translateY({features_TRANSLATE_Y}%)"
                             <svelte:element
                             this={html ?? 'p'}
                             class="feature"
-                            tabindex={html === 'a' && prop_FOCUS ? 0 : -1}
+                            tabindex={html === 'a' && features$_FOCUSABLE && show ? 0 : -1}
                             {...(attributes ?? {})}
                             >
                                 {#if value instanceof Array}
@@ -102,10 +102,10 @@ style:transform="translateY({features_TRANSLATE_Y}%)"
                         class="contact-me"
                         >
                             <Cell
+                            prop_FOCUS={features$_FOCUSABLE && show}
                             prop_TEXT_WRAPPER={true}
                             prop_CENTER={true}
                             prop_TITLE={contact}
-                            {prop_FOCUS}
                             on:click={cell_eClick}
                             >
                                 <Icon
@@ -205,6 +205,8 @@ style:transform="translateY({features_TRANSLATE_Y}%)"
 
     // --THIS
     $: features_update(prop_RATIO)
+
+    $: features$_FOCUSABLE = prop_FOCUS && !contact_ON
 
     // --INSIDE
 

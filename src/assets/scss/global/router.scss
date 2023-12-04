@@ -72,9 +72,9 @@
         {
             pointer-events: auto !important;
 
-            &:hover .route, .route.selected:focus
+            &:hover .route, .route:focus
             {
-                opacity: 1 !important;
+                opacity: 1 !important;                  
         
                 clip-path: $route-default-clip !important;
 

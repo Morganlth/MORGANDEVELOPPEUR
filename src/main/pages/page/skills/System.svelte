@@ -28,6 +28,7 @@ context="module"
 
 <div
 class="system"
+class:hide={prop_HIDE}
 style:--system-r-x={system_ROTATE_X}
 style:--system-r-y={system_ROTATE_Y}
 >
@@ -49,7 +50,7 @@ style:--system-r-y={system_ROTATE_Y}
                 let:grabbing
                 prop_$RESIZE={resize}
                 prop_$ANIMATION={animation}
-                prop_FOCUSABLE={(focus ?? false) && !prop_TARGET}
+                prop_FOCUSABLE={focus}
                 prop_3D={true}
                 prop_RATIO={gravityarea_RATIO}
                 prop_GRABBING={false}
@@ -66,7 +67,7 @@ style:--system-r-y={system_ROTATE_Y}
                     <Block
                     prop_HIDE={hide}
                     prop_GRABBING={grabbing}
-                    prop_FOCUS={focus ?? false}
+                    prop_FOCUS={focus}
                     prop_SRC={prop_SRC}
                     prop_ALT={prop_ALT}
                     prop_COLOR={prop_COLOR}
@@ -79,12 +80,12 @@ style:--system-r-y={system_ROTATE_Y}
     {#each prop_SYSTEM as item}
     {@const {focus, name} = item}
         <Cell
-        prop_FOCUS={(focus ?? false) && !prop_TARGET}
+        prop_FOCUS={focus}
         prop_TITLE={name}
         on:click={tag_eClick.bind(item)}
         >
             <Tag
-            prop_FOCUS={focus ?? false}
+            prop_FOCUS={focus}
             prop_CONTENT={name}
             prop_DURATION={TAG_DURATION}
             prop_getTagStyle={tag_getStyle}
@@ -144,7 +145,7 @@ style:--system-r-y={system_ROTATE_Y}
     ,
     prop_RATIO  = 0
     ,
-    prop_TARGET = null
+    prop_HIDE = false
     ,
     prop_updateTarget = () => {}
 
@@ -423,7 +424,7 @@ style:--system-r-y={system_ROTATE_Y}
 
 <!-- #|-STYLE-| -->
 
-<!-- <style
+<style
 lang="scss"
 >
 
@@ -445,7 +446,20 @@ lang="scss"
 
 /* #\-THIS-\ */
 
-.system {}
+.system.hide
+{
+    animation: a-hide .8s forwards;
+
+    @keyframes a-hide 
+    {
+        to
+        {
+            display: none;
+
+            transform: scale(0);
+        }    
+    }
+}
 
 
-</style> -->
+</style>

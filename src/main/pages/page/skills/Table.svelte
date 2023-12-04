@@ -306,15 +306,18 @@ lang="scss"
             @keyframes a-out { from { clip-path: $b; } to { clip-path: $a; } }
         }
 
-        .contents .line
+        .contents
         {
-            &::before { animation-name: a-0 !important; }
-
-            &>* { animation-name: a-1 !important; }
-
             filter: blur(100px);
 
-            transition: filter .8s;
+            transition: filter 1s;
+    
+            .line
+            {
+                &::before { animation-name: a-0 !important; }
+
+                &>* { animation-name: a-1 !important; }
+            }
         }
     }
 
