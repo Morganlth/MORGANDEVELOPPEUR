@@ -419,7 +419,7 @@ lang="scss"
 
             justify-content: flex-end;
 
-            min-height: 30vh;
+            min-height: max(8vw, 8vh);
 
             padding-inline: app.$gap-inline;
 
