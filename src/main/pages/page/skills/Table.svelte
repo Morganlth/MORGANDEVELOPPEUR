@@ -69,23 +69,19 @@ on:outrostart={table_eOut}
     >
         {#each prop_LINES as content}
         {@const {title, lines} = content}
-            <section
-            itemprop="knowsAbout"
-            >
+            <section>
                 <h4
                 class="line"
-                itemprop="name"
+                itemprop="knowsAbout"
                 >
                     {title}
                 </h4>
 
-                <ul
-                itemprop="knows"
-                >
+                <ul>
                     {#each lines as line}
                         <li
                         class="line"
-                        itemprop="name"
+                        itemprop="knows"
                         >
                             <p>{line}</p>
                         </li>
