@@ -63,7 +63,38 @@ on:outrostart={table_eOut}
         <h3>{prop_TITLE}</h3>
     </div>
 
-    <ul
+    <div
+    class="contents"
+    >
+        {#each prop_LINES as content}
+        {@const {title, lines} = content}
+            <section
+            itemprop="knowsAbout"
+            >
+                <h4
+                class="line"
+                itemprop="name"
+                >
+                    {title}
+                </h4>
+
+                <ul
+                itemprop="knows"
+                >
+                    {#each lines as line}
+                        <li
+                        class="line"
+                        itemprop="name"
+                        >
+                            <p>{line}</p>
+                        </li>
+                    {/each}
+                </ul>
+            </section>
+        {/each}
+    </div>
+
+    <!-- <ul
     class="lines"
     >
         {#each prop_LINES as line}
@@ -85,7 +116,7 @@ on:outrostart={table_eOut}
                 {/if}
             </li>
         {/each}
-    </ul>
+    </ul> -->
 </section>
 
 
@@ -271,11 +302,13 @@ lang="scss"
 
 .table
 {
-    &, .lines { @extend %f-column; }
+    &, .contents ul { @extend %f-column; }
 
     isolation: isolate;
 
     gap: 1rem;
+
+    background-color: $dark;
 
     &.build
     {
@@ -298,7 +331,7 @@ lang="scss"
             @keyframes a-out { from { clip-path: $b; } to { clip-path: $a; } }
         }
 
-        .line
+        .contents .line
         {
             &::before { animation-name: a-0 !important; }
 
@@ -306,16 +339,16 @@ lang="scss"
         }
     }
 
-    .background, .lines
+    .background, .contents
     {
         @include utils.placement(absolute, 0, 0, 0, 0);
     
         @extend %any-size;
     }
 
-    .background { background-color: $dark; }
+    .head, .contents section, .contents ul, .contents .line { width: 100%; }
 
-    .head, .line { width: 100%; }
+    .head, .contents section { height: fit-content; }
 
     .head
     {
@@ -330,8 +363,6 @@ lang="scss"
 
         opacity: 0;
 
-        height: fit-content;
-
         padding-bottom: 2rem;
 
         h3
@@ -341,8 +372,11 @@ lang="scss"
             animation: .6s ease-out forwards;
         }
     }
-    .lines
+
+    .contents
     {
+        $font-size: map.get(font.$font-sizes, s3);
+    
         &, .line { box-sizing: border-box; }
     
         @extend %scroll-bar;
@@ -354,17 +388,24 @@ lang="scss"
 
         padding-inline: app.$gap-inline calc(app.$gap-inline - utils.$scrollbar-width);
 
+        h4
+        {
+            #{--title-size}: $font-size;
+    
+            @include font.h-($color: $primary);
+        }
+
+        ul { @include font.text($color: $light, $font-size: $font-size); }
+
         .line
         {
-            $font-size: map.get(font.$font-sizes, s3);
-    
             &::before, &>* { animation: .6s ease-out forwards; }
 
             &::before
             {
                 @include utils.placement(absolute, $bottom: 0, $left: -100%, $pe: true);
         
-                width: 100%;
+                width : 100%;
                 height: 0;
 
                 border-bottom: solid $intermediate 1px;
@@ -377,10 +418,8 @@ lang="scss"
             @extend %f-a-center;
 
             justify-content: flex-end;
-    
-            flex: 1;
 
-            min-height: 30%;
+            min-height: 30vh;
 
             padding-inline: app.$gap-inline;
 
@@ -389,16 +428,9 @@ lang="scss"
             transition: color .2s;
 
             &>* { animation-name: a-0; }
-
-            h4
-            {
-                color:       $primary;
-                font-family: font.$family-subtitle;
-                font-size:   $font-size;
-            }
-    
-            p { @include font.text($color: $light, $font-size: $font-size); }
         }
+
+        li { flex: 1; }
 
         @keyframes a-0 { from { transform: translateX(100%); } to { transform: translateX(0%); } }
         @keyframes a-1 { from { transform: translateX(0%); }   to { transform: translateX(100%); } }
