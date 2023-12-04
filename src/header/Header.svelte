@@ -26,7 +26,7 @@ context="module"
 
 <!-- #|-HTML-| -->
 
-<div
+<header
 class="header"
 >
     <strong>
@@ -52,7 +52,7 @@ class="header"
     <span>
         {$event_$FPS}
     </span>
-</div>
+</header>
 
 
 <!-- #|-SCRIPT-| -->
