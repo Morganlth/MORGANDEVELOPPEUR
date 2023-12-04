@@ -77,11 +77,13 @@ on:outrostart={table_eOut}
                     {title}
                 </h4>
 
-                <ul>
+                <ul
+                itemprop="knows"
+                >
                     {#each lines as line}
                         <li
                         class="line"
-                        itemprop="knows"
+                        itemprop="name"
                         >
                             <p>{line}</p>
                         </li>
