@@ -354,16 +354,12 @@ lang="scss"
     {
         $font-size: map.get(font.$font-sizes, s3);
     
-        &, .line { box-sizing: border-box; }
-    
         @extend %scroll-bar;
 
         overflow:            hidden scroll;
         overscroll-behavior: none;
 
         pointer-events: auto;
-
-        padding-inline: app.$gap-inline calc(app.$gap-inline - utils.$scrollbar-width);
 
         h4
         {
@@ -401,6 +397,8 @@ lang="scss"
             padding-inline: app.$gap-inline;
 
             text-align: right;
+
+            box-sizing: border-box;
     
             transition: color .2s;
 
