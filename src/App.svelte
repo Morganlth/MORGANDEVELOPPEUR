@@ -69,7 +69,7 @@ context="module"
     >
     <meta
     name="og:image"
-    content={APP_DATA.image}
+    content={$page.url.origin + APP_DATA.image}
     >
     <meta
     property="og:image:type"
@@ -102,7 +102,7 @@ context="module"
     >
     <meta
     name="twitter:image"
-    content={APP_DATA.image}
+    content={$page.url.origin + APP_DATA.image}
     >
     <meta
     name="twitter:card"
