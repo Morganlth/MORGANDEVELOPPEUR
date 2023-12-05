@@ -800,7 +800,6 @@ lang="scss"
         background-color: $dark;
 
         pointer-events: auto;
-        touch-action:   auto;
     }
 
     .canvas, .grid { position: absolute; }
