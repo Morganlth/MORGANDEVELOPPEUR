@@ -796,6 +796,8 @@ lang="scss"
 
     max-height: 100svh;
 
+    user-select: auto;
+
     &.game
     {
         background-color: $dark;
