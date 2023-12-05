@@ -288,8 +288,6 @@ lang="scss"
 {
     &, .contents ul { @extend %f-column; }
 
-    isolation: isolate;
-
     gap: 1rem;
 
     &.build
