@@ -85,7 +85,7 @@ context="module"
     >
     <meta
     property="og:image:alt"
-    content="LE THUAUT Morgan"
+    content="LE THUAUT {APP_DATA.title}"
     >
 
     <meta
