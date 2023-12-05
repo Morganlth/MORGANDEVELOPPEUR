@@ -376,7 +376,6 @@ lang="scss"
     @include utils.fixed($z: 2); /* label & title */
 
     pointer-events: auto;
-    touch-action  : auto;
 
     background-color: $dark;
 
