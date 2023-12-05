@@ -265,7 +265,7 @@ lang="scss"
 
     background-color: $dark;
 
-    &.freeze { overflow: clip !important; }
+    &.freeze { overflow: hidden !important; }
 }
 
 

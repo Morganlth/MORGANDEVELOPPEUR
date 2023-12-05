@@ -32,16 +32,16 @@ data-page-id={prop_ID}
 >
     <Features
     prop_FEATURES={prop_CHILDREN.features}
+    prop_FOCUS={prop_FOCUS && !contact_ON}
     prop_CONTENTS_LENGTH={FEATURES_CONTENTS_LENGTH}
-    {prop_FOCUS}
     {prop_RATIO}
-    bind:contact_ON
+    on:click={features_eClick}
     />
 
     {#if contact_ON}
         <Contact
         prop_CONTACT={prop_CHILDREN.contact}
-        bind:contact_ON
+        on:click={contact_eClick}
         />
     {/if}
 </div>
@@ -103,12 +103,16 @@ data-page-id={prop_ID}
     // --CONTEXTS
     const APP_$FREEZE = APP.app_$FREEZE
 
+    const ROUTER_$SUBPATH = ROUTER.router_$SUBPATH
+
     // --OUTSIDE
 
     // --THIS
 
     // --INSIDE
     const FEATURES_CONTENTS_LENGTH = features_getContentsLength()
+
+    const CONTACT_NAME = 'contact'
 
 
 // #\-VARIABLES-\
@@ -126,14 +130,14 @@ data-page-id={prop_ID}
 // #\-REATIVES-\
 
     // --CONTEXTS
-    $: !$APP_$FREEZE ? contact_ON = false : void 0
 
     // --OUTSIDE
 
     // --THIS
 
     // --INSIDE
-    $: presentation_update(contact_ON)
+    $: contact_update($ROUTER_$SUBPATH)
+    $: contact_updateVars($APP_$FREEZE)
 
 
 // #\-FUNCTIONS-\
@@ -144,14 +148,7 @@ data-page-id={prop_ID}
     onMount(presentation_set)
 
     // --SET
-    function presentation_set()
-    {
-        APP.app_WAITING_LOADING = contact_setVars
-
-        page_CHARGED = true
-    }
-
-    function contact_setVars() { contact_ON = ROUTER.router_SUBPATH === 'contact' }
+    function presentation_set() { page_CHARGED = true }
  
     // --GET
     function features_getContentsLength() { return prop_CHILDREN.features.reduce((accumulator, current) => accumulator += current.contents.length, 0) }
@@ -161,27 +158,25 @@ data-page-id={prop_ID}
     // --UPDATES
     function app_updateFreeze(value) { APP.app_$FREEZE = { value, target: prop_ID } }
 
-    function router_updatePaths()
-    {
-        ROUTER.router_updateSubPath(prop_ID, contact_ON ? 'contact' : null)
-        ROUTER.router_updatePath(prop_ID)
-    }
+    function router_updatePage(subPath) { ROUTER.router_updatePage(prop_ID, subPath) }
 
-    function presentation_update()
+    function contact_update(subPath)
     {
         if (page_CHARGED)
         {
-            router_updatePaths()
-            presentation_updateScrollPosition()
+            const ON = subPath === CONTACT_NAME
+
+            if (ON)
+            {
+                presentation_goTo(features_getTarget(CONTACT_NAME)?.id ?? 0, true, false, app_updateFreeze.bind(null, true))
+
+                contact_ON = true
+            }
+            else if (contact_ON) app_updateFreeze(false) // contact_ON = false
         }
     }
 
-    function presentation_updateScrollPosition()
-    {
-        contact_ON
-        ? presentation_goTo(features_getTarget('contact')?.id ?? 0, true, false, app_updateFreeze.bind(null, true))
-        : app_updateFreeze(false)
-    }
+    function contact_updateVars(freeze) { if (!freeze) contact_ON = false }
 
     // --DESTROY
 
@@ -198,11 +193,15 @@ data-page-id={prop_ID}
     {
         if (id === 0)
         {
-            const CONTACT = features_getTarget('contact')
+            const CONTACT = features_getTarget(CONTACT_NAME)
         
             presentation_goTo(CONTACT ? CONTACT.id : 0)
         }
     }
+
+    function features_eClick() { router_updatePage(CONTACT_NAME) }
+
+    function contact_eClick()  { router_updatePage(null) }
 
 
 //=======@TRANSITIONS|

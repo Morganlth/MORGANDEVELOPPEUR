@@ -326,7 +326,7 @@
             NAME = CHILD.name,
             DATA = CHILD.getData(lang)
 
-            if (CHILD.tag) PROCESS[CHILD.tag[lang]] = 'start'
+            if (CHILD.tag) PROCESS[CHILD.tag] = 'start'
 
             if (DATA instanceof Array)
             {

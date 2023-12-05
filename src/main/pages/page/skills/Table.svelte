@@ -30,7 +30,8 @@ context="module"
 class="table"
 class:build={table_CHARGED}
 class:destroy={table_DESTROY}
-transition:transition_fade={{ duration: 800 }}
+style:--table-duration="{prop_DURATION}ms"
+transition:transition_fade={{ duration: prop_DURATION }}
 on:introstart={table_eIn}
 on:outrostart={table_eOut}
 >
@@ -130,9 +131,13 @@ on:outrostart={table_eOut}
     prop_TITLE = ''
     ,
     prop_LINES = []
+    ,
+    prop_SET_TARGET = false
+    ,
+    prop_DURATION = 600
 
     // --BINDING
-    export let head_HEIGHT = 0
+    export let head_HEIGHT
 
 
 // #\-CONSTANTES-\
@@ -205,7 +210,7 @@ on:outrostart={table_eOut}
     {
         table_destroyTimeout()
 
-        head_HEIGHT = 0
+        if (!prop_SET_TARGET) head_HEIGHT = 0
 
         particles?.moveTo()
     }
@@ -274,6 +279,8 @@ lang="scss"
     $a: polygon(0 0, 0 0, 0 100%, 0 100%);
     $b: polygon(0 0, 100% 0, 100% 100%, 0 100%);
 
+    $duration: var(--table-duration, 0s);
+
 
 /* #\-THIS-\ */
 
@@ -308,9 +315,9 @@ lang="scss"
 
         .contents
         {
-            filter: blur(100px);
+            filter: blur(60px);
 
-            transition: filter 1s;
+            transition: filter $duration;
             
             .line
             {
@@ -349,7 +356,7 @@ lang="scss"
 
         padding-bottom: 2rem;
 
-        h3 { animation: .8s ease-out forwards; }
+        h3 { animation: $duration ease-out forwards; }
     }
 
     .contents
@@ -374,7 +381,7 @@ lang="scss"
 
         .line
         {
-            &::before, &>* { animation: .8s ease-out forwards; }
+            &::before, &>* { animation: $duration ease-out forwards; }
 
             &::before
             {

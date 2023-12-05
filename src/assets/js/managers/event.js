@@ -99,7 +99,11 @@ class Event
 
     #event_setVars() { this.#event_ANIMATION = this.#event_MANAGER.animation }
 
-    #event_setEvents() { window.addEventListener('resize', this.event_resize) }
+    #event_setEvents()
+    {
+        window.addEventListener('resize',   this.event_resize)
+        window.addEventListener('popstate', this.event_popstate)
+    }
 
     // --GET
 
@@ -112,7 +116,11 @@ class Event
         this.#event_destroyFrames()
     }
 
-    #event_destroyEvents() { try { window.removeEventListener('resize', this.event_resize) } catch {} }
+    #event_destroyEvents()
+    {
+        try { window.removeEventListener('resize', this.event_resize)     } catch {}
+        try { window.removeEventListener('popstate', this.event_popstate) } catch {}
+    }
 
     #event_destroyFrames() { for (const FRAME in this.#event_FRAMES) cancelAnimationFrame(this.#event_FRAMES[FRAME]) }
 
@@ -184,6 +192,8 @@ class Event
         this.#event_run.call(this.#event_MANAGER.resize)
     }
 
+    event_popstate({ state: {id, subPath} }) { ROUTER.router_update(id, subPath, true, false) }
+
 
 //=======@UTILS|
 
@@ -254,23 +264,16 @@ class Event
     async event_scrollTo(top, instant = false, hide = true, callback)
     {
         const APP_$FREEZE = APP.app_$FREEZE
-
+    
         top = Math.floor(top)
 
         if (top !== APP.app_SCROLLTOP)
         {
-      await tick() // app freeze overflow clip + set app manager
-    
-            if (APP_$FREEZE.value)
-            {
-                APP.app_$FREEZE = { value: false, target: APP_$FREEZE.target }
+            if (APP_$FREEZE.value) APP.app_$FREEZE = { value: false, target: APP_$FREEZE.target }
+            if (instant && hide)   APP.app_hide()
+            if (callback)          this.#event_scrollToCallback(top, callback)
 
-          await tick() // app freeze overflow clip
-            }
-
-            if (instant && hide) APP.app_hide()
-
-            if (callback) this.#event_scrollToCallback(top, callback)
+      await tick() // app freeze => overflow hidden
 
             ;(APP.app ?? document.getElementById('app'))?.scrollTo({ top: top, behavior: instant ? 'instant' : 'smooth' })
         }
@@ -287,11 +290,12 @@ class Event
     import { tick } from 'svelte'
 
     // --LIB
-    import store_custom from '$lib/store'
+    import store_custom      from '$lib/store'
     import { wait_debounce } from '$lib/wait'
 
     // --CONTEXTS
-    import APP from './app'
+    import APP    from './app'
+    import ROUTER from './router'
 
 
 // #\-EXPORTS-\

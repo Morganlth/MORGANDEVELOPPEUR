@@ -140,7 +140,7 @@ on:introend={contact_eIntro}
     // --DATA
 
     // --SVELTE
-    import { onMount, onDestroy } from 'svelte'
+    import { onMount, onDestroy, createEventDispatcher } from 'svelte'
 
     // --LIB
     import COLORS                                                       from '$lib/colors'
@@ -170,12 +170,12 @@ on:introend={contact_eIntro}
     export let prop_CONTACT = {}
 
     // --BINDING
-    export let contact_ON = true
 
 
 // #\-CONSTANTES-\
 
     // --SVELTE
+    const SVELTE_DISPATCH = createEventDispatcher()
 
     // --CONTEXTS
 
@@ -315,7 +315,7 @@ on:introend={contact_eIntro}
 
     function email_eInput()   { email_VALID = form_testEmail(email_VALUE.trim()) }
 
-    function cell_eClick()    { contact_ON = false }
+    function cell_eClick()    { SVELTE_DISPATCH('click') }
 
     function message_eInput() { message_VALID = form_testMsg(message_VALUE.trim()) }
 

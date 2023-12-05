@@ -24,7 +24,7 @@
     {
         name: 'features'
     ,
-        tag: { fr: 'caracteristique', en: 'features' }
+        tag: { fr: 'caracteristiques', en: 'features' }
     ,
         getData: lang =>
         {

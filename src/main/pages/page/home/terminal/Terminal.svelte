@@ -281,7 +281,7 @@ on:mouseleave={terminal_eMouseLeave}
 
     async function terminal_goTo()
     {
-        await tick() // wait for 'app freeze' to change
+  await tick() // wait for 'app freeze' to change
 
         terminal_PROCESS_DATA.callback(terminal_PROCESS_DATA.str, terminal_PROCESS_DATA.target)
 

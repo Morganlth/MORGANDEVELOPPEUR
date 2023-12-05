@@ -166,7 +166,10 @@ data-page-id={prop_ID}
     // --THIS
 
     // --INSIDE
-    const SNAKE_COMMANDS =
+    const
+    SNAKE_TAG = games_getTagGame('snake')
+    ,
+    SNAKE_COMMANDS =
     [
         {
             name           : 'snake',
@@ -178,6 +181,10 @@ data-page-id={prop_ID}
             storage        : true
         }
     ]
+
+    const TICTACTOE_TAG = games_getTagGame('tictactoe')
+
+    const TERMINAL_TAG = games_getTagGame('terminal')
 
 
 // #\-VARIABLES-\
@@ -233,6 +240,7 @@ data-page-id={prop_ID}
     function snake_setCommands() { COMMAND.command_setCommands(SNAKE_COMMANDS) }
 
     // --GET
+    function games_getTagGame(name) { return prop_CHILDREN.games.find(game => game.name === name)?.tags[0] }
 
     // --UPDATES
     function snake_update(value) { snake_GAME = value }
@@ -276,7 +284,6 @@ data-page-id={prop_ID}
 
     // --*
 
-
 //=======@UTILS|
 
     // --*
@@ -286,10 +293,10 @@ data-page-id={prop_ID}
         {
             switch (str)
             {
-                case 'snake'    : snake_update(true)     ;break
-                case 'tictactoe': tictactoe_update(true) ;break
-                case 'terminal' : terminal_update(true)  ;break
-                default         :                        ;break
+                case SNAKE_TAG    : snake_update(true)     ;break
+                case TICTACTOE_TAG: tictactoe_update(true) ;break
+                case TERMINAL_TAG : terminal_update(true)  ;break
+                default           :                        ;break
             }
         })
     }

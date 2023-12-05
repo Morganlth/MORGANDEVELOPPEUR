@@ -33,17 +33,19 @@ data-page-id={prop_ID}
     <System
     prop_SYSTEM={prop_CHILDREN.system}
     prop_START={prop_FOCUS && !prop_INTRO}
-    prop_HIDE={skills_TARGET || skills_SET_TARGET}
-    prop_updateTarget={skills_updateTarget}
+    prop_HIDE={table__TARGET || table_SET_TARGET}
     {prop_FOCUS}
     {prop_RATIO}
+    on:click={system_eClick}
     />
 
-    {#if skills_TARGET}
-    {@const {name, skills} = skills_TARGET}
+    {#if table__TARGET}
+    {@const {name, skills} = table__TARGET}
         <Table
         prop_TITLE={name}
         prop_LINES={skills}
+        prop_SET_TARGET={table_SET_TARGET}
+        prop_DURATION={TABLE_DURATION + TABLE_DELAY}
         bind:head_HEIGHT={PAGE_NAV.offset}
         on:click={table_eClick}
         />
@@ -63,6 +65,7 @@ data-page-id={prop_ID}
     import { onMount, onDestroy, tick } from 'svelte'
 
     // --LIB
+    import { wait_getDelay } from '$lib/wait'
 
     // --CONTEXTS
     import { APP, ROUTER, EVENT } from '../../../../App.svelte'
@@ -107,7 +110,9 @@ data-page-id={prop_ID}
     // --SVELTE
 
     // --CONTEXTS
-    const APP_$FREEZE  = APP.app_$FREEZE
+    const APP_$FREEZE = APP.app_$FREEZE
+
+    const ROUTER_$SUBPATH = ROUTER.router_$SUBPATH
 
     // --OUTSIDE
 
@@ -115,6 +120,10 @@ data-page-id={prop_ID}
 
     // --INSIDE
     const SYSTEM_EVENTS = { resize: system_e$Resize }
+
+    const
+    TABLE_DURATION = wait_getDelay(24), // +- 400ms
+    TABLE_DELAY    = wait_getDelay(6)   // +- 100ms
 
 
 // #\-VARIABLES-\
@@ -124,12 +133,16 @@ data-page-id={prop_ID}
     // --OUTSIDE
 
     // --THIS
-    let
-    skills_SET_TARGET = false
-    ,
-    skills_TARGET = null
+    let skills_INSTANT = true
 
     // --INSIDE
+    let
+    table__TARGET = null
+    ,
+    table_SET_TARGET = false,
+    table_CLICK      = false
+    ,
+    table_TIMEOUT
 
 
 // #\-REATIVES-\
@@ -139,7 +152,11 @@ data-page-id={prop_ID}
     // --OUTSIDE
 
     // --THIS
-    $: !$APP_$FREEZE ? skills_reset() : void 0
+
+    // --INSIDE
+    $: table_setTarget($ROUTER_$SUBPATH)
+
+    $: !$APP_$FREEZE ? table_reset() : void 0
 
 
 // #\-FUNCTIONS-\
@@ -154,14 +171,7 @@ data-page-id={prop_ID}
     {
         system_setEvents()
 
-        APP.app_WAITING_LOADING = () =>
-        {
-            system_setVars()
-        
-            const TARGET = prop_CHILDREN.system.find(item => item.path === ROUTER.router_SUBPATH)
-
-            if (TARGET) skills_updateTarget(TARGET, true)
-        }
+        APP.app_WAITING_LOADING = system_setVars
     
         page_CHARGED = true
     }
@@ -170,36 +180,65 @@ data-page-id={prop_ID}
 
     function system_setEvents() { EVENT.event_add(SYSTEM_EVENTS) }
 
+    function table_setTarget(subPath)
+    {
+        if (page_CHARGED)
+        {
+            const TARGET = table_getTarget(subPath)
+
+            if (TARGET)
+            {
+                const DELAY = table__TARGET || table_SET_TARGET ? TABLE_DURATION : 0
+        
+                table_SET_TARGET = true
+
+                skills_goTo(TARGET, table_updateTarget.bind(TARGET, DELAY))
+            }
+        }
+    }
+
     // --GET
     function system_getTarget(target) { return prop_CHILDREN.system.find(item => item.tags.includes(target)) }
+
+    function table_getTarget(subPath) { return prop_CHILDREN.system.find(item => item.path === subPath) }
 
     // --UPDATES
     function app_updateFreeze(value) { APP.app_$FREEZE = { value, target: prop_ID } }
 
-    function router_updatePaths(subpath)
-    {
-        ROUTER.router_updateSubPath(prop_ID, subpath)
-        ROUTER.router_updatePath(prop_ID)
-    }
+    function router_updatePage(subPath) { ROUTER.router_updatePage(prop_ID, subPath) }
 
-    function skills_updateTarget(target, instant = false)
+    async function table_updateTarget(delay)
     {
-        skills_SET_TARGET = true
-    
-        skills_goTo(target, instant, () =>
+        const update = () =>
         {
-            skills_SET_TARGET = false
-            skills_TARGET     = target
+            table__TARGET    = this
+            table_SET_TARGET = false
+            table_TIMEOUT    = null
+        }
     
-            app_updateFreeze(true)
-            router_updatePaths(target?.path)
-        })
+        delay ? table_TIMEOUT = setTimeout(update, delay) : update()
+
+  await tick() // table_reset => tick
+
+        app_updateFreeze(true)
     }
 
     // --DESTROY
-    function skills_destroy() { system_destroyEvents() }
+    function skills_destroy()
+    {
+        system_destroyEvents()
+
+        table_destroyTimeout()
+    }
 
     function system_destroyEvents() { EVENT.event_remove(SYSTEM_EVENTS) }
+
+    function table_destroyTimeout()
+    {
+        clearTimeout(table_TIMEOUT)
+
+        table_TIMEOUT = null
+    }
 
 
 //=======@COMMANDS|
@@ -212,9 +251,24 @@ data-page-id={prop_ID}
     // --*
     export function nav_e$Click({id})
     {
+        if (table_SET_TARGET) return
+
         const TARGET = prop_CHILDREN.system[id]
 
-        skills_TARGET ? skills_updateTarget(TARGET) : skills_goTo(TARGET)
+        if (table__TARGET) router_updatePage(TARGET?.path)
+        else
+        {
+            skills_INSTANT = false
+
+            skills_goTo(TARGET)
+        }
+    }
+
+    function system_eClick({ detail: {target} })
+    {
+        skills_INSTANT = false
+    
+        router_updatePage(target?.path)
     }
 
     async function system_e$Resize()
@@ -224,7 +278,13 @@ data-page-id={prop_ID}
         system_setVars()
     }
 
-    function table_eClick() { app_updateFreeze(false) } // call skills_reset with reactive app_$FREEZE
+    function table_eClick()
+    {
+        table_CLICK = true
+    
+        app_updateFreeze(false) // APP_$FREEZE => skills_reset
+        router_updatePage(null)
+    }
 
 
 //=======@TRANSITIONS|
@@ -251,14 +311,26 @@ data-page-id={prop_ID}
         }
     }
 
-    function skills_reset()
+    async function table_reset()
     {
-        if (skills_TARGET) router_updatePaths(null)
+        if (table__TARGET || table_SET_TARGET)
+        {
+            if (table_TIMEOUT) table_SET_TARGET = false
     
-        skills_TARGET = null
+      await tick() // table_SET_TARGET prop => table
+
+            table__TARGET = null
+
+            table_destroyTimeout()
+        }
     }
 
-    function skills_goTo(target, instant = false, callback) { EVENT.event_scrollTo(target?.top ?? prop_START, instant, true, callback) }
+    function skills_goTo(target, callback)
+    {
+        EVENT.event_scrollTo(target?.top ?? prop_START, skills_INSTANT, false, callback)
+
+        skills_INSTANT = true
+    }
 
 
 </script>

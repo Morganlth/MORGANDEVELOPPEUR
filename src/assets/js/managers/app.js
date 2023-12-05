@@ -75,7 +75,7 @@ class App
     {
         const CURRENT_TARGET = this.#app_$FREEZE.target
     
-        if (!CURRENT_TARGET || CURRENT_TARGET === target) this.#app_$FREEZE.set(value, value ? target : null)
+        if (CURRENT_TARGET == null || CURRENT_TARGET === target) this.#app_$FREEZE.set(value, value ? target : null)
     }
 
     set app_$OPTIMIZE(value)

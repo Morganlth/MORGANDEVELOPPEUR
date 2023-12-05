@@ -45,6 +45,7 @@
     [
         {
             id       : 0,
+            name     : 'snake',
             component: Snake2,
             props    :
             {
@@ -57,6 +58,7 @@
         ,
         {
             id       : 1,
+            name     : 'tictactoe',
             component: Grid,
             props    :
             {
@@ -69,6 +71,7 @@
         ,
         {
             id       : 2,
+            name     : 'terminal',
             component: CommandLine,
             props    :
             {

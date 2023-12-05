@@ -69,7 +69,7 @@ style:transform="translateY({features_TRANSLATE_Y}%)"
                             <svelte:element
                             this={html ?? 'p'}
                             class="feature"
-                            tabindex={html === 'a' && features$_FOCUSABLE && show ? 0 : -1}
+                            tabindex={html === 'a' && prop_FOCUS && show ? 0 : -1}
                             {...(attributes ?? {})}
                             >
                                 {#if value instanceof Array}
@@ -102,7 +102,7 @@ style:transform="translateY({features_TRANSLATE_Y}%)"
                         class="contact-me"
                         >
                             <Cell
-                            prop_FOCUS={features$_FOCUSABLE && show}
+                            prop_FOCUS={prop_FOCUS && show}
                             prop_TEXT_WRAPPER={true}
                             prop_CENTER={true}
                             prop_TITLE={contact}
@@ -136,6 +136,7 @@ style:transform="translateY({features_TRANSLATE_Y}%)"
     // --DATA
 
     // --SVELTE
+    import { createEventDispatcher } from 'svelte'
 
     // --LIB
     import COLORS from '$lib/colors'
@@ -169,12 +170,12 @@ style:transform="translateY({features_TRANSLATE_Y}%)"
     prop_FEATURES
 
     // --BINDING
-    export let contact_ON = false
 
 
 // #\-CONSTANTES-\
 
     // --SVELTE
+    const SVELTE_DISPATCH = createEventDispatcher()
 
     // --CONTEXTS
 
@@ -205,8 +206,6 @@ style:transform="translateY({features_TRANSLATE_Y}%)"
 
     // --THIS
     $: features_update(prop_RATIO)
-
-    $: features$_FOCUSABLE = prop_FOCUS && !contact_ON
 
     // --INSIDE
 
@@ -261,7 +260,7 @@ style:transform="translateY({features_TRANSLATE_Y}%)"
 //=======@EVENTS|
 
     // --*
-    function cell_eClick() { contact_ON = !contact_ON }
+    function cell_eClick() { SVELTE_DISPATCH('click') }
 
 
 //=======@TRANSITIONS|

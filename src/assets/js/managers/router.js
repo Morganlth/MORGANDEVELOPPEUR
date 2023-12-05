@@ -14,14 +14,14 @@ class Router
 // #\-PRIVATES-\
 
     // --THIS
-    #router_$ID   = {}
-    #router_$HIDE = { value: false, setter: function ({target}) { this.target = target }, optionalparameters: { target: null } }
+    #router_$ID      = {}
+    #router_$HIDE    = { value: false, setter: function ({target}) { this.target = target }, optionalparameters: { target: null } }
+    #router_$SUBPATH = { value: '' }
 
     #router_PAGES = []
 
     #router_ROUTE = '/'
 
-    #router_SUBPATH
     #router_RESPONSE
 
 
@@ -58,11 +58,11 @@ class Router
 
     get router_$HIDE()    { return this.#router_$HIDE }
 
+    get router_$SUBPATH() { return this.#router_$SUBPATH }
+
     get router_PAGES()    { return this.#router_PAGES }
 
     get router_ROUTE()    { return this.#router_ROUTE }
-
-    get router_SUBPATH()  { return this.#router_SUBPATH }
 
     get router_RESPONSE() { return this.#router_RESPONSE }
 
@@ -73,24 +73,26 @@ class Router
     router_set(id, subPath, response)
     {
         this.#router_setVars(response)
-    
-        this.router_updateSubPath(id, subPath)
-        this.router_update(id, true)
+
+        this.router_update(id, subPath, true)
     }
 
     #router_setStores()
     {
-        this.#router_$ID   = store_custom(this.#router_$ID)
-        this.#router_$HIDE = store_custom(this.#router_$HIDE)
+        this.#router_$ID      = store_custom(this.#router_$ID)
+        this.#router_$HIDE    = store_custom(this.#router_$HIDE)
+        this.#router_$SUBPATH = store_custom(this.#router_$SUBPATH)
     }
 
     #router_setVars(response) { this.#router_RESPONSE = response }
 
     // --GET
+    #router_getPageFocus() { return this.#router_PAGES.find(page => page.focus) }
+
     router_getInstant(top) { return Math.abs(APP.app_SCROLLTOP - top) > APP.app_HEIGHT * 2 }
 
     // --UPDATES
-    router_update(id, instant)
+    router_update(id, subPath, instant, history = true)
     {
         const
         PAGE = this.#router_PAGES[id],
@@ -98,38 +100,39 @@ class Router
 
         instant ??= this.router_getInstant(TOP)
     
-        if (instant) this.router_updatePath(id, PAGE)
+        if (instant || PAGE.id === this.#router_getPageFocus()?.id) this.router_updatePage(id, subPath, PAGE, history)
 
         EVENT.event_scrollTo(TOP, instant)
     }
 
-    router_updatePath(id, page)
+    router_updatePage(id, subPath, page, history = true)
     {
         page ??= this.#router_PAGES[id]
 
         if (page)
         {
-            const
-            SUBPATH = (page.subPath ? page.subPath : ''),
-            ROUTE   = '/' + page.name + SUBPATH
-    
-            history.pushState({}, '', location.origin + ROUTE)
-    
-            this.#router_$ID.set(id)
-            this.#router_ROUTE = ROUTE
+            const ROUTE = '/' + page.name + (subPath ? '/' + subPath : '')
+
+            if (this.#router_ROUTE !== ROUTE)
+            {
+                this.#router_resetLastPageFocus()
+                this.#router_updateVars(id, subPath, ROUTE)
+
+                page.focus = true
+
+                if (history) this.#router_updateHistory(id, subPath, ROUTE)
+            }
         }
     }
 
-    router_updateSubPath(id, subPath = null)
+    #router_updateHistory(id, subPath, route) { history.pushState({id, subPath}, '', location.origin + route) }
+
+    #router_updateVars(id, subPath, route)
     {
-        const PAGE = this.#router_PAGES[id]
-
-        if (PAGE)
-        {
-            PAGE.subPath = subPath ? '/' + subPath : subPath
-
-            this.#router_SUBPATH = subPath
-        }
+        this.#router_$ID.set(id)
+        this.#router_$SUBPATH.set(subPath)
+    
+        this.#router_ROUTE = route
     }
 
     // --DESTROY
@@ -151,7 +154,7 @@ class Router
         {
             if (PAGES[i].top <= scrolltop)
             {
-                if (i !== this.#router_$ID.value) this.router_updatePath(i, PAGES[i])
+                if (i !== this.#router_$ID.value) this.router_updatePage(i, null, PAGES[i])
 
                 break
             }
@@ -162,9 +165,16 @@ class Router
 //=======@UTILS|
 
     // --*
-    router_add(id, name, label, top) { this.#router_PAGES[id] = { name, label, top } }
+    router_add(id, name, label, top) { this.#router_PAGES[id] = { focus: false, id, name, label, top } }
 
     router_remove(id) { this.#router_PAGES.splice(id, 1) }
+
+    #router_resetLastPageFocus()
+    {
+        const PAGE = this.#router_getPageFocus()
+    
+        if (PAGE) PAGE.focus = false
+    }
 
 
 }

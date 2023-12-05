@@ -107,7 +107,7 @@ style:--system-r-y={system_ROTATE_Y}
     // --DATA
 
     // --SVELTE
-    import { onMount, onDestroy } from 'svelte'
+    import { onMount, onDestroy, createEventDispatcher } from 'svelte'
 
     // --LIB
     import MATH                             from '$lib/math'
@@ -146,8 +146,6 @@ style:--system-r-y={system_ROTATE_Y}
     prop_RATIO  = 0
     ,
     prop_HIDE = false
-    ,
-    prop_updateTarget = () => {}
 
     // --BINDING
 
@@ -155,6 +153,7 @@ style:--system-r-y={system_ROTATE_Y}
 // #\-CONSTANTES-\
 
     // --SVELTE
+    const SVELTE_DISPATCH = createEventDispatcher()
 
     // --CONTEXTS
 
@@ -362,7 +361,7 @@ style:--system-r-y={system_ROTATE_Y}
 
     async function gravityarea_e$Resize() { gravityarea_setVars() }
 
-    function gravityarea_eClick() { if (this.focus) prop_updateTarget(this) }
+    function gravityarea_eClick() { if (this.focus) SVELTE_DISPATCH('click', { target: this }) }
 
     function tag_eIn({detail: { tag, frags }})
     {
@@ -373,7 +372,7 @@ style:--system-r-y={system_ROTATE_Y}
 
     function tag_eOut({detail: { tag, frags }}) { tag_update(tag, frags, tag_getY(), 0) }
 
-    function tag_eClick() { prop_updateTarget(this) }
+    function tag_eClick() { SVELTE_DISPATCH('click', { target: this }) }
 
 
 //=======@TRANSITIONS|
@@ -448,17 +447,9 @@ lang="scss"
 
 .system.hide
 {
-    animation: a-hide .8s forwards;
+    animation: a-hide 1s forwards;
 
-    @keyframes a-hide 
-    {
-        to
-        {
-            display: none;
-
-            transform: scale(0);
-        }    
-    }
+    @keyframes a-hide { to { display: none; } }
 }
 
 

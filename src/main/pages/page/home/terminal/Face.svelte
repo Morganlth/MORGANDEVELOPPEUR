@@ -369,7 +369,7 @@ class="face"
     {
         if (output)
         {
-            await tick()
+      await tick()
 
             output.scrollTop = output.scrollHeight - output_HEIGHT
         }
@@ -527,7 +527,8 @@ class="face"
             COMMAND.command_COMMANDS[NAME](...PARAMS)
             
             input_reset()
-        } catch (e) { input_error(e, NAME) }
+        }
+        catch (e) { input_error(e, NAME) }
     }
 
     function input_reset()

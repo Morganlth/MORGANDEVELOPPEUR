@@ -17,15 +17,15 @@ class Process
 // #\-PRIVATES-\
 
     // --THIS
-    #process_TREE       = { children: {} }
-    #process_KEYWORDS   = []
-    #process_COMMANDS   = []
+    #process_TREE     = { children: {} }
+    #process_KEYWORDS = []
+    #process_COMMANDS = []
 
-    #process_STR                = ''
-    #process_FIND               = null
-    #process_LENGTH             = 0
-    #process_PREVIOUS_LETTER    = null
-    #process_MIN                = Process.__process_DEFAULT_MIN
+    #process_STR             = ''
+    #process_FIND            = null
+    #process_LENGTH          = 0
+    #process_PREVIOUS_LETTER = null
+    #process_MIN             = Process.__process_DEFAULT_MIN
 
 
 // #\-PUBLICS-\
@@ -68,11 +68,11 @@ class Process
     {
         const LENGTH = str.length
     
-        this.#process_STR = str
-        this.#process_FIND = null
-        this.#process_LENGTH = LENGTH
+        this.#process_STR             = str
+        this.#process_FIND            = null
+        this.#process_LENGTH          = LENGTH
         this.#process_PREVIOUS_LETTER = null,
-        this.#process_MIN = LENGTH === 3 ? 1 : Process.__process_DEFAULT_MIN
+        this.#process_MIN             = LENGTH === 3 ? 1 : Process.__process_DEFAULT_MIN
     }
 
     #process_setCommands() { for (const CMD of this.#process_COMMANDS) COMMAND.command_add(CMD.name, CMD.callback, CMD.desc) }
@@ -81,10 +81,10 @@ class Process
     #process_getArrayFrom(str)
     {
         return (
-        str.toLowerCase()                   // min
-        .normalize("NFD")                   // normalize
+        str.toLowerCase()                // min
+        .normalize("NFD")                // normalize
         .replace(/[\u0300-\u036f]/g, "")
-        .split(/[\s|']/gm))                 // split into words
+        .split(/[\s|']/gm))              // split into words
     }
 
     #process_getRow()
@@ -105,8 +105,8 @@ class Process
         for (let i = 1; i <= this.#process_LENGTH; i++)
         {
             const
-                L = this.#process_STR[i - 1],
-                K = L === l || L === this.#process_PREVIOUS_LETTER ? 0 : 1
+            L = this.#process_STR[i - 1],
+            K = L === l || L === this.#process_PREVIOUS_LETTER ? 0 : 1
         
             CURRENT_ROW[i] = Math.min(
             previous_ROW[i]     + 1,
@@ -198,14 +198,14 @@ class Process
     {
         const
         CURRENT_ROW = this.#process_getCurrentRow(l, previous_ROW),
-        DISTANCE = CURRENT_ROW[this.#process_LENGTH]
+        DISTANCE    = CURRENT_ROW[this.#process_LENGTH]
 
         this.#process_PREVIOUS_LETTER = l
 
         if (DISTANCE < this.#process_MIN && node.datas)
         {
             this.#process_FIND = node.datas
-            this.#process_MIN = DISTANCE
+            this.#process_MIN  = DISTANCE
         }
         else Math.min(...CURRENT_ROW) < this.#process_MIN ? this.#process_run(node, CURRENT_ROW) : this.#process_PREVIOUS_LETTER = null
     }
