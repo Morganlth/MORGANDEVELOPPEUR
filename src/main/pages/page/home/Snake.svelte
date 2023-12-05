@@ -791,12 +791,9 @@ lang="scss"
 
     @extend %f-center;
 
-    overflow           : hidden;
-    overscroll-behavior: none;
+    overflow: hidden;
 
     max-height: 100svh;
-
-    touch-action: auto;
 
     &.game
     {
