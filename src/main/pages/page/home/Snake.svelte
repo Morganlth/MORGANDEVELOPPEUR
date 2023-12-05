@@ -796,7 +796,7 @@ lang="scss"
 
     max-height: 100svh;
 
-    user-select: auto;
+    touch-action: auto;
 
     &.game
     {
