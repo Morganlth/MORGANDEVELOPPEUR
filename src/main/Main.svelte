@@ -53,7 +53,7 @@ style:height="{MAIN_HEIGHT}%"
 // #\-IMPORTS-\
 
     // --DATA
-    import app_getData from '../assets/js/data/appData'
+    import { app_getPageData } from '../assets/js/data/appData'
 
     // --SVELTE
     import { onMount, onDestroy, tick } from 'svelte'
@@ -93,7 +93,7 @@ style:height="{MAIN_HEIGHT}%"
     // --CONTEXTS
 
     // --OUTSIDE
-    const APP_DATA = app_getData(prop_LANG)
+    const APP_DATA = app_getPageData(prop_LANG)
 
     // --THIS
     const

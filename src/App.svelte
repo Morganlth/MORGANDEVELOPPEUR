@@ -39,6 +39,85 @@ context="module"
 
 <!-- #|-HTML-| -->
 
+<svelte:head>
+    <title>{APP_DATA.title}</title>
+
+    <meta
+    name="description"
+    content={APP_DATA.desc}
+    >
+
+    <meta
+    property="og:type"
+    content="website"
+    >
+    <meta
+    property="og:url"
+    content={$page.url.origin}
+    >
+    <meta
+    property="og:locale"
+    content="fr_FR"
+    >
+    <meta
+    property="og:title"
+    content={APP_DATA.title}
+    >
+    <meta
+    property="og:description"
+    content={APP_DATA.desc}
+    >
+    <meta
+    name="og:image"
+    content={APP_DATA.image}
+    >
+    <meta
+    property="og:image:type"
+    content="image/png"
+    >
+    <meta
+    property="og:image:width"
+    content="1200"
+    >
+    <meta
+    property="og:image:height"
+    content="630"
+    >
+    <meta
+    property="og:image:alt"
+    content="LE THUAUT Morgan"
+    >
+
+    <meta
+    name="twitter:url"
+    content={$page.url.origin}
+    >
+    <meta
+    name="twitter:title"
+    content={APP_DATA.title}
+    >
+    <meta
+    name="twitter:description"
+    content={APP_DATA.desc}
+    >
+    <meta
+    name="twitter:image"
+    content={APP_DATA.image}
+    >
+    <meta
+    name="twitter:card"
+    content="summary_large_image"
+    >
+    <meta
+    name="twitter:site"
+    content="@morganDeveloppeur"
+    >
+    <meta
+    name="twitter:creator"
+    content="@morganLeThuaut"
+    >
+</svelte:head>
+
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
 id="app"
@@ -76,9 +155,11 @@ on:touchstart|once={app_eTouchStart}
 // #\-IMPORTS-\
 
     // --DATA
+    import app_getData from './assets/js/data/appData'
 
     // --SVELTE
     import { onMount, onDestroy } from 'svelte'
+    import { page }               from '$app/stores'
 
     // --LIB
     import { LANGS } from '$lib/lang'
@@ -120,6 +201,7 @@ on:touchstart|once={app_eTouchStart}
     // --OUTSIDE
 
     // --THIS
+    const APP_DATA = app_getData(prop_LANG)
 
     // --INSIDE
 

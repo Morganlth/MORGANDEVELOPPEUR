@@ -7,7 +7,7 @@
 
     // --LIB
     import COLORS              from '$lib/colors'
-    import { lang_processing } from '$lib/lang'
+    import { LANGS, lang_processing } from '$lib/lang'
 
     // --CONTEXTS
 
@@ -42,11 +42,13 @@
 // #\-EXPORTS-\
 
     // --THIS
-    export default function app_getData(lang = 'fr')
+    export default function app_getData(lang = LANGS[0]) { return lang_processing(lang, APP_DATA) }
+
+    export function app_getPageData(lang = LANGS[0])
     {
         const APP = []
     
-        for (let i = 0; i < APP_DATA.length; i++) APP.push(page_get(lang, APP_DATA[i], i))
+        for (let i = 0; i < APP_PAGE_DATA.length; i++) APP.push(page_get(lang, APP_PAGE_DATA[i], i))
 
         return APP
     }
@@ -55,7 +57,22 @@
 // #\-CONSTANTES-\
 
     // --THIS
-    const APP_DATA =
+    const
+    APP_DATA =
+    {
+        title: { fr: 'MORGAN - Développeur Web', en: 'MORGAN - Web Developer'}
+        ,
+        desc :
+        {
+            fr: 'Je suis un créateur, un développeur web et à mes heures perdues, un designer. Je vous propose mes services pour la réalisation de sites web entièrement sur mesure.'
+            ,
+            en: 'I\'m a creator, a web developer and, in my spare time, a designer. I offer you my services for the creation of fully customized websites. #FRONT, #BACK & #DESIGNER.'
+        }
+        ,
+        image: '/images/me_meta.png'
+    }
+    ,
+    APP_PAGE_DATA =
     [
 /////////////////////////////////////////////HOME////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         {
