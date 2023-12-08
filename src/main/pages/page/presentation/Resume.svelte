@@ -51,6 +51,7 @@ transition:transition_fade={{ duration: 200 }}
     <div
     class="content d-f-c s-any"
     style:--content-mul={content_MUL}
+    bind:this={content}
     on:wheel={content_eWheel}
     >
         <div
@@ -182,9 +183,14 @@ transition:transition_fade={{ duration: 200 }}
     // --OUTSIDE
 
     // --THIS
-    let content_MUL = 1
 
     // --INSIDE
+    let
+    content
+    ,
+    content_MUL = 1
+
+    let copy_TIMEOUT
 
 
 // #\-REATIVES-\
@@ -206,24 +212,20 @@ transition:transition_fade={{ duration: 200 }}
     onMount(resume_set), onDestroy(resume_destroy)
 
     // --SET
-    function resume_set() { document_setEvents() }
+    function resume_set() { copy_setVars() }
 
-    function document_setEvents()
-    {
-
-    }
+    function copy_setVars() { copy_TIMEOUT = setTimeout(copy_destroy, 1000) }
 
     // --GET
 
     // --UPDATES
 
     // --DESTROY
-    function resume_destroy() { document_destroyEvents() }
+    function resume_destroy() { copy_destroyTimeout() }
 
-    function document_destroyEvents()
-    {
+    function copy_destroy() { content.querySelector('.copy')?.remove() }
 
-    }
+    function copy_destroyTimeout() { clearTimeout(copy_TIMEOUT) }
 
 
 //=======@COMMANDS|
