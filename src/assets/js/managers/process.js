@@ -187,6 +187,12 @@ class Process
     
                 if (this.#process_FIND) FINDS.push(this.#process_FIND)
             }
+            else
+            {
+                const FIND = this.#process_KEYWORDS.find(key => key.str === STR)
+
+                if (FIND) FINDS.push(FIND)
+            }
         }
     
         return FINDS
