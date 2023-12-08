@@ -46,7 +46,7 @@ on:introend={contact_eIntro}
         prop_ICON_WRAPPER={true}
         prop_CENTER={true}
         prop_TITLE={prop_CONTACT.headCellTitle}
-        on:click={cell_eClick}
+        on:click
         >
             <Icon
             prop_COLOR={COLORS.light}
@@ -140,7 +140,7 @@ on:introend={contact_eIntro}
     // --DATA
 
     // --SVELTE
-    import { onMount, onDestroy, createEventDispatcher } from 'svelte'
+    import { onMount, onDestroy } from 'svelte'
 
     // --LIB
     import COLORS                                                       from '$lib/colors'
@@ -175,7 +175,6 @@ on:introend={contact_eIntro}
 // #\-CONSTANTES-\
 
     // --SVELTE
-    const SVELTE_DISPATCH = createEventDispatcher()
 
     // --CONTEXTS
 
@@ -315,8 +314,6 @@ on:introend={contact_eIntro}
 
     function email_eInput()   { email_VALID = form_testEmail(email_VALUE.trim()) }
 
-    function cell_eClick()    { SVELTE_DISPATCH('click') }
-
     function message_eInput() { message_VALID = form_testMsg(message_VALUE.trim()) }
 
 
@@ -366,8 +363,6 @@ lang="scss"
     /* --* */
     $head-top: 8rem;
 
-    $cell-size: map.get(font.$font-sizes, s4);
-
 
 /* #\-THIS-\ */
 
@@ -387,7 +382,7 @@ lang="scss"
 
     .head
     {
-        #{--cell-size}: $cell-size;
+        #{--cell-size}: map.get(font.$font-sizes, s4);
 
         @include utils.placement(absolute, $top: $head-top, $left: app.$gap-inline, $z: 1);
 

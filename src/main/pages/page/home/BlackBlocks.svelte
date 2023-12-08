@@ -267,23 +267,21 @@ bind:this={blackblocks}
 
     function blackblocks_setVars()
     {
-        const
-        ASPECT = blackblocks_getAspectRatio(),
-        DEPTH  = BLACKBLOCKS_CAMERA_Z + 1
+        const DEPTH = BLACKBLOCKS_CAMERA_Z + 1
     
         blackblocks_SCENE    = new Scene()
-        blackblocks_CAMERA   = new PerspectiveCamera(BLACKBLOCKS_CAMERA_FOV, ASPECT, BLACKBLOCKS_CAMERA_NEAR, DEPTH)
+        blackblocks_CAMERA   = new PerspectiveCamera(BLACKBLOCKS_CAMERA_FOV, APP.app_RATIO, BLACKBLOCKS_CAMERA_NEAR, DEPTH)
         blackblocks_RENDERER = new WebGLRenderer({ alpha: true, antialias: BLACKBLOCKS_ANTIALIAS })
 
         blackblocks_DEPTH = DEPTH
 
-        blackblocks_setVars2(ASPECT)
+        blackblocks_setVars2()
     }
-    function blackblocks_setVars2(aspect)
+    function blackblocks_setVars2()
     {
         const HEIGHT = Math.tan(MATH.toRad(BLACKBLOCKS_CAMERA_FOV / 2)) * BLACKBLOCKS_CAMERA_Z
 
-        blackblocks_WIDTH = (blackblocks_HEIGHT = HEIGHT) * aspect
+        blackblocks_WIDTH = (blackblocks_HEIGHT = HEIGHT) * APP.app_RATIO
     }
 
     function blackblocks_setCommands() { COMMAND.command_setCommands(BLACKBLOCKS_COMMANDS) }
@@ -454,8 +452,6 @@ bind:this={blackblocks}
     }
 
     // --GET
-    function blackblocks_getAspectRatio() { return APP.app_WIDTH / APP.app_HEIGHT }
-
     function blackblocks_getBlock(size, x, y)
     {
         const
@@ -595,9 +591,9 @@ bind:this={blackblocks}
         delay) 
     }
 
-    function blackblocks_updateCamera(aspect)
+    function blackblocks_updateCamera()
     {
-        blackblocks_CAMERA.aspect = aspect
+        blackblocks_CAMERA.aspect = APP.app_RATIO
         blackblocks_CAMERA.updateProjectionMatrix()
     }
 
@@ -788,10 +784,8 @@ bind:this={blackblocks}
 
     async function blackblocks_e$Resize()
     {
-        const ASPECT = blackblocks_getAspectRatio()
-    
-        blackblocks_updateCamera(ASPECT)
-        blackblocks_setVars2(ASPECT)
+        blackblocks_updateCamera()
+        blackblocks_setVars2()
         blackblocks_setRenderer()
         blackblocks_setShaderUniforms()
         blackblocks_resetSceneObjects()

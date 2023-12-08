@@ -13,6 +13,7 @@
 
     /* --DEPENDENCIES */
     @use './styles/utils';
+    @use './styles/display';
 
     /* --MEDIA */
     @use './styles/media';
@@ -26,9 +27,9 @@
 /* #\-VARIABLES-\ */
 
     /* --* */
+    $gap-block         : 2rem;
     $default-gap-inline: 3rem;
-    $gap-block:          2rem;
-    $gap-inline:         var(--app-g-inline, $default-gap-inline);
+    $gap-inline        : var(--app-g-inline, $default-gap-inline);
 
 
 /* #\-MIXIN-\ */
@@ -63,6 +64,8 @@
     {
         #{--app-g-inline}: $default-gap-inline;
 
+        @extend %global-class;
+
         &, body, body>div
         {
             overflow: hidden;
@@ -96,7 +99,7 @@
         @font-face
         {
             font-family: 'CodeNext-BLACK';
-            src: local('CodeNext-Trial-Black'),
+            src        : local('CodeNext-Trial-Black'),
             url('/fonts/CodeNext/CodeNext-Trial-Black.ttf') format('truetype'),
             url('/fonts/CodeNext/CodeNext-Trial-Black.otf') format('opentype');
             font-display: swap;
@@ -104,7 +107,7 @@
         @font-face
         {
             font-family: 'CodeNext-BLACK-ITALIC';
-            src: local('CodeNext-Trial-BlackItalic'),
+            src        : local('CodeNext-Trial-BlackItalic'),
             url('/fonts/CodeNext/CodeNext-Trial-BlackItalic.ttf') format('truetype'),
             url('/fonts/CodeNext/CodeNext-Trial-BlackItalic.otf') format('opentype');
             font-display: swap;
@@ -112,7 +115,7 @@
         @font-face
         {
             font-family: 'CodeNext';
-            src: local('CodeNext-ExtraBold'),
+            src        : local('CodeNext-ExtraBold'),
             url('/fonts/CodeNext/CodeNext-ExtraBold.ttf') format('truetype'),
             url('/fonts/CodeNext/CodeNext-ExtraBold.otf') format('opentype');
             font-display: swap;
@@ -120,8 +123,8 @@
         @font-face
         {
             font-family: 'AnonymousPro-Bold';
-            src: url('/fonts/AnonymousPro/AnonymousPro-Bold.eot');
-            src: local('Anonymous Pro Bold'), local('AnonymousPro-Bold'),
+            src        : url('/fonts/AnonymousPro/AnonymousPro-Bold.eot');
+            src        : local('Anonymous Pro Bold'), local('AnonymousPro-Bold'),
             url('/fonts/AnonymousPro/AnonymousPro-Bold.eot?#iefix') format('embedded-opentype'),
             url('/fonts/AnonymousPro/AnonymousPro-Bold.woff2') format('woff2'),
             url('/fonts/AnonymousPro/AnonymousPro-Bold.woff') format('woff'),
@@ -131,14 +134,39 @@
         @font-face
         {
             font-family: 'AnonymousPro';
-            src: url('/fonts/AnonymousPro/AnonymousPro.eot');
-            src: local('Anonymous Pro Regular'), local('AnonymousPro-Regular'),
+            src        : url('/fonts/AnonymousPro/AnonymousPro.eot');
+            src        : local('Anonymous Pro Regular'), local('AnonymousPro-Regular'),
             url('/fonts/AnonymousPro/AnonymousPro.eot?#iefix') format('embedded-opentype'),
             url('/fonts/AnonymousPro/AnonymousPro.woff2') format('woff2'),
             url('/fonts/AnonymousPro/AnonymousPro.woff') format('woff'),
             url('/fonts/AnonymousPro/AnonymousPro.ttf') format('truetype');
             font-display: swap;
         }
+    }
+
+    %global-class
+    {
+        .p-abs { position: absolute; }
+        .p-rlt { position: relative; }
+
+        .d-f-- { display: flex; }
+        .d-fcc { @extend %f-column-center; }
+        .d-fc- { @extend %f-column; }
+        .d-f-c { @extend %f-center; }
+        .d-fjc { @extend %f-j-center; }
+        .d-fac { @extend %f-a-center; }
+
+        .t-p3d { transform-style: preserve-3d; }
+
+        .o-hid { overflow: hidden; }
+        .o-h-a { overflow: hidden auto; }
+
+        .s-any { @extend %any-size; }
+        .s-a-w { width : 100%; }
+        .s-a-h { height: 100%; }
+        .s-fit { width : fit-content; height: fit-content; }
+
+        .b-box { box-sizing: border-box; }
     }
 
 

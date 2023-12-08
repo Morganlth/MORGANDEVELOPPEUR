@@ -32,7 +32,7 @@ data-page-id={prop_ID}
 >
     <Features
     prop_FEATURES={prop_CHILDREN.features}
-    prop_FOCUS={prop_FOCUS && !contact_ON}
+    prop_FOCUS={prop_FOCUS && !contact_ON && !resume_ON}
     prop_CONTENTS_LENGTH={FEATURES_CONTENTS_LENGTH}
     {prop_RATIO}
     on:click={features_eClick}
@@ -40,8 +40,15 @@ data-page-id={prop_ID}
 
     {#if contact_ON}
         <Contact
-        prop_CONTACT={prop_CHILDREN.contact}
+        prop_CONTACT={prop_CHILDREN.contact ?? {}}
         on:click={contact_eClick}
+        />
+    {/if}
+
+    {#if resume_ON}
+        <Resume
+        prop_RESUME={prop_CHILDREN.resume ?? {}}
+        on:click={resume_eClick}
         />
     {/if}
 </div>
@@ -68,6 +75,7 @@ data-page-id={prop_ID}
     // --*
     import Features from './Features.svelte'
     import Contact  from './Contact.svelte'
+    import Resume   from './Resume.svelte'
     
 //=======@STYLE|
 
@@ -126,6 +134,8 @@ data-page-id={prop_ID}
     // --INSIDE
     let contact_ON = false
 
+    let resume_ON = false
+
 
 // #\-REATIVES-\
 
@@ -137,7 +147,8 @@ data-page-id={prop_ID}
 
     // --INSIDE
     $: contact_update($ROUTER_$SUBPATH)
-    $: contact_updateVars($APP_$FREEZE)
+
+    $: !$APP_$FREEZE ? presentation_resetChildrenVars() : void 0 // after contact_update
 
 
 // #\-FUNCTIONS-\
@@ -172,11 +183,16 @@ data-page-id={prop_ID}
 
                 contact_ON = true
             }
-            else if (contact_ON) app_updateFreeze(false) // contact_ON = false
+            else if (contact_ON) app_updateFreeze(false) // => presentation_resetChildrenVars
         }
     }
 
-    function contact_updateVars(freeze) { if (!freeze) contact_ON = false }
+    function resume_update()
+    {
+        resume_ON = true
+        
+        presentation_goTo(0, true, false, app_updateFreeze.bind(null, true))
+    }
 
     // --DESTROY
 
@@ -191,17 +207,19 @@ data-page-id={prop_ID}
     // --*
     export function nav_e$Click({id})
     {
-        if (id === 0)
+        switch (id)
         {
-            const CONTACT = features_getTarget(CONTACT_NAME)
-        
-            presentation_goTo(CONTACT ? CONTACT.id : 0)
+            case 0 : presentation_goTo(features_getTarget(CONTACT_NAME)?.id ?? 0) ;break
+            case 1 : resume_update()                                              ;break
+            default:                                                              ;break
         }
     }
 
     function features_eClick() { router_updatePage(CONTACT_NAME) }
 
     function contact_eClick()  { router_updatePage(null) }
+
+    function resume_eClick()   { app_updateFreeze(false) } // => presentation_resetChildrenVars
 
 
 //=======@TRANSITIONS|
@@ -235,12 +253,18 @@ data-page-id={prop_ID}
         for (const DATA of prop_CHILDREN.features)
         {
             if (DATA.id < id) position += DATA.contents.length
-            else break
+            else              break
         }
 
         const TOP = prop_START + prop_DIF * position / FEATURES_CONTENTS_LENGTH + APP.app_HEIGHT / 4 // 1/4 app_HEIGHT because Features top 50%
 
         EVENT.event_scrollTo(TOP, instant ?? ROUTER.router_getInstant(TOP), hide, callback)
+    }
+
+    function presentation_resetChildrenVars()
+    {
+        contact_ON = false
+        resume_ON  = false
     }
 
 

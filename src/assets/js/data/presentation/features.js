@@ -170,7 +170,7 @@
                         {
                             value:
                             {
-                                value     : { fr: 'Développeur Web', en: 'Web Developer' },
+                                value     : { fr: 'RNCP niveau 5 - Développeur Web', en: 'RNCP level 5 - Web Developer' },
                                 attributes: { itemprop: 'name' }
                             }
                             ,

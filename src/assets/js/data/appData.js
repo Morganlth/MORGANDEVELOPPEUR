@@ -20,6 +20,7 @@
 
     import PRESENTATION_FEATURES from './presentation/features'
     import PRESENTATION_CONTACT  from './presentation/contact'
+    import PRESENTATION_RESUME   from './presentation/resume'
 
     import SKILLS_SYSTEM from './skills/system'
 
@@ -161,6 +162,10 @@
                     id   : 0,
                     title: { fr: 'Page de contact', en: 'Contact page' },
                     value: 'Contact'
+                },
+                {
+                    id   : 1,
+                    value: { fr: 'CV', en: 'Resume' }
                 }
             ]
         ,
@@ -170,7 +175,7 @@
                 author: 'Bill Gates'
             }
         ,
-            children: [PRESENTATION_FEATURES, PRESENTATION_CONTACT]
+            children: [PRESENTATION_FEATURES, PRESENTATION_CONTACT, PRESENTATION_RESUME]
         ,
             props:
             {

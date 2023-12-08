@@ -276,8 +276,8 @@ lang="scss"
 /* #\-VARIABLES-\ */
 
     /* --* */
-    $a: polygon(0 0, 0 0, 0 100%, 0 100%);
-    $b: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    $a: polygon(0 0, 0 0, 0 110%, 0 110%);
+    $b: polygon(0 0, 100% 0, 100% 110%, 0 110%);
 
     $duration: var(--table-duration, 0s);
 
@@ -375,7 +375,12 @@ lang="scss"
             @include font.h-($color: $primary);
         }
 
-        ul { @include font.text($color: $light, $font-size: $font-size); }
+        ul
+        {
+            @include font.text($color: $light, $font-size: $font-size);
+
+            user-select: text;
+        }
 
         .line
         {

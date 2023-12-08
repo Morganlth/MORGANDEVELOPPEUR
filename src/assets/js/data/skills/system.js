@@ -164,7 +164,7 @@
         },
         {
             id  : 1,
-            name: 'Javascript',
+            name: 'JavaScript',
             tags: ['javascript'],
             path: 'javascript'
             ,
@@ -310,14 +310,14 @@
                     ]
                 },
                 {
-                    title: 'THREE JS'
+                    title: 'THREE.JS'
                     ,
                     lines:
                     [
                         {
-                            fr: 'Créer une scène Three JS.'
+                            fr: 'Créer une scène Three.js.'
                             ,
-                            en: 'Create a Three JS scene.'
+                            en: 'Create a Three.js scene.'
                         },
                         {
                             fr: 'Ajouter des caméras (perspectiveCamera, orthographicCamera...).'
@@ -325,9 +325,9 @@
                             en: 'Add cameras (perspectiveCamera, orthographicCamera, etc.).'
                         },
                         {
-                            fr: 'Jouer avec les différents effets de lumière et les ombres de Three JS.'
+                            fr: 'Jouer avec les différents effets de lumière et les ombres de Three.js.'
                             ,
-                            en: 'Play with the different lighting effects and shadows in Three JS.'
+                            en: 'Play with the different lighting effects and shadows in Three.js.'
                         },
                         {
                             fr: 'Rendre des objets 3d de différentes géométries et matériaux.'
@@ -335,9 +335,9 @@
                             en: 'Render 3d objects with different geometries and materials.'
                         },
                         {
-                            fr: 'Appliquer des Textures comme des images sur les objets Three JS.'
+                            fr: 'Appliquer des Textures comme des images sur les objets Three.js.'
                             ,
-                            en: 'Apply textures like images to Three JS objects.'
+                            en: 'Apply textures like images to Three.js objects.'
                         },
                         {
                             fr: 'Manipuler les positions et les rotations sur les plans x, y et z.'
@@ -365,29 +365,29 @@
         },
         {
             id  : 2,
-            name: 'Node JS',
-            tags: ['nodejs'],
+            name: 'Node.js',
+            tags: ['node.js'],
             path: 'nodejs'
             ,
             props:
             {
                 prop_ROTATE: MATH.toRad(60),
                 prop_SRC   : 'node-js.png',
-                prop_ALT   : 'Node Js Logo: https://www.pngwing.com/en/free-png-yghmf',
+                prop_ALT   : 'Node.js Logo: https://www.pngwing.com/en/free-png-yghmf',
                 prop_COLOR : '#88C043'
             }
             ,
             skills:
             [
                 {
-                    title: 'NODE JS'
+                    title: 'NODE.JS'
                     ,
                     lines:
                     [
                         {
-                            fr: 'Créer un nouveau projet NodeJS impliquant diverses dépendances (Express, MongoDB, jsonwebtoken...).'
+                            fr: 'Créer un nouveau projet Node.js impliquant diverses dépendances (Express, MongoDB, jsonwebtoken...).'
                             ,
-                            en: 'Create a new NodeJS project involving various dependencies (Express, MongoDB, jsonwebtoken, etc.).'
+                            en: 'Create a new Node.js project involving various dependencies (Express, MongoDB, jsonwebtoken, etc.).'
                         },
                         {
                             fr: 'Gérer les comptes utilisateurs (coté serveur).'

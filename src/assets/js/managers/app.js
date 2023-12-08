@@ -40,6 +40,7 @@ class App
     // --THIS
     app_WIDTH             = 0
     app_HEIGHT            = 0
+    app_RATIO             = 0
     app_PAGE_INTRO_HEIGHT = 0
     app_SCROLLTOP         = 0
 
@@ -170,6 +171,7 @@ class App
     {
         this.app_WIDTH             = window.innerWidth
         this.app_HEIGHT            = window.innerHeight
+        this.app_RATIO             = this.app_WIDTH / this.app_HEIGHT
         this.app_PAGE_INTRO_HEIGHT = this.app_HEIGHT
     }
 
