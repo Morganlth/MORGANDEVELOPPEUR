@@ -28,7 +28,7 @@ context="module"
 
 <div
 class="system"
-class:hide={prop_HIDE}
+class:d-hid={system_HIDE}
 style:--system-r-x={system_ROTATE_X}
 style:--system-r-y={system_ROTATE_Y}
 >
@@ -161,6 +161,8 @@ style:--system-r-y={system_ROTATE_Y}
 
     // --THIS
     const
+    SYSTEM_DELAY = wait_getDelay(60) // +- 1s
+    ,
     SYSTEM_COMMANDS =
     [
         {
@@ -197,10 +199,13 @@ style:--system-r-y={system_ROTATE_Y}
 
     // --THIS
     let
+    system_HIDE     = false,
     system_OPTIMIZE = false
     ,
     system_ROTATE_X = 0,
     system_ROTATE_Y = 0
+    ,
+    system_TIMEOUT
 
     // --INSIDE
     let
@@ -222,6 +227,7 @@ style:--system-r-y={system_ROTATE_Y}
 
     // --THIS
     $: system_startAndStop(prop_FOCUS)
+    $: system_updateHide(prop_HIDE) 
 
     // --INSIDE
     $: prop_FOCUS ? gravityarea_update(prop_RATIO) : void 0
@@ -284,6 +290,13 @@ style:--system-r-y={system_ROTATE_Y}
     }
 
     // --UPDATES
+    function system_updateHide(hide)
+    {
+        system_destroyTimeout()
+
+        hide ? system_TIMEOUT = setTimeout(() => system_HIDE = true, SYSTEM_DELAY) : system_HIDE = false
+    }
+
     function group_updateFocus()
     {
         const INDEX = prop_START ? group_getIndexFocus() : void 0
@@ -309,12 +322,15 @@ style:--system-r-y={system_ROTATE_Y}
     // --DESTROY
     function system_destroy()
     {
+        system_destroyTimeout()
         system_destroyEvents()
 
         group_destroy()
 
         gravityarea_destroyEvents()
     }
+
+    function system_destroyTimeout() { clearTimeout(system_TIMEOUT) }
 
     function system_destroyEvents() { EVENT.event_remove(SYSTEM_EVENTS) }
 
@@ -444,13 +460,6 @@ lang="scss"
 
 
 /* #\-THIS-\ */
-
-.system.hide
-{
-    animation: a-hide 1s forwards;
-
-    @keyframes a-hide { to { display: none; } }
-}
 
 
 </style>
