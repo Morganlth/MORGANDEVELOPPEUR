@@ -179,7 +179,7 @@ data-page-id={prop_ID}
 
             if (ON)
             {
-                presentation_goTo(features_getTarget(CONTACT_NAME)?.id ?? 0, true, false, app_updateFreeze.bind(null, true))
+                features_goTo(features_getTarget(CONTACT_NAME)?.id ?? 0, true, false, app_updateFreeze.bind(null, true))
 
                 contact_ON = true
             }
@@ -191,7 +191,7 @@ data-page-id={prop_ID}
     {
         resume_ON = true
         
-        presentation_goTo(0, true, false, app_updateFreeze.bind(null, true))
+        presentation_goTo(prop_START, true, false, app_updateFreeze.bind(null, true))
     }
 
     // --DESTROY
@@ -209,9 +209,9 @@ data-page-id={prop_ID}
     {
         switch (id)
         {
-            case 0 : presentation_goTo(features_getTarget(CONTACT_NAME)?.id ?? 0) ;break
-            case 1 : resume_update()                                              ;break
-            default:                                                              ;break
+            case 0 : features_goTo(features_getTarget(CONTACT_NAME)?.id ?? 0) ;break
+            case 1 : resume_update()                                          ;break
+            default:                                                          ;break
         }
     }
 
@@ -239,14 +239,22 @@ data-page-id={prop_ID}
     {
         switch (target)
         {
-            case 'top'     : EVENT.event_scrollTo(prop_TOP)                 ;break
-            case 'start'   : EVENT.event_scrollTo(prop_START)               ;break
-            case 'features': presentation_goTo(features_getTarget(str)?.id) ;break
-            default        :                                                ;break
+            case 'top'     : EVENT.event_scrollTo(prop_TOP)                                                     ;break
+            case 'start'   : str === prop_CHILDREN.resume.tag ? resume_update() : presentation_goTo(prop_START) ;break
+            case 'features': features_goTo(features_getTarget(str)?.id)                                         ;break
+            default        :                                                                                    ;break
         }
     }
 
-    function presentation_goTo(id = 0, instant, hide, callback)
+    function presentation_goTo(top, instant, hide, callback) { EVENT.event_scrollTo(top, instant ?? ROUTER.router_getInstant(top), hide, callback) }
+
+    function presentation_resetChildrenVars()
+    {
+        contact_ON = false
+        resume_ON  = false
+    }
+
+    function features_goTo(id = 0, instant, hide, callback)
     {
         let position = 0
     
@@ -258,13 +266,7 @@ data-page-id={prop_ID}
 
         const TOP = prop_START + prop_DIF * position / FEATURES_CONTENTS_LENGTH + APP.app_HEIGHT / 4 // 1/4 app_HEIGHT because Features top 50%
 
-        EVENT.event_scrollTo(TOP, instant ?? ROUTER.router_getInstant(TOP), hide, callback)
-    }
-
-    function presentation_resetChildrenVars()
-    {
-        contact_ON = false
-        resume_ON  = false
+        presentation_goTo(TOP, instant, hide, callback)
     }
 
 

@@ -24,7 +24,16 @@
     {
         name: 'resume'
     ,
-        getData: lang => lang_processing(lang, RESUME_DATA)
+        tag: { fr: 'cv', en: 'resume' }
+    ,
+        getData: function (lang)
+        {
+            const RESUME = lang_processing(lang, RESUME_DATA)
+
+            RESUME.tag = this.tag
+
+            return RESUME
+        }
     }
 
 
