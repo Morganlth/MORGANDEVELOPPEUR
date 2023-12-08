@@ -323,7 +323,7 @@ lang="scss"
 
     @include utils.placement(absolute, $top: 50%, $right: 0, $left: 0);
 
-    transition: transform .3s ease-out;
+    transition: transform .24s ease-out;
 
     .container
     {
@@ -450,7 +450,7 @@ lang="scss"
 
     @include media.min($ms4, $ms4)
     {
-        transition-duration: .7s;
+        transition-duration: .64s;
 
         .container
         {

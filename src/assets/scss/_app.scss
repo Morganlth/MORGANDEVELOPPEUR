@@ -149,6 +149,7 @@
         .p-abs { position: absolute; }
         .p-rlt { position: relative; }
 
+        .d-hid { display: none !important; }
         .d-f-- { display: flex; }
         .d-fcc { @extend %f-column-center; }
         .d-fc- { @extend %f-column; }

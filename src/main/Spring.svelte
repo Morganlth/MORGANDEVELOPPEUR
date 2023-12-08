@@ -29,7 +29,7 @@ context="module"
 {#if $spring_$ON}
     <svg
     class="spring"
-    class:hide={spring_HIDE}
+    class:d-hid={spring_HIDE}
     class:true={$spring_$STATE === 1}
     class:false={$spring_$STATE === -1}
     >
@@ -205,8 +205,6 @@ lang="scss"
     @include utils.fixed($z: 3); /* > header */
 
     mix-blend-mode: difference;
-
-    &.hide { display: none !important; }
 
     &.true, &.false { mix-blend-mode: screen !important; }
 

@@ -483,9 +483,7 @@ lang="scss"
 
 .particles
 {
-    @include utils.placement(fixed, $top: 0, $bottom: 0, $left: 0);
-
-    @extend %any-size;
+    @include utils.fixed;
 
     isolation: isolate;
 
@@ -497,13 +495,11 @@ lang="scss"
 
     &::after
     {
-        @include utils.placement(absolute, 0, 0, 0, 0, $pe: true);
-
-        @extend %any-size;
+        @include utils.absolute-any($pe: true);
 
         background:
-        radial-gradient(circle at 24% -20%,  rgba($dark, .94) 40%, transparent 120%),
-        radial-gradient(circle at 38% -100%, $primary         0%,  transparent 88%);
+        radial-gradient(circle at 24% -20% , rgba($dark, .94) 40%, transparent 120%),
+        radial-gradient(circle at 38% -100%, $primary         0% , transparent 88%);
     }
 }
 

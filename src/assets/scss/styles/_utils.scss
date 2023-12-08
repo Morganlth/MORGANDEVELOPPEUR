@@ -31,7 +31,7 @@
     /* --* */
     @mixin fixed($z: false, $pe: false)
     {
-        @include placement(fixed, 0, 0, 0, 0, $z: $z, $pe: $pe);
+        @include placement(fixed, $top: 0, $bottom: 0, $left: 0, $z: $z, $pe: $pe);
 
         @extend %any-size;
 
