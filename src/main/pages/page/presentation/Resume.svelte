@@ -373,16 +373,16 @@ lang="scss"
             animation: a-main-intro ($a-duration * .5) ($a-duration * .5 + $i-duration) ease-out forwards;
 
             @keyframes a-main-intro { to { clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%); } }
-        }
 
-        &::after
-        {
-            @include utils.placement(absolute, $top: 50%, $right: 0, $left: 0, $pe: true);
+            &::after
+            {
+                @include utils.placement(absolute, $top: 50%, $right: 0, $left: 0, $pe: true);
 
-            width : 100%;
-            height: calc(1 * $ratio);
+                width : 100%;
+                height: calc(1 * $ratio);
 
-            box-shadow: 0 0 calc(8 * $ratio) $dark;
+                box-shadow: 0 0 calc(8 * $ratio) $dark;
+            }
         }
 
         @keyframes a-self-intro { to { transform: rotateX(0deg); } }
