@@ -52,10 +52,12 @@ data-page-id={prop_ID}
         />
     {/if}
 
-    <Slider
-    prop_SLIDER={prop_CHILDREN.slider}
-    prop_FOCUS={prop_FOCUS && page_CHARGED}
-    />
+    {#if !$APP_$SMALL_SCREEN}
+        <Slider
+        prop_SLIDER={prop_CHILDREN.slider}
+        prop_FOCUS={prop_FOCUS && page_CHARGED}
+        />
+    {/if}
 
     <TicTacToe
     prop_ON={prop_FOCUS && tictactoe_ON}
@@ -160,8 +162,9 @@ data-page-id={prop_ID}
 
     // --CONTEXTS
     const
-    APP_$OPTIMIZE = APP.app_$OPTIMIZE,
-    APP_$MOBILE   = APP.app_$MOBILE
+    APP_$OPTIMIZE     = APP.app_$OPTIMIZE,
+    APP_$MOBILE       = APP.app_$MOBILE,
+    APP_$SMALL_SCREEN = APP.app_$SMALL_SCREEN
 
     // --OUTSIDE
 
