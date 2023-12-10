@@ -27,7 +27,7 @@ context="module"
 <!-- #|-HTML-| -->
 
 <div
-class="pages"
+class="pages p-a00 t-sc1 s-any"
 class:hide={$app_$HIDE}
 >
     {#each prop_DATA as page (page.id)}
@@ -169,7 +169,7 @@ class:hide={$app_$HIDE}
         SCROLLTOP = APP.app_SCROLLTOP ?? 0,
         REACTIVE  = PAGES_REACTIVES[page.id],
         HEIGHT    = page.height,
-        START     = HEIGHT ? top + APP.app_PAGE_INTRO_HEIGHT : 1,
+        START     = HEIGHT ? top + APP.app_HEIGHT : 1,
         END       = HEIGHT ? HEIGHT * APP.app_HEIGHT + top   : 1,
         INTRO     = page_getIntro(top, START, SCROLLTOP),
         DIF       = END - START + (page.gap ?? 0) * APP.app_HEIGHT,
@@ -314,7 +314,6 @@ lang="scss"
     /* --APP */
 
     /* --DEPENDENCIES */
-    @use '../../assets/scss/styles/utils';
 
     /* --MEDIA */
 
@@ -328,12 +327,6 @@ lang="scss"
 
 .pages
 {
-    @include utils.placement(absolute, 0, 0, 0, 0);
-
-    @extend %any-size;
-
-    transform: scale(1); /* fixed and page z-index */
-
     transition: filter .6s;
 
     &.hide { filter: blur(100px) hue-rotate(30deg); }

@@ -270,7 +270,7 @@ context="module"
         {
             const
             [A, B, C] = MODEL,
-            CELL = tictactoe_SIMULATION[A]
+            CELL      = tictactoe_SIMULATION[A]
 
             if (CELL && CELL === tictactoe_SIMULATION[B] && CELL === tictactoe_SIMULATION[C]) return CELL
         }
@@ -292,7 +292,7 @@ context="module"
     {
         let
         [value, currentPlayer, type] = maximizingPlayer ? [-Infinity, TICTACTOE_AI, 'max'] : [Infinity, TICTACTOE_PLAYER, 'min'],
-        id = emptyCells[0]
+        id                           = emptyCells[0]
 
         depth--
 

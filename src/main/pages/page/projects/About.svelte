@@ -27,7 +27,7 @@ context="module"
 <!-- #|-HTML-| -->
 
 <div
-class="about {$APP_$USER_AGENT}"
+class="about {$APP_$USER_AGENT} p-a00 d-fc- o-h-a s-any b-box"
 style:--x="{prop_X}px"
 style:--y="{prop_Y}px"
 style:--w="{prop_W}px"
@@ -35,7 +35,7 @@ bind:this={about}
 transition:transition_fade={{ duration: 200 }}
 >
     <div
-    class="sup"
+    class="sup p-rlt"
     >
         <Cell
         prop_FOCUS={true}
@@ -53,19 +53,19 @@ transition:transition_fade={{ duration: 200 }}
     </div>
 
     <p
-    class="global"
+    class="global b-box"
     >
         {prop_GLOBAL}
     </p>
 
     <p
-    class="this"
+    class="this b-box"
     >
         {prop_THIS}
     </p>
 
     <canvas
-    class="canvas"
+    class="canvas p-a00 s-any p-n--"
     style:opacity={canvas_OPACITY}
     bind:this={canvas}
     >
@@ -299,7 +299,7 @@ lang="scss"
 /* #\-VARIABLES-\ */
 
     /* --* */
-    $gap-border:         1rem;
+    $gap-border        : 1rem;
     $gap-center-element: 14%;
 
 
@@ -307,27 +307,11 @@ lang="scss"
 
 .about
 {
-    &, .global, .this
-    {
-        @extend %scroll-bar;
-
-        box-sizing: border-box;
-    }
-
-    &, .canvas
-    {
-        @include utils.placement(absolute, 0, 0, 0, 0);
-
-        @extend %any-size;
-    }
+    &, .global, .this { @extend %scroll-bar; }
 
     @include font.text($font-size: map.get(font.$font-sizes, s3), $line-height: 1.2);
 
-    @extend %f-column;
-
     gap: 2rem;
-
-    overflow: hidden auto;
 
     padding: 8rem app.$gap-inline;
 
@@ -335,37 +319,27 @@ lang="scss"
 
     .sup, .global, .this { isolation: isolate; }
 
-    .global, .this { min-width: max(10vw, 10vh); }
+    .global, .this
+    {
+        min-width: max(10vw, 10vh);
+
+        padding-inline: $gap-border;
+    }
     
     .sup
     {
         #{--cell-size}: map.get(font.$font-sizes, s4);
 
-        @include utils.placement(relative, $z: 1);
+        z-index: 1;
     
         min-height: var(--cell-size, fit-content);
     }
 
-    .global
-    {
-        padding-inline: $gap-border $gap-center-element;
+    .global { color: $light; }
 
-        color: $light;
-    }
+    .this { color: $primary; }
 
-    .this
-    {
-        padding-inline: $gap-center-element $gap-border;
-
-        color: $primary;
-    }
-
-    .canvas
-    {
-        pointer-events: none;
-
-        transition: opacity .2s;
-    }
+    .canvas { transition: opacity .2s; }
 
     @include media.min($ms4, $ms4)
     {
@@ -394,13 +368,20 @@ lang="scss"
             overflow: hidden auto;
         }
 
-        .global { width: var(--x, 50vw); }
+        .global
+        {
+            width: var(--x, 50vw);
+
+            padding-right: $gap-center-element;
+        }
 
         .this
         {
             grid-column: 3 / 4;
 
             width: calc(100vw - var(--x, 50vw) - var(--w, 0));
+
+            padding-left: $gap-center-element;
         }
     }
 }

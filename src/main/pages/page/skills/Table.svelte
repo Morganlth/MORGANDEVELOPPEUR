@@ -27,7 +27,7 @@ context="module"
 <!-- #|-HTML-| -->
 
 <section
-class="table"
+class="table d-fc-"
 class:build={table_CHARGED}
 class:destroy={table_DESTROY}
 style:--table-duration="{prop_DURATION}ms"
@@ -36,13 +36,13 @@ on:introstart={table_eIn}
 on:outrostart={table_eOut}
 >
     <div
-    class="background"
+    class="background p-a00 s-any"
     bind:this={background}
     >
     </div>
 
     <div
-    class="head"
+    class="head p-abs d-fac s-a-w"
     bind:offsetHeight={head_HEIGHT}
     >
         <Cell
@@ -66,22 +66,26 @@ on:outrostart={table_eOut}
     </div>
 
     <div
-    class="contents"
+    class="content p-a00 o-h-a s-any p-y--"
     >
         {#each prop_LINES as content}
         {@const {title, lines} = content}
-            <section>
+            <section
+            class="s-a-w"
+            >
                 <h4
-                class="line"
+                class="line p-rlt d-fac s-a-w b-box"
                 itemprop="knowsAbout"
                 >
                     {title}
                 </h4>
 
-                <ul>
+                <ul
+                class="d-fc- s-a-w"
+                >
                     {#each lines as line}
                         <li
-                        class="line"
+                        class="line p-rlt d-fac s-a-w b-box"
                         itemprop="knows"
                         >
                             <p>{line}</p>
@@ -267,7 +271,6 @@ lang="scss"
 
     /* --DEPENDENCIES */
     @use '../../../../assets/scss/styles/utils';
-    @use '../../../../assets/scss/styles/display';
     @use '../../../../assets/scss/styles/font';
 
     /* --MEDIA */
@@ -286,8 +289,6 @@ lang="scss"
 
 .table
 {
-    &, .contents ul { @extend %f-column; }
-
     gap: 1rem;
 
     &.build
@@ -311,9 +312,9 @@ lang="scss"
             @keyframes a-out { from { clip-path: $b; } to { clip-path: $a; } }
         }
 
-        .contents
+        .content
         {
-            filter: blur(60px);
+            filter: blur(100px);
 
             transition: filter $duration;
             
@@ -326,27 +327,17 @@ lang="scss"
         }
     }
 
-    .background, .contents
-    {
-        @include utils.placement(absolute, 0, 0, 0, 0);
-    
-        @extend %any-size;
-    }
-
     .background { background-color: $dark; }
 
-    .head, .contents section, .contents ul, .contents .line { width: 100%; }
-
-    .head, .contents section { height: fit-content; }
+    .head, .content section { height: fit-content; }
 
     .head
     {
         #{--cell-size}: calc(var(--title-size) * font.$line-height-min);
 
-        @include utils.placement(absolute, $z: 1);
         @include font.h-(4, $light, 1);
-    
-        @extend %f-a-center;
+
+        z-index: 1;
 
         gap: 3rem;
 
@@ -357,16 +348,13 @@ lang="scss"
         h3 { animation: $duration ease-out forwards; }
     }
 
-    .contents
+    .content
     {
         $font-size: map.get(font.$font-sizes, s3);
     
         @extend %scroll-bar;
 
-        overflow:            hidden scroll;
         overscroll-behavior: none;
-
-        pointer-events: auto;
 
         h4
         {
@@ -398,10 +386,6 @@ lang="scss"
                 animation-name: a-1;
             }
 
-            position: relative;
-
-            @extend %f-a-center;
-
             justify-content: flex-end;
 
             min-height: max(12vw, 12vh, 160px);
@@ -409,8 +393,6 @@ lang="scss"
             padding-inline: app.$gap-inline;
 
             text-align: right;
-
-            box-sizing: border-box;
     
             transition: color .2s;
 
@@ -419,8 +401,8 @@ lang="scss"
 
         li { flex: 1; }
 
-        @keyframes a-0 { from { transform: translateX(100%); } to { transform: translateX(0%); } }
-        @keyframes a-1 { from { transform: translateX(0%); }   to { transform: translateX(100%); } }
+        @keyframes a-0 { from { transform: translateX(100%); } to { transform: translateX(0%);   } }
+        @keyframes a-1 { from { transform: translateX(0%);   } to { transform: translateX(100%); } }
     }
 }
 

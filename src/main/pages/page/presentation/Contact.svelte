@@ -522,7 +522,7 @@ lang="scss"
 
         button
         {
-            #{--icon-size}: 1.4rem;
+            #{--icon-size}: 1.6rem;
 
             @extend %f-center;
         

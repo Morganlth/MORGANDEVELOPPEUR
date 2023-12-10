@@ -38,7 +38,7 @@ on:mouseenter={terminal_eMouseEnter}
 on:mouseleave={terminal_eMouseLeave}
 >
     <div
-    class="container"
+    class="container p-a00 t-p3d"
     style:--container-duration="{CONTAINER_DURATION}ms"
     >
         <Face
@@ -329,11 +329,11 @@ lang="scss"
     @include utils.placement(absolute, $right: app.$gap-inline, $bottom: 14%);
 
     perspective-origin: left;
-    perspective:        2000px;
+    perspective       : 2000px;
 
     overflow: visible;
 
-    width:  calc((100vw - app.$gap-inline * 2) / var(--cos, 1));
+    width : calc((100vw - app.$gap-inline * 2) / var(--cos, 1));
     height: 26vh;
 
     &.focus
@@ -352,11 +352,8 @@ lang="scss"
     {
         #{--cell-size}: calc($cell-size * .6);
 
-        @include utils.placement(absolute, 0, 0, 0, 0);
-
         transform-origin: right;
-        transform-style:  preserve-3d;
-        transform:        rotateY(calc($r-y * -1)) translateX(calc(101% + app.$gap-inline));
+        transform       : rotateY(calc($r-y * -1)) translateX(calc(101% + app.$gap-inline));
     }
 
     @include media.min($ms3)

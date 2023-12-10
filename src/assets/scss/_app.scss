@@ -13,7 +13,6 @@
 
     /* --DEPENDENCIES */
     @use './styles/utils';
-    @use './styles/display';
 
     /* --MEDIA */
     @use './styles/media';
@@ -42,8 +41,8 @@
     /* --* */
     %reset
     {
-        body, h1, h2, h3, h4, h5, h6, ul, p, figure, blockquote, pre, form { margin: 0; }
-        ul, button, input, textarea                                        { padding: 0; }
+        body, h1, h2, h3, h4, h5, h6, ul, p, figure, blockquote, pre, form, select, option { margin: 0; }
+        ul, button, input, textarea, option                                                { padding: 0; }
 
         li { list-style: none; }
 
@@ -51,11 +50,11 @@
 
         a { text-decoration: none; }
 
-        button, input, textarea { border: none; }
+        button, input, textarea, select { border: none; }
 
         button, input, textarea { background-color: transparent; }
 
-        button { cursor: pointer; }
+        button, select { cursor: pointer; }
 
         input, textarea { outline: none; }
     }
@@ -64,24 +63,14 @@
     {
         #{--app-g-inline}: $default-gap-inline;
 
-        @extend %global-class;
-
         &, body, body>div
         {
-            overflow: hidden;
-
-            width : 100vw;
-            height: 100vh;
-            height: 100svh;
-
             overscroll-behavior: none;
     
             user-select: none;
         }
 
         &, body { background-color: $dark; }
-
-        body>div { transform: scale(1); } // fixed children
 
         font-size: 36.458%;
 
@@ -142,32 +131,6 @@
             url('/fonts/AnonymousPro/AnonymousPro.ttf') format('truetype');
             font-display: swap;
         }
-    }
-
-    %global-class
-    {
-        .p-abs { position: absolute; }
-        .p-rlt { position: relative; }
-
-        .d-hid { display: none !important; }
-        .d-f-- { display: flex; }
-        .d-fcc { @extend %f-column-center; }
-        .d-fc- { @extend %f-column; }
-        .d-f-c { @extend %f-center; }
-        .d-fjc { @extend %f-j-center; }
-        .d-fac { @extend %f-a-center; }
-
-        .t-p3d { transform-style: preserve-3d; }
-
-        .o-hid { overflow: hidden; }
-        .o-h-a { overflow: hidden auto; }
-
-        .s-any { @extend %any-size; }
-        .s-a-w { width : 100%; }
-        .s-a-h { height: 100%; }
-        .s-fit { width : fit-content; height: fit-content; }
-
-        .b-box { box-sizing: border-box; }
     }
 
 

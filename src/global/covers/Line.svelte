@@ -27,7 +27,7 @@ context="module"
 <!-- #|-HTML-| -->
 
 <div
-class="line"
+class="line d-fac s-a-w"
 >
     <div
     class="id"
@@ -38,7 +38,7 @@ class="line"
     </div>
 
     <div
-    class="content"
+    class="content d-fac s-any"
     >
         <slot
         name="content"
@@ -169,8 +169,6 @@ lang="scss"
     /* --APP */
 
     /* --DEPENDENCIES */
-    @use '../../assets/scss/styles/utils';
-    @use '../../assets/scss/styles/display';
     @use '../../assets/scss/styles/font';
 
     /* --MEDIA */
@@ -187,11 +185,8 @@ lang="scss"
 
 .line
 {
-    &, .content { @extend %f-a-center; }
-
     @include font.text($regular: true, $font-size: map.get(font.$font-sizes, s3));
 
-    width:      100%;
     height:     $line-h;
     min-height: $line-h;
     max-height: $line-h;
@@ -210,8 +205,6 @@ lang="scss"
     .content
     {
         flex: 1;
-
-        @extend %any-size;
 
         user-select: text;
 

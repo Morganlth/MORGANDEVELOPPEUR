@@ -27,7 +27,7 @@ context="module"
 <!-- #|-HTML-| -->
 
 <div
-class="mask"
+class="mask p-a00 s-any p-n--"
 class:blur={prop_BLUR}
 class:shadow={prop_SHADOW}
 style:--mask-x="{prop_COORDS[0]}%"
@@ -167,7 +167,6 @@ lang="scss"
     /* --APP */
 
     /* --DEPENDENCIES */
-    @use '../../../../assets/scss/styles/utils';
 
     /* --MEDIA */
 
@@ -182,12 +181,6 @@ lang="scss"
 
 .mask
 {
-    @include utils.placement(absolute, 0, 0, 0, 0);
-
-    @extend %any-size;
-
-    pointer-events: none;
-
     &.blur
     {
         backdrop-filter: blur(1.4rem);

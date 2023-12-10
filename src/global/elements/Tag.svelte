@@ -27,7 +27,7 @@ context="module"
 <!-- #|-HTML-| -->
 
 <h3
-class="tag"
+class="tag s-fit"
 class:focus={tag_FOCUS}
 class:target={prop_TARGET}
 style={prop_getTagStyle()}
@@ -200,7 +200,6 @@ lang="scss"
 /* #\-USES-\ */
 
     /* --SASS */
-    @use 'sass:map';
 
     /* --APP */
 
@@ -224,9 +223,6 @@ lang="scss"
     @include font.h-(3, $light, $line-height: .88);
 
     opacity: 0;
-
-    width : fit-content;
-    height: fit-content;
 
     text-align: right;
 

@@ -27,14 +27,14 @@ context="module"
 <!-- #|-HTML-| -->
 
 <section
-class="wrapper"
+class="wrapper p-stk t-sc1 o-hid b-box"
 >
     <slot
     name="label"
     />
 
     <div
-    class="head"
+    class="head p-abs"
     >
         <slot
         name="title"
@@ -175,7 +175,6 @@ lang="scss"
     @use '../../../assets/scss/app';
 
     /* --DEPENDENCIES */
-    @use '../../../assets/scss/styles/utils';
 
     /* --MEDIA */
     @use '../../../assets/scss/styles/media';
@@ -190,19 +189,13 @@ lang="scss"
 
 .wrapper
 {
-    @extend %sticky;
-
-    transform: scale(1); /* fixed */
-
-    overflow: hidden;
+    overflow: clip; /* fixed booki link bug */
 
     padding: 8rem app.$gap-inline;
 
-    box-sizing: border-box;
-
     .head
     {
-        @include utils.placement(absolute, $z: 1);
+        z-index: 1;
 
         width: calc(100% - app.$gap-inline * 2);
     }

@@ -28,7 +28,7 @@ context="module"
 
 <div
 id={prop_NAME}
-class="page"
+class="page p-a00 s-any"
 class:hide={page_HIDE}
 style:z-index={prop_Z}
 >
@@ -147,6 +147,7 @@ style:z-index={prop_Z}
     // --SVELTE
 
     // --CONTEXTS
+    const APP_$FREEZE = APP.app_$FREEZE
 
     // --OUTSIDE
 
@@ -158,7 +159,6 @@ style:z-index={prop_Z}
 // #\-VARIABLES-\
 
     // --CONTEXTS
-    let app_$FREEZE = APP.app_$FREEZE
 
     // --OUTSIDE
 
@@ -182,7 +182,7 @@ style:z-index={prop_Z}
     // --OUTSIDE
 
     // --THIS
-    $: page_update($app_$FREEZE)
+    $: page_update($APP_$FREEZE)
 
     // --INSIDE
 
@@ -204,9 +204,9 @@ style:z-index={prop_Z}
     {
         if (freeze)
         {
-            const TARGET = app_$FREEZE.target
+            const TARGET = APP_$FREEZE.target
 
-            page_HIDE = TARGET != null && TARGET != prop_ID ? true : false
+            page_HIDE = TARGET != null && TARGET != prop_ID
         }
         else page_HIDE = false
     }
@@ -256,7 +256,6 @@ lang="scss"
     /* --APP */
 
     /* --DEPENDENCIES */
-    @use '../../../assets/scss/styles/utils';
 
     /* --MEDIA */
 
@@ -268,20 +267,11 @@ lang="scss"
 
 /* #\-THIS-\ */
 
-.page
+.page.hide
 {
-    @include utils.placement(absolute, 0, 0, 0, 0);
-    
-    @extend %any-size;
+    visibility: hidden;
 
-    visibility: visible;
-
-    &.hide
-    {
-        visibility: hidden;
-
-        pointer-events: none !important;
-    }
+    pointer-events: none !important;
 }
 
 

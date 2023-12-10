@@ -27,15 +27,15 @@ context="module"
 <!-- #|-HTML-| -->
 
 <div
-class="block"
+class="block t-p3d p-n--"
 class:focus={prop_FOCUS}
-class:hide={prop_HIDE}
+class:d-hid={prop_HIDE}
 class:grabbing={prop_GRABBING}
 style:--block-color={prop_COLOR ?? COLORS.primary}
 >
     {#each [1, 2, 3, 4, 5, 6] as id}
         <div
-        class="side"
+        class="side p-abs d-f-c s-any b-box"
         data-side-id={id}
         >
             <Icon
@@ -218,58 +218,46 @@ lang="scss"
 
 .block
 {
-    transform-style: preserve-3d;
     transform-origin: center;
-    transform:
-        translate(var(--slot-f-x, 0), var(--slot-f-y, 0))
-        rotateY(var(--slot-r-y, 0))
-        rotateZ(var(--slot-r-z, 0))
-        translateZ(calc(var(--slot-size, '100px') / 2))
-    ;
+    transform       : translate(var(--slot-f-x, 0), var(--slot-f-y, 0))
+                      rotateY(var(--slot-r-y, 0))
+                      rotateZ(var(--slot-r-z, 0))
+                      translateZ(calc(var(--slot-size, '100px') / 2));
 
-    width:  50%;
+    width : 50%;
     height: 50%;
-
-    pointer-events: none;
 
     transition: transform .4s ease-out;
 
     &.focus .side { border-color: var(--block-color, $primary); }
 
-    &.hide { display: none !important; }
-
     &.grabbing .side { border-color: $indicator !important; }
 
     .side
     {
-        @extend %f-center;
-        @extend %any-size;
-
-        position: absolute;
-
+        backface-visibility: hidden;
+    
         background-color: $dark;
 
         border: solid $intermediate calc($size * .05);
 
-        box-sizing: border-box;
-
         transition: border-color .4s ease-in;
     }
-    .side:nth-child(1), .side:nth-child(2), .side:nth-child(3), .side:nth-child(4) { top: 0; }
+    .side:nth-child(1), .side:nth-child(2), .side:nth-child(3), .side:nth-child(4) { top : 0; }
     .side:nth-child(1), .side:nth-child(4), .side:nth-child(5), .side:nth-child(6) { left: 0; }
     .side:nth-child(2)
     {
         left: 100%;
 
         transform-origin: left;
-        transform: rotate3d(0, 1, 0, 90deg);
+        transform       : rotate3d(0, 1, 0, 90deg);
     }
     .side:nth-child(3)
     {
         left: -100%;
 
         transform-origin: right;
-        transform: rotate3d(0, -1, 0, 90deg);
+        transform       : rotate3d(0, -1, 0, 90deg);
     }
     .side:nth-child(4) { transform: translateZ(calc($size * -1)) rotate3d(0, 1, 0, 180deg); }
     .side:nth-child(5)
@@ -277,14 +265,14 @@ lang="scss"
         top: -100%;
 
         transform-origin: bottom;
-        transform: rotate3d(1, 0, 0, 90deg);
+        transform       : rotate3d(1, 0, 0, 90deg);
     }
     .side:nth-child(6)
     {
         top: 100%;
 
         transform-origin: top;
-        transform: rotate3d(-1, 0, 0, 90deg);
+        transform       : rotate3d(-1, 0, 0, 90deg);
     }
 }
 

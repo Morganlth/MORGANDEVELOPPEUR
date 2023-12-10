@@ -93,13 +93,16 @@ context="module"
 
 <div
 id="ninacarducci"
+class="s-a-w"
 >
 	<div
-    class="body"
+    class="body s-a-w"
     itemscope
     itemtype="https://schema.org/LocalBusiness"
     >
-        <header>
+        <header
+        class="d-fc- s-a-w b-box"
+        >
             <a
             href="/projects/ninacarducci"
             alt={prop_DATA.desc}
@@ -113,7 +116,9 @@ id="ninacarducci"
             </a>
         
             <nav>
-                <ul>
+                <ul
+                class="d-flx s-a-w"
+                >
                     {#each prop_DATA.nav ?? [] as a}
                         <li>
                             <a
@@ -145,16 +150,17 @@ id="ninacarducci"
 
         <main>
             <div
-            class="slider"
+            class="slider p-rlt o-hid s-a-w"
             >
                 <div
+                class="d-flx s-a-w"
                 itemscope
                 itemtype="https://schema.org/ImageGallery"
                 itemprop="subjectOf"
                 >
                     {#each prop_DATA.slider ?? [] as item}
                         <div
-                        class="slider-item"
+                        class="slider-item d-fjc o-hid s-a-w"
                         style:transition-duration="{item.duration}ms"
                         style:transform="translateX({item.translateX - 100}%)"
                         >
@@ -202,7 +208,7 @@ id="ninacarducci"
 
                 {#each ['prev', 'next'] as btn}
                     <button
-                    class={btn}
+                    class="{btn} d-f-c"
                     type="button"
                     aria-label="{btn} button slider"
                     on:click={slider_eClick.bind(null, btn === 'prev' ? -1 : 1)}
@@ -231,6 +237,7 @@ id="ninacarducci"
         
             <div
             id="ninacarducci-about"
+            class="p-rlt d-fc- s-a-w b-box"
             >
                 <picture>
                     <source
@@ -273,6 +280,7 @@ id="ninacarducci"
 
             <section
             id="ninacarducci-gallery"
+            class="s-a-w"
             itemscope
             itemtype="https://schema.org/ImageGallery"
             itemprop="subjectOf"
@@ -284,7 +292,9 @@ id="ninacarducci"
                 </h2>
 
                 <nav>
-                    <ul>
+                    <ul
+                    class="d-fjc"
+                    >
                         {#each GALLERY_FILTERS as filter}
                             <li>
                                 <button
@@ -301,7 +311,7 @@ id="ninacarducci"
                 </nav>
             
                 <div
-                class="container"
+                class="container d-fjc"
                 >
                     <div>
                         {#each gallery_GALLERY as img (img.id)}
@@ -364,12 +374,15 @@ id="ninacarducci"
                 {#if gallery_TARGET != null}
                     <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
                     <div
-                    class="modal"
+                    class="modal p-fxd d-fjc"
                     transition:transition_fade={{ duration: 200 }}
                     on:click={modal_eClick}
                     >
-                        <div>
+                        <div
+                        class="d-fac s-a-h"
+                        >
                             <img
+                            class="b-box"
                             src="/images/ninacarducci/gallery/{(prop_DATA.gallery ?? [])[gallery_TARGET]?.src}.jpg"
                             alt={(prop_DATA.gallery ?? [])[gallery_TARGET]?.alt}
                             width="498"
@@ -378,7 +391,7 @@ id="ninacarducci"
                             {#if gallery_GALLERY.length > 1}
                                 {#each ['prev', 'next'] as btn}
                                     <button
-                                    class={btn}
+                                    class="{btn} d-f-c"
                                     type="button"
                                     aria-label="{btn} button modal"
                                     on:click|stopPropagation={modal_eClick2.bind(null, btn === 'prev' ? -1 : 1)}
@@ -418,12 +431,16 @@ id="ninacarducci"
 
             <section
             id="ninacarducci-service"
+            class="p-rlt s-a-w"
             >
                 <h2>{prop_DATA.services.title}</h2>
 
-                <div>
+                <div
+                class="d-fc- b-box"
+                >
                     {#each prop_DATA.services.contents ?? [] as service}
                         <article
+                        class="d-fc- s-a-w b-box"
                         itemscope
                         itemtype="https://schema.org/Offer"
                         itemprop="makesOffer"
@@ -491,14 +508,18 @@ id="ninacarducci"
 
         <footer
         id="ninacarducci-contact"
+        class="p-rlt"
         >
-            <div>
+            <div
+            class="d-fc-"
+            >
                 <section>
                     <h2>{prop_DATA.contact.title}</h2>
         
                     <p>{prop_DATA.contact.text}</p>
                     
                     <form
+                    class="d-fc- s-a-w"
                     action="#"
                     method="post"
                     onsubmit="return false"
@@ -510,10 +531,12 @@ id="ninacarducci"
 
                                 {#if textarea}
                                     <textarea
+                                    class="s-a-w b-box"
                                     {...rest}
                                     ></textarea>
                                 {:else}
                                     <input
+                                    class="s-a-w b-box"
                                     autocomplete="on"
                                     {...rest}
                                     >
@@ -522,6 +545,7 @@ id="ninacarducci"
                         {/each}
 
                         <input
+                        class="s-a-w b-box"
                         type="submit"
                         value={prop_DATA.contact.formSubmit}
                         >
@@ -558,7 +582,9 @@ id="ninacarducci"
                 </picture>
             </div>
 
-            <div>
+            <div
+            class="d-fc-"
+            >
                 {#each prop_DATA.infos as info}
                     {@const {title, textAttributes, contents} = info}
                     <section>
@@ -786,6 +812,7 @@ id="ninacarducci"
         let i = -1
 
         while (++i < LENGTH)
+        {
             if (gallery_GALLERY[i].id == gallery_TARGET)
             {
                 i += n
@@ -794,6 +821,7 @@ id="ninacarducci"
         
                 break
             }
+        }
     }
 
     // --DESTROY
@@ -884,8 +912,6 @@ lang="scss"
 
 #ninacarducci
 {
-    &, .body { width: 100%; }
-
     background-color: $light-color;
 
     .body
@@ -909,16 +935,9 @@ lang="scss"
 
     header
     {
-        &, nav ul
-        {
-            align-items: center;
-    
-            width: 100%;
-        }
+        &, ul { align-items: center; }
 
         @include utils.placement(sticky, $top: 0, $right: 0, $left: 0, $z: 2);
-    
-        @extend %f-column;
 
         justify-content: space-between;
 
@@ -926,14 +945,10 @@ lang="scss"
 
         background-color: $light-color;
 
-        box-sizing: border-box;
-
         h1 { font-size: 2.5rem; }
 
-        nav ul
+        ul
         {
-            display: flex;
-
             font-size: 1.4rem;
 
             li
@@ -956,30 +971,15 @@ lang="scss"
 
     .slider
     {
-        &, &>div, .slider-item
-        {
-            width : 100%;
-            height: fit-content;
-        }
-
-        position: relative;
+        &, &>div, .slider-item { height: fit-content; }
 
         max-height: 888px;
 
-        &>div
-        {
-            display: flex;
-
-            transform: translateX(100%);
-        }
+        &>div { transform: translateX(100%); }
 
         .slider-item
         {
-            @extend %f-j-center;
-
             flex-shrink: 0;
-        
-            overflow: hidden;
 
             transition: transform ease-in-out;
 
@@ -995,8 +995,6 @@ lang="scss"
         &>button
         {
             @include utils.placement(absolute, $top: 0, $z: 1);
-    
-            @extend %f-center;
 
             opacity: .5;
 
@@ -1028,8 +1026,6 @@ lang="scss"
 
             button
             {
-                $border: solid transparent 1rem;
-            
                 opacity: .5;
     
                 width : 3rem;
@@ -1040,8 +1036,7 @@ lang="scss"
                 background-color: $light-color;
                 background-clip : padding-box;
 
-                border-top   : $border;
-                border-bottom: $border;
+                border-block: solid transparent 1rem;
 
                 box-sizing: content-box;
 
@@ -1056,25 +1051,14 @@ lang="scss"
     {
         padding: 10rem;
 
-        picture::before { height: 150px; }
+        picture::before { height: 15rem; }
     }
 
-    #ninacarducci-about, #ninacarducci-service>div, #ninacarducci-contact>div
-    {
-        @extend %f-column;
-        
-        align-items: center;
-    }
+    #ninacarducci-about, #ninacarducci-service>div, #ninacarducci-contact>div { align-items: center; }
 
     #ninacarducci-about
     {
-        &, picture::before { width: 100%; }
-
-        position: relative;
-
         background-color: $about-p-color;
-
-        box-sizing: border-box;
 
         picture, article h2 { margin-top: 1.6rem; }
 
@@ -1084,6 +1068,7 @@ lang="scss"
             {
                 @include utils.placement(absolute, $top: 0, $left: 0, $z: -1, $pe: true);
 
+                width : 100%;
                 height: 30%;
 
                 background-color: $about-s-color;
@@ -1126,8 +1111,6 @@ lang="scss"
 
     #ninacarducci-gallery
     {
-        width: 100%;
-
         h2
         {
             padding-block: 6.4rem;
@@ -1136,8 +1119,6 @@ lang="scss"
         }
 
         button { background-color: transparent; }
-
-        ul, .container { @extend %f-j-center; }
 
         ul
         {
@@ -1179,7 +1160,7 @@ lang="scss"
 
             img
             {
-                aspect-ratio: 1 /  1;
+                aspect-ratio: 1 / 1;
 
                 width : auto;
                 height: auto;
@@ -1188,20 +1169,13 @@ lang="scss"
 
         .modal
         {
-            @include utils.placement(fixed, 0, 0, 0, 0, 3);
-
-            @extend %f-j-center;
-            @extend %any-size;
+            z-index: 3;
 
             background-color: rgba(0, 0, 0, .5);
 
             &>div
             {
                 $border-size: 1rem;
-        
-                @extend %f-a-center;
-
-                height: 100%;
 
                 img
                 {
@@ -1215,14 +1189,17 @@ lang="scss"
             
                     border       : solid $light-color $border-size;
                     border-radius: .5rem;
-
-                    box-sizing: border-box;
                 }
 
                 button
                 {
-                    @extend %f-center;
-        
+                    width : 3rem;
+                    height: 3rem;
+
+                    background-color: $light-color;
+
+                    font-size: 2.4rem;
+
                     &.prev
                     {
                         order: 1;
@@ -1235,13 +1212,6 @@ lang="scss"
     
                         transform: translateX(-$border-size);
                     }
-
-                    width : 3rem;
-                    height: 3rem;
-
-                    background-color: $light-color;
-
-                    font-size: 2.4rem;
                 }
             }
         }
@@ -1276,10 +1246,6 @@ lang="scss"
 
     #ninacarducci-service
     {
-        &, article { width: 100%; }
-
-        position: relative;
-
         background-color: $service-p-color;
 
         h2
@@ -1289,12 +1255,7 @@ lang="scss"
             text-align: center;
         }
 
-        &>div, article
-        {
-            justify-content: space-between;
-
-            box-sizing: border-box;
-        }
+        &>div, article { justify-content: space-between; }
 
         &>div
         {
@@ -1316,8 +1277,6 @@ lang="scss"
 
         article
         {
-            @extend %f-column;
-    
             z-index: 1;
 
             max-width: 100%;
@@ -1344,8 +1303,6 @@ lang="scss"
 
     #ninacarducci-contact
     {
-        position: relative;
-
         background-color: $contact-p-color;
 
         &>div
@@ -1368,13 +1325,9 @@ lang="scss"
 
             form
             {
-                &, input, textarea { width: 100%; }
-        
-                @extend %f-column;
-
                 label, input
                 {
-                    font-size  :   inherit;
+                    font-size  : inherit;
                     line-height: inherit;
                 }
 
@@ -1386,8 +1339,6 @@ lang="scss"
                     background-color: transparent;
     
                     border: 1px solid;
-
-                    box-sizing: border-box;
                 }
     
                 input { height: 4rem; }
@@ -1415,8 +1366,7 @@ lang="scss"
                 {
                     @include utils.placement(absolute, $bottom: 0, $right: 0, $z: -1, $pe: true);
 
-                    width : 100%;
-                    height: 150px;
+                    width: 100%;
                 
                     background-color: $contact-s-color;
                 }

@@ -27,7 +27,7 @@ context="module"
 <!-- #|-HTML-| -->
 
 <svg
-class="snake2" 
+class="snake2 s-any" 
 viewBox="0 0 99 99"
 fill="var(--icon-color)"
 xmlns="http://www.w3.org/2000/svg"
@@ -53,7 +53,7 @@ xmlns="http://www.w3.org/2000/svg"
 
 <!-- #|-SCRIPT-| -->
 
-<script>
+<!-- <script>
 
 // #\-IMPORTS-\
 
@@ -156,12 +156,12 @@ xmlns="http://www.w3.org/2000/svg"
     // --*
 
 
-</script>
+</script> -->
 
 
 <!-- #|-STYLE-| -->
 
-<style
+<!-- <style
 lang="scss"
 >
 
@@ -172,7 +172,6 @@ lang="scss"
     /* --APP */
 
     /* --DEPENDENCIES */
-    @use '../../assets/scss/styles/utils';
 
     /* --MEDIA */
 
@@ -184,7 +183,5 @@ lang="scss"
 
 /* #\-THIS-\ */
 
-.snake2 { @extend %any-size; }
 
-
-</style>
+</style> -->

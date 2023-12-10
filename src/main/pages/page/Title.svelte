@@ -28,7 +28,7 @@ context="module"
 
 <svelte:element
 this={prop_TITLE.html}
-class="title"
+class="title p-rlt d-fc- s-fit"
 class:focus={prop_CHARGED && prop_INTRO}
 data-pe-content={prop_TITLE.fragments[0]?.frags?.substring(0, 1)}
 {...(prop_TITLE.attributes ?? {})}
@@ -45,20 +45,22 @@ bind:this={title}
     {/each}
 
     {#if prop_TITLE.element}
+    {@const {component, props, children} = prop_TITLE.element}
         <div
         class="element"
-        style:transform={fragments_getTranslate3d()}
+        style:transform={fragments_getTransform()}
         style:opacity="0"
         bind:this={FRAGMENTS_FRAGS[FRAGMENTS_FRAGS.length]}
         >
             <svelte:component
-            this={prop_TITLE.element.component}
-            {...prop_TITLE.element.props ?? {}}
+            this={component}
+            {...(props ?? {})}
             >
-                {#each prop_TITLE.element.children ?? [] as child}
+                {#each children ?? [] as child}
+                {@const {component, props} = child}
                     <svelte:component
-                    this={child.component}
-                    {...child.props ?? {}}
+                    this={component}
+                    {...(props ?? {})}
                     />
                 {/each}
             </svelte:component>
@@ -186,26 +188,26 @@ bind:this={title}
 
     function title_setEvents() { EVENT.event_add(TITLE_EVENTS) }
 
-    function fragments_setEvents()  { EVENT.event_add(FRAGMENTS_EVENTS) }
+    function fragments_setEvents()  { EVENT.event_add(FRAGMENTS_EVENTS)   }
 
     function fragments_setEvents2() { EVENT.event_add(FRAGMENTS_EVENTS_2) }
 
     // --GET
-    function fragments_getTranslate3d()
+    function fragments_getTransform()
     {
         function get() { return Math.random() * FRAGMENTS_FORCE - FRAGMENTS_FORCE / 2 }
 
-        return `translate3d(${get()}px, ${get()}px, ${get()}px)`
+        return `translate(${get()}px, ${get()}px) scale(0)`
     }
     
     function fragments_getStyle(i)
     {
         return `
-        transform: ${fragments_getTranslate3d()};
-        opacity: 0;
-        transition: transform ease-out, opacity;
+        transform          : ${fragments_getTransform()};
+        opacity            : 0;
+        transition         : transform ease-out, opacity;
         transition-duration: .6s;
-        transition-delay: ${.04 * i}s;`
+        transition-delay   : ${.04 * i}s;`
     }
 
     // --UPDATES
@@ -229,7 +231,7 @@ bind:this={title}
     {
         for (const FRAG of FRAGMENTS_FRAGS)
         {
-            FRAG.style.transform = transform ?? fragments_getTranslate3d()
+            FRAG.style.transform = transform ?? fragments_getTransform()
             FRAG.style.opacity   = opacity
         }
     }
@@ -266,7 +268,7 @@ bind:this={title}
 
     function fragments_destroyTimeout() { clearTimeout(fragments_TIMEOUT) }
 
-    function fragments_destroyEvents() { EVENT.event_remove(FRAGMENTS_EVENTS) }
+    function fragments_destroyEvents()  { EVENT.event_remove(FRAGMENTS_EVENTS)   }
 
     function fragments_destroyEvents2() { EVENT.event_remove(FRAGMENTS_EVENTS_2) }
 
@@ -285,13 +287,7 @@ bind:this={title}
     {
         const DIF = scrollTop - prop_TOP
 
-        if (DIF < 0) fragments_TRANSLATE_X = 0
-        else
-        {
-            const RATIO = DIF / APP.app_PAGE_INTRO_HEIGHT
-        
-            fragments_TRANSLATE_X = -title_LEFT * RATIO
-        }
+        fragments_TRANSLATE_X = DIF < 0 ? 0 : -title_LEFT * DIF / APP.app_HEIGHT
     }
 
 
@@ -310,7 +306,7 @@ bind:this={title}
     // --*
     function fragments_intro()
     {
-        const TRANSFORM = 'translate3d(0, 0, 0)'
+        const TRANSFORM = 'translate(0, 0) scale(1)'
     
         fragments_updateFrags(1, TRANSFORM)
         fragments_updateTags(animation_staticWriting, 1000)
@@ -340,7 +336,6 @@ lang="scss"
 
     /* --DEPENDENCIES */
     @use '../../../assets/scss/styles/utils';
-    @use '../../../assets/scss/styles/display';
     @use '../../../assets/scss/styles/font';
 
     /* --MEDIA */
@@ -357,17 +352,8 @@ lang="scss"
 .title
 {
     @include font.h-(1, $light);
-    
-    @extend %f-column;
-
-    position: relative;
 
     gap: 2rem;
-
-    perspective: 1000px;
-
-    width : fit-content;
-    height: fit-content;
 
     padding-bottom: 2rem;
 

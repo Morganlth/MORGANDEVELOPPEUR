@@ -27,7 +27,7 @@ context="module"
 <!-- #|-HTML-| -->
 
 <div
-class="label"
+class="label p-rlt"
 style:opacity={label_OPACITY}
 >
     <span
@@ -192,15 +192,13 @@ style:opacity={label_OPACITY}
                 label_T = t
         
                 closure_TRANSLATE_X = -100 + (content_CLIP = t * 100)
-            }, LABEL_D, label_T, invert)
+            },
+            LABEL_D, label_T, invert)
 
             label_cancel = cancel
 
-            if(invert)
-            {
-                try { await promise, label_OPACITY = 0 } catch {}
-            }
-            else label_OPACITY = 1
+            if(invert) try { await promise, label_OPACITY = 0 } catch {}
+            else       label_OPACITY = 1
         },
         !invert && label_T === 0 ? LABEL_D : 0)
     }
@@ -243,9 +241,10 @@ lang="scss"
 .label
 {
     &, .content { width: min-content; }
-    
-    @include utils.placement(relative, $z: 2);
+
     @include font.text($color: $light);
+
+    z-index: 2;
 
     padding-bottom: 2rem;
 

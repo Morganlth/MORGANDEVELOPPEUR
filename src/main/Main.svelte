@@ -27,7 +27,7 @@ context="module"
 <!-- #|-HTML-| -->
 
 <main
-class="main"
+class="main p-rlt s-ful p-n--"
 style:height="{MAIN_HEIGHT}%"
 >
     <Particles />
@@ -234,7 +234,7 @@ style:height="{MAIN_HEIGHT}%"
 
 <!-- #|-STYLE-| -->
 
-<style
+<!-- <style
 lang="scss"
 >
 
@@ -256,16 +256,5 @@ lang="scss"
 
 /* #\-THIS-\ */
 
-.main
-{
-    position: relative;
-    
-    width     : 100vw;
-    min-height: 100vh;
-    min-height: 100svh;
 
-    pointer-events: none;
-}
-
-
-</style>
+</style> -->

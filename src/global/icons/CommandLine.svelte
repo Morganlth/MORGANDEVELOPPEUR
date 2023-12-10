@@ -27,14 +27,14 @@ context="module"
 <!-- #|-HTML-| -->
 
 <svg
-class="commandline"
+class="commandline s-a-w"
 viewBox="0 0 90 72"
 fill="none"
 xmlns="http://www.w3.org/2000/svg"
 >
     <path
     d="M45 67H85M5 5L40.5556 36L5 67"
-    stroke="var(--icon-color, {COLORS.light})"
+    stroke="var(--icon-color, #FFF)"
     stroke-width="10"
     stroke-linecap="round"
     stroke-linejoin="round"
@@ -44,7 +44,7 @@ xmlns="http://www.w3.org/2000/svg"
 
 <!-- #|-SCRIPT-| -->
 
-<script>
+<!-- <script>
 
 // #\-IMPORTS-\
 
@@ -53,7 +53,6 @@ xmlns="http://www.w3.org/2000/svg"
     // --SVELTE
 
     // --LIB
-    import COLORS from '$lib/colors'
 
     // --CONTEXTS
 
@@ -148,12 +147,12 @@ xmlns="http://www.w3.org/2000/svg"
     // --*
 
 
-</script>
+</script> -->
 
 
 <!-- #|-STYLE-| -->
 
-<style
+<!-- <style
 lang="scss"
 >
 
@@ -175,11 +174,5 @@ lang="scss"
 
 /* #\-THIS-\ */
 
-.commandline
-{
-    width: 100%;
-    height: auto;
-}
 
-
-</style>
+</style> -->

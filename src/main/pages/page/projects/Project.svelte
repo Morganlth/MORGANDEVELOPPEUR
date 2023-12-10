@@ -27,14 +27,14 @@ context="module"
 <!-- #|-HTML-| -->
 
 <section
-class="project"
+class="project o-hid s-any"
 class:scroller={prop_TARGET}
 style:--tag-x="{tag_TRANSLATE_X}px"
 style:--tag-y="{tag_TRANSLATE_Y}px"
 bind:this={project}
 >
     <div
-    class="head"
+    class="head p-stk"
     bind:this={head}
     >
         <Mask2
@@ -54,10 +54,11 @@ bind:this={project}
         />
     
         {#if prop_TARGET}
+        {@const {id, about} = prop_PROJECT}
             <About
-            prop_ID={prop_PROJECT.id}
+            prop_ID={id}
             prop_GLOBAL={prop_ABOUT_GLOBAL}
-            prop_THIS={prop_PROJECT.about}
+            prop_THIS={about}
             prop_X={card_TRANSLATE_X}
             prop_Y={card_TRANSLATE_Y}
             prop_W={card_HALF_WIDTH  * 2}
@@ -89,12 +90,13 @@ bind:this={project}
     
 
     {#if prop_TARGET}
+    {@const {component, data} = prop_PROJECT}
         <div
-        class="content"
+        class="content p-rlt s-a-w"
         >
             <svelte:component
-            this={prop_PROJECT.component}
-            prop_DATA={prop_PROJECT.data}
+            this={component}
+            prop_DATA={data}
             />
         </div>
     {/if}
@@ -223,7 +225,7 @@ bind:this={project}
     function tag_setVars()
     {
         tag_TRANSLATE_X = card_TRANSLATE_X + card_HALF_WIDTH
-        tag_TRANSLATE_Y = APP.app_HEIGHT * .5
+        tag_TRANSLATE_Y = APP.app_HALF_HEIGHT
     }
 
     function tag_setTimeout()
@@ -388,9 +390,6 @@ lang="scss"
 {
     @include utils.placement(absolute, $top: 0, $left: 0, $right: 0);
 
-    @extend %any-size;
-
-    overflow           : hidden;
     overscroll-behavior: none;
 
     &.scroller
@@ -404,15 +403,12 @@ lang="scss"
         max-height: 100svh;
 
         pointer-events: auto;
-
-        .head { @extend %sticky; }
     }
 
     .content
     {
-        @include utils.placement(relative, $z: 1);
+        z-index: 1;
 
-        width : 100%;
         height: fit-content;
     }
 }

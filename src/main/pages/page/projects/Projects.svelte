@@ -27,10 +27,11 @@ context="module"
 <!-- #|-HTML-| -->
 
 <div
-class="projects"
+class="projects p-a00 s-any"
 data-page-id={prop_ID}
 >
     <Group
+    prop_CLASS="p-a00 s-any"
     let:resize
     >
         {#each prop_CHILDREN.projects as project}
@@ -77,7 +78,6 @@ data-page-id={prop_ID}
 //=======@STYLE|
 
     // --*
-    import '../../../../assets/scss/global/projects.scss'
 
 
 // #\-EXPORTS-\
@@ -246,7 +246,7 @@ data-page-id={prop_ID}
 
 <!-- #|-STYLE-| -->
 
-<style
+<!-- <style
 lang="scss"
 >
 
@@ -257,7 +257,6 @@ lang="scss"
     /* --APP */
 
     /* --DEPENDENCIES */
-    @use '../../../../assets/scss/styles/utils';
 
     /* --MEDIA */
 
@@ -269,12 +268,5 @@ lang="scss"
 
 /* #\-THIS-\ */
 
-.projects
-{
-    @include utils.placement(absolute, 0, 0, 0, 0);
 
-    @extend %any-size;
-}
-
-
-</style>
+</style> -->

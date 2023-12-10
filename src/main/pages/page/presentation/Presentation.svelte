@@ -27,7 +27,7 @@ context="module"
 <!-- #|-HTML-| -->
 
 <div
-class="presentation"
+class="presentation p-a00 s-any"
 data-page-id={prop_ID}
 >
     <Features
@@ -275,7 +275,7 @@ data-page-id={prop_ID}
 
 <!-- #|-STYLE-| -->
 
-<style
+<!-- <style
 lang="scss"
 >
 
@@ -286,7 +286,6 @@ lang="scss"
     /* --APP */
 
     /* --DEPENDENCIES */
-    @use '../../../../assets/scss/styles/utils';
 
     /* --MEDIA */
 
@@ -298,12 +297,5 @@ lang="scss"
 
 /* #\-THIS-\ */
 
-.presentation
-{
-    @include utils.placement(absolute, 0, 0, 0, 0);
 
-    @extend %any-size;
-}
-
-
-</style>
+</style> -->

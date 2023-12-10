@@ -27,7 +27,7 @@ context="module"
 <!-- #|-HTML-| -->
 
 <div
-class="particles {$APP_$USER_AGENT}"
+class="particles p-fxd o-hid p-n-- {$APP_$USER_AGENT}"
 bind:this={particles}
 >
     <canvas
@@ -483,13 +483,7 @@ lang="scss"
 
 .particles
 {
-    @include utils.fixed;
-
     isolation: isolate;
-
-    overflow: hidden;
-
-    pointer-events: none;
 
     &.-webkit { width: calc(100% - utils.$scrollbar-width) !important; }
 

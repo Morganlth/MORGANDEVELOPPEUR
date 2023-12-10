@@ -29,7 +29,7 @@ context="module"
 <!-- #|-HTML-| -->
 
 <div
-class="blackblocks"
+class="blackblocks p-a00 o-hid s-any"
 class:hide={blackblocks_HIDE}
 bind:this={blackblocks}
 >
@@ -935,7 +935,6 @@ lang="scss"
     /* --APP */
 
     /* --DEPENDENCIES */
-    @use '../../../../assets/scss/styles/utils';
 
     /* --MEDIA */
 
@@ -947,16 +946,7 @@ lang="scss"
 
 /* #\-THIS-\ */
 
-.blackblocks
-{
-    @include utils.placement(absolute, 0, 0, 0, 0);
-
-    @extend %any-size;
-
-    overflow: hidden;
-
-    &.hide { visibility: hidden; }
-}
+.blackblocks.hide { visibility: hidden; }
 
 
 </style>

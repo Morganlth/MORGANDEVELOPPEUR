@@ -27,7 +27,7 @@ context="module"
 <!-- #|-HTML-| -->
 
 <svg
-class="send"
+class="send s-any"
 viewBox="0 0 90 90"
 fill="none"
 xmlns="http://www.w3.org/2000/svg"
@@ -41,7 +41,7 @@ xmlns="http://www.w3.org/2000/svg"
 
 <!-- #|-SCRIPT-| -->
 
-<script>
+<!-- <script>
 
 // #\-IMPORTS-\
 
@@ -144,7 +144,7 @@ xmlns="http://www.w3.org/2000/svg"
     // --*
 
 
-</script>
+</script> -->
 
 
 <!-- #|-STYLE-| -->
@@ -160,7 +160,6 @@ lang="scss"
     /* --APP */
 
     /* --DEPENDENCIES */
-    @use '../../assets/scss/styles/utils';
     @use '../../assets/scss/styles/animation';
 
     /* --MEDIA */
@@ -173,11 +172,7 @@ lang="scss"
 
 /* #\-THIS-\ */
 
-.send
-{
-    @extend %any-size;
-    @extend %a-scaled;
-}
+.send { @extend %a-scaled; }
 
 
 </style>

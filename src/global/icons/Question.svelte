@@ -27,7 +27,7 @@ context="module"
 <!-- #|-HTML-| -->
 
 <svg 
-class="question"
+class="question s-any"
 viewBox="0 0 99 99"
 fill="none"
 xmlns="http://www.w3.org/2000/svg"
@@ -45,7 +45,7 @@ xmlns="http://www.w3.org/2000/svg"
 
 <!-- #|-SCRIPT-| -->
 
-<script>
+<!-- <script>
 
 // #\-IMPORTS-\
 
@@ -148,12 +148,12 @@ xmlns="http://www.w3.org/2000/svg"
     // --*
 
 
-</script>
+</script> -->
 
 
 <!-- #|-STYLE-| -->
 
-<style
+<!-- <style
 lang="scss"
 >
 
@@ -164,7 +164,6 @@ lang="scss"
     /* --APP */
 
     /* --DEPENDENCIES */
-    @use '../../assets/scss/styles/utils';
 
     /* --MEDIA */
 
@@ -176,7 +175,5 @@ lang="scss"
 
 /* #\-THIS-\ */
 
-.question { @extend %any-size; }
 
-
-</style>
+</style> -->

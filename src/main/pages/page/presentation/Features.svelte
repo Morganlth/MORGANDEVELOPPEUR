@@ -27,20 +27,21 @@ context="module"
 <!-- #|-HTML-| -->
 
 <div
-class="features"
+class="features s-a-w"
 class:focus={prop_FOCUS}
 style:transform="translateY({features_TRANSLATE_Y}%)"
 >
     {#each prop_FEATURES as group}
     {@const {show, attributes, contents} = group}
         <div
-        class="container"
+        class="container s-a-w"
         class:show
         {...(attributes ?? {})}
         >
             {#each contents as feature, j}
             {@const {topic, value, html, attributes, contact} = feature}
                 <div
+                class="b-box"
                 style:--feature-direction={j % 2 ? -1 : 1}
                 style:--feature-delay="{.2 * j}s"
                 >
@@ -52,6 +53,7 @@ style:transform="translateY({features_TRANSLATE_Y}%)"
                         </span>
 
                         <section
+                        class="p-rlt s-a-w b-box"
                         slot="content"
                         >
                             <div
@@ -61,14 +63,14 @@ style:transform="translateY({features_TRANSLATE_Y}%)"
                             </div>
                     
                             <h3
-                            class="topic"
+                            class="topic p-rlt"
                             >
                                 {topic}
                             </h3>
 
                             <svelte:element
                             this={html ?? 'p'}
-                            class="feature"
+                            class="feature p-rlt p-y-- b-box"
                             tabindex={html === 'a' && prop_FOCUS && show ? 0 : -1}
                             {...(attributes ?? {})}
                             >
@@ -297,7 +299,6 @@ lang="scss"
 
     /* --DEPENDENCIES */
     @use '../../../../assets/scss/styles/utils';
-    @use '../../../../assets/scss/styles/display';
     @use '../../../../assets/scss/styles/font';
     @use '../../../../assets/scss/styles/animation';
 
@@ -315,11 +316,7 @@ lang="scss"
 
 .features
 {
-    &, .container
-    {
-        width : 100%;
-        height: fit-content;
-    }
+    &, .container { height: fit-content; }
 
     @include utils.placement(absolute, $top: 50%, $right: 0, $left: 0);
 
@@ -333,25 +330,19 @@ lang="scss"
 
         &.show>div { transform: translate(0, 0); }
 
-        &>div, section, .feature { box-sizing: border-box; }
-
         &>div:nth-child(1) { border-top: solid $primary 1rem; }
 
         &>div
         {
             &::before
             {
-                @include utils.placement(absolute, 0, 0, 0, 0, -1, true);
-
-                @extend %any-size;
+                @include utils.absolute-any(-1, true);
 
                 opacity: .3;
         
                 background    : url('/images/feature_bg.jpg') center / cover no-repeat;
                 mix-blend-mode: darken;
             }
-        
-            @extend %f-a-center;
 
             isolation: isolate;
     
@@ -366,24 +357,17 @@ lang="scss"
             transition: transform $duration var(--feature-delay, 0) ease-in-out;
         }
 
-        section, .feature { position: relative; }
-
-        section
+        section::before
         {
-            &::before
-            {
-                @include utils.placement(absolute, $top: 50%, $right: calc(app.$gap-inline * 2), $z: -1, $pe: true);
+            @include utils.placement(absolute, $top: 50%, $right: calc(app.$gap-inline * 2), $z: -1, $pe: true);
 
-                transform: translateY(-50%);
+            transform: translateY(-50%);
 
-                height: $height;
-            
-                mix-blend-mode: hue;
+            height: $height;
+        
+            mix-blend-mode: hue;
 
-                border-right: solid $primary 1.2rem;
-            }
-    
-            width: 100%;
+            border-right: solid $primary 1.2rem;
         }
 
         .text-background
@@ -392,12 +376,7 @@ lang="scss"
 
             @include utils.placement(absolute, $top: 50%, $left: 0, $z: -1, $pe: attr(data-topic));
             @include font.h-($color: $dark, $line-height: 0, $italic: true);
-
-            text-shadow:
-             1px  1px $light,
-            -1px  1px $light,
-            -1px -1px $light,
-             1px -1px $light;
+            @include utils.text-stroke;
 
             mix-blend-mode: hue;
         }
@@ -409,8 +388,6 @@ lang="scss"
         .feature
         {
             display: inline;
-
-            pointer-events: auto;
 
             padding-block: .2rem;
             padding-left :  app.$gap-inline;
@@ -456,7 +433,12 @@ lang="scss"
         {
             section { padding-left: 6%; }
 
-            .topic { line-height: 0; }
+            .topic
+            {
+                top: .6rem;
+        
+                line-height: 0;
+            }
 
             .feature { padding-left: max(34%, 400px); }
         }

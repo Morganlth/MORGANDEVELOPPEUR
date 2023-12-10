@@ -27,21 +27,25 @@ context="module"
 <!-- #|-HTML-| -->
 
 <nav
-class="router"
+class="router s-fit p-y--"
 class:hide={prop_HIDE}
 itemscope
 itemtype="https://schema.org/SiteNavigationElement"
 on:mouseleave={router_eMouseLeave}
 >
-    <ul>
+    <ul
+    class="d-flx s-fit"
+    >
         {#each prop_ROUTES as route, i}
-            {#if route.actif}
+        {@const {actif, on, id, value, attributes} = route}
+            {#if actif}
                 <li
+                class="p-rlt s-fit"
                 style:--route-t-delay="{i * 100}ms"
                 itemprop="name"
                 >
                     <span
-                    class="indicator"
+                    class="indicator d-hid"
                     >
                         <Icon
                         prop_SIZE="1rem"
@@ -49,18 +53,18 @@ on:mouseleave={router_eMouseLeave}
                         prop_SPRING={false}
                         >
                             <Indicator
-                            prop_FOCUS={route.on}
+                            prop_FOCUS={on}
                             />
                         </Icon>
                     </span>
             
                     <Route
-                    prop_ON={route.on}
-                    prop_ID={route.id}
-                    prop_VALUE={route.value ?? ''}
-                    prop_ATTRIBUTES={route.attributes}
-                    prop_e$mouseEnter={router_eMouseEnter}
+                    prop_ON={on}
+                    prop_ID={id}
+                    prop_VALUE={value ?? ''}
+                    prop_ATTRIBUTES={attributes}
                     on:click={route_eClick}
+                    on:mouseenter={route_eMouseEnter}
                     />
                 </li>
             {/if}
@@ -104,9 +108,9 @@ on:mouseleave={router_eMouseLeave}
 
     // --PROPS
     export let
-    prop_HIDE = false
-    ,
     prop_ROUTES = []
+    ,
+    prop_HIDE = false
 
     // --BINDING
 
@@ -162,7 +166,7 @@ on:mouseleave={router_eMouseLeave}
     function spring_update(state, size)
     {
         SPRING.spring_$STATE = state
-        SPRING.spring_$SIZE = size
+        SPRING.spring_$SIZE  = size
     }
 
     function router_update(id)
@@ -171,7 +175,7 @@ on:mouseleave={router_eMouseLeave}
 
         if (!LINK || LINK.on) return
 
-        try { prop_ROUTES.find(link => link.on).on = false } catch { /* recuperer le chemin dans l'url pour définir le lien sélectionné */ }
+        try { prop_ROUTES.find(link => link.on).on = false } catch {}
 
         prop_ROUTES[id] = { ...LINK, on: true }
     }
@@ -187,7 +191,7 @@ on:mouseleave={router_eMouseLeave}
 //=======@EVENTS|
 
     // --*
-    function router_eMouseEnter(id) { spring_update(prop_ROUTES[id].on ? -1 : 1, SPRING.spring_D_SIZE * 4) }
+    function route_eMouseEnter({ detail: {id} }) { spring_update(prop_ROUTES[id].on ? -1 : 1, SPRING.spring_D_SIZE * 4) }
 
     function router_eMouseLeave() { spring_update(0, SPRING.spring_D_SIZE) }
 
@@ -246,35 +250,22 @@ lang="scss"
 
 .router
 {
-    &, ul, li
-    {
-        width:  fit-content;
-        height: fit-content;
-    }
-
     @include utils.placement(fixed, $top: app.$gap-block, $left: 38%, $z: 1);
-
-    pointer-events: auto;
 
     mix-blend-mode: difference;
 
     ul
     {
-        display:     flex;
         align-items: flex-end;
 
         transform: rotate(-.01rad);
 
-        max-width:  calc(50vw - app.$gap-inline * 2);
+        max-width : calc(50vw - app.$gap-inline * 2);
         min-height: 2.4rem;
-
-        li { position: relative; }
 
         .indicator
         {
             @include utils.placement(absolute, $top: 50%, $left: 0);
-
-            display: none;
 
             transform: translate(-250%, -50%);
         }
@@ -289,19 +280,19 @@ lang="scss"
             pointer-events: none;
         }
 
-        top:  58%;
+        top : 58%;
         left: app.$gap-inline;
 
         ul
         {
             flex-direction: column;
-            align-items:    flex-start;
+            align-items   : flex-start;
 
             max-width: none;
 
             li { width: 100%; }
 
-            .indicator { display: inline-block; }
+            .indicator { display: inline-block !important; }
         }
     }
 }

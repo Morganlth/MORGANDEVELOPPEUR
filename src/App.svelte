@@ -121,7 +121,7 @@ context="module"
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
 id="app"
-class="lang-{prop_LANG}"
+class="lang-{prop_LANG} p-fxd o-h-a"
 class:freeze={$app_$FREEZE}
 style:visibility={app_FONTS_CHARGED ? 'visible' : 'hidden'}
 bind:this={app}
@@ -176,7 +176,7 @@ on:touchstart|once={app_eTouchStart}
 //=======@STYLE|
 
     // --*
-    import './assets/scss/global/setter.scss'
+    import './assets/scss/global/app.scss'
 
 
 // #\-EXPORTS-\
@@ -338,16 +338,17 @@ lang="scss"
 
 #app
 {
-    @include utils.fixed;
-
     @extend %scroll-bar;
 
-    overflow           : hidden scroll;
     overscroll-behavior: none;
 
     background-color: $dark;
 
-    &.freeze { overflow: hidden !important; }
+    &.freeze
+    {
+        overflow: hidden !important;
+        overflow: clip   !important;
+    }
 }
 
 

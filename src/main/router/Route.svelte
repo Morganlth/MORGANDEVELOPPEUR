@@ -28,8 +28,9 @@ context="module"
 
 <!-- svelte-ignore a11y-no-static-element-interactions a11y-missing-attribute -->
 <a
-class="route"
+class="route p-rlt d-fac s-a-w b-box"
 class:selected={prop_ON}
+draggable="false"
 {...prop_ATTRIBUTES}
 on:mouseenter={route_eMouseEnter}
 on:click|preventDefault={route_eClick}
@@ -77,8 +78,6 @@ on:click|preventDefault={route_eClick}
     prop_ID         = 0,
     prop_VALUE      = '',
     prop_ATTRIBUTES = {}
-    ,
-    prop_e$mouseEnter = () => {}
 
     // --BINDING
 
@@ -153,9 +152,9 @@ on:click|preventDefault={route_eClick}
 //=======@EVENTS|
 
     // --*
-    function route_eMouseEnter() { prop_e$mouseEnter(prop_ID) }
+    function route_eMouseEnter() { route_dispatch('mouseenter') }
 
-    function route_eClick() { SVELTE_DISPATCH('click', { id: prop_ID }) }
+    function route_eClick()      { route_dispatch('click') }
 
 
 //=======@TRANSITIONS|
@@ -173,7 +172,7 @@ on:click|preventDefault={route_eClick}
     // --*
     async function route_intro()
     {
-        await new Promise(resolve =>
+  await new Promise(resolve =>
         {
             ROUTE_EVENTS.animation = animation_staticWriting(ROUTE_TAGS, resolve)
             
@@ -182,6 +181,8 @@ on:click|preventDefault={route_eClick}
 
         route_destroyEvents()
     }
+
+    function route_dispatch(e) { SVELTE_DISPATCH(e, { id: prop_ID }) }
 
 
 </script>
@@ -202,7 +203,6 @@ lang="scss"
 
     /* --DEPENDENCIES */
     @use '../../assets/scss/styles/utils';
-    @use '../../assets/scss/styles/display';
     @use '../../assets/scss/styles/font';
 
     /* --MEDIA */
@@ -219,15 +219,8 @@ lang="scss"
 
 .route
 {
-    &, &::after { box-sizing: border-box; }
-
     @include font.text($color: $light, $regular: false);
 
-    @extend %f-a-center;
-
-    position: relative;
-
-    width: 100%;
     height: 3.4rem;
     
     padding-inline: 1.2rem;
@@ -243,6 +236,7 @@ lang="scss"
         border: solid $primary 1px;
         
         box-shadow: 0 0 5px $primary;
+        box-sizing: border-box;
     }
 
     &.selected
@@ -258,8 +252,8 @@ lang="scss"
 
         @keyframes a-selected
         {
-            40%     { color: $indicator; }
-            100%    { color: $primary; }    
+            40%  { color: $indicator; }
+            100% { color: $primary;   }    
         }
     }
 
@@ -271,7 +265,7 @@ lang="scss"
 
             transform: translateX(-50%);
 
-            width: .6rem;
+            width : .6rem;
             height: 0;
             
             border-top: solid $light 1px;

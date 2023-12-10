@@ -180,7 +180,7 @@ lang="scss"
 {
     transform: translate(calc(50vw - 30%), calc(-50vh + 50%)) scale(.26);
 
-    width: 34%;
+    width : 34%;
     height: 34%;
 
     fill: $light;

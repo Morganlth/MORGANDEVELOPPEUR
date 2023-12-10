@@ -38,11 +38,12 @@ class App
 // #\-PUBLICS-\
 
     // --THIS
-    app_WIDTH             = 0
-    app_HEIGHT            = 0
-    app_RATIO             = 0
-    app_PAGE_INTRO_HEIGHT = 0
-    app_SCROLLTOP         = 0
+    app_WIDTH       = 0
+    app_HEIGHT      = 0
+    app_HALF_WIDTH  = 0
+    app_HALF_HEIGHT = 0
+    app_RATIO       = 0
+    app_SCROLLTOP   = 0
 
 
 // #\-CONSTRUCTOR-\
@@ -169,10 +170,11 @@ class App
     // --UPDATES
     app_updateSize()
     {
-        this.app_WIDTH             = window.innerWidth
-        this.app_HEIGHT            = window.innerHeight
-        this.app_RATIO             = this.app_WIDTH / this.app_HEIGHT
-        this.app_PAGE_INTRO_HEIGHT = this.app_HEIGHT
+        this.app_WIDTH       = window.innerWidth
+        this.app_HEIGHT      = window.innerHeight
+        this.app_HALF_WIDTH  = this.app_WIDTH  * .5
+        this.app_HALF_HEIGHT = this.app_HEIGHT * .5
+        this.app_RATIO       = this.app_WIDTH / this.app_HEIGHT
     }
 
     app_updateSmallScreen()

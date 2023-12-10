@@ -48,6 +48,7 @@ transition:transition_fade={{ duration: 200 }}
         </Cell>
     </div>
 
+    <!--do not set the wheel event to passive-->
     <div
     class="content d-f-c s-any"
     style:--content-mul={content_MUL}
@@ -71,7 +72,7 @@ transition:transition_fade={{ duration: 200 }}
                     </header>
 
                     <main
-                    class="pe-b-rotate p-rlt d-f-- o-hid s-any b-box"
+                    class="pe-b-rotate p-rlt d-flx o-hid s-any b-box"
                     class:t-p3d={self}
                     >
                         {#each prop_RESUME.main as column}
@@ -313,7 +314,7 @@ lang="scss"
 
     pointer-events: auto;
 
-    backdrop-filter: blur(80px);
+    backdrop-filter: blur(100px);
 
     .head
     {
@@ -373,18 +374,6 @@ lang="scss"
         main
         {
             animation: a-main-intro ($a-duration * .5) ($a-duration * .5 + $i-duration) ease-out forwards;
-
-            &::after
-            {
-                @include utils.placement(absolute, $top: 50%, $right: 0, $left: 0, $pe: true);
-
-                width : 100%;
-                height: calc(1 * $ratio);
-
-                pointer-events: none;
-
-                box-shadow: 0 0 calc(8 * $ratio) $dark;
-            }
 
             @keyframes a-main-intro { to { clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%); } }
         }
@@ -554,6 +543,18 @@ lang="scss"
             padding-right: calc(8 * $ratio);
     
             user-select: text;
+        }
+
+        &::after
+        {
+            @include utils.placement(absolute, $top: 50%, $right: 0, $left: 0, $pe: true);
+
+            width : 100%;
+            height: calc(1 * $ratio);
+
+            pointer-events: none;
+
+            box-shadow: 0 0 calc(8 * $ratio) $dark;
         }
     }
 }

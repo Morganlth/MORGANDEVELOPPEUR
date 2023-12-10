@@ -35,6 +35,8 @@ style:transform="translate({card_TRANSLATE_X}px, {card_TRANSLATE_Y}px)"
 bind:this={card}
 >
     <button
+    class="t-p3d s-any p-y--"
+    class:grab={card_GRABBING}
     title={prop_TITLE}
     style:transform="
     translateZ({(prop_ID - (prop__CARD_HOVER ?? prop_ID)) * 50}px)
@@ -50,13 +52,14 @@ bind:this={card}
     on:touchend={card_eTouchEnd}
     >
         <div
-        class="decor"
+        class="decor d-f-c t-p3d p-n--"
         class:hide={decor_HIDE}
         style:transform="rotateY({decor_ROTATE_Y}deg) translateZ({decor_TRANSLATE_Z}px)"
         >
             {#each ['back', 'face'] as position}
                 <svg
-                class="background {position}"
+                class="background {position} s-any"
+                class:p-abs={position === 'back'}
                 viewBox="0 0 234 333"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
@@ -72,7 +75,7 @@ bind:this={card}
             {/each}
 
             <svg
-            class="texture"
+            class="texture p-abs t-p3d"
             viewBox="0 0 234 333"
             fill={prop_COLOR}
             xmlns="http://www.w3.org/2000/svg"
@@ -163,7 +166,7 @@ bind:this={card}
     const
     CARD_DURATION    = wait_getDelay(36), // id * +- 600ms
     CARD_DURATION_2  = wait_getDelay(24), // id * +- 400ms
-    CARD_DELAY       = wait_getDelay(18), // +- 300ms
+    CARD_DELAY       = wait_getDelay(18), //      +- 300ms
     CARD_DELAY_2     = (prop_ID ?? 0) * CARD_DURATION
     ,
     CARD_EVENTS =
@@ -286,8 +289,8 @@ bind:this={card}
 
     function card_updateRotate(x, y)
     {
-        card_ROTATE_X = y / card_HALF_HEIGHT * .3
-        card_ROTATE_Y = x / -card_HALF_WIDTH * .3
+        card_ROTATE_X = y / card_HALF_HEIGHT * .26
+        card_ROTATE_Y = x / -card_HALF_WIDTH * .26
     }
 
     // --DESTROY
@@ -500,7 +503,6 @@ lang="scss"
 
     /* --DEPENDENCIES */
     @use '../../../../../assets/scss/styles/utils';
-    @use '../../../../../assets/scss/styles/display';
 
     /* --MEDIA */
 
@@ -508,7 +510,7 @@ lang="scss"
 /* #\-VARIABLES-\ */
 
     /* --* */
-    $width:  234;
+    $width : 234;
     $height: 333;
 
     $card-ratio: math.div($height, $width);
@@ -524,39 +526,48 @@ lang="scss"
 {
     &, button { transition: transform var(--card-t-duration, .4s) ease-out; }
 
-    contain:   layout size;
+    contain  : layout size;
     isolation: isolate;
 
     perspective: 3000px;
 
     aspect-ratio: #{$width} / #{$height};
 
-    width:  $size;
+    width : $size;
     height: calc($size * $card-ratio);
 
     &.focus button { will-change: transform; }
 
-    button, .decor, .texture { transform-style: preserve-3d; }
-
-    button, .background { @extend %any-size; }
-
     button
     {
-        pointer-events: auto;
-        touch-action:   none;
+        $pe-translate: translate(-50%, -50%);
+
+        &::before
+        {
+            @include utils.placement(absolute, $top: 50%, $left: 50%, $pe: true);
+
+            @extend %full-screen;
+
+            transform: $pe-translate scale(0);
+        }
+
+        touch-action: none;
+
+        &.grab
+        {
+            &::before { transform: $pe-translate scale(1); }
+
+            cursor: grabbing;
+        }
     }
 
     .decor
     {
-        @extend %f-center;
-
-        pointer-events: none;
-
         &.hide { display: none !important; }
 
         .texture
         {
-            width:  $texture-size;
+            width : $texture-size;
             height: $texture-size;
         }
     }

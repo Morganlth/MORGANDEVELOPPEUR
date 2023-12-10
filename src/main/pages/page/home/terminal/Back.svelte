@@ -27,7 +27,7 @@ context="module"
 <!-- #|-HTML-| -->
 
 <div
-class="back"
+class="back p-rlt s-any b-box"
 >
     <Cell
     prop_ICON_WRAPPER={true}
@@ -44,7 +44,7 @@ class="back"
     </Cell>
 
     <article
-    class="desc"
+    class="desc s-a-w b-box"
     >
         <h2>{prop_BACK.desc.title}</h2>
 
@@ -55,23 +55,26 @@ class="back"
                 <p>
                     {#each section.contents as content}
                         {#if content instanceof Object}
-                            {#if content.br}
+                        {@const {br, cell, command, commandFraction} = content}
+                            {#if br}
                                 <br>
-                            {:else if content.cell}
+                            {:else if cell}
+                            {@const {cellTitle, value} = content}
                                 <Cell
                                 prop_TEXT_WRAPPER={true}
-                                prop_TITLE={content.cellTitle}
+                                prop_TITLE={cellTitle}
                                 {prop_FOCUS}
-                                on:click={cell_eClick.bind(null, content.value)}
+                                on:click={cell_eClick.bind(null, value)}
                                 >
-                                    "{content.value}"
+                                    "{value}"
                                 </Cell>
-                            {:else if content.command}
+                            {:else if command}
+                            {@const {name, params} = content}
                                 <Cell
                                 prop_TEXT_WRAPPER={true}
                                 prop_TITLE={prop_BACK.cellCommandTitle}
                                 {prop_FOCUS}
-                                on:click={cell_eClick.bind(null, `${TERMINAL_WORD_REFERENCE} ${content.name} ${content.params ?? ''}`)}
+                                on:click={cell_eClick.bind(null, `${TERMINAL_WORD_REFERENCE} ${name} ${params ?? ''}`)}
                                 >
                                     <span
                                     class="command-app"
@@ -82,20 +85,21 @@ class="back"
                                     <span
                                     class="command-name"
                                     >
-                                        {content.name}
+                                        {name}
                                     </span>
                 
                                     <span
                                     class="command-params"
                                     >
-                                        {content.params ?? ''}
+                                        {params ?? ''}
                                     </span>
                                 </Cell>
-                            {:else if content.commandFraction}
+                            {:else if commandFraction}
+                            {@const {commandType, value} = content}
                                 <span
-                                class="command-{content.commandType}"
+                                class="command-{commandType}"
                                 >
-                                    {content.commandType === 'app' ? TERMINAL_WORD_REFERENCE : content.value}
+                                    {commandType === 'app' ? TERMINAL_WORD_REFERENCE : value}
                                 </span>
                             {/if}
                         {:else}
@@ -275,7 +279,7 @@ lang="scss"
 
 .back
 {
-    @include utils.placement(relative, $top: -100%);
+    top: -100%;
 
     transform: rotateY(180deg);
 
@@ -287,10 +291,9 @@ lang="scss"
 
         @extend %scroll-bar;
 
-        overflow:            auto;
+        overflow           : auto;
         overscroll-behavior: none;
 
-        width:  100%;
         height: calc(100% - var(--cell-size) - $margin-top);
 
         margin-top:     $margin-top;
@@ -298,8 +301,6 @@ lang="scss"
         padding-right:  2rem;
 
         background-color: $dark;
-
-        box-sizing: border-box;
 
         user-select: text;
 

@@ -27,7 +27,7 @@ context="module"
 <!-- #|-HTML-| -->
 
 <div
-class="quote"
+class="quote d-hid s-a-w"
 class:focus={prop_INTRO}
 itemscope
 itemtype="https://schema.org/Quotation"
@@ -199,12 +199,8 @@ lang="scss"
 .quote
 {
     @include font.text($color: $light);
-    
-    display: none;
 
     justify-content: flex-end;
-
-    width: 100%;
 
     margin-top: 6vh;
 
@@ -223,7 +219,7 @@ lang="scss"
 
     q::before, q::after { content: '' }
 
-    @include media.min($height: $ms3) { display: flex; }
+    @include media.min($height: $ms3) { display: flex !important; }
 
     @include media.min($ms4, $ms4)    { margin-top: 26vh; }
 }

@@ -27,7 +27,7 @@ context="module"
 <!-- #|-HTML-| -->
 
 <svg
-class="logo"
+class="logo s-any"
 viewBox="0 0 50 50"
 fill="none"
 xmlns="http://www.w3.org/2000/svg"
@@ -42,7 +42,7 @@ xmlns="http://www.w3.org/2000/svg"
 
 <!-- #|-SCRIPT-| -->
 
-<script>
+<!-- <script>
 
 // #\-IMPORTS-\
 
@@ -145,12 +145,12 @@ xmlns="http://www.w3.org/2000/svg"
     // --*
 
 
-</script>
+</script> -->
 
 
 <!-- #|-STYLE-| -->
 
-<style
+<!-- <style
 lang="scss"
 >
 
@@ -161,7 +161,6 @@ lang="scss"
     /* --APP */
 
     /* --DEPENDENCIES */
-    @use '../../assets/scss/styles/utils';
 
     /* --MEDIA */
 
@@ -173,12 +172,5 @@ lang="scss"
 
 /* #\-THIS-\ */
 
-.logo
-{
-    @extend %any-size;
 
-    path { transition: stroke .8s; }
-}
-
-
-</style>
+</style> -->

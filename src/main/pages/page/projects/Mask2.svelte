@@ -27,7 +27,7 @@ context="module"
 <!-- #|-HTML-| -->
 
 <div
-class="mask2"
+class="mask2 p-a00 s-any p-n--"
 style:opacity={mask2_OPACITY}
 style:--pe-bg-color={mask2_BACKGROUND_COLOR}
 style:--pe-before-clip="polygon({mask2_PE_BEFORE_CLIP_POINTS})"
@@ -127,7 +127,7 @@ style:--pe-after-clip="polygon({mask2_PE_AFTER_CLIP_POINTS})"
         [mask2_OPACITY, mask2_BACKGROUND_COLOR, mask2_PE_BEFORE_CLIP_POINTS, mask2_PE_AFTER_CLIP_POINTS] =
         destroy
         ? [0, COLORS.primary, '0 0, 0 0, 0 100%, 0% 100%', '100% 0, 100% 0, 100% 100%, 100% 100%']
-        : [1, COLORS.dark, '100% 0, 50% 0, 50% 100%, 100% 100%', '0 0, 50% 0, 50% 100%, 0 100%']
+        : [1, COLORS.dark,    '100% 0, 50% 0, 50% 100%, 100% 100%', '0 0, 50% 0, 50% 100%, 0 100%']
     }
 
     // --DESTROY
@@ -189,11 +189,9 @@ lang="scss"
 
 .mask2
 {
-    &, &::before, &::after { @extend %any-size; }
-
     &::before, &::after
     {
-        @include utils.placement(absolute, 0, 0, 0, 0, $pe: true);
+        @include utils.absolute-any($pe: true);
 
         background-color: var(--pe-bg-color, $dark);
 
@@ -206,10 +204,6 @@ lang="scss"
 
         transition-duration: $duration;
     }
-
-    @include utils.placement(absolute, 0, 0, 0, 0);
-
-    pointer-events: none;
 
     mix-blend-mode: color-dodge;
 

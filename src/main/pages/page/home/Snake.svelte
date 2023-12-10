@@ -28,7 +28,7 @@ context="module"
 <!-- #|-HTML-| -->
 
 <div
-class="snake"
+class="snake p-a00 d-f-c o-hid s-any"
 class:game={snake_GAME}
 style:--snake-blocksize="{snake_BLOCKSIZE}px"
 style:z-index={snake_Z}
@@ -36,7 +36,7 @@ bind:this={snake}
 on:fullscreenchange={snake_eFullscreenChange}
 >
     <canvas
-    class="canvas"
+    class="canvas p-abs"
     style:width="{canvas_WIDTH}px"
     style:height="{canvas_HEIGHT}px"
     bind:this={canvas}
@@ -45,7 +45,7 @@ on:fullscreenchange={snake_eFullscreenChange}
 
     {#if snake_GAME}
         <div
-        class="grid"
+        class="grid p-abs p-n--"
         style:width="{canvas_WIDTH}px"
         style:height="{canvas_HEIGHT}px"
         >
@@ -53,7 +53,7 @@ on:fullscreenchange={snake_eFullscreenChange}
 
         {#if gameover_ON}
             <button
-            class="gameover"
+            class="gameover p-a00 d-fcc s-any"
             type="button"
             on:click={gameover_eClick}
             >
@@ -65,9 +65,11 @@ on:fullscreenchange={snake_eFullscreenChange}
         {/if}
 
         <div
-        class="frame"
+        class="frame d-flx b-box"
         >
-            <ul>
+            <ul
+            class="d-flx"
+            >
                 <li
                 class="score"
                 >
@@ -387,7 +389,7 @@ on:fullscreenchange={snake_eFullscreenChange}
     {
         snake_setApple()
 
-        if (!snake_INVINCIBLE) snake_updateSnake(snake_SNAKE.length + 3)
+        snake_updateSnake(snake_SNAKE.length + 3)
     }
 
     function snake_updateMove(x, y)
@@ -599,12 +601,12 @@ on:fullscreenchange={snake_eFullscreenChange}
     {
         try
         {
-            await (snake.requestFullscreen       ??
-                   snake.webkitRequestFullscreen ??
-                   snake.webkitEnterFullScreen   ??
-                   snake.webkitEnterFullscreen   ??
-                   snake.mozRequestFullScreen    ??
-                   snake.msRequestFullscreen).call(snake)
+     await (snake.requestFullscreen       ??
+            snake.webkitRequestFullscreen ??
+            snake.webkitEnterFullScreen   ??
+            snake.webkitEnterFullscreen   ??
+            snake.mozRequestFullScreen    ??
+            snake.msRequestFullscreen).call(snake)
         }
         catch
         {
@@ -626,22 +628,19 @@ on:fullscreenchange={snake_eFullscreenChange}
 
     function snake_stopGame()
     {
-        if (prop_ON)
-        {
-            if (gameover_ON) gameover_update(false)
-        }
-        else snake_stop()
+        if (prop_ON) { if (gameover_ON) gameover_update(false) }
+        else                            snake_stop()
         
         particles?.moveTo()
 
         snake_INVINCIBLE = true
     }
 
-    function snake_testMove() { return snake_SNAKE[0] !== snake_X || snake_SNAKE[1] !== snake_Y }
+    function snake_testMove()        { return snake_SNAKE[0] !== snake_X || snake_SNAKE[1] !== snake_Y }
 
-    function snake_testEatenApple() { return snake_X === SNAKE_APPLE[0] && snake_Y === SNAKE_APPLE[1] }
+    function snake_testEatenApple()  { return snake_X === SNAKE_APPLE[0] && snake_Y === SNAKE_APPLE[1] }
 
-    function snake_testOutside() { return snake_X < 0 || snake_X >= canvas_COLUMNS || snake_Y < 0 || snake_Y >= canvas_ROWS }
+    function snake_testOutside()     { return snake_X < 0 || snake_X >= canvas_COLUMNS || snake_Y < 0 || snake_Y >= canvas_ROWS }
 
     function snake_testOverlay(x, y) { return x === snake_X && y === snake_Y  }
 
@@ -652,9 +651,11 @@ on:fullscreenchange={snake_eFullscreenChange}
         Y = snake_SNAKE[1]
 
         let
-        [gap_X, gap_Y] = [X - snake_X, Y - snake_Y],
-        [add_X, add_Y] = [snake_X < X ? -1 : 1, snake_Y < Y ? -1 : 1],
-        i              = 0
+        gap_X = X - snake_X,
+        gap_Y = Y - snake_Y,
+        add_X = snake_X < X ? -1 : 1,
+        add_Y = snake_Y < Y ? -1 : 1,
+        i     = 0
 
         while(i++ < 3)
         {
@@ -769,7 +770,6 @@ lang="scss"
 
     /* --DEPENDENCIES */
     @use '../../../../assets/scss/styles/utils';
-    @use '../../../../assets/scss/styles/display';
     @use '../../../../assets/scss/styles/font';
 
     /* --MEDIA */
@@ -785,14 +785,6 @@ lang="scss"
 
 .snake
 {
-    &, .gameover { @extend %any-size; }
-
-    @include utils.placement(absolute, $top: 0, $left: 0);
-
-    @extend %f-center;
-
-    overflow: hidden;
-
     max-height: 100svh;
 
     &.game
@@ -802,12 +794,8 @@ lang="scss"
         pointer-events: auto;
     }
 
-    .canvas, .grid { position: absolute; }
-
     .grid
     {
-        pointer-events: none;
-
         background:
         repeating-linear-gradient($intermediate 0 1px, transparent 1px 100%),
         repeating-linear-gradient(90deg, $intermediate 0 1px, transparent 1px 100%);
@@ -818,10 +806,6 @@ lang="scss"
 
     .gameover
     {
-        @include utils.placement(absolute, 0, 0, 0, 0);
-
-        @extend %f-column-center;
-
         pre { @include font.h-(1, $light, .9, true); }
 
         span { @include font.text($color: $primary, $regular: false, $font-size: map.get(font.$font-sizes, s3), $line-height: 1.4); }
@@ -831,8 +815,6 @@ lang="scss"
     {
         #{--cell-size}: calc($blocksize * .7);
 
-        &, ul { display: flex; }
-
         @include utils.placement(absolute, $top: calc(app.$gap-block * 2), $right: 0, $left: 0);
 
         justify-content: space-between;
@@ -840,8 +822,6 @@ lang="scss"
         height: fit-content;
 
         padding-inline: $blocksize;
-
-        box-sizing: border-box;
 
         ul
         {

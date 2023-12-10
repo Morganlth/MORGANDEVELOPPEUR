@@ -13,6 +13,7 @@
     @use '../app';
 
     /* --DEPENDENCIES */
+    @use '../styles/utils';
 
     /* --MEDIA */
     @use '../styles/media';
@@ -49,19 +50,12 @@
 
         transition: transform .4s ease-out;
 
-        &>pre
-        {
-            text-shadow:
-            $s    $s    $dark,
-            $s*-1 $s    $dark,
-            $s*-1 $s*-1 $dark,
-            $s    $s*-1 $dark;
-        }
+        &>pre { @include utils.text-stroke($dark, $s); }
 
         @include media.min($ms3, $ms3)
         {
             &:nth-child(1) { margin-left: calc(app.$gap-inline * 2); }
-            &:nth-child(2) { margin-left: app.$gap-inline; }
+            &:nth-child(2) { margin-left: app.$gap-inline;           }
         }
     }
 

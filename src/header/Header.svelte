@@ -27,13 +27,16 @@ context="module"
 <!-- #|-HTML-| -->
 
 <header
-class="header"
+class="header d-flx s-a-w p-n-- b-box"
 >
-    <strong>
+    <strong
+    class="d-flx"
+    >
         <a
         href={$page.url.origin}
         aria-label={LINK_LABEL}
         alt={LINK_LABEL}
+        draggable="false"
         data-sveltekit-reload
         >
             <Icon
@@ -200,11 +203,7 @@ lang="scss"
 
 .header
 {
-    &, &>strong
-    {
-        display: flex;
-        align-items: flex-end;
-    }
+    &, &>strong { align-items: flex-end; }
 
     @include utils.placement(fixed, $top: 0, $left: 0, $z: 2);
     
@@ -212,16 +211,11 @@ lang="scss"
 
     justify-content: space-between;
 
-    width: 100%;
     height: fit-content;
 
     padding: app.$gap-block app.$gap-inline 0;
 
-    pointer-events: none;
-
     mix-blend-mode: lighten;
-
-    box-sizing: border-box;
 
     &>strong
     {   

@@ -27,12 +27,11 @@ context="module"
 <!-- #|-HTML-| -->
 
 <i
-class="icon"
+class="icon d-f-c {prop_SPRING ? 'p-y--' : 'p-n--'}"
 style:--icon-color={prop_COLOR}
 style:opacity={prop_OPACITY}
 style:width={prop_SIZE}
 style:height={prop_SIZE}
-style:pointer-events={prop_SPRING ? 'auto' : 'none'}
 bind:this={icon}
 >
     <slot />
@@ -210,7 +209,6 @@ lang="scss"
     /* --APP */
 
     /* --DEPENDENCIES */
-    @use '../../assets/scss/styles/display';
 
     /* --MEDIA */
 
@@ -222,12 +220,7 @@ lang="scss"
 
 /* #\-THIS-\ */
 
-.icon
-{
-    @extend %f-center;
-
-    transition: opacity .6s;
-}
+.icon { transition: opacity .6s; }
 
 
 </style>

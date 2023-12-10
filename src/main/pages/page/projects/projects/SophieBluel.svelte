@@ -44,17 +44,22 @@ context="module"
 
 <div
 id="sophiebluel"
+class="s-a-w"
 >
     <div
     class="body"
     >
-        <header>
+        <header
+        class="d-flx"
+        >
             <a
             href="/projects/sophiebluel"
             alt={prop_DATA.desc}
             data-sveltekit-reload
             >
-                <h1>
+                <h1
+                class="d-fc-"
+                >
                     Sophie Bluel
     
                     <span>{prop_DATA.job}</span>
@@ -62,7 +67,9 @@ id="sophiebluel"
             </a>
         
             <nav>
-                <ul>
+                <ul
+                class="d-fac"
+                >
                     {#each prop_DATA.nav ?? [] as a}
                         <li>
                             <!-- svelte-ignore a11y-invalid-attribute -->
@@ -89,29 +96,16 @@ id="sophiebluel"
         <main>
             <section
             id="sophiebluel-introduction"
+            class="d-fc-"
             >
                 <figure>
                     <img
                     src="/images/sophiebluel/sophie-bluel.png"
                     alt="Sophie Bluel"
                     >
-
-                    <!--* Ajout d'une ancre pour les éléments d'édition -->
-        
-                    <figcaption
-                    class="js-anchor"
-                    >
-                    </figcaption>
                 </figure>
         
                 <article>
-                    <!--* Ajout d'une ancre pour les éléments d'édition -->
-        
-                    <div
-                    class="js-anchor"
-                    >
-                    </div>
-        
                     <h2>{prop_DATA.introduction.title}</h2>
 
                     {#each prop_DATA.introduction.contents as content}
@@ -125,17 +119,8 @@ id="sophiebluel"
             >
                 <h2>{prop_DATA.projects.title}</h2>
 
-                <!--* Ajout d'une ancre pour les éléments d'édition + div -->
-        
-                <div
-                class="js-anchor"
-                >
-                </div>
-
-                <!--* Ajout d'une liste contenant l'ensemble des filtres -->
-
                 <ul
-                class="js-module"
+                class="js-module d-fjc"
                 >
                     {#each SOPHIEBLUEL_FILTERS as filter}
                         <li>
@@ -153,13 +138,14 @@ id="sophiebluel"
                 <!--* Suppression des éléments présent dans la gallery => import via le serveur -->
         
                 <div
-                class="gallery"
+                class="gallery s-a-w"
                 >
                     {#each sophiebluel_GALLERY as figure}
                         <figure
                         data-id={figure.id}
                         >
                             <img
+                            class="s-a-w"
                             src="/images/sophiebluel/gallery/{figure.src}"
                             alt={figure.title}
                             crossorigin
@@ -173,12 +159,14 @@ id="sophiebluel"
     
             <section
             id="sophiebluel-contact"
+            class="s-a-w"
             >
                 <h2>{prop_DATA.contact.title}</h2>
 
                 <p>{prop_DATA.contact.desc}</p>
     
                 <form
+                class="d-fc-"
                 action="#"
                 method="post"
                 rel="nofollow"
@@ -186,15 +174,19 @@ id="sophiebluel"
                 >
                     {#each prop_DATA.contact.form ?? [] as input}
                         {@const {value, textarea, ...rest} = input}
-                        <label>
+                        <label
+                        class="d-fc-"
+                        >
                             {value}
 
                             {#if textarea}
                                 <textarea
+                                class="b-box"
                                 {...rest}
                                 ></textarea>
                             {:else}
                                 <input
+                                class="b-box"
                                 autocomplete="on"
                                 {...rest}
                                 >
@@ -213,7 +205,9 @@ id="sophiebluel"
 
         <footer>
             <nav>
-                <ul>
+                <ul
+                class="d-flx"
+                >
                     <li>{prop_DATA.footer}</li>
                 </ul>
             </nav>
@@ -392,7 +386,6 @@ lang="scss"
     /* --APP */
 
     /* --DEPENDENCIES */
-    @use '../../../../../assets/scss/styles/display';
 
     /* --MEDIA */
     @use '../../../../../assets/scss/styles/media';
@@ -409,8 +402,6 @@ lang="scss"
 
 #sophiebluel
 {
-    width: 100%;
-
     padding-block: 5rem 2rem;
 
     background-color: white;
@@ -429,15 +420,12 @@ lang="scss"
 
     header
     {
-        display        : flex;
         justify-content: space-between;
 
         margin-bottom: 5rem;
 
         h1
         {
-            @extend %f-column;
-
             color      : $primary-color;
             font-family: 'Syne';
             font-size  : 2.2rem;
@@ -453,8 +441,6 @@ lang="scss"
 
         nav
         {
-            ul { @extend %f-a-center; }
-    
             a
             {
                 padding: 0 10px;
@@ -463,6 +449,12 @@ lang="scss"
 
                 &:hover { color: $primary-color; }
             }
+
+            img
+            {
+                width : 4rem;
+                height: 4rem;
+            }
         }
     }
 
@@ -470,8 +462,6 @@ lang="scss"
 
     #sophiebluel-introduction
     {
-        @extend %f-column;
-
         align-items: center;
         gap        : 3rem;
     
@@ -503,8 +493,6 @@ lang="scss"
 
         ul
         {
-            @extend %f-j-center;
-
             flex-wrap: wrap;
             gap      : 1rem;
 
@@ -529,15 +517,11 @@ lang="scss"
             display              : grid;
             grid-template-columns: 1fr;
             gap                  : 2rem;
-
-            &, img { width: 100%; }
         }
     }
 
     #sophiebluel-contact
     {
-        width: 100%;
-
         margin: auto;
         
         &>* { text-align: center; }
@@ -546,21 +530,15 @@ lang="scss"
     
         form
         {
-            @extend %f-column;
-
             margin-top: 3rem;
 
             text-align: left;
         }
-    
-        label { @extend %f-column; }
 
         input:not([type="submit"]), textarea
         {
             margin-top: 1rem;
             padding   : 1rem;
-
-            box-sizing: border-box;
         }
 
         input, textarea
@@ -624,9 +602,8 @@ lang="scss"
         &:hover { color: $primary-color; }
     }
 
-    footer nav ul
+    footer ul
     {
-        display        : flex;
         justify-content: flex-end;
 
         margin-top: 2rem;

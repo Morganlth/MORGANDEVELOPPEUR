@@ -27,7 +27,7 @@ context="module"
 <!-- #|-HTML-| -->
 
 <div
-class="home"
+class="home p-a00 s-any"
 data-page-id={prop_ID}
 >
     <Snake
@@ -64,7 +64,8 @@ data-page-id={prop_ID}
     />
 
     <Group
-    prop_STYLE="position:absolute;top:0;left:0;width:0;height:0;"
+    prop_CLASS="p-abs"
+    prop_STYLE="top:0;left:0;width:0;height:0;"
     let:resize
     let:animation
     bind:group_start
@@ -307,7 +308,7 @@ data-page-id={prop_ID}
 
 <!-- #|-STYLE-| -->
 
-<style
+<!-- <style
 lang="scss"
 >
 
@@ -318,7 +319,6 @@ lang="scss"
     /* --APP */
 
     /* --DEPENDENCIES */
-    @use '../../../../assets/scss/styles/utils';
 
     /* --MEDIA */
 
@@ -330,12 +330,5 @@ lang="scss"
 
 /* #\-THIS-\ */
 
-.home
-{
-    @include utils.placement(absolute, 0, 0, 0, 0);
 
-    @extend %any-size;
-}
-
-
-</style>
+</style> -->

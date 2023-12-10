@@ -27,17 +27,21 @@ context="module"
 <!-- #|-HTML-| -->
 
 <footer
-class="footer"
+class="footer d-fac s-a-w p-n-- b-box"
 >
     <nav>
-        <ul>
+        <ul
+        class="d-flx s-a-w"
+        >
             {#each ['LinkedIn', 'Github'] as a}
                 <li>
                     <a
+                    class="p-rlt p-y--"
                     href="./"
                     alt="LE THUAUT Morgan - {a}"
                     aria-label={a}
                     data-content={a}
+                    draggable="false"
                     >
                         {a}
                     </a>
@@ -47,7 +51,7 @@ class="footer"
     </nav>
 
     <div
-    class="lang"
+    class="lang d-fac"
     >
         <span>lang:</span>
 
@@ -57,12 +61,14 @@ class="footer"
         bind:this={form}
         >
             <input
+            class="d-hid"
             type="hidden"
             name="url"
             value={router_ROUTE}
             >
     
             <select
+            class="p-y--"
             name="lang"
             aria-label="choix de la langue"
             on:input={select_eInput}
@@ -234,7 +240,6 @@ lang="scss"
 
     /* --DEPENDENCIES */
     @use '../assets/scss/styles/utils';
-    @use '../assets/scss/styles/display';
     @use '../assets/scss/styles/font';
     @use '../assets/scss/styles/animation';
 
@@ -251,8 +256,6 @@ lang="scss"
 
 .footer
 {
-    &, .lang { @extend %f-a-center; }
-
     @include utils.placement(fixed, $right: 0, $bottom: 0, $z: 2);
     @include font.text($color: $light, $regular: false);
 
@@ -261,18 +264,12 @@ lang="scss"
 
     justify-content: space-between;
 
-    width: 100%;
+    height: fit-content;
 
     padding: 0 app.$gap-inline app.$gap-block;
 
-    pointer-events: none;
-
-    box-sizing: border-box;
-
     a, select
     {
-        pointer-events: auto;
-
         color: inherit;
         font : inherit;
     }
@@ -281,22 +278,15 @@ lang="scss"
 
     ul
     {
-        display        : flex;
         justify-content: flex-start;
 
         gap: app.$gap-block;
-
-        width: 100%;
 
         a
         {
             @extend %a-text;
 
-            position: relative;
-
             padding: .4rem 1rem;
-
-            text-decoration: none;
 
             &:focus { color: $primary; }
 
@@ -322,21 +312,13 @@ lang="scss"
             font-family: font.$family-text;
             font-weight: lighter;
         }
-
-        input { display: none; }
-
-        select, option { margin : 0; }
     
         select
         {
             padding: 0 .2rem;
 
             background-color: $dark;
-        
-            border: none;
         }
-
-        option { padding: 0; }
     }
 }
 

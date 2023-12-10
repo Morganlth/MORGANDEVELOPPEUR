@@ -26,13 +26,15 @@ context="module"
 
 <!-- #|-HTML-| -->
 
+<!-- o-hid (overflow hidden) important -->
 <div
-class="system"
+class="system p-a00 o-hid s-any"
 class:d-hid={system_HIDE}
 style:--system-r-x={system_ROTATE_X}
 style:--system-r-y={system_ROTATE_Y}
 >
     <Group
+    prop_CLASS="p-a00 d-f-c t-p3d s-any"
     let:resize
     let:animation
     bind:group_start
@@ -143,7 +145,7 @@ style:--system-r-y={system_ROTATE_Y}
     prop_FOCUS = false,
     prop_START = false
     ,
-    prop_RATIO  = 0
+    prop_RATIO = 0
     ,
     prop_HIDE = false
 
@@ -274,17 +276,17 @@ style:--system-r-y={system_ROTATE_Y}
     function tag_getStyle()
     {
         return `
-        --frag-scale: 0;
+        --frag-scale   : 0;
         --frag-duration: ${TAG_DURATION}ms;`
     }
 
     function fragments_getStyle()
     {
         return `
-        --frag-y: ${tag_getY()};
-        --frag-sign: ${MATH.headsOrTails() ? 1 : -1};
-        transform: translateY(calc(var(--frag-y, 0) * var(--frag-sign, 1))) scale(var(--frag-scale, 1));
-        transition: transform ease-out, opacity;
+        --frag-y           : ${tag_getY()};
+        --frag-sign        : ${MATH.headsOrTails() ? 1 : -1};
+        transform          : translateY(calc(var(--frag-y, 0) * var(--frag-sign, 1))) scale(var(--frag-scale, 1));
+        transition         : transform ease-out, opacity;
         transition-duration: var(--frag-duration, ${TAG_DURATION}ms);
         `
     }
@@ -368,8 +370,8 @@ style:--system-r-y={system_ROTATE_Y}
     async function system_e$MouseMove(clientX, clientY)
     {
         const
-        VW50 = APP.app_WIDTH  * .5,
-        VH50 = APP.app_HEIGHT * .5
+        VW50 = APP.app_HALF_WIDTH,
+        VH50 = APP.app_HALF_HEIGHT
         
         system_ROTATE_X = (clientY - VH50) / VH50
         system_ROTATE_Y = (clientX - VW50) / VW50
@@ -439,7 +441,7 @@ style:--system-r-y={system_ROTATE_Y}
 
 <!-- #|-STYLE-| -->
 
-<style
+<!-- <style
 lang="scss"
 >
 
@@ -462,4 +464,4 @@ lang="scss"
 /* #\-THIS-\ */
 
 
-</style>
+</style> -->

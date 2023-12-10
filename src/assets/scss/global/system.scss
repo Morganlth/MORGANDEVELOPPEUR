@@ -45,24 +45,9 @@
 
 .system
 {
-    &, .group
-    {
-        @include utils.placement(absolute, 0, 0, 0, 0);
-
-        @extend %any-size;
-    }
-
-    overflow: hidden; // important
-
     .group, .cell { transition: transform .4s; }
 
-    .group
-    {
-        @extend %f-center;
-
-        transform-style: preserve-3d;
-        transform      : rotate3d($r-x, $r-y, 0, .016rad);
-    }
+    .group { transform: rotate3d($r-x, $r-y, 0, .016rad); }
 
     .cell
     {

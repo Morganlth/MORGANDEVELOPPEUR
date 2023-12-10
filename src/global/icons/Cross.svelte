@@ -27,7 +27,7 @@ context="module"
 <!-- #|-HTML-| -->
 
 <svg
-class="cross {prop_DESTROY ? 'destroy' : 'build'}"
+class="cross {prop_DESTROY ? 'destroy' : 'build'} s-any"
 viewBox="0 0 81 81"
 fill="none"
 stroke="var(--icon-color, #FFF)"
@@ -162,7 +162,6 @@ lang="scss"
     /* --APP */
 
     /* --DEPENDENCIES */
-    @use '../../assets/scss/styles/utils';
 
     /* --MEDIA */
 
@@ -176,8 +175,6 @@ lang="scss"
 
 .cross
 {
-    @extend %any-size;
-
     &.build path
     {
         stroke-dashoffset: 120%;

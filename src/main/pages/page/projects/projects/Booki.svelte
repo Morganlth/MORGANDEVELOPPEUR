@@ -52,10 +52,10 @@ context="module"
 id="booki"
 >
     <div
-    class="body"
+    class="body b-box"
     >
         <header
-        class="flex"
+        class="d-fcc"
         >
             <a
             id="booki-logo"
@@ -70,17 +70,17 @@ id="booki"
             </a>
 
             <nav
-            class="any-h"
+            class="s-any"
             >
                 <ul
-                class="flex any-h"
+                class="d-flx s-any"
                 >
                     {#each prop_DATA.nav ?? [] as a}
                         <li
-                        class="any-h"
+                        class="s-a-h"
                         >
                             <a
-                            class="flex any-h"
+                            class="d-fjc s-any b-box"
                             href="#booki-{a.href}"
                             >
                                 {a.value}
@@ -92,7 +92,7 @@ id="booki"
         </header>
 
         <main
-        class="flex"
+        class="d-fc-"
         >
             <section
             id="booki-head"
@@ -102,14 +102,13 @@ id="booki"
                 <p>{prop_DATA.head.subtitle}</p>
 
                 <form
-                class="flex"
+                class="d-fjc"
                 method="get"
                 action="#"
                 onsubmit="return false"
                 rel="nofollow"
                 >
                     <button
-                    class="bg pointer"
                     type="button"
                     aria-label="location"
                     >
@@ -120,7 +119,7 @@ id="booki"
                     </button>
         
                     <input
-                    class="any-w"
+                    class="s-a-w"
                     type="search"
                     name="search"
                     aria-label="search"
@@ -128,13 +127,12 @@ id="booki"
                     >
             
                     <input
-                    class="pointer"
+                    class="d-hid"
                     type="submit"
                     value={prop_DATA.head.formInputValue}
                     >
                 
                     <button
-                    class="pointer"
                     type="submit"
                     >
                         <i
@@ -145,16 +143,18 @@ id="booki"
                 </form>
 
                 <ul
-                class="flex"
+                class="d-f-c"
                 >
-                    <li>
+                    <li
+                    class="s-a-w"
+                    >
                         <span>{prop_DATA.head.filtersTitle}</span>
                     </li>
 
                     {#each prop_DATA.head.filters ?? [] as filter}
                         <li>
                             <button
-                            class="flex pointer hover"
+                            class="hover d-fac s-a-w"
                             type="button"
                             aria-label="filtre {filter.value}"
                             >
@@ -170,10 +170,10 @@ id="booki"
                 </ul>
 
                 <aside
-                class="flex"
+                class="d-fac"
                 >
                     <i
-                    class="main-color fa-solid fa-info"
+                    class="main-color b-box fa-solid fa-info d-f-c"
                     >
                     </i>
 
@@ -183,36 +183,40 @@ id="booki"
 
             <section
             id="booki-accommodation"
-            class="flex"
+            class="d-flx"
             >
                 <div
-                class="any-w bg"
+                class="d-fc- s-a-w b-box"
                 >
                     <h2>{prop_DATA.accommodation.title}</h2>
 
                     <div
                     id="booki-container-accommodation"
-                    class="flex container"
+                    class="container d-fc-"
                     >
                         {#each prop_DATA.accommodation.contents ?? [] as accommodation}
-                            <article>
+                            <article
+                            class="o-hid s-a-w"
+                            >
                                 <!-- svelte-ignore a11y-invalid-attribute -->
                                 <a
                                 href="#"
                                 rel="nofollow"
                                 >
                                     <img
-                                    class="any-w"
+                                    class="s-a-w"
                                     src="/images/booki/hebergements/{accommodation.src}"
                                     alt={accommodation.title}
                                     >
                                 
-                                    <div>
+                                    <div
+                                    class="b-box"
+                                    >
                                         <h3>{accommodation.title}</h3>
                                         <span>{accommodation.desc}</span>
 
                                         <ul
-                                        class="flex star-list"
+                                        class="d-flx star-list"
                                         >
                                             {#each accommodation.stars as active}
                                                 <li>
@@ -232,6 +236,7 @@ id="booki"
 
                     <!-- svelte-ignore a11y-invalid-attribute -->
                     <a
+                    class="d-hid"
                     href="#"
                     rel="nofollow"
                     >
@@ -240,10 +245,10 @@ id="booki"
                 </div>
 
                 <aside
-                class="any-w bg"
+                class="s-a-w b-box"
                 >
                     <div
-                    class="flex"
+                    class="d-flx"
                     >
                         <h2>{prop_DATA.popular.title}</h2>
 
@@ -255,11 +260,11 @@ id="booki"
 
                     <div
                     id="booki-container-popular"
-                    class="flex container"
+                    class="container d-fc-"
                     >
                         {#each prop_DATA.popular.contents ?? [] as popular}
                             <article
-                            class="any-w"
+                            class="o-hid s-a-w"
                             >
                                 <!-- svelte-ignore a11y-invalid-attribute -->
                                 <a
@@ -267,19 +272,20 @@ id="booki"
                                 rel="nofollow"
                                 >
                                     <img
-                                    class="any-h"
+                                    class="s-a-h"
                                     src="/images/booki/hebergements/{popular.src}"
                                     alt={popular.title}
                                     >
                                 
                                     <div
-                                    class="any-h"
+                                    class="p-rlt s-a-h b-box"
                                     >
                                         <h3>{popular.title}</h3>
+    
                                         <span>{popular.desc}</span>
 
                                         <ul
-                                        class="flex star-list"
+                                        class="star-list p-abs d-flx"
                                         >
                                             {#each popular.stars as active}
                                                 <li>
@@ -306,25 +312,26 @@ id="booki"
 
                 <div
                 id="booki-container-activities"
-                class="flex container"
+                class="container d-fc-"
                 >
                     {#each prop_DATA.activities.contents ?? [] as activity}
                         <!-- svelte-ignore a11y-invalid-attribute -->
                         <a
+                        class="o-hid s-a-w"
                         href="#"
                         rel="nofollow"
                         >
                             <figure
-                            class="any-w any-h"
+                            class="s-any"
                             >
                                 <img
-                                class="any-w"
+                                class="s-a-w"
                                 src="/images/booki/activites/{activity.src}"
                                 alt="{prop_DATA.activities.alt} {activity.title}"
                                 >
 
                                 <figcaption
-                                class="flex"
+                                class="p-rlt d-fac"
                                 >
                                     <h3>{activity.title}</h3>
                                 </figcaption>
@@ -336,10 +343,12 @@ id="booki"
         </main>
 
         <footer
-        class="flex bg"
+        class="d-fc-"
         >
             {#each prop_DATA.footer ?? [] as nav}
-                <nav>
+                <nav
+                class="s-a-w"
+                >
                     <h2>{nav.title}</h2>
 
                     <ul>
@@ -486,6 +495,7 @@ lang="scss"
     /* --DEPENDENCIES */
 
     /* --MEDIA */
+    @use '../../../../../assets/scss/styles/media';
 
 
 /* #\-VARIABLES-\ */
@@ -519,16 +529,7 @@ lang="scss"
 
     background-color: #fff;
 
-    .flex { display: flex; }
-
-    .any-w { width : 100%; }
-    .any-h { height: 100%; }
-
-    .bg { background-color: $light-color; }
-
     .main-color { color: $primary-color !important; }
-
-    .pointer { cursor: pointer; }
 
     .hover:hover
     {
@@ -547,459 +548,438 @@ lang="scss"
     {
         max-width: 1400px;
 
-        margin : 0 auto;
-        padding: 0 5rem;
+        margin-inline : auto;
+        padding-inline: 5rem;
 
         font-family: 'Raleway', sans-serif;
-
-        box-sizing: border-box;
     }
-}
-
-header
-{
-    &, a { align-items: flex-end; }
-
-    justify-content: space-between;
-
-    height: 70px;
-
-    #booki-logo
-    {
-        width : 61px;
-        height: 19px;
-
-        img
-        {
-            width : inherit;
-            height: inherit;
-        }
-    }
-
-    &>nav a
-    {
-        justify-content: center;
-
-        width: 162px;
-
-        border-top: solid transparent .2rem;
-
-        box-sizing: border-box;
-
-        &:hover
-        {
-            border-color: $primary-color;
-
-            color: $primary-color !important;
-        }
-    }
-}
-
-main
-{
-    flex-direction: column;
-    gap           : 5rem 0;
-
-    padding: 5rem 0;
-
-    h2 { margin-bottom: 2.5rem; }
-
-    #booki-head
-    {
-        &>p { margin-top: .8rem; }
-
-        &>form
-        {
-            margin-top: 2rem;
-
-            &>*
-            {
-                height: 5rem;
-
-                border: none;
-
-                font-size  : 1.8rem;
-                font-weight: 700;
-            }
-
-            &>input[type="submit"], &>button[type="submit"]
-            {
-                background-color: $primary-color;
-
-                border-radius: 0 1.5rem 1.5rem 0;
-
-                color: #fff;
-            }
-
-            &>button
-            {
-                min-width: 50px;
-
-                &[type="button"] { border-radius: 1.5rem 0 0 1.5rem; }
-
-                &[type="submit"] { display: none; }
-            }
-
-            &>input
-            {
-                padding: 0 1.7rem;
-
-                &[type="search"]
-                {
-                    max-width: 232px;
-
-                    border-top:    solid $light-color 1px;
-                    border-bottom: solid $light-color 1px;
-
-                    outline: none;
-                }
-            }
-        }
-
-        &>ul, &>ul button, &>aside { align-items: center; }
-    
-        &>ul
-        {
-            flex-wrap: wrap;
-            gap      : 1rem 2rem;
-
-            margin-top: 3rem;
-
-            span, button { font-weight: 700; }
-
-            span { font-size: 1.8rem; }
-
-            button
-            {
-                height: 5rem;
-
-                padding: 0 2.5rem;
-
-                background-color: transparent;
-
-                border       : solid $border-color .2rem;
-                border-radius: 3rem;
-                
-                font-size: 1.7rem;
-            }
-
-            i
-            {
-                margin-right: 1rem;
-
-                font-size: 2.2rem;
-            }
-        }
-
-        &>aside
-        {
-            margin-top: 4rem;
-
-            &>i
-            {
-                display        : flex !important;
-                justify-content: center;
-                align-items    : center;
-
-                min-width: 24px;
-                height   : 2.4rem;
-
-                margin-right: 1rem;
-
-                border       : solid $border-color 1px;
-                border-radius: 50%;
-
-                font-size: 1.2rem;
-
-                box-sizing: border-box;
-            }
-        }
-    }
-
-    article, #booki-container-activities>a
-    {
-        overflow: hidden;
-
-        background-color: white;
-
-        border-radius: 2rem;
-
-        box-shadow: 0 1rem 1rem rgba(0, 0, 0, 0.1);
-    }
-
-    #booki-accommodation
-    {
-        gap: 4rem;
-
-        &>div, &>aside
-        {
-            padding: 4rem;
-
-            border-radius: 2rem;
-
-            box-sizing: border-box;
-        }
-    
-        & .container { gap: 2.5rem 3.5%; }
-
-        #booki-container-accommodation
-        {
-            flex-wrap: wrap;
-
-            &>article { width: 31%; }
-    
-            & img { height: 124px; }
-    
-            & div
-            {
-                padding: .5rem 1.5rem;
-
-                box-sizing: border-box;
-            }
-        }
-
-        &>div>a
-        {
-            display: block;
-
-            margin-top: 4rem;
-
-            font-size  : 1.8rem;
-            font-weight: 700;
-        }
-
-        &>aside
-        {
-            flex-shrink: 2;
-
-            &>div:nth-child(1)
-            {
-                justify-content: space-between;
-
-                &>i { font-size: 1.8rem; }
-            }
-        
-            #booki-container-popular
-            {
-                flex-direction: column;
-
-                article { height: 154px; }
-        
-                img
-                {
-                    float: left;
-
-                    width: 37%;
-                }
-            
-                div
-                {
-                    position: relative;
-
-                    width: 63%;
-
-                    margin-left: 37%;
-                    padding    : 1.5rem 2rem;
-
-                    box-sizing: border-box;
-                }
-
-                .star-list
-                {
-                    position: absolute;
-                    bottom  : 1rem;
-                }
-            }
-        }
-    }
-
-    #booki-container-activities
-    {
-        gap: 1.5rem 4rem;
-
-        a
-        {
-            display: block;
-
-            width : 25%;
-            height: 444px;
-        }
-    
-        img { height: 87%; }
-        
-        figcaption
-        {
-            align-items: center;
-
-            position: relative;
-            bottom  : .4rem;
-
-            height: 13%;
-
-            padding: 0 2rem;
-        }
-    }
-}
-
-footer
-{
-    padding: 5rem 7rem;
-
-    nav
-    {
-        width: 33.33%;
-
-        padding-left: 1rem;
-    }
-    h2 { margin-bottom: 2rem; }
-    a
-    {
-        line-height: 3rem;
-
-        &:hover { text-decoration: underline; }
-    }
-}
-
-@media screen and (max-width: 991px)
-{
-    #booki-accommodation { flex-wrap: wrap; }
-
-    #booki-container-popular
-    {
-        flex-direction: row;
-
-        &>article { width: 31%; }
-        
-        div { padding: 1rem 1.9rem; }
-    }
-
-    #booki-container-activities
-    {
-        &>a { height: 267px; }
-        
-        img { height: 80%; }
-        
-        figcaption { height: 20%; }
-    }
-}
-
-@media screen and (max-width: 767px)
-{
-    .body { padding: 0; }
-    
-    article, #booki-container-activities>a, #booki-head>ul>li:nth-child(1), #booki-head>ul button { width: 100% !important; }
 
     header
     {
-        flex-direction: column;
-        align-items   : center;
-
-        height: 130px;
-
+        height: 13rem;
+            
         padding-top: 2rem;
 
-        nav, ul, &>nav a { width: 100%; }
-
-        li { width: 50%; }
-
-        &>nav a
+        #booki-logo
         {
-            padding-bottom: 2.3rem;
+            width : 61px;
+            height: 19px;
 
-            border-top   : none;
-            border-bottom: solid $light-color .3rem;
+            img
+            {
+                width : inherit;
+                height: inherit;
+            }
+        }
+
+        nav
+        {
+            li { width: 50%; }
+
+            a
+            {
+                align-items: flex-end;
+        
+                padding-bottom: 2.3rem;
+
+                border-bottom: solid $light-color .3rem;
+
+                &:hover
+                {
+                    border-color: $primary-color;
+
+                    color: $primary-color !important;
+                }
+            }
         }
     }
-    
+
     main
     {
-        padding: 3rem 0 8rem;
+        gap: 5rem 0;
+
+        padding-block: 3rem 8rem;
+
+        h2 { margin-bottom: 2.5rem; }
 
         #booki-head
         {
-            padding: 0 2rem;
+            padding-inline: 2rem;
 
-            &>form
+            &>p { margin-top: .8rem; }
+
+            form
             {
-                justify-content: center;
-
                 margin-top: 3.5rem;
 
-                &>input[type="search"] { max-width: 100%; }
-        
-                &>input[type="submit"] { display: none; }
-        
-                &>button[type="submit"] { display: block; }
-            }
-            
-            &>ul
-            {
-                justify-content: center;
-                gap            : 3.5%;
-
-                &>li
+                &>*
                 {
-                    width: 48.25%;
+                    height: 5rem;
 
-                    margin-top: 1.7rem;
+                    font-size  : 1.8rem;
+                    font-weight: 700;
                 }
+
+                input[type="submit"], button[type="submit"]
+                {
+                    background-color: $primary-color;
+
+                    border-radius: 0 1.5rem 1.5rem 0;
+
+                    color: #fff;
+                }
+
+                input[type="submit"] { cursor: pointer; }
 
                 button
                 {
-                    padding: 0 1.3rem;
+                    min-width: 50px;
 
+                    &[type="button"]
+                    {
+                        background-color: $light-color;
+            
+                        border-radius: 1.5rem 0 0 1.5rem;
+                    }
+                }
+
+                input
+                {
+                    padding-inline: 1.7rem;
+
+                    &[type="search"]
+                    {
+                        border-block: solid $light-color 1px;
+
+                        outline: none;
+                    }
+                }
+            }
+        
+            ul
+            {
+                flex-wrap: wrap;
+                gap      : 3.5%;
+
+                margin-top: 3rem;
+
+                li { margin-top: 1.7rem; }
+
+                li:not(:nth-child(1)) { width: 48.25%; }
+
+                span, button { font-weight: 700; }
+
+                span { font-size: 1.8rem; }
+
+                button
+                {
+                    height: 5rem;
+
+                    padding-inline: 1.3rem;
+
+                    background-color: transparent;
+
+                    border       : solid $border-color .2rem;
+                    border-radius: 3rem;
+                    
                     font-size: 1.1rem;
+                }
+
+                i
+                {
+                    margin-right: 1rem;
+
+                    font-size: 2.2rem;
+                }
+            }
+
+            aside
+            {
+                margin-top: 4rem;
+
+                &>i
+                {
+                    display: flex !important;
+            
+                    width : 2.4rem;
+                    height: 2.4rem;
+
+                    margin-right: 1rem;
+
+                    border       : solid $border-color 1px;
+                    border-radius: 50%;
+
+                    font-size: 1.2rem;
                 }
             }
         }
 
-        .container { flex-direction: column !important; }
+        article, #booki-container-activities>a
+        {
+            background-color: white;
+
+            border-radius: 2rem;
+
+            box-shadow: 0 1rem 1rem rgba(0, 0, 0, 0.1);
+        }
 
         #booki-accommodation
         {
             flex-direction: column-reverse;
-            gap           : 0;
+            flex-wrap     : wrap;
 
-            &>div, &>aside
-            {
-                padding: 4rem 2rem;
-
-                border-radius: 0;
-            }
+            &>div, &>aside { padding: 4rem 2rem; }
 
             &>div
             {
-                background-color: white;
+                justify-content: space-between;
 
-                &>a { display: none; }
+                &>a
+                {
+                    margin-top: 2.5rem;
+
+                    font-size  : 1.8rem;
+                    font-weight: 700;
+                }
             }
-            
+        
             .container { gap: 1.5rem; }
+
+            #booki-container-accommodation
+            {
+                flex-wrap: wrap;
+        
+                img { height: 124px; }
+        
+                div { padding: .5rem 1.5rem; }
+            }
+
+            &>aside
+            {
+                flex-shrink: 2;
+
+                background-color: $light-color;
+
+                &>div:nth-child(1)
+                {
+                    justify-content: space-between;
+
+                    &>i { font-size: 1.8rem; }
+                }
+            
+                #booki-container-popular
+                {
+                    article { height: 154px; }
+            
+                    img
+                    {
+                        float: left;
+
+                        width: 37%;
+                    }
+                
+                    div
+                    {
+                        width: 63%;
+
+                        margin-left: 37%;
+                        padding    : 1rem 1.9rem;
+                    }
+
+                    .star-list { bottom: 1rem; }
+                }
+            }
         }
 
         #booki-activity
         {
-            padding: 0 2rem;
+            padding-inline: 2rem;
 
             #booki-container-activities
             {
-                &>a { height: 190px; }
-            
+                gap: 1.5rem 4rem;
+
+                a { height: 190px; }
+
                 img { height: 73%; }
-            
-                figcaption { height: 27%; }
+                
+                figcaption
+                {
+                    bottom: .4rem;
+
+                    height: 27%;
+
+                    padding-inline: 2rem;
+                }
             }
         }
     }
 
     footer
     {
-        flex-direction: column;
-        gap           : 4rem;
+        gap: 4rem;
 
         padding: 5rem 3rem;
 
-        &>nav { width: 100%; }
+        background-color: $light-color;
+
+        nav { padding-left: 1rem; }
+
+        h2 { margin-bottom: 2rem; }
+
+        a
+        {
+            line-height: 3rem;
+
+            &:hover { text-decoration: underline; }
+        }
+    }
+
+    @include media.min($ms4)
+    {
+        header
+        {
+            flex-direction : row;
+            justify-content: space-between;
+            align-items    : flex-end;
+        
+            height: 7rem;
+
+            nav
+            {
+                width: auto;
+        
+                a
+                {
+                    width: 16.2rem;
+
+                    padding-bottom: 0;
+                
+                    border-top   : solid transparent .2rem;
+                    border-bottom: none;
+                }
+            }
+        }
+
+        main
+        {
+            padding-block: 5rem;
+
+            .container { flex-direction: row; }
+
+            #booki-head
+            {
+                padding-inline: 0;
+
+                form, ul { justify-content: flex-start; }
+
+                form
+                {
+                    margin-top: 2rem;
+
+                    input
+                    {
+                        &[type="search"] { max-width: 232px; }
+
+                        &[type="submit"] { display: block !important; }
+                    }
+
+                    button[type="submit"] { display: none; }
+                }
+        
+                ul
+                {
+                    gap: 1rem 2rem;
+
+                    li, button { width: auto !important; }
+
+                    button
+                    {
+                        padding-inline: 2.5rem;
+
+                        font-size: 1.7rem;
+                    }
+                }
+            }
+
+            #booki-accommodation
+            {
+                gap: 4rem;
+
+                &>div, &>aside
+                {
+                    padding: 4rem;
+
+                    border-radius: 2rem;
+                }
+
+                &>div
+                {
+                    background-color: $light-color;
+
+                    &>a { display: block !important; }
+                }
+                
+                .container { gap: 2.5rem 3.5%; }
+
+                #booki-container-accommodation>article { width: 31%; }
+            }
+
+            #booki-activity
+            {
+                padding-inline: 0;
+        
+                #booki-container-activities
+                {
+                    a
+                    {
+                        width : 25%;
+                        height: 267px;
+                    }
+
+                    img { height: 80%; }
+
+                    figcaption { height: 20%; }
+                }
+            }
+        }
+
+        footer
+        {
+            flex-direction: row;
+    
+            padding: 5rem 7rem;
+
+            nav { width: 33.33%; }
+        }
+    }
+
+    @include media.min($ms5)
+    {
+        main
+        {
+            #booki-accommodation
+            {
+                flex-direction: row;
+                flex-wrap     : nowrap;
+            }
+
+            #booki-container-popular
+            {
+                flex-direction: column;
+
+                div { padding: 1.5rem 2rem; }
+            }
+
+            #booki-activity #booki-container-activities
+            {
+                a { height: 444px; }
+
+                img { height: 87%; }
+                
+                figcaption { height: 13%; }
+            }
+        }
     }
 }
 

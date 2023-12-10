@@ -27,7 +27,7 @@ context="module"
 <!-- #|-HTML-| -->
 
 <svg
-class="grid"
+class="grid s-any"
 viewBox="0 0 84 84"
 fill="none"
 xmlns="http://www.w3.org/2000/svg"
@@ -38,14 +38,14 @@ xmlns="http://www.w3.org/2000/svg"
     84 28.325 84 26.286C84 24.2025 82.6969 22.917 80.5683 22.917H61.0671V3.54599C61.0671 1.37403 59.8075 0 57.8096 0C55.7682 0 54.5088 1.37403 54.5088
     3.54599V22.917H29.2305V3.54599C29.2305 1.37403 27.9709 0 25.973 0C23.9318 0 22.6722 1.37403 22.6722 3.54599V22.917H3.47466C1.30295 22.917 0 24.2025 0 26.286C0 28.325 1.30295 29.6105
     3.47466 29.6105H22.6722V54.5667H3.47466C1.30295 54.5667 0 55.808 0 57.8912C0 59.9747 1.30295 61.2602 3.47466 61.2602ZM29.2305 54.5667V29.6105H54.5088V54.5667H29.2305Z"
-    fill="var(--icon-color, {COLORS.light})"
+    fill="var(--icon-color, #FFF)"
     />
 </svg>
 
 
 <!-- #|-SCRIPT-| -->
 
-<script>
+<!-- <script>
 
 // #\-IMPORTS-\
 
@@ -54,7 +54,6 @@ xmlns="http://www.w3.org/2000/svg"
     // --SVELTE
 
     // --LIB
-    import COLORS from '$lib/colors'
 
     // --CONTEXTS
 
@@ -149,12 +148,12 @@ xmlns="http://www.w3.org/2000/svg"
     // --*
 
 
-</script>
+</script> -->
 
 
 <!-- #|-STYLE-| -->
 
-<style
+<!-- <style
 lang="scss"
 >
 
@@ -165,7 +164,6 @@ lang="scss"
     /* --APP */
 
     /* --DEPENDENCIES */
-    @use '../../assets/scss/styles/utils';
 
     /* --MEDIA */
 
@@ -177,7 +175,5 @@ lang="scss"
 
 /* #\-THIS-\ */
 
-.grid { @extend %any-size; }
 
-
-</style>
+</style> -->

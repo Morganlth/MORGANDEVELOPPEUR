@@ -27,7 +27,7 @@ context="module"
 <!-- #|-HTML-| -->
 
 <div
-class="group"
+class="group p-n-- {prop_CLASS}"
 style={prop_STYLE}
 >
     <slot
@@ -66,7 +66,9 @@ style={prop_STYLE}
 // #\-EXPORTS-\
 
     // --PROPS
-    export let prop_STYLE = ''
+    export let
+    prop_CLASS = '',
+    prop_STYLE = ''
 
     // --BINDING
 
@@ -197,7 +199,7 @@ style={prop_STYLE}
 
 <!-- #|-STYLE-| -->
 
-<style
+<!-- <style
 lang="scss"
 >
 
@@ -219,7 +221,5 @@ lang="scss"
 
 /* #\-THIS-\ */
 
-.group { pointer-events: none; }
 
-
-</style>
+</style> -->

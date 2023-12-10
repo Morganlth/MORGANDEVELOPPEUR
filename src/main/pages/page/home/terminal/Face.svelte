@@ -27,10 +27,10 @@ context="module"
 <!-- #|-HTML-| -->
 
 <div
-class="face"
+class="face d-fc- s-any b-box"
 >
     <div
-    class="head"
+    class="head d-flx"
     >
         <Cell
         prop_ICON_WRAPPER={true}
@@ -73,10 +73,11 @@ class="face"
         </Cell>
 
         <div
-        class="input"
+        class="input p-rlt d-fac s-any b-box"
         slot="content"
         >
             <input
+            class="d-fac s-any b-box"
             type="text"
             name="command-line"
             inputmode="text"
@@ -94,7 +95,7 @@ class="face"
             />
 
             <div
-            class="mirror"
+            class="mirror d-fac s-any b-box"
             class:app-available={mirror_APP_AVAILABLE}
             class:command-available={mirror_COMMAND_AVAILABLE}
             >
@@ -108,7 +109,7 @@ class="face"
     </Line>
 
     <div
-    class="output"
+    class="output d-fc- s-any"
     bind:this={output}
     >
         {#each output_LINES as line, i}
@@ -120,6 +121,7 @@ class="face"
                 </span>
 
                 <div
+                class="d-fac"
                 slot="content"
                 >
                     {#if line.name}
@@ -591,7 +593,6 @@ lang="scss"
 
     /* --DEPENDENCIES */
     @use '../../../../../assets/scss/styles/utils';
-    @use '../../../../../assets/scss/styles/display';
     @use '../../../../../assets/scss/styles/font';
 
     /* --MEDIA */
@@ -609,13 +610,10 @@ lang="scss"
 {
     --line-height: 3rem;
 
-    &, .output { @extend %f-column; }
-
     transform: rotateY(0);
 
     .head
     {
-        display:         flex;
         justify-content: space-between;
 
         margin-bottom: 2rem;
@@ -630,27 +628,14 @@ lang="scss"
         }
     }
 
-    .input, .output { @extend %any-size; }
-
     .input
     {
-        &, input, .mirror
-        {
-            @extend %f-a-center;
-
-            box-sizing: border-box;
-        }
-
-        position: relative;
-
         justify-content: space-between;
     
         border-bottom: solid $primary 1px;
     }
 
     input, .mirror, pre { font: inherit !important; }
-
-    input, .mirror { @extend %any-size; }
 
     input
     {
@@ -667,7 +652,7 @@ lang="scss"
     {
         color: $light;
 
-        &.app-available    >pre:nth-child(1) { color: $primary; }
+        &.app-available    >pre:nth-child(1) { color: $primary;   }
         &.command-available>pre:nth-child(2) { color: $indicator; }
     }
 
@@ -677,7 +662,7 @@ lang="scss"
 
         align-items: flex-end;
 
-        overflow:            auto scroll;
+        overflow           : auto scroll;
         overscroll-behavior: none;
 
         max-height: 100%;
@@ -686,12 +671,7 @@ lang="scss"
 
         background-color: $dark;
 
-        div
-        {
-            @extend %f-a-center;
-
-            gap: 1rem;
-        }
+        div { gap: 1rem; }
 
         .error { color: $indicator; }
 

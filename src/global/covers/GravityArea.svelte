@@ -28,7 +28,7 @@ context="module"
 
 <!-- svelte-ignore a11y-no-static-element-interactions a11y-no-noninteractive-tabindex -->
 <button
-class="gravityarea"
+class="gravityarea p-abs d-f-c t-p3d p-y--"
 class:focus={prop_FOCUS}
 class:grabbing={slot_GRABBING}
 style:--slot-default-size="{prop_RADIUS}px"
@@ -464,7 +464,7 @@ on:touchend={gravityarea_eTouchEnd}
         
 
         if (invert) slot_HIDE = false
-        else try { await promise, slot_HIDE = true } catch {}
+        else        try { await promise, slot_HIDE = true } catch {}
     }
 
     function gravityarea_a$Floating() { gravityarea_FLOATING_Y = gravityarea_getFloating() }
@@ -511,7 +511,6 @@ lang="scss"
 
     /* --DEPENDENCIES */
     @use '../../assets/scss/styles/utils';
-    @use '../../assets/scss/styles/display';
 
     /* --MEDIA */
     @use '../../assets/scss/styles/media';
@@ -539,19 +538,12 @@ lang="scss"
         transform: scale(0);
     }
 
-    @extend %f-center;
-
     contain: layout size;
-
-    position: absolute;
-
-    transform-style: preserve-3d;
 
     width : $size;
     height: $size;
 
-    pointer-events: auto;
-    touch-action  : none;
+    touch-action: none;
 
     border-radius: 50%;
 
@@ -564,9 +556,9 @@ lang="scss"
         cursor: grabbing !important;
     }
 
-    @include media.min($ms4, $ms3) { --slot-ratio: .5; }
+    @include media.min($ms4, $ms3) { --slot-ratio: .5;  }
     @include media.min($ms5, $ms4) { --slot-ratio: .75; }
-    @include media.min($ms6, $ms4) { --slot-ratio: 1; }
+    @include media.min($ms6, $ms4) { --slot-ratio: 1;   }
 }
 
 

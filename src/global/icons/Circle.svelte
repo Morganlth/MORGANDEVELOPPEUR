@@ -27,10 +27,9 @@ context="module"
 <!-- #|-HTML-| -->
 
 <svg
-class="circle"
-class:animate-circle={!prop_FILL}
+class="circle s-any"
 viewBox="0 0 80 80"
-fill={prop_FILL ? 'var(--icon-color, #FFF)' : 'none'}
+fill="none"
 stroke="var(--icon-color, #FFF)"
 stroke-width="15"
 xmlns="http://www.w3.org/2000/svg"
@@ -42,7 +41,7 @@ xmlns="http://www.w3.org/2000/svg"
 
 <!-- #|-SCRIPT-| -->
 
-<script>
+<!-- <script>
 
 // #\-IMPORTS-\
 
@@ -66,7 +65,6 @@ xmlns="http://www.w3.org/2000/svg"
 // #\-EXPORTS-\
 
     // --PROPS
-    export let prop_FILL = false
 
     // --BINDING
 
@@ -146,7 +144,7 @@ xmlns="http://www.w3.org/2000/svg"
     // --*
 
 
-</script>
+</script> -->
 
 
 <!-- #|-STYLE-| -->
@@ -162,7 +160,6 @@ lang="scss"
     /* --APP */
 
     /* --DEPENDENCIES */
-    @use '../../assets/scss/styles/utils';
 
     /* --MEDIA */
 
@@ -176,18 +173,14 @@ lang="scss"
 
 .circle
 {
-    @extend %any-size;
+    stroke-dasharray : 300%;
+    stroke-dashoffset: 300%;
 
-    &.animate-circle
-    {
-        stroke-dasharray: 300%;
-        stroke-dashoffset: 300%;
+    animation: a-draw .3s ease-in forwards;
 
-        animation: a-draw .3s ease-in forwards;
-
-        @keyframes a-draw { to { stroke-dashoffset: 0%; } }
-    }
+    @keyframes a-draw { to { stroke-dashoffset: 0%; } }
 }
+
 
 
 </style>

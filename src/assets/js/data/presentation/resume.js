@@ -160,7 +160,8 @@
                                     href                   : '/skills',
                                     alt                    : { fr: 'Compétences de Morgan LE THUAUT', en: 'Morgan LE THUAUT\'s skills' },
                                     'aria-label'           : { fr: 'compétences', en: 'skills' },
-                                    'data-sveltekit-reload': true
+                                    'data-sveltekit-reload': true,
+                                    draggable              : false
                                 }
                             }
                         ]
@@ -178,7 +179,8 @@
                                 {
                                     href        : 'mailto:morganlethuaut@gmail.com',
                                     alt         : { fr: 'adresse email de LE THUAUT Morgan', en: 'LE THUAUT Morgan\'s email address' },
-                                    'aria-label': 'email'
+                                    'aria-label': 'email',
+                                    draggable   : false
                                 }
                             },
                             {
@@ -187,9 +189,11 @@
                                 ,
                                 attributes:
                                 {
-                                    href    : 'https://www.linkedin.com/in/le-thuaut-morgan',
-                                    alt     : { fr: 'Profil LinkedIn de LE THUAUT Morgan', en: 'LE THUAUT Morgan\'s LinkedIn profile' },
-                                    target  : '_blank'
+                                    href        : 'https://www.linkedin.com/in/le-thuaut-morgan',
+                                    alt         : { fr: 'Profil LinkedIn de LE THUAUT Morgan', en: 'LE THUAUT Morgan\'s LinkedIn profile' },
+                                    'aria-label': 'LinkedIn',
+                                    target      : '_blank',
+                                    draggable   : false
                                 }
                             }
                         ]

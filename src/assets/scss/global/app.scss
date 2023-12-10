@@ -1,0 +1,86 @@
+/*----------------------------------------------- #||--setter--|| */
+
+
+/* #\-USES-\ */
+
+    /* --SASS */
+
+    /* --GLOBAL */
+
+    /* --APP */
+    @use '../app';
+
+    /* --DEPENDENCIES */
+    @use '../styles/utils';
+    @use '../styles/display';
+
+    /* --MEDIA */
+
+
+/* #\-EXPORTS-\ */
+
+    /* --THIS */
+
+
+/* #\-VARIABLES-\ */
+
+    /* --* */
+
+
+/* #\-MIXIN-\ */
+
+    /* --* */
+
+
+/* #\-PLACEHOLDER-\ */
+
+    /* --* */
+
+
+/* #\-THIS-\ */
+
+html
+{
+    @extend %reset;
+    @extend %set;
+    @extend %fonts;
+}
+
+// position
+.p-fxd { @include utils.fixed; }
+.p-a00 { @include utils.placement(absolute, 0, 0, 0, 0); }
+.p-abs { position: absolute; }
+.p-rlt { position: relative; }
+.p-stk { @extend %sticky; }
+
+// display
+.d-hid { display: none !important; }
+.d-blc { display: block; }
+.d-flx { display: flex; }
+.d-fcc { @extend %f-column-center; }
+.d-fc- { @extend %f-column; }
+.d-f-c { @extend %f-center; }
+.d-fjc { @extend %f-j-center; }
+.d-fac { @extend %f-a-center; }
+
+// transform
+.t-p3d { transform-style: preserve-3d; }
+.t-sc1 { transform      : scale(1); } /* fixed shell */
+
+// overflow
+.o-hid { overflow: hidden; }
+.o-h-a { overflow: hidden auto; }
+
+// size
+.s-ful { @extend %full-screen; }
+.s-any { @extend %any-size; }
+.s-a-w { width : 100%; }
+.s-a-h { height: 100%; }
+.s-fit { @extend %fit-content; }
+
+// pointer-events
+.p-y-- { pointer-events: auto; }
+.p-n-- { pointer-events: none; }
+
+// box
+.b-box { box-sizing: border-box; }

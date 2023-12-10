@@ -20,7 +20,7 @@ class Event
     ,
         setter: function (args)
         {
-            this.count = 0
+            this.count           = 0
             this.samples[this.i] = args[0] // fps
             
             if (++this.i >= this.samples.length) this.i = 0
@@ -30,10 +30,10 @@ class Event
     ,
         optionalparameters:
         {
-            count: 0,
-            i: 0,
+            count  : 0,
+            i      : 0,
             samples: new Float32Array(20),
-            start: performance.now()
+            start  : performance.now()
         ,
             getAverage: function () { return this.samples.reduce((som, n) => n === 0 ? som : som += n, 0) / this.samples.length }
         }
@@ -192,7 +192,7 @@ class Event
         this.#event_run.call(this.#event_MANAGER.resize)
     }
 
-    event_popstate({ state: {id, subPath} }) { ROUTER.router_update(id, subPath, true, false) }
+    event_popstate({state}) { if (state != null) ROUTER.router_update(state.id, state.subPath, true, false) }
 
 
 //=======@UTILS|

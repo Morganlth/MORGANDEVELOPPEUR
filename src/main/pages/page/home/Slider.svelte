@@ -31,14 +31,14 @@ class="slider"
 class:focus={prop_FOCUS}
 >
     <div
-    class="banner"
+    class="banner s-a-h b-box"
     style:transform="translateY({banner_TRANSLATE_Y}%)"
     >
         {banner_CONTENT}
     </div>
 
     <div
-    class="subbanner"
+    class="subbanner s-a-h b-box"
     >
         {subbanner_CONTENT}
     </div>
@@ -196,7 +196,8 @@ class:focus={prop_FOCUS}
             slider_T = t
     
             banner_TRANSLATE_Y = 100 * T
-        }, SLIDER_DURATION, slider_T, invert)
+        },
+        SLIDER_DURATION, slider_T, invert)
 
         slider_cancel = cancel
 
@@ -282,14 +283,7 @@ lang="scss"
 
     &.focus div:nth-child(2) { transform: translateY(0); }
 
-    .banner, .subbanner
-    {
-        height: 100%;
-
-        padding-bottom: 44vh;
-
-        box-sizing: border-box;
-    }
+    .banner, .subbanner { padding-bottom: 44vh; }
 
     .banner
     {

@@ -27,7 +27,7 @@ context="module"
 <!-- #|-HTML-| -->
 
 <img
-class="image"
+class="image s-any"
 class:focus={prop_FOCUS}
 src="{base}/images/icons/{prop_SRC}"
 alt={prop_ALT}
@@ -161,7 +161,6 @@ lang="scss"
     /* --APP */
 
     /* --DEPENDENCIES */
-    @use '../../assets/scss/styles/utils';
 
     /* --MEDIA */
 
@@ -175,8 +174,6 @@ lang="scss"
 
 .image
 {
-    @extend %any-size;
-    
     opacity: .1;
 
     filter: grayscale(100%);

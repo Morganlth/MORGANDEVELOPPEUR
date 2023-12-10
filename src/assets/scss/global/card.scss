@@ -43,7 +43,7 @@
 
     .background, .texture, .icon { backface-visibility: hidden; }
 
-    .background.back, .texture, .icon { position: absolute; }
-
     .background.back, .icon { transform: rotateY(180deg); }
+
+    .icon { position: absolute; }
 }

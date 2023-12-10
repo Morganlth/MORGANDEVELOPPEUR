@@ -28,7 +28,7 @@ context="module"
 
 {#if $spring_$ON}
     <svg
-    class="spring"
+    class="spring p-fxd"
     class:d-hid={spring_HIDE}
     class:true={$spring_$STATE === 1}
     class:false={$spring_$STATE === -1}
@@ -188,7 +188,6 @@ lang="scss"
     /* --APP */
 
     /* --DEPENDENCIES */
-    @use '../assets/scss/styles/utils';
 
     /* --MEDIA */
 
@@ -202,14 +201,13 @@ lang="scss"
 
 .spring
 {
-    @include utils.fixed($z: 3); /* > header */
+    z-index: 3; /* > header */
 
     mix-blend-mode: difference;
 
     &.true, &.false { mix-blend-mode: screen !important; }
 
     &.true  circle { fill: $primary   !important; }
-
     &.false circle { fill: $indicator !important; }
 
     circle

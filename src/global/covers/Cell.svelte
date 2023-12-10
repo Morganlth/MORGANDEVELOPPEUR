@@ -27,7 +27,7 @@ context="module"
 <!-- #|-HTML-| -->
 
 <button
-class="cell"
+class="cell p-n--"
 class:focus={prop_FOCUS}
 class:icon-wrapper={prop_ICON_WRAPPER}
 class:text-wrapper={prop_TEXT_WRAPPER}
@@ -222,12 +222,10 @@ lang="scss"
 
 .cell
 {
-    pointer-events: none;
-
     color: inherit;
     font : inherit;
 
-    &.focus { pointer-events: auto; }
+    &.focus { pointer-events: auto !important; }
 
     &.icon-wrapper, &.text-wrapper { background-color: $dark; }
 

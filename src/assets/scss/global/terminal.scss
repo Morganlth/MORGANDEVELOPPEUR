@@ -70,19 +70,16 @@
 
         .face, .back
         {
-            @extend %any-size;
-
             flex-shrink: 0;
     
             padding: 1.4rem 1.8rem;
 
-            background-color:    $dark;
+            background-color   : $dark;
             backface-visibility: hidden;
 
             border: solid $light .1rem;
 
             box-shadow: 0 0 .4rem $light;
-            box-sizing: border-box;
 
             @include media.min($ms4, $ms4) { padding: 2rem 4rem; }
         }

@@ -27,7 +27,7 @@ context="module"
 <!-- #|-HTML-| -->
 
 <svg
-class="arrow"
+class="arrow s-any"
 xmlns="http://www.w3.org/2000/svg"
 viewBox="0 0 32 32"
 >
@@ -40,7 +40,7 @@ viewBox="0 0 32 32"
 
 <!-- #|-SCRIPT-| -->
 
-<script>
+<!-- <script>
 
 // #\-IMPORTS-\
 
@@ -143,12 +143,12 @@ viewBox="0 0 32 32"
     // --*
 
 
-</script>
+</script> -->
 
 
 <!-- #|-STYLE-| -->
 
-<style
+<!-- <style
 lang="scss"
 >
 
@@ -159,7 +159,6 @@ lang="scss"
     /* --APP */
 
     /* --DEPENDENCIES */
-    @use '../../assets/scss/styles/utils';
 
     /* --MEDIA */
 
@@ -171,7 +170,5 @@ lang="scss"
 
 /* #\-THIS-\ */
 
-.arrow { @extend %any-size; }
 
-
-</style>
+</style> -->

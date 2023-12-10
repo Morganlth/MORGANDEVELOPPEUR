@@ -27,8 +27,7 @@ context="module"
 <!-- #|-HTML-| -->
 
 <div
-class="fragments"
-class:inline={!prop_WORD_COLUMN}
+class="fragments {prop_WORD_COLUMN ? '' : 'inline d-flx'}"
 style:--fragments-direction={prop_DIRECTION}
 >
     {#each prop_FRAGS.value as char, i}
@@ -44,7 +43,9 @@ style:--fragments-direction={prop_DIRECTION}
     {/each}
 
     {#if prop_TAGS.value instanceof Array}
-        <ul>
+        <ul
+        class="d-flx"
+        >
             {#each prop_TAGS.value as tag}
                 <li>
                     <strong>
@@ -66,7 +67,7 @@ style:--fragments-direction={prop_DIRECTION}
             >&nbsp;</pre>
         {/each}
     {/if}
-    </div>
+</div>
 
 
 <!-- #|-SCRIPT-| -->
@@ -216,10 +217,6 @@ lang="scss"
     &, pre { font: inherit; }
 
     &, ul li { white-space: nowrap; }
-
-    &.inline, ul { display: flex; }
-
-    transform-style: preserve-3d;
 
     &.inline { align-items: flex-end; }
 

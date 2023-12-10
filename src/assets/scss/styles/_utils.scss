@@ -70,6 +70,8 @@
         @if $z { z-index: $z; }
     }
 
+    @mixin text-stroke($color: $light, $size: 1px) { text-shadow: $size $size $color, $size*-1 $size $color, $size*-1 $size*-1 $color, $size $size*-1 $color; }
+
 
 /* #\-PLACEHOLDER-\ */
 
@@ -83,7 +85,7 @@
 
     %full-screen
     {
-        width : 100%;
+        width : 100vw;
         height: 100vh;
         height: 100svh;
     }
@@ -92,6 +94,14 @@
     {
         width : 100%;
         height: 100%;
+    }
+
+    %fit-content
+    {
+        width : -moz-fit-content;
+        height: -moz-fit-content;
+        width : fit-content;
+        height: fit-content;
     }
 
     %no-drag

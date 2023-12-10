@@ -27,7 +27,7 @@ context="module"
 <!-- #|-HTML-| -->
 
 <nav
-class="nav"
+class="nav p-rlt s-a-w"
 class:focus={prop_FOCUS}
 class:top={!prop_INTRO}
 style:--nav-t-x="{nav_TRANSLATE_X}%"
@@ -38,23 +38,24 @@ itemscope
 itemtype="https://schema.org/SiteNavigationElement"
 >
     <ul
-    class="items"
+    class="items d-fac s-a-w"
     style:transform="translateX({items_TRANSLATE_X}%)"
     style:opacity={items_OPACITY}
     >
         {#each prop_NAV as item}
+        {@const {id, title, value, color} = item}
             <li
             class="item"
-            style:--item-color={item.color ?? COLORS.light}
+            style:--item-color={color ?? COLORS.light}
             itemprop="name"
             >
                 <Cell
                 prop_TEXT_WRAPPER={true}
-                prop_TITLE={item.title ?? (item.value ?? '')}
+                prop_TITLE={title ?? (value ?? '')}
                 {prop_FOCUS}
-                on:click={cell_eClick.bind(null, item.id)}
+                on:click={cell_eClick.bind(null, id)}
                 >
-                    {item.value ?? ''}
+                    {value ?? ''}
                 </Cell>
             </li>
         {/each}
@@ -208,7 +209,7 @@ itemtype="https://schema.org/SiteNavigationElement"
                 const T = cubicInOut(t / .7)
         
                 nav_TRANSLATE_X = -100 * T
-                nav_ROTATE = 90 * (1 - T)
+                nav_ROTATE      = 90 * (1 - T)
 
                 nav_PE_COLOR = prop_INTRO ? COLORS[t > .2 ? 'light' : 'intermediate'] : 'transparent'
             }
@@ -217,7 +218,7 @@ itemtype="https://schema.org/SiteNavigationElement"
                 const T = cubicInOut((t - .7) / .3)
             
                 items_TRANSLATE_X = (nav_TRANSLATE_X = -100 * (1 - T))
-                items_OPACITY = T
+                items_OPACITY     = T
 
                 nav_PE_COLOR = COLORS.intermediate
             }
@@ -252,7 +253,6 @@ lang="scss"
 
     /* --DEPENDENCIES */
     @use '../../../assets/scss/styles/utils';
-    @use '../../../assets/scss/styles/display';
 
     /* --MEDIA */
 
@@ -267,8 +267,6 @@ lang="scss"
 
 .nav
 {
-    &::before, &, .items { width: 100%; }
-
     &::before
     {
         @include utils.placement(absolute, $top: 0, $right: 0, $left: 0, $pe: true);
@@ -277,14 +275,13 @@ lang="scss"
 
         opacity: 0;
 
+        width : 100%;
         height: 1px;
 
         background-color: var(--pe-color, $intermediate);
 
         transition: $pe-transition, opacity 1s;
     }
-
-    position: relative;
 
     transition: transform .4s ease-out;
 
@@ -303,8 +300,6 @@ lang="scss"
     .items
     {
         --icon-size: 2.4rem;
-
-        @extend %f-a-center;
 
         justify-content: flex-start;
         flex-wrap      : wrap;
