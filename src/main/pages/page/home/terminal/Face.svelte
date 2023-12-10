@@ -90,6 +90,7 @@ class="face d-fc- s-any b-box"
             autocapitalize="off" 
             bind:this={input_FIELD}
             bind:value={input_VALUE}
+            on:click={input_eClick}
             on:input={input_eInput}
             on:keyup|preventDefault={input_eKeyup}
             />
@@ -443,6 +444,8 @@ class="face d-fc- s-any b-box"
     function cell_eClick() { input_fieldFocus() }
 
     function cell_eClick2(datas) { datas.target ? prop_updateProcessDatas(datas) : datas.callback() }
+
+    function input_eClick(e) { e.preventDefault() } 
 
     function input_eInput() { input_testApp() ? input_analyseCommand() : input_keywordFormat() }
 
