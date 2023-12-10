@@ -88,6 +88,7 @@ class:focus={prop_FOCUS}
     // --SVELTE
 
     // --CONTEXTS
+    const APP_$SMALL_SCREEN = APP.app_$SMALL_SCREEN
 
     // --OUTSIDE
 
@@ -130,7 +131,7 @@ class:focus={prop_FOCUS}
     // --OUTSIDE
 
     // --THIS
-    $: slider_update(prop_FOCUS)
+    $: slider_update(prop_FOCUS && !$APP_$SMALL_SCREEN)
 
     // --INSIDE
 

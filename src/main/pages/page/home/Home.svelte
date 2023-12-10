@@ -32,7 +32,7 @@ data-page-id={prop_ID}
 >
     <Snake
     prop_SNAKE={prop_CHILDREN.snake}
-    prop_ON={snake_ON && prop_FOCUS && !$app_$MOBILE}
+    prop_ON={snake_ON && prop_FOCUS && !$APP_$MOBILE}
     {prop_ID}
     bind:snake_GAME
     />
@@ -52,12 +52,10 @@ data-page-id={prop_ID}
         />
     {/if}
 
-    {#if !$app_$SMALL_SCREEN}
-        <Slider
-        prop_SLIDER={prop_CHILDREN.slider}
-        prop_FOCUS={prop_FOCUS && page_CHARGED}
-        />
-    {/if}
+    <Slider
+    prop_SLIDER={prop_CHILDREN.slider}
+    prop_FOCUS={prop_FOCUS && page_CHARGED}
+    />
 
     <TicTacToe
     prop_ON={prop_FOCUS && tictactoe_ON}
@@ -161,6 +159,9 @@ data-page-id={prop_ID}
     // --SVELTE
 
     // --CONTEXTS
+    const
+    APP_$OPTIMIZE = APP.app_$OPTIMIZE,
+    APP_$MOBILE   = APP.app_$MOBILE
 
     // --OUTSIDE
 
@@ -191,10 +192,6 @@ data-page-id={prop_ID}
 // #\-VARIABLES-\
 
     // --CONTEXTS
-    let
-    app_$OPTIMIZE     = APP.app_$OPTIMIZE,
-    app_$SMALL_SCREEN = APP.app_$SMALL_SCREEN,
-    app_$MOBILE       = APP.app_$MOBILE
 
     // --OUTSIDE
 
@@ -223,7 +220,7 @@ data-page-id={prop_ID}
     // --THIS
 
     // --INSIDE
-    $: group_update(prop_FOCUS && !snake_GAME && !$app_$OPTIMIZE)
+    $: group_update(prop_FOCUS && !snake_GAME && !$APP_$OPTIMIZE)
 
     $: gravityarea$_FOCUS = prop_FOCUS && page_CHARGED
 
