@@ -166,6 +166,8 @@ data-page-id={prop_ID}
 
     function features_getTarget(target) { return prop_CHILDREN.features.find(feature => feature.tags.includes(target)) }
 
+    function features_getCurrentTarget() { return prop_CHILDREN.features.findLast(feature => feature.show) }
+
     // --UPDATES
     function app_updateFreeze(value) { APP.app_$FREEZE = { value, target: prop_ID } }
 
@@ -189,9 +191,11 @@ data-page-id={prop_ID}
 
     function resume_update()
     {
+        const FEATURE_ID = features_getCurrentTarget()?.id ?? 0
+    
         resume_ON = true
         
-        presentation_goTo(prop_START, true, false, app_updateFreeze.bind(null, true))
+        features_goTo(FEATURE_ID, true, false, app_updateFreeze.bind(null, true))
     }
 
     // --DESTROY
@@ -246,13 +250,13 @@ data-page-id={prop_ID}
         }
     }
 
-    function presentation_goTo(top, instant, hide, callback) { EVENT.event_scrollTo(top, instant ?? ROUTER.router_getInstant(top), hide, callback) }
-
     function presentation_resetChildrenVars()
     {
         contact_ON = false
         resume_ON  = false
     }
+
+    function presentation_goTo(top, instant, hide, callback) { EVENT.event_scrollTo(top, instant ?? ROUTER.router_getInstant(top), hide, callback) }
 
     function features_goTo(id = 0, instant, hide, callback)
     {
