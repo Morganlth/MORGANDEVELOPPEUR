@@ -360,7 +360,7 @@ lang="scss"
     
         &::before
         {
-            @include utils.absolute-any($pe: true);
+            @include utils.absolute-any($z: -1, $pe: true);
 
             background-color: $light;
         }
