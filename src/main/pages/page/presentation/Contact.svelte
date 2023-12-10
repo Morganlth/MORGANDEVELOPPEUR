@@ -87,6 +87,7 @@ on:introend={contact_eIntro}
                 type="email"
                 name="email"
                 aria-label="email"
+                inputmode="email"
                 placeholder="...@"
                 autocomplete="on"
                 required
@@ -105,6 +106,7 @@ on:introend={contact_eIntro}
                 id="contact-message"
                 name="message"
                 aria-label="message"
+                inputmode="text"
                 placeholder={prop_CONTACT.messagePlaceholder}
                 minlength={FORM_MSG_MIN}
                 maxlength={FORM_MSG_MAX}
