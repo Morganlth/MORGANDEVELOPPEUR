@@ -258,8 +258,6 @@ lang="scss"
     {
         align-items: flex-end;
 
-        transform: rotate(-.01rad);
-
         max-width : calc(50vw - app.$gap-inline * 2);
         min-height: 2.4rem;
 
