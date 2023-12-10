@@ -31,16 +31,16 @@ class="slider"
 class:focus={prop_FOCUS}
 >
     <div
+    class="subbanner s-a-h b-box"
+    >
+        {subbanner_CONTENT}
+    </div>
+
+    <div
     class="banner s-a-h b-box"
     style:transform="translateY({banner_TRANSLATE_Y}%)"
     >
         {banner_CONTENT}
-    </div>
-
-    <div
-    class="subbanner s-a-h b-box"
-    >
-        {subbanner_CONTENT}
     </div>
 </div>
 
@@ -282,7 +282,7 @@ lang="scss"
 
     color       : $intermediate;
     text-align  : right;
-    writing-mode: vertical-rl;
+    writing-mode: vertical-lr;
 
     &.focus .subbanner { transform: translateY(0); }
 
