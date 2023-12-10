@@ -267,6 +267,8 @@ lang="scss"
 
             transform: translate(-250%, -50%);
         }
+
+        @include media.min($ms4, $ms4) { transform: rotate(-.01rad); }
     }
 
     @include media.min($height: $ms3)
