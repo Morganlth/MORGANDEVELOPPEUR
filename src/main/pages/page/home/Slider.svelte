@@ -270,6 +270,8 @@ lang="scss"
 {
     @include utils.placement(absolute, $bottom: 0, $left: 62%);
 
+    isolation: isolate;
+
     transform-origin: bottom right;
     transform       : perspective(860px) rotateX(-.6rad) scale(.5);
 
