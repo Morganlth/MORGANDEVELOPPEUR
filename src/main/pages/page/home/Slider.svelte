@@ -271,7 +271,7 @@ lang="scss"
     @include utils.placement(absolute, $bottom: 0, $left: 62%);
 
     transform-origin: bottom right;
-    transform:        perspective(860px) rotateX(-.6rad) scale(.5);
+    transform       : perspective(860px) rotateX(-.6rad) scale(.5);
 
     width : fit-content;
     height: 200vh;
@@ -281,7 +281,7 @@ lang="scss"
     text-align  : right;
     writing-mode: vertical-rl;
 
-    &.focus div:nth-child(2) { transform: translateY(0); }
+    &.focus .subbanner { transform: translateY(0); }
 
     .banner, .subbanner { padding-bottom: 44vh; }
 
