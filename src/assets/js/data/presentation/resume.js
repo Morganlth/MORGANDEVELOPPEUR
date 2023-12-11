@@ -179,7 +179,7 @@
                                 {
                                     href        : 'mailto:morganlethuaut@gmail.com',
                                     alt         : { fr: 'adresse email de LE THUAUT Morgan', en: 'LE THUAUT Morgan\'s email address' },
-                                    'aria-label': 'email',
+                                    'aria-label': 'email: morganlethuaut@gmail.com',
                                     draggable   : false
                                 }
                             },
