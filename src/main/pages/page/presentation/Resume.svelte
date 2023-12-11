@@ -352,16 +352,13 @@ lang="scss"
 
     .copy { clip-path: polygon(110% 50%, 110% 97%, 96% 110%, -10% 110%, -10% 50%); }
 
+    .self::before, main { background-color: $light; }
+
     .self
     {
         &::before, main { clip-path: polygon(0 0, 100% 0, 100% 50%, 0 50%); }
     
-        &::before
-        {
-            @include utils.absolute-any($z: -1, $pe: true);
-
-            background-color: $light;
-        }
+        &::before { @include utils.absolute-any($z: -1, $pe: true); }
 
         transform: rotateX(-180deg);
 
@@ -444,8 +441,6 @@ lang="scss"
         }
 
         justify-content: space-between;
-
-        background-color: $light;
 
         border: solid $light calc(2 * $ratio);
 
