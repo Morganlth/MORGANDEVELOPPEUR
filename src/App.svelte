@@ -121,7 +121,7 @@ context="module"
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
 id="app"
-class="lang-{prop_LANG} p-fxd o-h-a"
+class="lang-{prop_LANG} p-fxd o-h-a b-drk"
 class:freeze={$app_$FREEZE}
 style:visibility={app_FONTS_CHARGED ? 'visible' : 'hidden'}
 bind:this={app}
@@ -341,8 +341,6 @@ lang="scss"
     @extend %scroll-bar;
 
     overscroll-behavior: none;
-
-    background-color: $dark;
 
     &.freeze
     {

@@ -27,7 +27,7 @@ context="module"
 <!-- #|-HTML-| -->
 
 <div
-class="back p-rlt s-any b-box"
+class="back p-rlt s-any b-drk b-box"
 >
     <Cell
     prop_ICON_WRAPPER={true}
@@ -44,7 +44,7 @@ class="back p-rlt s-any b-box"
     </Cell>
 
     <article
-    class="desc s-a-w b-box"
+    class="desc s-a-w b-drk b-box"
     >
         <h2>{prop_BACK.desc.title}</h2>
 
@@ -283,8 +283,6 @@ lang="scss"
 
     transform: rotateY(180deg);
 
-    background-color: $dark;
-
     .desc
     {
         $margin-top: 1rem;
@@ -299,8 +297,6 @@ lang="scss"
         margin-top:     $margin-top;
         padding-bottom: 1rem;
         padding-right:  2rem;
-
-        background-color: $dark;
 
         user-select: text;
 

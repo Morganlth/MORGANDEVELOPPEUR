@@ -28,8 +28,7 @@ context="module"
 <!-- #|-HTML-| -->
 
 <div
-class="snake p-a00 d-f-c o-hid s-any"
-class:game={snake_GAME}
+class="snake p-a00 d-f-c o-hid s-any {snake_GAME ? 'p-y-- b-drk' : ''}"
 style:--snake-blocksize="{snake_BLOCKSIZE}px"
 style:z-index={snake_Z}
 bind:this={snake}
@@ -786,13 +785,6 @@ lang="scss"
 .snake
 {
     max-height: 100svh;
-
-    &.game
-    {
-        background-color: $dark;
-
-        pointer-events: auto;
-    }
 
     .grid
     {

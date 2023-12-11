@@ -6,6 +6,7 @@
     /* --SASS */
 
     /* --GLOBAL */
+    @use './colors' as *;
 
     /* --APP */
     @use '../app';
@@ -81,6 +82,10 @@ html
 // pointer-events
 .p-y-- { pointer-events: auto; }
 .p-n-- { pointer-events: none; }
+
+// background
+.b-drk { background-color: $dark; }
+.b-lgh { background-color: $light; }
 
 // box
 .b-box { box-sizing: border-box; }

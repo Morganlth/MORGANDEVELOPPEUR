@@ -36,9 +36,10 @@ on:introstart={table_eIn}
 on:outrostart={table_eOut}
 >
     <div
-    class="background p-a00 s-any"
+    class="p-a00 s-any b-drk"
     bind:this={background}
     >
+        <!-- particles -->
     </div>
 
     <div
@@ -326,8 +327,6 @@ lang="scss"
             }
         }
     }
-
-    .background { background-color: $dark; }
 
     .head, .content section { height: fit-content; }
 

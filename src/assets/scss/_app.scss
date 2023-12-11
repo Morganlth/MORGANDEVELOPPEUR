@@ -70,8 +70,6 @@
             user-select: none;
         }
 
-        &, body { background-color: $dark; }
-
         font-size: 36.458%;
 
         @include media.min($ms4)

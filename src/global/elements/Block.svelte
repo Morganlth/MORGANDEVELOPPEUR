@@ -35,7 +35,7 @@ style:--block-color={prop_COLOR ?? COLORS.primary}
 >
     {#each [1, 2, 3, 4, 5, 6] as id}
         <div
-        class="side p-abs d-f-c s-any b-box"
+        class="side p-abs d-f-c s-any b-drk b-box"
         data-side-id={id}
         >
             <Icon
@@ -236,8 +236,6 @@ lang="scss"
     .side
     {
         backface-visibility: hidden;
-    
-        background-color: $dark;
 
         border: solid $intermediate calc($size * .05);
 

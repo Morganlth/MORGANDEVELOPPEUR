@@ -27,7 +27,7 @@ context="module"
 <!-- #|-HTML-| -->
 
 <div
-class="face d-fc- s-any b-box"
+class="face d-fc- s-any b-drk b-box"
 >
     <div
     class="head d-flx"
@@ -109,7 +109,7 @@ class="face d-fc- s-any b-box"
     </Line>
 
     <div
-    class="output d-fc- s-any"
+    class="output d-fc- s-any b-drk"
     bind:this={output}
     >
         {#each output_LINES as line, i}
@@ -668,8 +668,6 @@ lang="scss"
         max-height: 100%;
 
         margin-top: 1rem;
-
-        background-color: $dark;
 
         div { gap: 1rem; }
 

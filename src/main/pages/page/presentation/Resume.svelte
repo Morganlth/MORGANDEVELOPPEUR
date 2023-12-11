@@ -72,10 +72,10 @@ transition:transition_fade={{ duration: 200 }}
                     </header>
 
                     <main
-                    class="pe-b-rotate p-rlt d-flx o-hid s-any b-box"
+                    class="pe-b-rotate p-rlt d-flx o-hid s-any b-lgh b-box"
                     class:t-p3d={self}
                     >
-                        {#each prop_RESUME.main as column}
+                        {#each prop_RESUME.main as column, i}
                         {@const {className, content} = column}
                             <div
                             class="column p-rlt d-fc- s-a-h b-box {className ?? ''}"
@@ -86,7 +86,11 @@ transition:transition_fade={{ duration: 200 }}
                                     class="d-fc-"
                                     class:o-hid={hide}
                                     >
-                                        <h4>{title}</h4>
+                                        <h4
+                                        class:b-drk={i}
+                                        >
+                                            {title}
+                                        </h4>
 
                                         <ul
                                         class="{hide ? 'd-fc- o-h-a' : ''} b-box"
@@ -352,13 +356,16 @@ lang="scss"
 
     .copy { clip-path: polygon(110% 50%, 110% 97%, 96% 110%, -10% 110%, -10% 50%); }
 
-    .self::before, main { background-color: $light; }
-
     .self
     {
         &::before, main { clip-path: polygon(0 0, 100% 0, 100% 50%, 0 50%); }
     
-        &::before { @include utils.absolute-any($z: -1, $pe: true); }
+        &::before
+        {
+            @include utils.absolute-any($z: -1, $pe: true);
+
+            background-color: $light;
+        }
 
         transform: rotateX(-180deg);
 
@@ -487,8 +494,6 @@ lang="scss"
             h4
             {
                 padding-left: calc(8 * $ratio);
-        
-                background-color: $dark;
     
                 color: $primary;
             }

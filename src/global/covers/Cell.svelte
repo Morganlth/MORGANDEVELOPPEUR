@@ -31,7 +31,7 @@ class="cell p-n--"
 class:focus={prop_FOCUS}
 class:icon-wrapper={prop_ICON_WRAPPER}
 class:text-wrapper={prop_TEXT_WRAPPER}
-class:center={prop_CENTER}
+class:d-f-c={prop_CENTER}
 type={prop_SUBMIT ? 'submit' : 'button'}
 title={prop_TITLE}
 tabindex={prop_FOCUS ? 0 : -1}
@@ -251,8 +251,6 @@ lang="scss"
 
         border: solid var(--cell-border-color, $intermediate) 1px;
     }
-
-    &.center { @extend %f-center; }
 }
 
 

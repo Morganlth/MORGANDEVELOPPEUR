@@ -68,7 +68,7 @@ class="footer d-fac s-a-w p-n-- b-box"
             >
     
             <select
-            class="p-y--"
+            class="p-y-- b-drk"
             name="lang"
             aria-label="choix de la langue"
             on:input={select_eInput}
@@ -313,12 +313,7 @@ lang="scss"
             font-weight: lighter;
         }
     
-        select
-        {
-            padding: 0 .2rem;
-
-            background-color: $dark;
-        }
+        select { padding: 0 .2rem; }
     }
 }
 

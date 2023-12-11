@@ -27,7 +27,7 @@ context="module"
 <!-- #|-HTML-| -->
 
 <div
-class="contact p-fxd p-y--"
+class="contact p-fxd p-y-- b-drk"
 transition:transition_fade={{ duration: 200 }}
 on:introend={contact_eIntro}
 >
@@ -78,7 +78,7 @@ on:introend={contact_eIntro}
             on:submit|preventDefault={form_eSubmit}
             >
                 <label
-                class="d-fac s-a-w b-box"
+                class="d-fac s-a-w b-drk b-box"
                 for="contact-email"
                 class:valid={email_VALID}
                 >
@@ -100,7 +100,7 @@ on:introend={contact_eIntro}
                 />
 
                 <label
-                class="d-fac s-a-w b-box"
+                class="d-fac s-a-w b-drk b-box"
                 for="contact-message"
                 class:valid={message_VALID}
                 >
@@ -122,7 +122,7 @@ on:introend={contact_eIntro}
                 ></textarea>
 
                 <button
-                class="d-f-c s-a-w b-box"
+                class="d-f-c s-a-w b-drk b-box"
                 type="submit"
                 title={prop_CONTACT.formCellTitle}
                 >
@@ -388,8 +388,6 @@ lang="scss"
 {
     z-index: 2; /* label & title */
 
-    background-color: $dark;
-
     .background { z-index: -1; }
 
     .head
@@ -459,12 +457,7 @@ lang="scss"
             &::placeholder { color: $primary; }
         }
 
-        label, button
-        {
-            height: $label-height;
-
-            background-color: $dark;
-        }
+        label, button { height: $label-height; }
 
         label
         {
