@@ -270,11 +270,11 @@
                         [
                             {
                                 topic: { fr: 'Activités sportives', en: 'Sports activities' },
-                                value: { fr: 'plongée, vélo, course et musculation', en: 'diving, cycling, running and weight training' }
+                                value: { fr: 'Plongée, vélo, course et musculation', en: 'Diving, cycling, running and weight training' }
                             },
                             {
                                 topic: { fr: 'Arts et concepts', en: 'Arts and concepts' },
-                                value: { fr: 'programmation, dessin, mécanique', en: 'programming, design, mechanics' }
+                                value: { fr: 'Programmation, dessin, mécanique', en: 'Programming, design, mechanics' }
                             }
                         ]
                     },
