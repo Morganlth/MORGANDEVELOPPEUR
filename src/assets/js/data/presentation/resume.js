@@ -242,9 +242,9 @@
                                 topic: 'OpenClassrooms',
                                 value:
                                 {
-                                    fr: 'OpenClassrooms Prep\'Apprentissage - Développeur Web (09/05/22-08/09/22)'
+                                    fr: 'Prep\'Apprentissage - Développeur Web (09/05/22-08/09/22)'
                                     ,
-                                    en: 'OpenClassrooms Prep\'Apprenticeship - Web Developer (09/05/22-08/09/22)'
+                                    en: 'Prep\'Apprenticeship - Web Developer (09/05/22-08/09/22)'
                                 }
                             },
                             {
