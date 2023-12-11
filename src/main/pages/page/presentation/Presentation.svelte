@@ -172,13 +172,13 @@ data-page-id={prop_ID}
     // --UPDATES
     function app_updateFreeze(value) { APP.app_$FREEZE = { value, target: prop_ID } }
 
-    function router_updatePage(subPath) { ROUTER.router_updatePage(prop_ID, subPath) }
+    function router_updatePage(subpath) { ROUTER.router_updatePage(prop_ID, subpath) }
 
-    function presentation_update(subPath)
+    function presentation_update(subpath)
     {
         if (!page_CHARGED) return
     
-        switch (subPath)
+        switch (subpath)
         {
             case CONTACT_NAME: contact_update()     ;break
             case RESUME_NAME : resume_update()      ;break

@@ -192,7 +192,7 @@ class Event
         this.#event_run.call(this.#event_MANAGER.resize)
     }
 
-    event_popstate({state}) { if (state != null) ROUTER.router_update(state.id, state.subPath, true, false) }
+    event_popstate({state}) { if (state != null) ROUTER.router_update(state.id, state.subpath, true, false) }
 
 
 //=======@UTILS|

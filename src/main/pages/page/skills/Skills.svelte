@@ -180,11 +180,11 @@ data-page-id={prop_ID}
 
     function system_setEvents() { EVENT.event_add(SYSTEM_EVENTS) }
 
-    function table_setTarget(subPath)
+    function table_setTarget(subpath)
     {
         if (page_CHARGED)
         {
-            const TARGET = table_getTarget(subPath)
+            const TARGET = table_getTarget(subpath)
 
             if (TARGET)
             {
@@ -200,12 +200,12 @@ data-page-id={prop_ID}
     // --GET
     function system_getTarget(target) { return prop_CHILDREN.system.find(item => item.tags.includes(target)) }
 
-    function table_getTarget(subPath) { return prop_CHILDREN.system.find(item => item.path === subPath) }
+    function table_getTarget(subpath) { return prop_CHILDREN.system.find(item => item.path === subpath) }
 
     // --UPDATES
     function app_updateFreeze(value) { APP.app_$FREEZE = { value, target: prop_ID } }
 
-    function router_updatePage(subPath) { ROUTER.router_updatePage(prop_ID, subPath) }
+    function router_updatePage(subpath) { ROUTER.router_updatePage(prop_ID, subpath) }
 
     async function table_updateTarget(delay)
     {

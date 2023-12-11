@@ -70,11 +70,11 @@ class Router
 //=======@LIFE|
 
     // --SET
-    router_set(id, subPath, response)
+    router_set(id, subpath, response)
     {
         this.#router_setVars(response)
 
-        this.router_update(id, subPath, true)
+        this.router_update(id, subpath, true)
     }
 
     #router_setStores()
@@ -92,7 +92,7 @@ class Router
     router_getInstant(top) { return Math.abs(APP.app_SCROLLTOP - top) > APP.app_HEIGHT * 2 }
 
     // --UPDATES
-    router_update(id, subPath, instant, history = true)
+    router_update(id, subpath, instant, history = true)
     {
         const
         PAGE = this.#router_PAGES[id],
@@ -100,37 +100,37 @@ class Router
 
         instant ??= this.router_getInstant(TOP)
     
-        if (instant || PAGE.id === this.#router_getPageFocus()?.id) this.router_updatePage(id, subPath, PAGE, history)
+        if (instant || PAGE.id === this.#router_getPageFocus()?.id) this.router_updatePage(id, subpath, PAGE, history)
 
         EVENT.event_scrollTo(TOP, instant)
     }
 
-    router_updatePage(id, subPath, page, history = true)
+    router_updatePage(id, subpath, page, history = true)
     {
         page ??= this.#router_PAGES[id]
 
         if (page)
         {
-            const ROUTE = '/' + page.name + (subPath ? '/' + subPath : '')
+            const ROUTE = '/' + page.name + (subpath ? '/' + subpath : '')
 
             if (this.#router_ROUTE !== ROUTE)
             {
                 this.#router_resetLastPageFocus()
-                this.#router_updateVars(id, subPath, ROUTE)
+                this.#router_updateVars(id, subpath, ROUTE)
 
                 page.focus = true
 
-                if (history) this.#router_updateHistory(id, subPath, ROUTE)
+                if (history) this.#router_updateHistory(id, subpath, ROUTE)
             }
         }
     }
 
-    #router_updateHistory(id, subPath, route) { history.pushState({id, subPath}, '', location.origin + route) }
+    #router_updateHistory(id, subpath, route) { history.pushState({id, subpath}, '', location.origin + route) }
 
-    #router_updateVars(id, subPath, route)
+    #router_updateVars(id, subpath, route)
     {
         this.#router_$ID.set(id)
-        this.#router_$SUBPATH.set(subPath)
+        this.#router_$SUBPATH.set(subpath)
     
         this.#router_ROUTE = route
     }
