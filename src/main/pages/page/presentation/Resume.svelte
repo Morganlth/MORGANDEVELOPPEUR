@@ -27,7 +27,7 @@ context="module"
 <!-- #|-HTML-| -->
 
 <div
-class="resume"
+class="resume p-fxd p-y--"
 transition:transition_fade={{ duration: 200 }}
 >
     <div
@@ -78,7 +78,7 @@ transition:transition_fade={{ duration: 200 }}
                         {#each prop_RESUME.main as column}
                         {@const {className, content} = column}
                             <div
-                            class="column d-fc- s-a-h b-box {className ?? ''}"
+                            class="column p-rlt d-fc- s-a-h b-box {className ?? ''}"
                             >
                                 {#each content as section}
                                 {@const {hide, title, content} = section}
@@ -310,9 +310,7 @@ lang="scss"
 
 .resume
 {
-    @include utils.fixed($z: 2);
-
-    pointer-events: auto;
+    z-index: 2;
 
     backdrop-filter: blur(100px);
 
@@ -331,7 +329,7 @@ lang="scss"
 
         @extend %scroll-bar;
 
-        perspective: 2000px;
+        perspective: 1600px;
 
         transform: translateY(100%);
 
@@ -451,7 +449,7 @@ lang="scss"
 
         border: solid $light calc(2 * $ratio);
 
-        .column { @include utils.placement(relative, $z: 1); }
+        .column { z-index: 1; }
 
         .column:nth-child(1)
         {
