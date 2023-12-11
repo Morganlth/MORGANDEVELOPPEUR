@@ -29,7 +29,7 @@ context="module"
 <App
 prop_LANG={data.lang ?? LANGS[0]}
 prop_PAGE_ID={data.page_ID ?? 0}
-prop_SUBPATH={data.subPath}
+prop_SUBPATH={data.subpath}
 prop_RESPONSE={form}
 />
 

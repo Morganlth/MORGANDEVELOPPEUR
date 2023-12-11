@@ -26,18 +26,18 @@
 // #\-EXPORTS-\
 
     // --THIS
-    export function load({ params: {page, subPath}, cookies })
+    export function load({ params: {page, subpath}, cookies })
     {
-        const ID = page_getId(page, subPath)
+        const ID = page_getId(page, subpath)
 
         if (ID == null)
         {
-            const ERROR = { fr: `La page ${page}/${subPath} n'existe pas.`, en: `The ${page}/${subPath} page does not exist.` }[cookies.get('lang') ?? LANGS[0]]
+            const ERROR = { fr: `La page ${page}/${subpath} n'existe pas.`, en: `The ${page}/${subpath} page does not exist.` }[cookies.get('lang') ?? LANGS[0]]
 
             throw error(404, ERROR)
         }
 
-        return { page_ID: ID, subPath }
+        return { page_ID: ID, subpath }
     }
 
     export const actions =
@@ -82,9 +82,9 @@
     // --SET
 
     // --GET
-    function page_getId(page, subPath)
+    function page_getId(page, subpath)
     {
-        switch (subPath)
+        switch (subpath)
         {
             case 'contact'     :
             case 'resume'      : if (page === 'presentation') return 1 ;break
