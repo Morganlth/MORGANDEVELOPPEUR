@@ -27,19 +27,19 @@ context="module"
 <!-- #|-HTML-| -->
 
 <div
-class="contact"
+class="contact p-fxd p-y--"
 transition:transition_fade={{ duration: 200 }}
 on:introend={contact_eIntro}
 >
     <div
-    class="background"
+    class="background p-a00 s-any"
     bind:this={background}
     >
         <!-- particles -->
     </div>
 
     <div
-    class="head"
+    class="head d-flx"
     >
         <Cell
         prop_FOCUS={true}
@@ -56,7 +56,7 @@ on:introend={contact_eIntro}
         </Cell>
 
         <div
-        class="response"
+        class="response b-box"
         class:success={response_SUCCESS}
         class:error={response_ERROR}
         >
@@ -65,9 +65,11 @@ on:introend={contact_eIntro}
     </div>
 
     <div
-    class="content"
+    class="content p-a00 o-h-a s-any"
     >
-        <div>
+        <div
+        class="p-rlt d-f-c o-hid s-any b-box"
+        >
             <form
             style:--pe-border-color={form_PE_BORDER_COLOR}
             method="post"
@@ -76,6 +78,7 @@ on:introend={contact_eIntro}
             on:submit|preventDefault={form_eSubmit}
             >
                 <label
+                class="d-fac s-a-w b-box"
                 for="contact-email"
                 class:valid={email_VALID}
                 >
@@ -84,6 +87,7 @@ on:introend={contact_eIntro}
 
                 <input
                 id="contact-email"
+                class="b-box"
                 type="email"
                 name="email"
                 aria-label="email"
@@ -96,6 +100,7 @@ on:introend={contact_eIntro}
                 />
 
                 <label
+                class="d-fac s-a-w b-box"
                 for="contact-message"
                 class:valid={message_VALID}
                 >
@@ -104,6 +109,7 @@ on:introend={contact_eIntro}
 
                 <textarea
                 id="contact-message"
+                class="b-box"
                 name="message"
                 aria-label="message"
                 inputmode="text"
@@ -116,6 +122,7 @@ on:introend={contact_eIntro}
                 ></textarea>
 
                 <button
+                class="d-f-c s-a-w b-box"
                 type="submit"
                 title={prop_CONTACT.formCellTitle}
                 >
@@ -262,25 +269,33 @@ on:introend={contact_eIntro}
         }
     }
 
+    function response_setValue(value) { response_VALUE = value }
+
     function response_setSuccess(success)
     {
-        response_SUCCESS = true
-        response_VALUE   = success ?? prop_CONTACT.formSuccess
+        response_update(true, false)
+        
+        response_setValue(success ?? prop_CONTACT.formSuccess)
     }
 
     function response_setError(error)
     {
-        response_ERROR = true
+        response_update(false, true)
 
-             if (error.server)  response_VALUE = error.server
-        else if (error.email)   response_VALUE = prop_CONTACT.emailError
-        else if (error.message) response_VALUE = prop_CONTACT.messageError
-        else                    response_VALUE = prop_CONTACT.formError
+             if (error.server)  response_setValue(error.server)
+        else if (error.email)   response_setValue(prop_CONTACT.emailError)
+        else if (error.message) response_setValue(prop_CONTACT.messageError)
+        else                    response_setValue(prop_CONTACT.formError)
     }
 
     // --GET
 
     // --UPDATES
+    function response_update(success = false, error = false)
+    {
+        response_SUCCESS = success
+        response_ERROR   = error
+    }
 
     // --DESTROY
     function contact_destroy()
@@ -307,7 +322,8 @@ on:introend={contact_eIntro}
         if (!email_VALID)   return response_setError({ email  : prop_CONTACT.emailError })
         if (!message_VALID) return response_setError({ message: prop_CONTACT.messageError })
 
-        response_setSuccess(prop_CONTACT.formWait)
+        response_update(false, false)
+        response_setValue(prop_CONTACT.formWait)
     
         form_SUBMIT = true
 
@@ -370,15 +386,9 @@ lang="scss"
 
 .contact
 {
-    @include utils.fixed($z: 2); /* label & title */
-
-    pointer-events: auto;
+    z-index: 2; /* label & title */
 
     background-color: $dark;
-
-    .background, .content, .content>div { @extend %any-size; }
-
-    .background, .content { @include utils.placement(absolute, 0, 0, 0, 0); }
 
     .background { z-index: -1; }
 
@@ -388,23 +398,19 @@ lang="scss"
 
         @include utils.placement(absolute, $top: $head-top, $left: app.$gap-inline, $z: 1);
 
-        display    : flex;
         align-items: flex-end;
         flex-wrap  : wrap;
         gap        : 2rem;
 
         .response
         {
-            @include font.text($regular: false);
+            @include font.text($color: $intermediate, $regular: false);
 
             flex: 1;
 
             padding-left: 1rem;
 
-            box-sizing: border-box;
-
-            &.success { color: $primary; }
-
+            &.success { color: $primary;   }
             &.error   { color: $indicator; }
         }
     }
@@ -412,22 +418,12 @@ lang="scss"
     .content
     {
         @extend %scroll-bar;
-    
-        overflow: hidden auto;
 
         &>div
         {
-            @extend %f-center;
-
-            position: relative;
-
-            overflow: hidden;
-
             min-height: $ms3;
 
             padding-block: $head-top * 2;
-
-            box-sizing: border-box;
         }
     }
 
@@ -460,14 +456,11 @@ lang="scss"
             color: inherit;
             font : inherit;
 
-            box-sizing: border-box;
-
             &::placeholder { color: $primary; }
         }
 
         label, button
         {
-            width : 100%;
             height: $label-height;
 
             background-color: $dark;
@@ -475,13 +468,9 @@ lang="scss"
 
         label
         {
-            @extend %f-a-center;
-
             padding-left: 1.8rem;
 
             border-left: $border;
-
-            box-sizing: border-box;
 
             &.valid { color: $primary; }
         }
@@ -525,8 +514,6 @@ lang="scss"
         button
         {
             #{--icon-size}: 1.6rem;
-
-            @extend %f-center;
         
             grid-column: 3 / 4;
             grid-row   : 3 / 4;

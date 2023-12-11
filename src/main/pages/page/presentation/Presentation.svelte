@@ -121,6 +121,8 @@ data-page-id={prop_ID}
     const FEATURES_CONTENTS_LENGTH = features_getContentsLength()
 
     const CONTACT_NAME = 'contact'
+    
+    const RESUME_NAME = 'resume'
 
 
 // #\-VARIABLES-\
@@ -144,11 +146,10 @@ data-page-id={prop_ID}
     // --OUTSIDE
 
     // --THIS
+    $: presentation_update($ROUTER_$SUBPATH)
 
     // --INSIDE
-    $: contact_update($ROUTER_$SUBPATH)
-
-    $: !$APP_$FREEZE ? presentation_resetChildrenVars() : void 0 // after contact_update
+    $: !$APP_$FREEZE ? presentation_resetChildrenVars() : void 0 // after presentation_update
 
 
 // #\-FUNCTIONS-\
@@ -173,20 +174,23 @@ data-page-id={prop_ID}
 
     function router_updatePage(subPath) { ROUTER.router_updatePage(prop_ID, subPath) }
 
-    function contact_update(subPath)
+    function presentation_update(subPath)
     {
-        if (page_CHARGED)
+        if (!page_CHARGED) return
+    
+        switch (subPath)
         {
-            const ON = subPath === CONTACT_NAME
-
-            if (ON)
-            {
-                features_goTo(features_getTarget(CONTACT_NAME)?.id ?? 0, true, false, app_updateFreeze.bind(null, true))
-
-                contact_ON = true
-            }
-            else if (contact_ON) app_updateFreeze(false) // => presentation_resetChildrenVars
+            case CONTACT_NAME: contact_update()     ;break
+            case RESUME_NAME : resume_update()      ;break
+            default          : presentation_reset() ;break
         }
+    }
+
+    function contact_update()
+    {
+        contact_ON = true
+    
+        features_goTo(features_getTarget(CONTACT_NAME)?.id ?? 0, true, false, app_updateFreeze.bind(null, true))
     }
 
     function resume_update()
@@ -213,9 +217,9 @@ data-page-id={prop_ID}
     {
         switch (id)
         {
-            case 0 : features_goTo(features_getTarget(CONTACT_NAME)?.id ?? 0) ;break
-            case 1 : resume_update()                                          ;break
-            default:                                                          ;break
+            case 0 : router_updatePage(CONTACT_NAME) ;break
+            case 1 : router_updatePage(RESUME_NAME)  ;break
+            default:                                 ;break
         }
     }
 
@@ -223,7 +227,7 @@ data-page-id={prop_ID}
 
     function contact_eClick()  { router_updatePage(null) }
 
-    function resume_eClick()   { app_updateFreeze(false) } // => presentation_resetChildrenVars
+    function resume_eClick()   { router_updatePage(null) }
 
 
 //=======@TRANSITIONS|
@@ -249,6 +253,8 @@ data-page-id={prop_ID}
             default        :                                                                                    ;break
         }
     }
+
+    function presentation_reset() { if (contact_ON || resume_ON) app_updateFreeze(false) } // => presentation_resetChildrenVars
 
     function presentation_resetChildrenVars()
     {

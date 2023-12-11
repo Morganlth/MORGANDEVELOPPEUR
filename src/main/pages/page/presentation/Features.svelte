@@ -27,105 +27,109 @@ context="module"
 <!-- #|-HTML-| -->
 
 <div
-class="features s-a-w"
+class="features p-fxd"
 class:focus={prop_FOCUS}
-style:transform="translateY({features_TRANSLATE_Y}%)"
 >
-    {#each prop_FEATURES as group}
-    {@const {show, attributes, contents} = group}
-        <div
-        class="container s-a-w"
-        class:show
-        {...(attributes ?? {})}
-        >
-            {#each contents as feature, j}
-            {@const {topic, value, html, attributes, contact} = feature}
-                <div
-                class="b-box"
-                style:--feature-direction={j % 2 ? -1 : 1}
-                style:--feature-delay="{.2 * j}s"
-                >
-                    <Line>
-                        <span
-                        slot="id"
-                        >
-                            {j}
-                        </span>
+    <div
+    class="s-a-w"
+    style:transform="translateY({features_TRANSLATE_Y}%)"
+    >
+        {#each prop_FEATURES as group}
+        {@const {show, attributes, contents} = group}
+            <div
+            class="container s-a-w"
+            class:show
+            {...(attributes ?? {})}
+            >
+                {#each contents as feature, j}
+                {@const {topic, value, html, attributes, contact} = feature}
+                    <div
+                    class="o-hid s-a-w b-box"
+                    style:--feature-direction={j % 2 ? -1 : 1}
+                    style:--feature-delay="{.2 * j}s"
+                    >
+                        <Line>
+                            <span
+                            slot="id"
+                            >
+                                {j}
+                            </span>
 
-                        <section
-                        class="p-rlt s-a-w b-box"
-                        slot="content"
-                        >
-                            <div
-                            class="text-background"
+                            <section
+                            class="p-rlt s-a-w b-box"
+                            slot="content"
                             >
-                                {topic.toUpperCase()}
-                            </div>
-                    
-                            <h3
-                            class="topic p-rlt"
-                            >
-                                {topic}
-                            </h3>
-
-                            <svelte:element
-                            this={html ?? 'p'}
-                            class="feature p-rlt p-y-- b-box"
-                            tabindex={html === 'a' && prop_FOCUS && show ? 0 : -1}
-                            {...(attributes ?? {})}
-                            >
-                                {#if value instanceof Array}
-                                    {#each value as _}
-                                    {@const {value, attributes} = _}
-                                        <span
-                                        {...(attributes ?? {})}
-                                        >
-                                            {#if value instanceof Object}
-                                            {@const {value, attributes} = value}
-                                                <span
-                                                {...(attributes ?? {})}
-                                                >
-                                                    {value}
-                                                </span>
-                                            {:else}
-                                                {value}
-                                            {/if}
-                                        </span>
-                                    {/each}
-                                {:else}
-                                    {value}
-                                {/if}
-                            </svelte:element>
-                        </section>
-                    </Line>
-
-                    {#if contact}
-                        <div
-                        class="contact-me"
-                        >
-                            <Cell
-                            prop_FOCUS={prop_FOCUS && show}
-                            prop_TEXT_WRAPPER={true}
-                            prop_CENTER={true}
-                            prop_TITLE={contact}
-                            on:click={cell_eClick}
-                            >
-                                <Icon
-                                prop_SPRING={false}
-                                prop_SIZE="1.8rem"
-                                prop_COLOR={COLORS.light}
+                                <div
+                                class="text-background"
                                 >
-                                    <Arrow />
-                                </Icon>
-    
-                                {contact}
-                            </Cell>
-                        </div>
-                    {/if}
-                </div>
-            {/each}
-        </div>
-    {/each}
+                                    {topic.toUpperCase()}
+                                </div>
+                        
+                                <h3
+                                class="topic p-rlt"
+                                >
+                                    {topic}
+                                </h3>
+
+                                <svelte:element
+                                this={html ?? 'p'}
+                                class="feature p-rlt p-y-- b-box"
+                                tabindex={html === 'a' && prop_FOCUS && show ? 0 : -1}
+                                {...(attributes ?? {})}
+                                >
+                                    {#if value instanceof Array}
+                                        {#each value as _}
+                                        {@const {value, attributes} = _}
+                                            <span
+                                            {...(attributes ?? {})}
+                                            >
+                                                {#if value instanceof Object}
+                                                {@const {value, attributes} = value}
+                                                    <span
+                                                    {...(attributes ?? {})}
+                                                    >
+                                                        {value}
+                                                    </span>
+                                                {:else}
+                                                    {value}
+                                                {/if}
+                                            </span>
+                                        {/each}
+                                    {:else}
+                                        {value}
+                                    {/if}
+                                </svelte:element>
+                            </section>
+                        </Line>
+
+                        {#if contact}
+                            <div
+                            class="contact-me"
+                            >
+                                <Cell
+                                prop_FOCUS={prop_FOCUS && show}
+                                prop_TEXT_WRAPPER={true}
+                                prop_CENTER={true}
+                                prop_TITLE={contact}
+                                on:click={cell_eClick}
+                                >
+                                    <Icon
+                                    prop_SPRING={false}
+                                    prop_SIZE="1.8rem"
+                                    prop_COLOR={COLORS.light}
+                                    >
+                                        <Arrow />
+                                    </Icon>
+        
+                                    {contact}
+                                </Cell>
+                            </div>
+                        {/if}
+                    </div>
+                {/each}
+            </div>
+        {/each}
+    </div>
 </div>
 
 
@@ -316,11 +320,16 @@ lang="scss"
 
 .features
 {
-    &, .container { height: fit-content; }
+    mask: linear-gradient(0deg, $dark 76%, transparent);
 
-    @include utils.placement(absolute, $top: 50%, $right: 0, $left: 0);
+    &>div, .container { height: fit-content; }
 
-    transition: transform .2s ease-out;
+    &>div
+    {
+        @include utils.placement(absolute, $top: 50%, $right: 0, $left: 0);
+
+        transition: transform .2s ease-out;
+    }
 
     .container
     {
@@ -374,9 +383,11 @@ lang="scss"
         {
             --title-size: 56rem;
 
-            @include utils.placement(absolute, $top: 50%, $left: 0, $z: -1, $pe: attr(data-topic));
+            @include utils.placement(absolute, $top: 50%, $left: 0, $z: -1);
             @include font.h-($color: $dark, $line-height: 0, $italic: true);
             @include utils.text-stroke;
+
+            max-width: 100%;
 
             mix-blend-mode: hue;
         }
@@ -427,7 +438,7 @@ lang="scss"
 
     @include media.min($ms4, $ms4)
     {
-        transition-duration: .64s;
+        &>div { transition-duration: .66s; }
 
         .container
         {

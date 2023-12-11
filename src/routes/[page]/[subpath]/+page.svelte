@@ -29,7 +29,8 @@ context="module"
 <App
 prop_LANG={data.lang ?? LANGS[0]}
 prop_PAGE_ID={data.page_ID ?? 0}
-prop_SUBPATH={data.subpath}
+prop_SUBPATH={data.subPath}
+prop_RESPONSE={form}
 />
 
 
@@ -61,7 +62,9 @@ prop_SUBPATH={data.subpath}
 // #\-EXPORTS-\
 
     // --PROPS
-    export let data = {}
+    export let
+    data = {},
+    form = void {}
 
     // --BINDING
 
