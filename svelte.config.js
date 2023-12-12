@@ -22,6 +22,23 @@ const config =
 		// If your environment is not supported or you settled on a specific environment, switch out the adapter.
 		// See https://kit.svelte.dev/docs/adapters for more information about adapters.
 		adapter: adapter()
+		,
+		csp:
+		{
+			directives:
+			{
+				'script-src'     : ['self', 'https://kit.fontawesome.com'],
+				'font-src'       : ['self', 'https://fonts.gstatic.com', 'https://ka-f.fontawesome.com'],
+				'img-src'        : ['self'],
+				'style-src'      : ['self', 'https://fonts.googleapis.com'],
+				'connect-src'    : ['self', 'https://ka-f.fontawesome.com'],
+				'frame-src'      : ['self'],
+				'frame-ancestors': ['self'],
+				'object-src'     : ['none'],
+				'media-src'      : ['none'],
+				'form-action'    : ['self']
+			}
+		}
 	}
 }
 
