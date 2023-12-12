@@ -52,7 +52,9 @@ class="header d-flx s-a-w p-n-- b-box"
         <p>LE THUAUT MORGAN</p>
     </strong>
 
-    <span>
+    <span
+    class="fps"
+    >
         {$event_$FPS}
     </span>
 </header>
@@ -217,6 +219,8 @@ lang="scss"
 
     mix-blend-mode: lighten;
 
+    span { @include font.text($color: $primary, $regular: false); }
+
     &>strong
     {   
         p { @include font.text($color: $light); }
@@ -228,8 +232,6 @@ lang="scss"
             font-size: map.get(font.$font-sizes, s1);
         }
     }
-
-    span { @include font.text($color: $primary, $regular: false); }
 }
 
 </style>
