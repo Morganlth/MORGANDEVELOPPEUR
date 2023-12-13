@@ -33,17 +33,19 @@ class="footer d-fac s-a-w p-n-- b-box"
         <ul
         class="d-flx s-a-w"
         >
-            {#each ['LinkedIn', 'Github'] as a}
+            {#each LINKS as a}
+            {@const {value, href} = a}
                 <li>
                     <a
                     class="p-rlt p-y--"
-                    href="./"
-                    alt="LE THUAUT Morgan - {a}"
-                    aria-label={a}
-                    data-content={a}
+                    href={href}
+                    alt="LE THUAUT Morgan - {value}"
+                    aria-label={value}
+                    data-content={value}
+                    target="_blank"
                     draggable="false"
                     >
-                        {a}
+                        {value}
                     </a>
                 </li>
             {/each}
@@ -99,7 +101,8 @@ class="footer d-fac s-a-w p-n-- b-box"
     import { tick } from 'svelte'
 
     // --LIB
-    import { LANGS } from '$lib/lang'
+    import { LANGS }                      from '$lib/lang'
+    import { DATA_LINKEDIN, DATA_GITHUB } from '$lib/data'
 
     // --CONTEXTS
     import { ROUTER } from '../App.svelte'
@@ -132,6 +135,17 @@ class="footer d-fac s-a-w p-n-- b-box"
     // --THIS
 
     // --INSIDE
+    const LINKS =
+    [
+        {
+            value: 'LinkedIn',
+            href : DATA_LINKEDIN
+        },
+        {
+            value: 'Github',
+            href : DATA_GITHUB
+        }
+    ]
 
 
 // #\-VARIABLES-\

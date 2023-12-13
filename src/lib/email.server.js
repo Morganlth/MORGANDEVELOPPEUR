@@ -5,8 +5,11 @@
 
     // --SVELTE
 
+    // --ENV
+    import { EMAIL_PASSWORD } from '$env/static/private'
+
     // --LIB
-    import { EMAIL, EMAIL_PASSWORD } from '$env/static/private'
+    import { DATA_EMAIL } from '$lib/data'
 
     // --CONTEXTS
 
@@ -48,7 +51,7 @@
             secure: false,
             auth  :
             {
-                user: EMAIL,
+                user: DATA_EMAIL,
                 pass: EMAIL_PASSWORD
             }
         })

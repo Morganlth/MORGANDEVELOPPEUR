@@ -6,7 +6,8 @@
     // --SVELTE
 
     // --LIB
-    import { lang_processing } from '$lib/lang'
+    import { DATA_EMAIL, DATA_LINKEDIN } from '$lib/data'
+    import { lang_processing }           from '$lib/lang'
 
     // --CONTEXTS
 
@@ -173,13 +174,13 @@
                         [
                             {
                                 html : 'a',
-                                value: 'morganlethuaut@gmail.com'
+                                value: DATA_EMAIL
                                 ,
                                 attributes:
                                 {
-                                    href        : 'mailto:morganlethuaut@gmail.com',
+                                    href        : 'mailto:' + DATA_EMAIL,
                                     alt         : { fr: 'adresse email de LE THUAUT Morgan', en: 'LE THUAUT Morgan\'s email address' },
-                                    'aria-label': 'email: morganlethuaut@gmail.com',
+                                    'aria-label': 'email: ' + DATA_EMAIL,
                                     draggable   : false
                                 }
                             },
@@ -189,7 +190,7 @@
                                 ,
                                 attributes:
                                 {
-                                    href        : 'https://www.linkedin.com/in/le-thuaut-morgan',
+                                    href        : DATA_LINKEDIN,
                                     alt         : { fr: 'Profil LinkedIn de LE THUAUT Morgan', en: 'LE THUAUT Morgan\'s LinkedIn profile' },
                                     'aria-label': 'LinkedIn',
                                     target      : '_blank',
@@ -233,9 +234,9 @@
                                 topic: 'OpenClassrooms',
                                 value:
                                 {
-                                    fr: 'RNCP niveau 5 - Développeur Web (08/12/22-31/07/23)'
+                                    fr: 'RNCP niveau 5 - Développeur Intégrateur Web (08/12/22-31/07/23)'
                                     ,
-                                    en: 'RNCP level 5 - Web Developer (08/12/22-31/07/23)'
+                                    en: 'RNCP level 5 - Web Developer Integrator (08/12/22-31/07/23)'
                                 }
                             },
                             {

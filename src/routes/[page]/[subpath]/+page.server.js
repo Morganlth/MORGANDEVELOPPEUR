@@ -3,14 +3,12 @@
 
 // #\-IMPORTS-\
 
-    // --ENV
-    import { EMAIL } from '$env/static/private'
-
     // --SVELTE
     import { error, fail } from '@sveltejs/kit'
 
     // --LIB
     import transporter                      from '$lib/email.server'
+    import { DATA_EMAIL }                   from '$lib/data'
     import { form_testEmail, form_testMsg } from '$lib/form'
     import { LANGS }                        from '$lib/lang'
 
@@ -120,7 +118,7 @@
     {
         return {
             from   : email,
-            to     : EMAIL,
+            to     : DATA_EMAIL,
             subject: `@auto#email => ${email}`,
             text   : msg,
             html   : html

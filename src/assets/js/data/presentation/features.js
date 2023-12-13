@@ -6,7 +6,8 @@
     // --SVELTE
 
     // --LIB
-    import { lang_processing } from '$lib/lang'
+    import { DATA_EMAIL, DATA_LINKEDIN, DATA_GITHUB } from '$lib/data'
+    import { lang_processing }                        from '$lib/lang'
 
     // --CONTEXTS
 
@@ -170,7 +171,7 @@
                         {
                             value:
                             {
-                                value     : { fr: 'RNCP niveau 5 - Développeur Web', en: 'RNCP level 5 - Web Developer' },
+                                value     : { fr: 'RNCP niveau 5 - Développeur intégrateur web', en: 'RNCP level 5 - Web developer integrator' },
                                 attributes: { itemprop: 'name' }
                             }
                             ,
@@ -225,14 +226,14 @@
             [
                 {
                     topic: 'Email',
-                    value: 'morganlethuaut@gmail.com',
+                    value: DATA_EMAIL,
                     html : 'a'
                     ,
                     attributes:
                     {
-                        href        : 'mailto:morganlethuaut@gmail.com',
+                        href        : 'mailto:' + DATA_EMAIL,
                         alt         : { fr: 'adresse email de LE THUAUT Morgan', en: 'LE THUAUT Morgan\'s email address' },
-                        'aria-label': 'email',
+                        'aria-label': 'email: ' + DATA_EMAIL,
                         draggable   : false,
                         itemprop    : 'email'
                     }
@@ -246,7 +247,7 @@
                     ,
                     attributes:
                     {
-                        href        : 'https://www.linkedin.com/in/le-thuaut-morgan',
+                        href        : DATA_LINKEDIN,
                         alt         : { fr: 'Profil LinkedIn de LE THUAUT Morgan', en: 'LE THUAUT Morgan\'s LinkedIn profile' },
                         'aria-label': 'LinkedIn',
                         target      : '_blank',
@@ -261,7 +262,7 @@
                     ,
                     attributes:
                     {
-                        href        : 'https://github.com/Morganlth',
+                        href        : DATA_GITHUB,
                         alt         : { fr: 'Profil Github de LE THUAUT Morgan', en: 'LE THUAUT Morgan\'s Github profile' },
                         'aria-label': 'Github',
                         target      : '_blank',
