@@ -206,7 +206,7 @@
             contents:
             [
                 {
-                    topic     : { fr: 'Profesion', en: 'Job' },
+                    topic     : { fr: 'Profession', en: 'Job' },
                     value     : { fr: 'Développeur Web', en: 'Web Developer' },
                     html      : 'strong',
                     attributes: { itemprop: 'jobTitle' }
