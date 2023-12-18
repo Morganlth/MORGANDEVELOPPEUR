@@ -27,7 +27,7 @@ const config =
 		{
 			directives:
 			{
-				'script-src'     : ['unsafe-inline', 'self', 'https://kit.fontawesome.com'],
+				'script-src'     : ['unsafe-inline', 'self', 'https://kit.fontawesome.com', 'https://va.vercel-scripts.com'],
 				'style-src'      : ['unsafe-inline', 'self', 'https://fonts.googleapis.com'],
 				'font-src'       : ['self', 'https://fonts.gstatic.com', 'https://ka-f.fontawesome.com'],
 				'img-src'        : ['self'],

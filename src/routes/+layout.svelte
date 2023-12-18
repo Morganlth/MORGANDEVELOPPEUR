@@ -42,6 +42,7 @@ context="module"
     // --LIB
 
     // --CONTEXTS
+    import { injectSpeedInsights } from '@vercel/speed-insights/sveltekit'
 
 //=======@COMPONENTS|
 
@@ -101,6 +102,7 @@ context="module"
     // --SVELTE
 
     // --SET
+    ;(function layout_set() { injectSpeedInsights() })()
 
     // --GET
 
